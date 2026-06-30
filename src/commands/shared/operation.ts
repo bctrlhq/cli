@@ -27,7 +27,9 @@ type UploadFileInput<OperationId extends CliOperationId> = OperationPathInput<Op
     actingSubaccountId?: string;
   };
 
-type DownloadInput<OperationId extends CliOperationId> = OperationPathInput<OperationId>;
+type DownloadInput<OperationId extends CliOperationId> = OperationPathInput<OperationId> & {
+  actingSubaccountId?: string;
+};
 
 type StreamInput<OperationId extends CliOperationId> = OperationPathInput<OperationId> &
   OperationQueryInput<OperationId> & {
@@ -67,6 +69,16 @@ export function optionString(options: Record<string, unknown>, name: string): st
 
 export function actingSubaccountOption(name = 'subaccountId') {
   return (options: Record<string, unknown>): string | undefined => optionString(options, name);
+}
+
+function withActingSubaccount<T extends Record<string, unknown>>(
+  input: T,
+  actingSubaccountId: string | undefined
+): T & { actingSubaccountId?: string } {
+  return {
+    ...input,
+    ...(actingSubaccountId ? { actingSubaccountId } : {}),
+  };
 }
 
 export function addPaginationFlags(command: Command): Command {
@@ -298,7 +310,10 @@ export async function downloadOperation<OperationId extends CliOperationId>(
 ): Promise<Uint8Array> {
   const client = await deps.apiClient();
   return client.download(
-    operationPath(operationId, input.pathParams as CliOperationPathParams<OperationId>)
+    operationPath(operationId, input.pathParams as CliOperationPathParams<OperationId>),
+    {
+      ...(input.actingSubaccountId ? { actingSubaccountId: input.actingSubaccountId } : {}),
+    }
   );
 }
 
@@ -337,12 +352,18 @@ export function createOperationListCommand<OperationId extends CliOperationId>(
     const overrides = await resolveRequestOverrides(config.operationId, options);
     const curatedQuery = config.query ? config.query(options) : defaultListQuery(options);
     const actingSubaccountId = config.actingSubaccountId?.(options);
-    await requestOperationAndPrint(factory, config.operationId, {
-      ...(overrides.pathParams ? { pathParams: overrides.pathParams } : {}),
-      query: overlayDefined(overrides.query, curatedQuery as Record<string, unknown>),
-      ...(actingSubaccountId ? { actingSubaccountId } : {}),
-      output: outputFlags(options),
-    } as unknown as OperationRequestInput<OperationId>);
+    await requestOperationAndPrint(
+      factory,
+      config.operationId,
+      withActingSubaccount(
+        {
+          ...(overrides.pathParams ? { pathParams: overrides.pathParams } : {}),
+          query: overlayDefined(overrides.query, curatedQuery as Record<string, unknown>),
+          output: outputFlags(options),
+        },
+        actingSubaccountId
+      ) as unknown as OperationRequestInput<OperationId>
+    );
   });
 }
 
@@ -355,6 +376,7 @@ export function createOperationViewCommand<OperationId extends CliOperationId>(
     argName?: string;
     configure?: (command: Command) => Command;
     query?: (id: string, options: Record<string, unknown>) => CliOperationQuery<OperationId>;
+    actingSubaccountId?: (id: string, options: Record<string, unknown>) => string | undefined;
   }
 ): Command {
   const argName = config.argName ?? 'id';
@@ -368,11 +390,22 @@ export function createOperationViewCommand<OperationId extends CliOperationId>(
   return command.action(async (id: string, options: Record<string, unknown>) => {
     const overrides = await resolveRequestOverrides(config.operationId, options);
     const curatedQuery = config.query ? config.query(id, options) : undefined;
-    await requestOperationAndPrint(factory, config.operationId, {
-      pathParams: overlayDefined(overrides.pathParams, { [argName]: id, id }),
-      query: overlayDefined(overrides.query, curatedQuery as Record<string, unknown> | undefined),
-      output: outputFlags(options),
-    } as unknown as OperationRequestInput<OperationId>);
+    const actingSubaccountId = config.actingSubaccountId?.(id, options);
+    await requestOperationAndPrint(
+      factory,
+      config.operationId,
+      withActingSubaccount(
+        {
+          pathParams: overlayDefined(overrides.pathParams, { [argName]: id, id }),
+          query: overlayDefined(
+            overrides.query,
+            curatedQuery as Record<string, unknown> | undefined
+          ),
+          output: outputFlags(options),
+        },
+        actingSubaccountId
+      ) as unknown as OperationRequestInput<OperationId>
+    );
   });
 }
 
@@ -411,11 +444,22 @@ export function createOperationDeleteCommand<OperationId extends CliOperationId>
     for (let i = 0; i < argNames.length; i += 1) params[argNames[i]!] = String(actionArgs[i]);
     const overrides = await resolveRequestOverrides(config.operationId, options);
     const curatedQuery = config.query ? config.query(params, options) : undefined;
-    await requestOperationAndPrint(factory, config.operationId, {
-      pathParams: overlayDefined(overrides.pathParams, params),
-      query: overlayDefined(overrides.query, curatedQuery as Record<string, unknown> | undefined),
-      output: outputFlags(options),
-    } as unknown as OperationRequestInput<OperationId>);
+    const actingSubaccountId = config.actingSubaccountId?.(params, options);
+    await requestOperationAndPrint(
+      factory,
+      config.operationId,
+      withActingSubaccount(
+        {
+          pathParams: overlayDefined(overrides.pathParams, params),
+          query: overlayDefined(
+            overrides.query,
+            curatedQuery as Record<string, unknown> | undefined
+          ),
+          output: outputFlags(options),
+        },
+        actingSubaccountId
+      ) as unknown as OperationRequestInput<OperationId>
+    );
   });
 }
 
@@ -459,13 +503,22 @@ export function createOperationJsonBodyCommand<OperationId extends CliOperationI
     const body = overrides.body !== undefined ? overrides.body : (curatedBody ?? {});
     const curatedQuery = config.query ? config.query(args, options) : undefined;
     const actingSubaccountId = config.actingSubaccountId?.(args, options);
-    await requestOperationAndPrint(factory, config.operationId, {
-      pathParams: overlayDefined(overrides.pathParams, args),
-      body,
-      query: overlayDefined(overrides.query, curatedQuery as Record<string, unknown> | undefined),
-      ...(actingSubaccountId ? { actingSubaccountId } : {}),
-      output: outputFlags(options),
-    } as unknown as OperationRequestInput<OperationId>);
+    await requestOperationAndPrint(
+      factory,
+      config.operationId,
+      withActingSubaccount(
+        {
+          pathParams: overlayDefined(overrides.pathParams, args),
+          body,
+          query: overlayDefined(
+            overrides.query,
+            curatedQuery as Record<string, unknown> | undefined
+          ),
+          output: outputFlags(options),
+        },
+        actingSubaccountId
+      ) as unknown as OperationRequestInput<OperationId>
+    );
   });
 }
 
