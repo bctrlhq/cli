@@ -467,7 +467,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Search proxy geo targets */
+        /**
+         * Search proxy geo targets
+         * @description Search provider-backed managed proxy geo targets. Use geoId results when creating dynamic managed rotating proxies.
+         */
         get: operations["proxies.geo.list"];
         put?: never;
         post?: never;
@@ -1728,7 +1731,6 @@ export interface components {
             provider: "openai" | "anthropic" | "google" | "azure" | "groq" | "deepseek" | "mistral" | "cerebras" | "openrouter" | "xai" | "perplexity" | "togetherai" | "vercel-ai-gateway" | "custom";
             /** @enum {string} */
             status?: "enabled" | "disabled";
-            subaccountId?: string | null;
             test?: boolean;
         };
         AiCredentialDeleteResponse: {
@@ -1923,9 +1925,16 @@ export interface components {
             data: components["schemas"]["ApiKey"][];
             nextCursor: string | null;
         };
+        AuthEffectiveScope: {
+            defaultSpaceId: string | null;
+            organizationId: string;
+            /** @enum {string} */
+            scope: "organization" | "subaccount";
+            subaccountId: string | null;
+        };
         AuthWhoamiResponse: {
-            /** Format: uuid */
-            defaultSpaceId: string;
+            defaultSpaceId: string | null;
+            effectiveScope: components["schemas"]["AuthEffectiveScope"];
             email: string | null;
             keyId: string;
             organizationId: string;
@@ -1959,7 +1968,6 @@ export interface components {
         };
         BrowserExtensionImportRequest: {
             name?: string;
-            subaccountId?: string;
             /** Format: uri */
             url: string;
         };
@@ -1978,8 +1986,6 @@ export interface components {
             file: string;
             /** @description Optional display name. Defaults to manifest.name. */
             name?: string;
-            /** @description Parent/org keys may create the extension inside a subaccount. Subaccount keys are auto-scoped. */
-            subaccountId?: string;
         };
         BrowserNetworkTrafficConfig: {
             blockAds?: boolean;
@@ -3357,7 +3363,6 @@ export interface components {
         SpaceCreateRequest: {
             environment?: components["schemas"]["EnvironmentMounts"];
             name?: string;
-            subaccountId?: string | null;
         };
         SpaceDeleteResponse: {
             /** @constant */
@@ -3853,7 +3858,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -3914,7 +3922,10 @@ export interface operations {
     "ai.credentials.create": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -4029,7 +4040,10 @@ export interface operations {
     "ai.credentials.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 credentialId: string;
             };
@@ -4108,7 +4122,10 @@ export interface operations {
     "ai.credentials.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 credentialId: string;
             };
@@ -4205,7 +4222,10 @@ export interface operations {
     "ai.credentials.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 credentialId: string;
             };
@@ -4338,7 +4358,10 @@ export interface operations {
     "ai.credentials.test": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 credentialId: string;
             };
@@ -4890,12 +4913,14 @@ export interface operations {
             query?: {
                 cursor?: string;
                 limit?: number;
-                subaccountId?: string;
                 q?: string;
                 format?: "crx";
                 source?: "upload" | "url";
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -4956,7 +4981,10 @@ export interface operations {
     "browser-extensions.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 extensionId: string;
             };
@@ -5035,7 +5063,10 @@ export interface operations {
     "browser-extensions.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 extensionId: string;
             };
@@ -5148,7 +5179,10 @@ export interface operations {
     "browser-extensions.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 extensionId: string;
             };
@@ -5265,7 +5299,10 @@ export interface operations {
     "browser-extensions.import": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -5396,7 +5433,10 @@ export interface operations {
     "browser-extensions.upload": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -5542,7 +5582,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -5606,7 +5649,10 @@ export interface operations {
                 /** @description Filter by a space UUID, or pass `default` to use the caller default space. */
                 spaceId?: string;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -5753,7 +5799,10 @@ export interface operations {
     "files.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 fileId: string;
             };
@@ -5832,7 +5881,10 @@ export interface operations {
     "files.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 fileId: string;
             };
@@ -5929,7 +5981,10 @@ export interface operations {
     "files.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 fileId: string;
             };
@@ -6046,7 +6101,10 @@ export interface operations {
     "files.content": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 fileId: string;
             };
@@ -6607,7 +6665,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -6668,7 +6729,10 @@ export interface operations {
     "proxies.create": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -6815,7 +6879,10 @@ export interface operations {
     "proxies.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 proxyId: string;
             };
@@ -6894,7 +6961,10 @@ export interface operations {
     "proxies.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 proxyId: string;
             };
@@ -7007,7 +7077,10 @@ export interface operations {
     "proxies.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 proxyId: string;
             };
@@ -7140,7 +7213,10 @@ export interface operations {
     "proxies.test": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 proxyId: string;
             };
@@ -7575,9 +7651,11 @@ export interface operations {
                 runtimeId?: string;
                 cursor?: string;
                 limit?: number;
-                subaccountId?: string;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -7656,7 +7734,10 @@ export interface operations {
     "runs.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
             };
@@ -7747,7 +7828,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
             };
@@ -7856,7 +7940,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
             };
@@ -7953,7 +8040,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
             };
@@ -8059,7 +8149,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
             };
@@ -8152,7 +8245,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
             };
@@ -8232,6 +8328,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
                 /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409. */
                 "Idempotency-Key"?: string;
             };
@@ -8406,7 +8504,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
             };
@@ -8485,7 +8586,10 @@ export interface operations {
     "runs.invocations.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
                 invocationId: string;
@@ -8565,7 +8669,10 @@ export interface operations {
     "runs.live": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
             };
@@ -8714,7 +8821,10 @@ export interface operations {
     "runs.recording": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runId: string;
             };
@@ -8854,7 +8964,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -8915,7 +9028,10 @@ export interface operations {
     "runtimes.create": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -9046,7 +9162,10 @@ export interface operations {
     "runtimes.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -9127,7 +9246,10 @@ export interface operations {
             query?: {
                 force?: boolean;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -9240,7 +9362,10 @@ export interface operations {
     "runtimes.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -9346,7 +9471,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -9443,7 +9571,10 @@ export interface operations {
     "runtimes.files.collect": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -9592,7 +9723,10 @@ export interface operations {
     "runtimes.files.stage": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -9741,7 +9875,10 @@ export interface operations {
     "runtimes.files.upload": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -9890,7 +10027,10 @@ export interface operations {
     "runtimes.human-actions.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -9970,6 +10110,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
                 /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409. */
                 "Idempotency-Key"?: string;
             };
@@ -10105,7 +10247,10 @@ export interface operations {
     "runtimes.human-actions.cancel": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -10218,7 +10363,10 @@ export interface operations {
     "runtimes.human-actions.complete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -10331,7 +10479,10 @@ export interface operations {
     "runtimes.human-actions.wait": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -10449,6 +10600,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
                 /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409. */
                 "Idempotency-Key"?: string;
             };
@@ -10632,7 +10785,10 @@ export interface operations {
     "runtimes.invocations.cancel": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
                 invocationId: string;
@@ -10746,7 +10902,10 @@ export interface operations {
     "runtimes.invocations.wait": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
                 invocationId: string;
@@ -10897,6 +11056,8 @@ export interface operations {
         parameters: {
             query?: never;
             header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
                 /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409. */
                 "Idempotency-Key"?: string;
             };
@@ -11060,7 +11221,10 @@ export interface operations {
     "runtimes.stop": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -11205,7 +11369,10 @@ export interface operations {
     "runtimes.targets.list": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -11332,7 +11499,10 @@ export interface operations {
     "runtimes.targets.create": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
             };
@@ -11497,7 +11667,10 @@ export interface operations {
     "runtimes.targets.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
                 targetId: string;
@@ -11625,7 +11798,10 @@ export interface operations {
     "runtimes.targets.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
                 targetId: string;
@@ -11771,7 +11947,10 @@ export interface operations {
     "runtimes.targets.activate": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 runtimeId: string;
                 targetId: string;
@@ -11921,7 +12100,10 @@ export interface operations {
                 limit?: number;
                 subaccountId?: string;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -11982,7 +12164,10 @@ export interface operations {
     "spaces.create": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -12099,7 +12284,10 @@ export interface operations {
             query?: {
                 include?: "environment";
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 spaceId: string;
             };
@@ -12178,7 +12366,10 @@ export interface operations {
     "spaces.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 spaceId: string;
             };
@@ -12291,7 +12482,10 @@ export interface operations {
     "spaces.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 spaceId: string;
             };
@@ -12408,7 +12602,10 @@ export interface operations {
     "spaces.environment.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 spaceId: string;
             };
@@ -12487,7 +12684,10 @@ export interface operations {
     "spaces.environment.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 spaceId: string;
             };
@@ -13207,7 +13407,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -13268,7 +13471,10 @@ export interface operations {
     "tool-calls.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 toolCallId: string;
             };
@@ -13352,7 +13558,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -13413,7 +13622,10 @@ export interface operations {
     "tools.create": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -13528,7 +13740,10 @@ export interface operations {
     "tools.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 toolId: string;
             };
@@ -13607,7 +13822,10 @@ export interface operations {
     "tools.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 toolId: string;
             };
@@ -13704,7 +13922,10 @@ export interface operations {
     "tools.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 toolId: string;
             };
@@ -13837,7 +14058,10 @@ export interface operations {
     "tools.test": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 toolId: string;
             };
@@ -13991,7 +14215,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -14052,7 +14279,10 @@ export interface operations {
     "toolsets.create": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -14167,7 +14397,10 @@ export interface operations {
     "toolsets.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 toolsetId: string;
             };
@@ -14246,7 +14479,10 @@ export interface operations {
     "toolsets.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 toolsetId: string;
             };
@@ -14343,7 +14579,10 @@ export interface operations {
     "toolsets.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 toolsetId: string;
             };
@@ -14544,7 +14783,10 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -14605,7 +14847,10 @@ export interface operations {
     "vault.secrets.get": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 key: string;
             };
@@ -14684,7 +14929,10 @@ export interface operations {
     "vault.secrets.upsert": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 key: string;
             };
@@ -14801,7 +15049,10 @@ export interface operations {
     "vault.secrets.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 key: string;
             };
@@ -14898,7 +15149,10 @@ export interface operations {
     "vault.secrets.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 key: string;
             };
@@ -15015,7 +15269,10 @@ export interface operations {
     "vault.secrets.totp": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 key: string;
             };
@@ -15126,7 +15383,10 @@ export interface operations {
     "vault.secrets.value": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 key: string;
             };

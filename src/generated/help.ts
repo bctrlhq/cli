@@ -35,6 +35,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -61,6 +68,7 @@ export const CLI_HELP_COMMANDS = {
         "query.status",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -84,6 +92,13 @@ export const CLI_HELP_COMMANDS = {
       "Create a saved BYOK AI credential. Name is optional and defaults server-side; pass test=true to verify credentials before saving.",
     input: {
       fields: [
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
         {
           name: "body.apiKey",
           type: "string",
@@ -112,11 +127,6 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "body.status",
           type: '"enabled" | "disabled"',
-          required: false,
-        },
-        {
-          name: "body.subaccountId",
-          type: "string | null",
           required: false,
         },
         {
@@ -185,13 +195,13 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/ai/credentials",
       operationId: "ai.credentials.create",
       requestFields: [
+        "header.BCTRL-Subaccount-Id",
         "body.apiKey",
         "body.baseUrl",
         "body.defaultModel",
         "body.name",
         "body.provider",
         "body.status",
-        "body.subaccountId",
         "body.test",
       ],
       responseFields: [
@@ -230,6 +240,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.credentialId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -291,7 +308,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/ai/credentials/{credentialId}",
       operationId: "ai.credentials.get",
-      requestFields: ["path.credentialId"],
+      requestFields: ["path.credentialId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "baseUrl",
         "createdAt",
@@ -329,6 +346,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.credentialId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.apiKey",
@@ -417,6 +441,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "ai.credentials.update",
       requestFields: [
         "path.credentialId",
+        "header.BCTRL-Subaccount-Id",
         "body.apiKey",
         "body.baseUrl",
         "body.defaultModel",
@@ -460,6 +485,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -480,7 +512,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/ai/credentials/{credentialId}",
       operationId: "ai.credentials.delete",
-      requestFields: ["path.credentialId"],
+      requestFields: ["path.credentialId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["deleted", "id"],
     },
     cli: {
@@ -506,6 +538,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.credentialId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -537,7 +576,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/ai/credentials/{credentialId}/test",
       operationId: "ai.credentials.test",
-      requestFields: ["path.credentialId"],
+      requestFields: ["path.credentialId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["checkedAt", "error", "latencySeconds", "ok"],
     },
     cli: {
@@ -808,7 +847,12 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "defaultSpaceId",
-          type: "uuid",
+          type: "uuid | null",
+          required: true,
+        },
+        {
+          name: "effectiveScope",
+          type: "object",
           required: true,
         },
         {
@@ -849,6 +893,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "auth.whoami",
       responseFields: [
         "defaultSpaceId",
+        "effectiveScope",
         "email",
         "keyId",
         "organizationId",
@@ -888,11 +933,6 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "query.subaccountId",
-          type: "string",
-          required: false,
-        },
-        {
           name: "query.q",
           type: "string",
           required: false,
@@ -906,6 +946,13 @@ export const CLI_HELP_COMMANDS = {
           name: "query.source",
           type: '"upload" | "url"',
           required: false,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -930,10 +977,10 @@ export const CLI_HELP_COMMANDS = {
       requestFields: [
         "query.cursor",
         "query.limit",
-        "query.subaccountId",
         "query.q",
         "query.format",
         "query.source",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -961,6 +1008,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.extensionId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -1027,7 +1081,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/browser-extensions/{extensionId}",
       operationId: "browser-extensions.get",
-      requestFields: ["path.extensionId"],
+      requestFields: ["path.extensionId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "contentHash",
         "createdAt",
@@ -1066,6 +1120,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.extensionId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.name",
@@ -1137,7 +1198,11 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/browser-extensions/{extensionId}",
       operationId: "browser-extensions.update",
-      requestFields: ["path.extensionId", "body.name"],
+      requestFields: [
+        "path.extensionId",
+        "header.BCTRL-Subaccount-Id",
+        "body.name",
+      ],
       responseFields: [
         "contentHash",
         "createdAt",
@@ -1177,6 +1242,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -1197,7 +1269,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/browser-extensions/{extensionId}",
       operationId: "browser-extensions.delete",
-      requestFields: ["path.extensionId"],
+      requestFields: ["path.extensionId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["deleted", "id"],
     },
     cli: {
@@ -1221,12 +1293,14 @@ export const CLI_HELP_COMMANDS = {
     input: {
       fields: [
         {
-          name: "body.name",
+          name: "header.BCTRL-Subaccount-Id",
           type: "string",
           required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
-          name: "body.subaccountId",
+          name: "body.name",
           type: "string",
           required: false,
         },
@@ -1300,7 +1374,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/browser-extensions/import",
       operationId: "browser-extensions.import",
-      requestFields: ["body.name", "body.subaccountId", "body.url"],
+      requestFields: ["header.BCTRL-Subaccount-Id", "body.name", "body.url"],
       responseFields: [
         "contentHash",
         "createdAt",
@@ -1333,6 +1407,17 @@ export const CLI_HELP_COMMANDS = {
     title: "Upload a browser extension",
     summary:
       "Upload a browser extension package and return the simplified browser extension resource.",
+    input: {
+      fields: [
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
     output: {
       fields: [
         {
@@ -1396,6 +1481,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/browser-extensions/upload",
       operationId: "browser-extensions.upload",
+      requestFields: ["header.BCTRL-Subaccount-Id"],
       responseFields: [
         "contentHash",
         "createdAt",
@@ -1494,6 +1580,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -1532,6 +1625,7 @@ export const CLI_HELP_COMMANDS = {
         "query.include",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "folders", "nextCursor"],
     },
@@ -1561,6 +1655,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Filter by a space UUID, or pass `default` to use the caller default space.",
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -1642,7 +1743,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/files",
       operationId: "files.upload",
-      requestFields: ["query.spaceId"],
+      requestFields: ["query.spaceId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "contentType",
         "createdAt",
@@ -1683,6 +1784,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.fileId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -1764,7 +1872,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/files/{fileId}",
       operationId: "files.get",
-      requestFields: ["path.fileId"],
+      requestFields: ["path.fileId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "contentType",
         "createdAt",
@@ -1805,6 +1913,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.fileId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.metadata",
@@ -1896,7 +2011,12 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/files/{fileId}",
       operationId: "files.update",
-      requestFields: ["path.fileId", "body.metadata", "body.name"],
+      requestFields: [
+        "path.fileId",
+        "header.BCTRL-Subaccount-Id",
+        "body.metadata",
+        "body.name",
+      ],
       responseFields: [
         "contentType",
         "createdAt",
@@ -1938,6 +2058,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -1958,7 +2085,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/files/{fileId}",
       operationId: "files.delete",
-      requestFields: ["path.fileId"],
+      requestFields: ["path.fileId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["deleted", "id"],
     },
     cli: {
@@ -1985,13 +2112,20 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     api: {
       method: "GET",
       path: "/v1/files/{fileId}/content",
       operationId: "files.content",
-      requestFields: ["path.fileId"],
+      requestFields: ["path.fileId", "header.BCTRL-Subaccount-Id"],
     },
     cli: {
       command: "bctrl help --topic files.content",
@@ -2377,6 +2511,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -2397,7 +2538,11 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies",
       operationId: "proxies.list",
-      requestFields: ["query.cursor", "query.limit"],
+      requestFields: [
+        "query.cursor",
+        "query.limit",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: ["data", "nextCursor"],
     },
     cli: {
@@ -2420,6 +2565,13 @@ export const CLI_HELP_COMMANDS = {
     input: {
       fields: [
         {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
           name: "body",
           type: "object",
           required: true,
@@ -2439,7 +2591,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/proxies",
       operationId: "proxies.create",
-      requestFields: ["body"],
+      requestFields: ["header.BCTRL-Subaccount-Id", "body"],
       responseFields: ["body"],
     },
     cli: {
@@ -2466,6 +2618,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -2481,7 +2640,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies/{proxyId}",
       operationId: "proxies.get",
-      requestFields: ["path.proxyId"],
+      requestFields: ["path.proxyId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["body"],
     },
     cli: {
@@ -2508,6 +2667,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.proxyId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.autoRenew",
@@ -2636,6 +2802,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "proxies.update",
       requestFields: [
         "path.proxyId",
+        "header.BCTRL-Subaccount-Id",
         "body.autoRenew",
         "body.city",
         "body.country",
@@ -2685,6 +2852,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -2705,7 +2879,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/proxies/{proxyId}",
       operationId: "proxies.delete",
-      requestFields: ["path.proxyId"],
+      requestFields: ["path.proxyId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["deleted", "id"],
     },
     cli: {
@@ -2732,6 +2906,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.proxyId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -2773,7 +2954,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/proxies/{proxyId}/test",
       operationId: "proxies.test",
-      requestFields: ["path.proxyId"],
+      requestFields: ["path.proxyId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "country",
         "error",
@@ -2799,7 +2980,8 @@ export const CLI_HELP_COMMANDS = {
     topic: "proxies.geo.list",
     aliases: ["proxies geo list"],
     title: "Search proxy geo targets",
-    summary: "Search proxy geo targets",
+    summary:
+      "Search provider-backed managed proxy geo targets. Use geoId results when creating dynamic managed rotating proxies.",
     input: {
       fields: [
         {
@@ -3157,9 +3339,11 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "query.subaccountId",
+          name: "header.BCTRL-Subaccount-Id",
           type: "string",
           required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -3187,7 +3371,7 @@ export const CLI_HELP_COMMANDS = {
         "query.runtimeId",
         "query.cursor",
         "query.limit",
-        "query.subaccountId",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -3214,6 +3398,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -3285,7 +3476,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runs/{runId}",
       operationId: "runs.get",
-      requestFields: ["path.runId"],
+      requestFields: ["path.runId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "counts",
         "createdAt",
@@ -3372,6 +3563,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -3402,6 +3600,7 @@ export const CLI_HELP_COMMANDS = {
         "query.fileId",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -3476,6 +3675,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     api: {
@@ -3492,6 +3698,7 @@ export const CLI_HELP_COMMANDS = {
         "query.fileId",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
     },
     cli: {
@@ -3553,6 +3760,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -3581,6 +3795,7 @@ export const CLI_HELP_COMMANDS = {
         "query.contextId",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -3643,6 +3858,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     api: {
@@ -3657,6 +3879,7 @@ export const CLI_HELP_COMMANDS = {
         "query.contextId",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
     },
     cli: {
@@ -3701,6 +3924,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -3731,6 +3961,7 @@ export const CLI_HELP_COMMANDS = {
         "query.type",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "folders", "nextCursor"],
     },
@@ -3757,6 +3988,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "header.Idempotency-Key",
@@ -3860,6 +4098,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "runs.files.export",
       requestFields: [
         "path.runId",
+        "header.BCTRL-Subaccount-Id",
         "header.Idempotency-Key",
         "body.name",
         "body.type",
@@ -3930,6 +4169,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -3956,6 +4202,7 @@ export const CLI_HELP_COMMANDS = {
         "query.action",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -3988,6 +4235,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.invocationId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -4054,7 +4308,11 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runs/{runId}/invocations/{invocationId}",
       operationId: "runs.invocations.get",
-      requestFields: ["path.runId", "path.invocationId"],
+      requestFields: [
+        "path.runId",
+        "path.invocationId",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: [
         "action",
         "createdAt",
@@ -4094,6 +4352,13 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
           name: "body.control",
           type: '"none" | "input"',
           required: false,
@@ -4123,7 +4388,12 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runs/{runId}/live",
       operationId: "runs.live",
-      requestFields: ["path.runId", "body.control", "body.expiresInSeconds"],
+      requestFields: [
+        "path.runId",
+        "header.BCTRL-Subaccount-Id",
+        "body.control",
+        "body.expiresInSeconds",
+      ],
       responseFields: ["expiresAt", "url"],
     },
     cli: {
@@ -4149,6 +4419,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.expiresInSeconds",
@@ -4185,7 +4462,11 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runs/{runId}/recording",
       operationId: "runs.recording",
-      requestFields: ["path.runId", "body.expiresInSeconds"],
+      requestFields: [
+        "path.runId",
+        "header.BCTRL-Subaccount-Id",
+        "body.expiresInSeconds",
+      ],
       responseFields: ["durationSeconds", "expiresAt", "status", "url"],
     },
     cli: {
@@ -4232,6 +4513,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -4257,6 +4545,7 @@ export const CLI_HELP_COMMANDS = {
         "query.status",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -4280,6 +4569,13 @@ export const CLI_HELP_COMMANDS = {
       "Create a stopped browser runtime and return the simplified runtime detail resource. Omit spaceId to use the caller's default space.",
     input: {
       fields: [
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
         {
           name: "body.config",
           type: "object",
@@ -4371,6 +4667,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/runtimes",
       operationId: "runtimes.create",
       requestFields: [
+        "header.BCTRL-Subaccount-Id",
         "body.config",
         "body.metadata",
         "body.name",
@@ -4414,6 +4711,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -4492,7 +4796,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runtimes/{runtimeId}",
       operationId: "runtimes.get",
-      requestFields: ["path.runtimeId"],
+      requestFields: ["path.runtimeId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "activeRunId",
         "config",
@@ -4533,6 +4837,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.config",
@@ -4628,6 +4939,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "runtimes.update",
       requestFields: [
         "path.runtimeId",
+        "header.BCTRL-Subaccount-Id",
         "body.config",
         "body.idleTimeoutSeconds",
         "body.name",
@@ -4678,6 +4990,13 @@ export const CLI_HELP_COMMANDS = {
           type: "boolean",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -4698,7 +5017,11 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/runtimes/{runtimeId}",
       operationId: "runtimes.delete",
-      requestFields: ["path.runtimeId", "query.force"],
+      requestFields: [
+        "path.runtimeId",
+        "query.force",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: ["deleted", "id"],
     },
     cli: {
@@ -4743,6 +5066,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -4768,6 +5098,7 @@ export const CLI_HELP_COMMANDS = {
         "query.type",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -4795,6 +5126,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.destinationPath",
@@ -4903,6 +5241,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "runtimes.files.collect",
       requestFields: [
         "path.runtimeId",
+        "header.BCTRL-Subaccount-Id",
         "body.destinationPath",
         "body.metadata",
         "body.name",
@@ -4950,6 +5289,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.fileId",
@@ -5008,6 +5354,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "runtimes.files.stage",
       requestFields: [
         "path.runtimeId",
+        "header.BCTRL-Subaccount-Id",
         "body.fileId",
         "body.name",
         "body.runtimePath",
@@ -5045,6 +5392,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -5086,7 +5440,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/files/upload",
       operationId: "runtimes.files.upload",
-      requestFields: ["path.runtimeId"],
+      requestFields: ["path.runtimeId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "expiresAt",
         "id",
@@ -5120,6 +5474,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -5191,7 +5552,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runtimes/{runtimeId}/human-actions",
       operationId: "runtimes.human-actions.get",
-      requestFields: ["path.runtimeId"],
+      requestFields: ["path.runtimeId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "cancelledAt",
         "completedAt",
@@ -5231,6 +5592,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "header.Idempotency-Key",
@@ -5321,6 +5689,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "runtimes.human-actions.create",
       requestFields: [
         "path.runtimeId",
+        "header.BCTRL-Subaccount-Id",
         "header.Idempotency-Key",
         "body.message",
         "body.timeoutSeconds",
@@ -5363,6 +5732,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -5434,7 +5810,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/human-actions/cancel",
       operationId: "runtimes.human-actions.cancel",
-      requestFields: ["path.runtimeId"],
+      requestFields: ["path.runtimeId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "cancelledAt",
         "completedAt",
@@ -5474,6 +5850,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -5545,7 +5928,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/human-actions/complete",
       operationId: "runtimes.human-actions.complete",
-      requestFields: ["path.runtimeId"],
+      requestFields: ["path.runtimeId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "cancelledAt",
         "completedAt",
@@ -5585,6 +5968,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.timeoutSeconds",
@@ -5671,7 +6061,11 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/human-actions/wait",
       operationId: "runtimes.human-actions.wait",
-      requestFields: ["path.runtimeId", "body.timeoutSeconds"],
+      requestFields: [
+        "path.runtimeId",
+        "header.BCTRL-Subaccount-Id",
+        "body.timeoutSeconds",
+      ],
       responseFields: [
         "cancelledAt",
         "completedAt",
@@ -5713,6 +6107,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "header.Idempotency-Key",
@@ -5791,7 +6192,12 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/invocations",
       operationId: "runtimes.invocations.create",
-      requestFields: ["path.runtimeId", "header.Idempotency-Key", "body"],
+      requestFields: [
+        "path.runtimeId",
+        "header.BCTRL-Subaccount-Id",
+        "header.Idempotency-Key",
+        "body",
+      ],
       responseFields: [
         "action",
         "createdAt",
@@ -5835,6 +6241,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.invocationId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -5901,7 +6314,11 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/invocations/{invocationId}/cancel",
       operationId: "runtimes.invocations.cancel",
-      requestFields: ["path.runtimeId", "path.invocationId"],
+      requestFields: [
+        "path.runtimeId",
+        "path.invocationId",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: [
         "action",
         "createdAt",
@@ -5945,6 +6362,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.invocationId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.timeoutSeconds",
@@ -6029,6 +6453,7 @@ export const CLI_HELP_COMMANDS = {
       requestFields: [
         "path.runtimeId",
         "path.invocationId",
+        "header.BCTRL-Subaccount-Id",
         "body.timeoutSeconds",
       ],
       responseFields: [
@@ -6070,6 +6495,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "header.Idempotency-Key",
@@ -6120,7 +6552,11 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/start",
       operationId: "runtimes.start",
-      requestFields: ["path.runtimeId", "header.Idempotency-Key"],
+      requestFields: [
+        "path.runtimeId",
+        "header.BCTRL-Subaccount-Id",
+        "header.Idempotency-Key",
+      ],
       responseFields: [
         "connectUrl",
         "protocol",
@@ -6154,6 +6590,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -6184,7 +6627,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/stop",
       operationId: "runtimes.stop",
-      requestFields: ["path.runtimeId"],
+      requestFields: ["path.runtimeId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["runId", "runtimeId", "status", "stopped"],
     },
     cli: {
@@ -6211,6 +6654,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -6231,7 +6681,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runtimes/{runtimeId}/targets",
       operationId: "runtimes.targets.list",
-      requestFields: ["path.runtimeId"],
+      requestFields: ["path.runtimeId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["data", "nextCursor"],
     },
     cli: {
@@ -6257,6 +6707,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.runtimeId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.activate",
@@ -6320,6 +6777,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "runtimes.targets.create",
       requestFields: [
         "path.runtimeId",
+        "header.BCTRL-Subaccount-Id",
         "body.activate",
         "body.type",
         "body.uri",
@@ -6362,6 +6820,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.targetId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -6408,7 +6873,11 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runtimes/{runtimeId}/targets/{targetId}",
       operationId: "runtimes.targets.get",
-      requestFields: ["path.runtimeId", "path.targetId"],
+      requestFields: [
+        "path.runtimeId",
+        "path.targetId",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: [
         "active",
         "id",
@@ -6448,6 +6917,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -6468,7 +6944,11 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/runtimes/{runtimeId}/targets/{targetId}",
       operationId: "runtimes.targets.delete",
-      requestFields: ["path.runtimeId", "path.targetId"],
+      requestFields: [
+        "path.runtimeId",
+        "path.targetId",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: ["deleted", "id"],
     },
     cli: {
@@ -6499,6 +6979,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.targetId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -6545,7 +7032,11 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/targets/{targetId}/activate",
       operationId: "runtimes.targets.activate",
-      requestFields: ["path.runtimeId", "path.targetId"],
+      requestFields: [
+        "path.runtimeId",
+        "path.targetId",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: [
         "active",
         "id",
@@ -6591,6 +7082,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -6611,7 +7109,12 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/spaces",
       operationId: "spaces.list",
-      requestFields: ["query.cursor", "query.limit", "query.subaccountId"],
+      requestFields: [
+        "query.cursor",
+        "query.limit",
+        "query.subaccountId",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: ["data", "nextCursor"],
     },
     cli: {
@@ -6635,6 +7138,13 @@ export const CLI_HELP_COMMANDS = {
     input: {
       fields: [
         {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
           name: "body.environment",
           type: "object",
           required: false,
@@ -6642,11 +7152,6 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "body.name",
           type: "string",
-          required: false,
-        },
-        {
-          name: "body.subaccountId",
-          type: "string | null",
           required: false,
         },
       ],
@@ -6684,7 +7189,11 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/spaces",
       operationId: "spaces.create",
-      requestFields: ["body.environment", "body.name", "body.subaccountId"],
+      requestFields: [
+        "header.BCTRL-Subaccount-Id",
+        "body.environment",
+        "body.name",
+      ],
       responseFields: ["createdAt", "id", "name", "subaccountId", "updatedAt"],
     },
     cli: {
@@ -6715,6 +7224,13 @@ export const CLI_HELP_COMMANDS = {
           name: "query.include",
           type: '"environment"',
           required: false,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -6756,7 +7272,11 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/spaces/{spaceId}",
       operationId: "spaces.get",
-      requestFields: ["path.spaceId", "query.include"],
+      requestFields: [
+        "path.spaceId",
+        "query.include",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: [
         "createdAt",
         "environment",
@@ -6789,6 +7309,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.spaceId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.name",
@@ -6830,7 +7357,11 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/spaces/{spaceId}",
       operationId: "spaces.update",
-      requestFields: ["path.spaceId", "body.name"],
+      requestFields: [
+        "path.spaceId",
+        "header.BCTRL-Subaccount-Id",
+        "body.name",
+      ],
       responseFields: ["createdAt", "id", "name", "subaccountId", "updatedAt"],
     },
     cli: {
@@ -6857,6 +7388,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -6877,7 +7415,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/spaces/{spaceId}",
       operationId: "spaces.delete",
-      requestFields: ["path.spaceId"],
+      requestFields: ["path.spaceId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["deleted", "id"],
     },
     cli: {
@@ -6905,6 +7443,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -6930,7 +7475,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/spaces/{spaceId}/environment",
       operationId: "spaces.environment.get",
-      requestFields: ["path.spaceId"],
+      requestFields: ["path.spaceId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["ai", "storage", "vault"],
     },
     cli: {
@@ -6957,6 +7502,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.spaceId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.ai",
@@ -6998,7 +7550,13 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/spaces/{spaceId}/environment",
       operationId: "spaces.environment.update",
-      requestFields: ["path.spaceId", "body.ai", "body.storage", "body.vault"],
+      requestFields: [
+        "path.spaceId",
+        "header.BCTRL-Subaccount-Id",
+        "body.ai",
+        "body.storage",
+        "body.vault",
+      ],
       responseFields: ["ai", "storage", "vault"],
     },
     cli: {
@@ -7614,6 +8172,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -7643,6 +8208,7 @@ export const CLI_HELP_COMMANDS = {
         "query.actor",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -7670,6 +8236,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.toolCallId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -7776,7 +8349,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/tool-calls/{toolCallId}",
       operationId: "tool-calls.get",
-      requestFields: ["path.toolCallId"],
+      requestFields: ["path.toolCallId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "actor",
         "createdAt",
@@ -7836,6 +8409,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -7856,7 +8436,12 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/tools",
       operationId: "tools.list",
-      requestFields: ["query.spaceId", "query.cursor", "query.limit"],
+      requestFields: [
+        "query.spaceId",
+        "query.cursor",
+        "query.limit",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: ["data", "nextCursor"],
     },
     cli: {
@@ -7880,6 +8465,13 @@ export const CLI_HELP_COMMANDS = {
     input: {
       fields: [
         {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
           name: "body",
           type: "object",
           required: true,
@@ -7899,7 +8491,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/tools",
       operationId: "tools.create",
-      requestFields: ["body"],
+      requestFields: ["header.BCTRL-Subaccount-Id", "body"],
       responseFields: ["body"],
     },
     cli: {
@@ -7927,6 +8519,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -7942,7 +8541,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/tools/{toolId}",
       operationId: "tools.get",
-      requestFields: ["path.toolId"],
+      requestFields: ["path.toolId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["body"],
     },
     cli: {
@@ -7969,6 +8568,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.toolId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.authSecretId",
@@ -8027,6 +8633,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "tools.update",
       requestFields: [
         "path.toolId",
+        "header.BCTRL-Subaccount-Id",
         "body.authSecretId",
         "body.description",
         "body.inputSchema",
@@ -8063,6 +8670,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -8083,7 +8697,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/tools/{toolId}",
       operationId: "tools.delete",
-      requestFields: ["path.toolId"],
+      requestFields: ["path.toolId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["deleted", "id"],
     },
     cli: {
@@ -8110,6 +8724,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.toolId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.input",
@@ -8156,7 +8777,12 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/tools/{toolId}/test",
       operationId: "tools.test",
-      requestFields: ["path.toolId", "body.input", "body.record"],
+      requestFields: [
+        "path.toolId",
+        "header.BCTRL-Subaccount-Id",
+        "body.input",
+        "body.record",
+      ],
       responseFields: [
         "error",
         "errorDetail",
@@ -8202,6 +8828,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -8222,7 +8855,12 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/toolsets",
       operationId: "toolsets.list",
-      requestFields: ["query.spaceId", "query.cursor", "query.limit"],
+      requestFields: [
+        "query.spaceId",
+        "query.cursor",
+        "query.limit",
+        "header.BCTRL-Subaccount-Id",
+      ],
       responseFields: ["data", "nextCursor"],
     },
     cli: {
@@ -8245,6 +8883,13 @@ export const CLI_HELP_COMMANDS = {
       "Create a reusable bundle of built-in and custom tools for agent invocations.",
     input: {
       fields: [
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
         {
           name: "body.builtins",
           type: '"files" | "vault" | "captcha" | "human_action"[]',
@@ -8321,6 +8966,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/toolsets",
       operationId: "toolsets.create",
       requestFields: [
+        "header.BCTRL-Subaccount-Id",
         "body.builtins",
         "body.metadata",
         "body.name",
@@ -8362,6 +9008,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.toolsetId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -8413,7 +9066,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/toolsets/{toolsetId}",
       operationId: "toolsets.get",
-      requestFields: ["path.toolsetId"],
+      requestFields: ["path.toolsetId", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "builtins",
         "createdAt",
@@ -8449,6 +9102,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.toolsetId",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.builtins",
@@ -8522,6 +9182,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "toolsets.update",
       requestFields: [
         "path.toolsetId",
+        "header.BCTRL-Subaccount-Id",
         "body.builtins",
         "body.metadata",
         "body.name",
@@ -8563,6 +9224,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -8583,7 +9251,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/toolsets/{toolsetId}",
       operationId: "toolsets.delete",
-      requestFields: ["path.toolsetId"],
+      requestFields: ["path.toolsetId", "header.BCTRL-Subaccount-Id"],
       responseFields: ["deleted", "id"],
     },
     cli: {
@@ -8697,6 +9365,13 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -8723,6 +9398,7 @@ export const CLI_HELP_COMMANDS = {
         "query.hasTotp",
         "query.cursor",
         "query.limit",
+        "header.BCTRL-Subaccount-Id",
       ],
       responseFields: ["data", "nextCursor"],
     },
@@ -8749,6 +9425,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.key",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
       ],
     },
@@ -8800,7 +9483,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/vault/secrets/{key}",
       operationId: "vault.secrets.get",
-      requestFields: ["path.key"],
+      requestFields: ["path.key", "header.BCTRL-Subaccount-Id"],
       responseFields: [
         "createdAt",
         "hasTotp",
@@ -8836,6 +9519,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.key",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body",
@@ -8892,7 +9582,7 @@ export const CLI_HELP_COMMANDS = {
       method: "PUT",
       path: "/v1/vault/secrets/{key}",
       operationId: "vault.secrets.upsert",
-      requestFields: ["path.key", "body"],
+      requestFields: ["path.key", "header.BCTRL-Subaccount-Id", "body"],
       responseFields: [
         "createdAt",
         "hasTotp",
@@ -8928,6 +9618,13 @@ export const CLI_HELP_COMMANDS = {
           name: "path.key",
           type: "string",
           required: true,
+        },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
         {
           name: "body.label",
@@ -9021,6 +9718,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "vault.secrets.update",
       requestFields: [
         "path.key",
+        "header.BCTRL-Subaccount-Id",
         "body.label",
         "body.notes",
         "body.originPatterns",
@@ -9065,6 +9763,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -9085,7 +9790,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/vault/secrets/{key}",
       operationId: "vault.secrets.delete",
-      requestFields: ["path.key"],
+      requestFields: ["path.key", "header.BCTRL-Subaccount-Id"],
       responseFields: ["deleted", "key"],
     },
     cli: {
@@ -9113,6 +9818,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -9128,7 +9840,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/vault/secrets/{key}/totp",
       operationId: "vault.secrets.totp",
-      requestFields: ["path.key"],
+      requestFields: ["path.key", "header.BCTRL-Subaccount-Id"],
       responseFields: ["code"],
     },
     cli: {
@@ -9156,6 +9868,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "header.BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
       ],
     },
     output: {
@@ -9171,7 +9890,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/vault/secrets/{key}/value",
       operationId: "vault.secrets.value",
-      requestFields: ["path.key"],
+      requestFields: ["path.key", "header.BCTRL-Subaccount-Id"],
       responseFields: ["body"],
     },
     cli: {
