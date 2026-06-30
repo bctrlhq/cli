@@ -1,0 +1,56 @@
+{
+  "name": "@bctrl/cli",
+  "version": "0.1.6",
+  "description": "BCTRL command-line interface",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bctrlhq/cli.git"
+  },
+  "bin": {
+    "bctrl": "./dist/bin/bctrl.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "dev": "tsx src/bin/bctrl.ts",
+    "prepack": "pnpm run build",
+    "test": "tsx --test \"tests/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "typecheck:tests": "tsc --noEmit -p tests/tsconfig.json"
+  },
+  "keywords": [
+    "bctrl",
+    "cli",
+    "browser-automation",
+    "agents"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.4",
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "dependencies": {
+    "@napi-rs/keyring": "^1.3.0",
+    "commander": "^14.0.3",
+    "env-paths": "^4.0.0",
+    "handlebars": "^4.7.9",
+    "jq-web": "^0.6.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
