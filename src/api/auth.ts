@@ -2,13 +2,23 @@ import { z } from 'zod';
 import { CliError } from '../runtime/errors.js';
 import { apiErrorFromResponse } from './errors.js';
 
+const AuthEffectiveScopeSchema = z
+  .object({
+    scope: z.enum(['organization', 'subaccount']),
+    organizationId: z.string().min(1),
+    subaccountId: z.string().min(1).nullable(),
+    defaultSpaceId: z.string().min(1).nullable(),
+  })
+  .strict();
+
 export const AuthWhoamiSchema = z
   .object({
     email: z.string().email().nullable().optional(),
     scope: z.enum(['organization', 'subaccount']),
     organizationId: z.string().min(1),
     subaccountId: z.string().min(1).nullable(),
-    defaultSpaceId: z.string().min(1),
+    defaultSpaceId: z.string().min(1).nullable(),
+    effectiveScope: AuthEffectiveScopeSchema,
     keyId: z.string().min(1),
     plan: z.string().min(1),
   })

@@ -1,5 +1,5 @@
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
-import { dirname } from 'node:path';
+import { mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import { z } from 'zod';
 import { getMetadataFilePath } from './paths.js';
 import {
@@ -8,13 +8,23 @@ import {
   type SecretBackend,
 } from './secret-store.js';
 
+const StoredEffectiveScopeSchema = z
+  .object({
+    scope: z.enum(['organization', 'subaccount']),
+    organizationId: z.string().min(1),
+    subaccountId: z.string().min(1).nullable(),
+    defaultSpaceId: z.string().min(1).nullable(),
+  })
+  .strict();
+
 export const StoredWhoamiSchema = z
   .object({
     email: z.string().email().nullable().optional(),
     scope: z.enum(['organization', 'subaccount']),
     organizationId: z.string().min(1),
     subaccountId: z.string().min(1).nullable(),
-    defaultSpaceId: z.string().min(1),
+    defaultSpaceId: z.string().min(1).nullable(),
+    effectiveScope: StoredEffectiveScopeSchema,
     keyId: z.string().min(1),
     plan: z.string().min(1),
   })
@@ -46,6 +56,11 @@ export type StoredAuthMetadata = z.infer<typeof StoredAuthMetadataSchema>;
 
 /** Metadata + the resolved secret, assembled in memory only. */
 export type StoredCredential = StoredAuthMetadata & { token: string };
+
+const AUTH_WRITE_MARKER_FILE_NAME = 'auth.write';
+const AUTH_WRITE_WAIT_TIMEOUT_MS = 2000;
+const AUTH_WRITE_WAIT_INTERVAL_MS = 100;
+const AUTH_WRITE_STALE_MS = 30000;
 
 export function normalizeApiBaseUrl(url: string): string {
   return url.replace(/\/+$/, '');
@@ -79,7 +94,7 @@ export async function loadCredential(
   env: NodeJS.ProcessEnv = process.env,
   activeApiBaseUrl?: string
 ): Promise<StoredCredential | null> {
-  const meta = await readStoredMetadata(env);
+  const meta = await readStoredMetadataAfterPendingWrite(env);
   if (!meta) return null;
   if (
     activeApiBaseUrl &&
@@ -111,23 +126,28 @@ export async function saveCredential(
   },
   env: NodeJS.ProcessEnv = process.env
 ): Promise<SaveCredentialResult> {
+  await markCredentialWriteStarted(env);
   const { store, keychainFallback } = resolveSecretStore(env);
-  await store.set(normalizeApiBaseUrl(input.apiBaseUrl), input.token);
+  try {
+    await store.set(normalizeApiBaseUrl(input.apiBaseUrl), input.token);
 
-  const metadata: StoredAuthMetadata = {
-    apiBaseUrl: input.apiBaseUrl,
-    whoami: input.whoami,
-    method: input.method,
-    backend: store.backend,
-    createdAt: input.createdAt,
-    validatedAt: input.validatedAt,
-  };
+    const metadata: StoredAuthMetadata = {
+      apiBaseUrl: input.apiBaseUrl,
+      whoami: input.whoami,
+      method: input.method,
+      backend: store.backend,
+      createdAt: input.createdAt,
+      validatedAt: input.validatedAt,
+    };
 
-  const path = getMetadataFilePath(env);
-  await mkdir(dirname(path), { recursive: true, mode: 0o700 });
-  await writeFile(path, `${JSON.stringify(metadata, null, 2)}\n`, { mode: 0o600 });
+    const path = getMetadataFilePath(env);
+    await mkdir(dirname(path), { recursive: true, mode: 0o700 });
+    await writeFile(path, `${JSON.stringify(metadata, null, 2)}\n`, { mode: 0o600 });
 
-  return { path, backend: store.backend, keychainFallback };
+    return { path, backend: store.backend, keychainFallback };
+  } finally {
+    await clearCredentialWriteMarker(env);
+  }
 }
 
 /**
@@ -151,6 +171,52 @@ export async function clearCredential(
   }
 
   return secretRemoved || metadataRemoved;
+}
+
+function getAuthWriteMarkerPath(env: NodeJS.ProcessEnv = process.env): string {
+  return join(dirname(getMetadataFilePath(env)), AUTH_WRITE_MARKER_FILE_NAME);
+}
+
+async function markCredentialWriteStarted(env: NodeJS.ProcessEnv): Promise<void> {
+  const path = getAuthWriteMarkerPath(env);
+  await mkdir(dirname(path), { recursive: true, mode: 0o700 });
+  await writeFile(path, new Date().toISOString(), { mode: 0o600 });
+}
+
+async function clearCredentialWriteMarker(env: NodeJS.ProcessEnv): Promise<void> {
+  try {
+    await rm(getAuthWriteMarkerPath(env));
+  } catch (error) {
+    if (!isFileNotFound(error)) throw error;
+  }
+}
+
+async function readStoredMetadataAfterPendingWrite(
+  env: NodeJS.ProcessEnv
+): Promise<StoredAuthMetadata | null> {
+  const startedAt = Date.now();
+  for (;;) {
+    const meta = await readStoredMetadata(env);
+    if (meta) return meta;
+    if (!(await isCredentialWriteInProgress(env)) || Date.now() - startedAt >= AUTH_WRITE_WAIT_TIMEOUT_MS) {
+      return null;
+    }
+    await sleep(AUTH_WRITE_WAIT_INTERVAL_MS);
+  }
+}
+
+async function isCredentialWriteInProgress(env: NodeJS.ProcessEnv): Promise<boolean> {
+  try {
+    const marker = await stat(getAuthWriteMarkerPath(env));
+    return Date.now() - marker.mtimeMs < AUTH_WRITE_STALE_MS;
+  } catch (error) {
+    if (isFileNotFound(error)) return false;
+    throw error;
+  }
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 function isFileNotFound(error: unknown): boolean {

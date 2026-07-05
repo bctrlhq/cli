@@ -29,6 +29,16 @@ export async function apiErrorFromResponse(response: Response, context = 'BCTRL 
   });
 }
 
+export function isUnauthorizedApiError(error: unknown): boolean {
+  if (!(error instanceof CliError)) return false;
+  return (
+    error.apiError?.status === 401 &&
+    (error.apiError.code === 'auth.required' ||
+      error.apiError.code === 'auth.invalid' ||
+      error.apiError.code === undefined)
+  );
+}
+
 function parseErrorBody(bodyText: string): StructuredErrorBody {
   if (!bodyText) return {};
   try {

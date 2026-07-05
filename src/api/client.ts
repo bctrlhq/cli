@@ -1,6 +1,7 @@
 import { AuthError, CliError } from '../runtime/errors.js';
 import type { BctrlConfig } from '../config/config.js';
-import { apiErrorFromResponse } from './errors.js';
+import { clearCredential } from '../config/auth-store.js';
+import { apiErrorFromResponse, isUnauthorizedApiError } from './errors.js';
 
 export type BctrlApiClient = {
   get: <T>(path: string, options?: RequestOptions) => Promise<T>;
@@ -26,21 +27,25 @@ export type JsonRequestOptions = RequestOptions & {
   body?: unknown;
 };
 
-export function createBctrlApiClient(config: BctrlConfig): BctrlApiClient {
+export function createBctrlApiClient(
+  config: BctrlConfig,
+  env: NodeJS.ProcessEnv = process.env
+): BctrlApiClient {
   return {
-    get: (path, options) => requestJson(config, 'GET', path, options),
-    post: (path, options) => requestJson(config, 'POST', path, options),
-    patch: (path, options) => requestJson(config, 'PATCH', path, options),
-    put: (path, options) => requestJson(config, 'PUT', path, options),
-    delete: (path, options) => requestJson(config, 'DELETE', path, options),
-    download: (path, options) => requestBinary(config, 'GET', path, options),
-    streamText: (path, options) => requestTextStream(config, path, options),
-    uploadFile: (path, options) => uploadFile(config, path, options),
+    get: (path, options) => requestJson(config, env, 'GET', path, options),
+    post: (path, options) => requestJson(config, env, 'POST', path, options),
+    patch: (path, options) => requestJson(config, env, 'PATCH', path, options),
+    put: (path, options) => requestJson(config, env, 'PUT', path, options),
+    delete: (path, options) => requestJson(config, env, 'DELETE', path, options),
+    download: (path, options) => requestBinary(config, env, 'GET', path, options),
+    streamText: (path, options) => requestTextStream(config, env, path, options),
+    uploadFile: (path, options) => uploadFile(config, env, path, options),
   };
 }
 
 async function requestJson<T>(
   config: BctrlConfig,
+  env: NodeJS.ProcessEnv,
   method: string,
   path: string,
   options?: JsonRequestOptions
@@ -66,7 +71,7 @@ async function requestJson<T>(
   });
 
   if (!response.ok) {
-    throw await apiErrorFromResponse(response);
+    throw await reconcileStoredCredentialAuthError(config, env, await apiErrorFromResponse(response));
   }
 
   if (response.status === 204) {
@@ -79,6 +84,7 @@ async function requestJson<T>(
 
 async function requestBinary(
   config: BctrlConfig,
+  env: NodeJS.ProcessEnv,
   method: string,
   path: string,
   options?: RequestOptions
@@ -93,7 +99,7 @@ async function requestBinary(
   });
 
   if (!response.ok) {
-    throw await apiErrorFromResponse(response);
+    throw await reconcileStoredCredentialAuthError(config, env, await apiErrorFromResponse(response));
   }
 
   return new Uint8Array(await response.arrayBuffer());
@@ -101,6 +107,7 @@ async function requestBinary(
 
 async function requestTextStream(
   config: BctrlConfig,
+  env: NodeJS.ProcessEnv,
   path: string,
   options?: RequestOptions
 ): Promise<AsyncIterable<string>> {
@@ -114,7 +121,7 @@ async function requestTextStream(
   });
 
   if (!response.ok) {
-    throw await apiErrorFromResponse(response);
+    throw await reconcileStoredCredentialAuthError(config, env, await apiErrorFromResponse(response));
   }
   if (!response.body) {
     throw new CliError('BCTRL API response did not include a stream body');
@@ -141,6 +148,7 @@ async function requestTextStream(
 
 async function uploadFile<T>(
   config: BctrlConfig,
+  env: NodeJS.ProcessEnv,
   path: string,
   options: RequestOptions & { file: Blob; fileName: string; fields?: Record<string, string> }
 ): Promise<T> {
@@ -161,10 +169,21 @@ async function uploadFile<T>(
   });
 
   if (!response.ok) {
-    throw await apiErrorFromResponse(response);
+    throw await reconcileStoredCredentialAuthError(config, env, await apiErrorFromResponse(response));
   }
 
   return (await response.json()) as T;
+}
+
+async function reconcileStoredCredentialAuthError(
+  config: BctrlConfig,
+  env: NodeJS.ProcessEnv,
+  error: CliError
+): Promise<CliError> {
+  if (config.activeToken?.source === 'stored' && isUnauthorizedApiError(error)) {
+    await clearCredential(env, config.apiBaseUrl);
+  }
+  return error;
 }
 
 function requestHeaders(

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { test } from 'node:test';
 import { AuthError, CliError } from '../src/runtime/errors.js';
 import {
@@ -17,6 +17,7 @@ import {
   savePendingDeviceAuth,
 } from '../src/config/pending-auth.js';
 import { loadConfig } from '../src/config/config.js';
+import { createBctrlApiClient } from '../src/api/client.js';
 import { authLoginRun } from '../src/commands/auth/login.js';
 import { authLogoutRun } from '../src/commands/auth/logout.js';
 import { authStatusRun } from '../src/commands/auth/status.js';
@@ -29,6 +30,12 @@ const storedWhoami = {
   organizationId: 'org_test',
   subaccountId: null,
   defaultSpaceId: '00000000-0000-4000-8000-000000000001',
+  effectiveScope: {
+    scope: 'organization' as const,
+    organizationId: 'org_test',
+    subaccountId: null,
+    defaultSpaceId: '00000000-0000-4000-8000-000000000001',
+  },
   keyId: 'key_test',
   plan: 'developer',
 };
@@ -69,7 +76,10 @@ test('loadConfig prefers BCTRL_API_KEY over stored auth', async () => {
     async (env) => {
       await saveTestCredential(env);
       const config = await loadConfig(env);
-      assert.deepEqual(config.activeToken, { token: 'env-key', source: 'BCTRL_API_KEY' });
+      assert.deepEqual(config.activeToken, {
+        token: 'env-key',
+        source: 'BCTRL_API_KEY',
+      });
       assert.equal(config.storedAuth, null);
     },
     { BCTRL_API_KEY: 'env-key' }
@@ -80,7 +90,10 @@ test('loadConfig uses stored auth when env API key is absent', async () => {
   await withTempEnv(async (env) => {
     await saveTestCredential(env);
     const config = await loadConfig(env);
-    assert.deepEqual(config.activeToken, { token: 'stored-key', source: 'stored' });
+    assert.deepEqual(config.activeToken, {
+      token: 'stored-key',
+      source: 'stored',
+    });
     assert.equal(config.storedAuth?.token, 'stored-key');
     assert.equal(config.storedAuth?.backend, 'file');
     assert.equal(config.storedAuth?.method, 'api-key');
@@ -112,6 +125,21 @@ test('loadCredential ignores a credential for a different API base URL', async (
     await saveTestCredential(env);
     assert.equal(await loadCredential(env, 'http://localhost:8787/v1'), null);
     assert.ok(await loadCredential(env, 'https://api.bctrl.ai/v1'));
+  });
+});
+
+test('loadCredential waits briefly while credential metadata is being written', async () => {
+  await withTempEnv(async (env) => {
+    const markerPath = join(dirname(getMetadataFilePath(env)), 'auth.write');
+    await mkdir(dirname(markerPath), { recursive: true });
+    await writeFile(markerPath, new Date().toISOString());
+
+    const pendingLoad = loadCredential(env, 'https://api.bctrl.ai/v1');
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    await saveTestCredential(env, 'stored-key');
+
+    const credential = await pendingLoad;
+    assert.equal(credential?.token, 'stored-key');
   });
 });
 
@@ -218,7 +246,60 @@ test('auth login --url prints only the browser authorization URL, saves pending 
     const pending = await readPendingDeviceAuth(env);
     assert.equal(pending?.apiBaseUrl, 'https://api.bctrl.ai/v1');
     assert.equal(pending?.deviceCode, 'dc_secret');
-    assert.equal(pending?.verificationUriComplete, 'https://app.bctrl.ai/device?code=WDJB-MJHT');
+    assert.equal(
+      pending?.verificationUriComplete,
+      'https://app.bctrl.ai/device?code=WDJB-MJHT'
+    );
+  });
+});
+
+test('auth login --url --wait prints the URL, polls, and saves the approved CLI session', async () => {
+  await withTempEnv(async (env) => {
+    const io = createMemoryIO();
+    const pollResults = [
+      { status: 'authorization_pending' as const },
+      { status: 'complete' as const, token: 'device-minted-token' },
+    ];
+    const sleeps: number[] = [];
+
+    await authLoginRun({
+      io,
+      env,
+      url: true,
+      wait: true,
+      config: async () => ({
+        apiBaseUrl: 'https://api.bctrl.ai/v1',
+        activeToken: null,
+        storedAuth: null,
+      }),
+      validateToken: async (apiBaseUrl, token) => {
+        assert.equal(apiBaseUrl, 'https://api.bctrl.ai/v1');
+        assert.equal(token, 'device-minted-token');
+        return storedWhoami;
+      },
+      deviceLoginDeps: {
+        startDeviceAuth: async () => deviceSession(),
+        pollDeviceAuth: async (_apiBaseUrl, deviceCode) => {
+          assert.equal(deviceCode, 'dc_secret');
+          const next = pollResults.shift();
+          assert.ok(next);
+          return next;
+        },
+        sleep: async (ms) => {
+          sleeps.push(ms);
+        },
+        now: () => 1_000_000,
+      },
+    });
+
+    assert.equal(io.stdout(), 'https://app.bctrl.ai/device?code=WDJB-MJHT\n');
+    assert.deepEqual(sleeps, [5_000]);
+    assert.match(io.stderr(), /Waiting for browser approval/);
+    assert.match(io.stderr(), /Approved/);
+    const stored = await loadCredential(env);
+    assert.equal(stored?.token, 'device-minted-token');
+    assert.equal(stored?.method, 'device');
+    assert.equal(await readPendingDeviceAuth(env), null);
   });
 });
 
@@ -235,7 +316,7 @@ test('auth login --url rejects token input options', async () => {
         storedAuth: null,
       }),
     }),
-    /Use --url by itself/
+    /Use --url without --with-token or --token-file/
   );
 });
 
@@ -249,13 +330,59 @@ test('auth status reports unauthenticated state without validating a token', asy
       storedAuth: null,
     }),
     validateToken: async () => {
-      throw new Error('validateToken should not be called without an active token');
+      throw new Error(
+        'validateToken should not be called without an active token'
+      );
     },
   });
 
   assert.match(io.stdout(), /Authenticated: no/);
   assert.match(io.stdout(), /API: https:\/\/api\.bctrl\.ai\/v1/);
   assert.match(io.stdout(), /bctrl auth login/);
+});
+
+test('auth status clears stale stored credentials when the server rejects them', async () => {
+  await withTempEnv(async (env) => {
+    await saveTestCredential(env, 'revoked-device-key', 'device');
+    const config = await loadConfig(env);
+    const io = createMemoryIO();
+
+    await assert.rejects(
+      authStatusRun({
+        io,
+        env,
+        config: async () => config,
+        validateToken: async () => {
+          throw new CliError('BCTRL auth validation failed: 401 Authentication required', {
+            apiError: { status: 401, code: 'auth.invalid' },
+          });
+        },
+      }),
+      /BCTRL auth validation failed/
+    );
+
+    assert.equal(await loadCredential(env), null);
+  });
+});
+
+test('API requests clear stale stored credentials when the server rejects them', async () => {
+  await withTempEnv(async (env) => {
+    await saveTestCredential(env, 'revoked-device-key', 'device');
+    const config = await loadConfig(env);
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = (async () =>
+      new Response(JSON.stringify({ error: 'Authentication required', code: 'auth.invalid' }), {
+        status: 401,
+        statusText: 'Unauthorized',
+        headers: { 'content-type': 'application/json' },
+      })) as typeof fetch;
+    try {
+      await assert.rejects(createBctrlApiClient(config, env).get('/spaces'), /auth\.invalid/);
+      assert.equal(await loadCredential(env), null);
+    } finally {
+      globalThis.fetch = originalFetch;
+    }
+  });
 });
 
 test('auth status validates and prints a human active token context', async () => {
@@ -286,7 +413,10 @@ test('auth status validates and prints a human active token context', async () =
   assert.match(io.stdout(), /Email: user@example\.com/);
   assert.match(io.stdout(), /Scope: organization/);
   assert.match(io.stdout(), /Organization: org_test/);
-  assert.match(io.stdout(), /Default space: 00000000-0000-4000-8000-000000000001/);
+  assert.match(
+    io.stdout(),
+    /Default space: 00000000-0000-4000-8000-000000000001/
+  );
   assert.match(io.stdout(), /Plan: developer/);
   assert.match(io.stdout(), /Auth: saved API key/);
   assert.match(io.stdout(), /Store: OS keychain/);
@@ -404,7 +534,8 @@ test('auth token refuses to print to a terminal without --reveal', async () => {
         storedAuth: null,
       }),
     }),
-    (error: unknown) => error instanceof CliError && /without --reveal/.test(error.message)
+    (error: unknown) =>
+      error instanceof CliError && /without --reveal/.test(error.message)
   );
 });
 
@@ -449,7 +580,9 @@ test('auth logout revokes stored device credentials server-side', async () => {
       },
     });
 
-    assert.deepEqual(calls, [{ apiBaseUrl: 'https://api.bctrl.ai/v1', token: 'device-key' }]);
+    assert.deepEqual(calls, [
+      { apiBaseUrl: 'https://api.bctrl.ai/v1', token: 'device-key' },
+    ]);
     assert.equal(await loadCredential(env), null);
     assert.match(io.stderr(), /Revoked connected device session/);
     assert.match(io.stderr(), /Removed stored BCTRL credentials/);
@@ -475,7 +608,10 @@ test('auth logout still clears local device credentials when server revoke fails
     });
 
     assert.equal(await loadCredential(env), null);
-    assert.match(io.stderr(), /could not revoke connected device session: network down/);
+    assert.match(
+      io.stderr(),
+      /could not revoke connected device session: network down/
+    );
     assert.match(io.stderr(), /Removed stored BCTRL credentials/);
   });
 });
@@ -609,5 +745,48 @@ test('auth login keeps an unapproved pending browser login and prints the same U
 
     assert.equal(await loadCredential(env), null);
     assert.equal((await readPendingDeviceAuth(env))?.deviceCode, 'dc_secret');
+  });
+});
+
+test('auth login --wait polls an existing pending browser login until approval', async () => {
+  await withTempEnv(async (env) => {
+    await savePendingDeviceAuth(
+      'https://api.bctrl.ai/v1',
+      deviceSession(),
+      env,
+      () => 1_000_000
+    );
+    const io = createMemoryIO();
+    const pollResults = [
+      { status: 'rate_limited' as const },
+      { status: 'authorization_pending' as const },
+      { status: 'complete' as const, token: 'device-minted-token' },
+    ];
+
+    await authLoginRun({
+      io,
+      env,
+      wait: true,
+      config: async () => ({
+        apiBaseUrl: 'https://api.bctrl.ai/v1',
+        activeToken: null,
+        storedAuth: null,
+      }),
+      validateToken: async () => storedWhoami,
+      deviceLoginDeps: {
+        pollDeviceAuth: async () => {
+          const next = pollResults.shift();
+          assert.ok(next);
+          return next;
+        },
+        sleep: async () => {},
+        now: () => 1_000_000,
+      },
+    });
+
+    assert.equal(pollResults.length, 0);
+    assert.match(io.stderr(), /Approved/);
+    assert.equal((await loadCredential(env))?.token, 'device-minted-token');
+    assert.equal(await readPendingDeviceAuth(env), null);
   });
 });

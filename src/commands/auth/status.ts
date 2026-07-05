@@ -1,5 +1,7 @@
 import { Command } from 'commander';
 import { validateAuthToken } from '../../api/auth.js';
+import { isUnauthorizedApiError } from '../../api/errors.js';
+import { clearCredential } from '../../config/auth-store.js';
 import type { BctrlConfig } from '../../config/config.js';
 import type { Factory } from '../../factory.js';
 import type { IOStreams } from '../../io/streams.js';
@@ -10,6 +12,7 @@ export type AuthStatusOptions = {
   config: () => Promise<BctrlConfig>;
   output?: OutputFlags;
   validateToken?: typeof validateAuthToken;
+  env?: NodeJS.ProcessEnv;
 };
 
 export function createAuthStatusCommand(
@@ -45,7 +48,15 @@ export async function authStatusRun(options: AuthStatusOptions): Promise<void> {
   }
 
   const validateToken = options.validateToken ?? validateAuthToken;
-  const whoami = await validateToken(config.apiBaseUrl, config.activeToken.token);
+  let whoami: Awaited<ReturnType<typeof validateAuthToken>>;
+  try {
+    whoami = await validateToken(config.apiBaseUrl, config.activeToken.token);
+  } catch (error) {
+    if (config.activeToken.source === 'stored' && isUnauthorizedApiError(error)) {
+      await clearCredential(options.env, config.apiBaseUrl);
+    }
+    throw error;
+  }
   const status = {
     authenticated: true as const,
     apiBaseUrl: config.apiBaseUrl,
@@ -82,7 +93,7 @@ function writeHumanAuthStatus(
         scope: string;
         organizationId: string;
         subaccountId: string | null;
-        defaultSpaceId: string;
+        defaultSpaceId: string | null;
         tokenSource: string;
         method?: 'api-key' | 'device';
         backend?: 'keychain' | 'file';
@@ -109,7 +120,7 @@ function writeHumanAuthStatus(
       `Scope: ${status.scope}`,
       `Organization: ${status.organizationId}`,
       ...(status.subaccountId ? [`Subaccount: ${status.subaccountId}`] : []),
-      `Default space: ${status.defaultSpaceId}`,
+      `Default space: ${status.defaultSpaceId ?? '-'}`,
       `Plan: ${status.plan}`,
       `Auth: ${formatTokenSource(status.tokenSource, status.method)}`,
       ...(status.backend

@@ -277,7 +277,7 @@ test('runtime stop uses the explicit v1 stop route', async () => {
   ]);
 });
 
-test('runtime delete preserves confirmation and force query', async () => {
+test('runtime delete preserves confirmation and sends no force query', async () => {
   const calls: ApiCall[] = [];
   const io = createMemoryIO();
   const command = createRootCommand(
@@ -287,15 +287,13 @@ test('runtime delete preserves confirmation and force query', async () => {
     })
   );
 
-  await command.parseAsync(['runtime', 'delete', 'rt_test', '--yes', '--force'], { from: 'user' });
+  await command.parseAsync(['runtime', 'delete', 'rt_test', '--yes'], { from: 'user' });
 
   assert.deepEqual(calls, [
     {
       method: 'delete',
       path: '/runtimes/rt_test',
-      options: {
-        query: { force: true },
-      },
+      options: undefined,
     },
   ]);
 });

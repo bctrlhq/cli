@@ -328,7 +328,7 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get API, SDK, and CLI help
+         * Get API, SDK, CLI, MCP help
          * @description Return global API, SDK, and CLI help, or help for one named topic. Use query parameters so help is easy to call from browsers, CLI tools, SDKs, and plain HTTP clients.
          */
         get: operations["help"];
@@ -349,13 +349,13 @@ export interface paths {
         };
         /**
          * List notification recipients
-         * @description List organization notification receivers used for human action requests.
+         * @description List notification receivers used for human action requests. Use BCTRL-Subaccount-Id to scope the request to a subaccount.
          */
         get: operations["notification-recipients.list"];
         put?: never;
         /**
          * Create notification recipient
-         * @description Create an organization notification receiver. Supported receiver types are email, SMS, and WhatsApp.
+         * @description Create a notification receiver. Use BCTRL-Subaccount-Id to create it for a subaccount. Supported receiver types are email, SMS, and WhatsApp.
          */
         post: operations["notification-recipients.create"];
         delete?: never;
@@ -868,7 +868,7 @@ export interface paths {
         post?: never;
         /**
          * Delete a runtime
-         * @description Delete a runtime and its browser state. Active runtimes must be stopped first, or pass force=true to stop and delete in one call.
+         * @description Delete a stopped runtime and its browser state. Active runtimes must be stopped first.
          */
         delete: operations["runtimes.delete"];
         options?: never;
@@ -1055,7 +1055,7 @@ export interface paths {
         put?: never;
         /**
          * Create a durable invocation for a live runtime
-         * @description Submit durable AI work to a live runtime using the simplified invocation contract.
+         * @description Submit durable browser work to a live runtime. The invocation action chooses what BCTRL does: act, observe, extract, stagehandAgent, browserUse, or solveCaptcha.
          */
         post: operations["runtimes.invocations.create"];
         delete?: never;
@@ -1685,15 +1685,25 @@ export interface components {
             notificationsCredits: number;
             proxyCredits: number;
         };
+        /**
+         * @description Use act for one targeted browser action, such as clicking, typing, or selecting. Provide either instruction or stagehandAction.
+         * @example {
+         *       "action": "act",
+         *       "instruction": "Click the export button."
+         *     }
+         */
         ActRequest: {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
             action: "act";
+            /** @description Natural-language browser action to perform. */
             instruction?: string;
             metadata?: components["schemas"]["RuntimeInvocationMetadata"];
+            /** @description Model to use for this invocation. Pass a managed model string or an object that references credentials. */
             model?: string | components["schemas"]["AiModelSelection"];
+            /** @description Structured Stagehand action to perform instead of a natural-language instruction. */
             stagehandAction?: {
                 arguments?: string[];
                 description: string;
@@ -1701,7 +1711,9 @@ export interface components {
                 selector: string;
             };
             target?: components["schemas"]["RuntimeTargetSelector"];
+            /** @description Sampling temperature for model-backed invocation work. */
             temperature?: number;
+            /** @description Maximum server-side runtime for this invocation, in seconds. */
             timeoutSeconds?: number;
         };
         AiCredential: {
@@ -2035,50 +2047,88 @@ export interface components {
             stealth?: "medium" | "high" | "ultra";
             webRtcProxyOnly?: boolean;
         };
+        /**
+         * @description Use browserUse for exploratory or visual multi-step browser tasks. Requires instruction; provide either toolsetId or inline tools/toolIds, not both.
+         * @example {
+         *       "action": "browserUse",
+         *       "instruction": "Find the cheapest flight and add it to the cart.",
+         *       "maxSteps": 50
+         *     }
+         */
         BrowserUseAgentRequest: {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
             action: "browserUse";
+            /** @description Allow browser-use to navigate directly to URLs when useful for the task. */
             directlyOpenUrl?: boolean;
+            /** @description Allow browser-use to create an explicit plan before acting. */
             enablePlanning?: boolean;
+            /** @description Append extra instructions to the default browser-use system message. */
             extendSystemMessage?: string;
+            /** @description Optional model override for browser-use extraction steps. */
             extractionModel?: string | components["schemas"]["AiModelSelection"];
+            /** @description Optional fallback model if the primary browser-use model cannot complete the task. */
             fallbackModel?: string | components["schemas"]["AiModelSelection"];
+            /** @description Files to stage into the runtime workspace before the invocation starts. */
             files?: {
                 /** Format: uuid */
                 fileId: string;
                 name?: string;
                 runtimePath?: string;
             }[];
+            /** @description Enable browser-use flash mode for faster visual actions. */
             flashMode?: boolean;
+            /** @description DOM attributes browser-use should include in page observations. */
             includeAttributes?: string[];
+            /** @description Multi-step task for the browser-use agent to complete. */
             instruction: string;
+            /** @description Maximum browser-use browser actions to allow in one step. */
             maxActionsPerStep?: number;
+            /** @description Maximum browser-use step failures before the invocation fails. */
             maxFailures?: number;
+            /** @description Maximum number of browser-use history items to keep in context; null disables the cap. */
             maxHistoryItems?: number | null;
+            /** @description Maximum browser-use agent steps to run. */
             maxSteps?: number;
             metadata?: components["schemas"]["RuntimeInvocationMetadata"];
+            /** @description Model to use for this invocation. Pass a managed model string or an object that references credentials. */
             model?: string | components["schemas"]["AiModelSelection"];
+            /** @description JSON Schema object that constrains structured output from extract or agent actions. */
             outputSchema?: {
                 [key: string]: unknown;
             };
+            /** @description Replace the default browser-use system message for this invocation. */
             overrideSystemMessage?: string;
+            /** @description Sensitive values browser-use may use without exposing them in normal page context. */
             sensitiveData?: {
                 [key: string]: components["schemas"]["BrowserUseSensitiveDataValue"];
             };
+            /** @description Per-step timeout for browser-use actions, in seconds. */
             stepTimeoutSeconds?: number;
             target?: components["schemas"]["RuntimeTargetSelector"];
+            /** @description Sampling temperature for model-backed invocation work. */
             temperature?: number;
+            /** @description Maximum server-side runtime for this invocation, in seconds. */
             timeoutSeconds?: number;
+            /** @description Ad-hoc custom tool IDs to expose to the agent. Mutually exclusive with toolsetId. */
             toolIds?: string[];
+            /** @description Built-in managed tool groups to expose to the agent. Mutually exclusive with toolsetId. */
             tools?: ("files" | "vault" | "captcha" | "human_action")[];
-            /** Format: uuid */
+            /**
+             * Format: uuid
+             * @description Persisted toolset to expose to the agent. Mutually exclusive with tools and toolIds.
+             */
             toolsetId?: string;
+            /** @description Allow browser-use to use model reasoning when supported. */
             useThinking?: boolean;
+            /** @description Whether browser-use may use visual page understanding. 'auto' lets BCTRL decide. */
             useVision?: boolean | "auto";
-            /** @enum {string} */
+            /**
+             * @description Vision detail level for browser-use visual page understanding.
+             * @enum {string}
+             */
             visionDetailLevel?: "low" | "high" | "auto";
         };
         BrowserUseSensitiveDataScopedValue: {
@@ -2158,21 +2208,45 @@ export interface components {
             reasonClass?: "invalid_input" | "unauthorized" | "capability_denied" | "capability_limit_exceeded" | "rate_limited" | "not_found" | "conflict" | "upstream" | "server";
             requestId?: string;
         };
+        /**
+         * @description Use extract to pull structured data from the current page. Provide instruction, outputSchema, or both to guide the extraction.
+         * @example {
+         *       "action": "extract",
+         *       "instruction": "Extract the invoice total.",
+         *       "outputSchema": {
+         *         "properties": {
+         *           "total": {
+         *             "type": "number"
+         *           }
+         *         },
+         *         "required": [
+         *           "total"
+         *         ],
+         *         "type": "object"
+         *       }
+         *     }
+         */
         ExtractRequest: {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
             action: "extract";
+            /** @description What data to extract from the page. */
             instruction?: string;
             metadata?: components["schemas"]["RuntimeInvocationMetadata"];
+            /** @description Model to use for this invocation. Pass a managed model string or an object that references credentials. */
             model?: string | components["schemas"]["AiModelSelection"];
+            /** @description JSON Schema object that constrains the extracted output. */
             outputSchema?: {
                 [key: string]: unknown;
             };
+            /** @description Optional CSS or XPath selector to narrow extraction. */
             selector?: string;
             target?: components["schemas"]["RuntimeTargetSelector"];
+            /** @description Sampling temperature for model-backed invocation work. */
             temperature?: number;
+            /** @description Maximum server-side runtime for this invocation, in seconds. */
             timeoutSeconds?: number;
         };
         /** @description A durable BCTRL file, distinguished by `source`, `runId`, and `runtimeId`: a durable File (`source: "upload"`, no `runId`/`runtimeId`); and a produced runtime/run file (`source: "runtime"`, `runId`/`runtimeId` set when known). */
@@ -2242,14 +2316,44 @@ export interface components {
             requestFields?: string[];
             responseFields?: string[];
         };
+        HelpBodyDiscriminator: {
+            property: string;
+            variants: components["schemas"]["HelpBodyVariant"][];
+        };
+        HelpBodyInput: {
+            description?: string;
+            discriminator?: components["schemas"]["HelpBodyDiscriminator"];
+            fields?: components["schemas"]["HelpField"][];
+            schema?: string;
+            schemaResource?: string;
+        };
+        HelpBodyVariant: {
+            example?: components["schemas"]["JsonObject"];
+            required?: string[];
+            schema?: string;
+            schemaResource?: string;
+            summary?: string;
+            value: string;
+        };
         HelpCliCommand: {
             command: string;
             flags?: components["schemas"]["HelpFlag"][];
             usage: string;
         };
+        HelpDocLink: {
+            description?: string;
+            /** Format: uri */
+            llmsUrl?: string;
+            /** Format: uri */
+            markdownUrl?: string;
+            mcpResource?: string;
+            title: string;
+            /** Format: uri */
+            url: string;
+        };
         HelpExample: {
             /** @enum {string} */
-            audience?: "api" | "sdk" | "cli";
+            audience?: "api" | "sdk" | "cli" | "mcp";
             code?: string;
             command?: string;
             language?: string;
@@ -2268,12 +2372,23 @@ export interface components {
             name: string;
             value?: string;
         };
+        HelpInputs: {
+            body?: components["schemas"]["HelpBodyInput"];
+            headers?: components["schemas"]["HelpField"][];
+            path?: components["schemas"]["HelpField"][];
+            query?: components["schemas"]["HelpField"][];
+        };
         HelpIo: {
             fields: components["schemas"]["HelpField"][];
         };
+        HelpMcpTool: {
+            operationResource?: string;
+            schemaResources?: string[];
+            toolName: string;
+        };
         HelpNextStep: {
             /** @enum {string} */
-            audience?: "api" | "sdk" | "cli";
+            audience?: "api" | "sdk" | "cli" | "mcp";
             command?: string;
             /** @enum {string} */
             method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
@@ -2283,7 +2398,8 @@ export interface components {
         };
         HelpOverviewResponse: {
             /** @enum {string} */
-            audience?: "api" | "sdk" | "cli";
+            audience?: "api" | "sdk" | "cli" | "mcp";
+            docs?: components["schemas"]["HelpDocLink"][];
             examples?: components["schemas"]["HelpExample"][];
             next?: components["schemas"]["HelpNextStep"][];
             summary: string;
@@ -2294,11 +2410,6 @@ export interface components {
              */
             type: "overview";
         };
-        HelpRequest: {
-            /** @enum {string} */
-            audience?: "api" | "sdk" | "cli";
-            topic?: string;
-        };
         HelpResponse: components["schemas"]["HelpOverviewResponse"] | components["schemas"]["HelpTopicResponse"];
         HelpSdkMethod: {
             language: string;
@@ -2307,7 +2418,7 @@ export interface components {
         };
         HelpTopic: {
             aliases?: string[];
-            audiences: ("api" | "sdk" | "cli")[];
+            audiences: ("api" | "sdk" | "cli" | "mcp")[];
             /** @enum {string} */
             method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
             operationId?: string;
@@ -2320,10 +2431,12 @@ export interface components {
             aliases?: string[];
             api?: components["schemas"]["HelpApiOperation"];
             /** @enum {string} */
-            audience?: "api" | "sdk" | "cli";
+            audience?: "api" | "sdk" | "cli" | "mcp";
             cli?: components["schemas"]["HelpCliCommand"];
+            docs?: components["schemas"]["HelpDocLink"][];
             examples?: components["schemas"]["HelpExample"][];
-            input?: components["schemas"]["HelpIo"];
+            inputs?: components["schemas"]["HelpInputs"];
+            mcp?: components["schemas"]["HelpMcpTool"];
             next?: components["schemas"]["HelpNextStep"][];
             output?: components["schemas"]["HelpIo"];
             sdk?: components["schemas"]["HelpSdkMethod"][];
@@ -2619,6 +2732,7 @@ export interface components {
             /** Format: uuid */
             id: string;
             name: string | null;
+            subaccountId: string | null;
             /** @enum {string} */
             type: "email" | "sms" | "whatsapp";
             updatedAt: string;
@@ -2645,18 +2759,30 @@ export interface components {
             name?: string | null;
             value?: string;
         };
+        /**
+         * @description Use observe to inspect the current page before acting. Requires instruction and returns candidate actions or page state.
+         * @example {
+         *       "action": "observe",
+         *       "instruction": "Find the primary call-to-action on the page."
+         *     }
+         */
         ObserveRequest: {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
             action: "observe";
+            /** @description What to inspect or find on the current page. */
             instruction: string;
             metadata?: components["schemas"]["RuntimeInvocationMetadata"];
+            /** @description Model to use for this invocation. Pass a managed model string or an object that references credentials. */
             model?: string | components["schemas"]["AiModelSelection"];
+            /** @description Optional CSS or XPath selector to narrow observation. */
             selector?: string;
             target?: components["schemas"]["RuntimeTargetSelector"];
+            /** @description Sampling temperature for model-backed invocation work. */
             temperature?: number;
+            /** @description Maximum server-side runtime for this invocation, in seconds. */
             timeoutSeconds?: number;
         };
         OpenRouterChatCompletionParams: {
@@ -3307,6 +3433,7 @@ export interface components {
             type?: "browser_page";
             uri?: string;
         };
+        /** @description Browser target for this invocation: 'active' uses the active page, 'new' opens a new page, or pass { id } from runtimes.targets.list. */
         RuntimeTargetSelector: ("active" | "new") | {
             id: string;
         };
@@ -3340,6 +3467,13 @@ export interface components {
             proxyBytes: number | null;
             runtimeSeconds: number | null;
         };
+        /**
+         * @description Use solveCaptcha when the active page or a named target contains a CAPTCHA challenge to solve.
+         * @example {
+         *       "action": "solveCaptcha",
+         *       "target": "active"
+         *     }
+         */
         SolveCaptchaRequest: {
             /**
              * @description discriminator enum property added by openapi-typescript
@@ -3348,6 +3482,7 @@ export interface components {
             action: "solveCaptcha";
             metadata?: components["schemas"]["RuntimeInvocationMetadata"];
             target?: components["schemas"]["RuntimeCaptchaTargetSelector"];
+            /** @description Maximum server-side runtime for this invocation, in seconds. */
             timeoutSeconds?: number;
         };
         Space: {
@@ -3403,35 +3538,59 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
+        /**
+         * @description Use stagehandAgent for multi-step Stagehand tasks where DOM/action semantics matter. Requires instruction; provide either toolsetId or inline tools/toolIds, not both.
+         * @example {
+         *       "action": "stagehandAgent",
+         *       "instruction": "Download every invoice from the last quarter.",
+         *       "maxSteps": 30
+         *     }
+         */
         StagehandAgentRequest: {
             /**
              * @description discriminator enum property added by openapi-typescript
              * @enum {string}
              */
             action: "stagehandAgent";
+            /** @description Optional Stagehand execution model override for this invocation. */
             executionModel?: string | components["schemas"]["AiModelSelection"];
+            /** @description Files to stage into the runtime workspace before the invocation starts. */
             files?: {
                 /** Format: uuid */
                 fileId: string;
                 name?: string;
                 runtimePath?: string;
             }[];
+            /** @description Show a visible cursor highlight while the Stagehand agent acts. */
             highlightCursor?: boolean;
+            /** @description Multi-step task for the Stagehand agent to complete. */
             instruction: string;
+            /** @description Maximum Stagehand agent steps to run. */
             maxSteps?: number;
             metadata?: components["schemas"]["RuntimeInvocationMetadata"];
+            /** @description Model to use for this invocation. Pass a managed model string or an object that references credentials. */
             model?: string | components["schemas"]["AiModelSelection"];
+            /** @description JSON Schema object that constrains structured output from extract or agent actions. */
             outputSchema?: {
                 [key: string]: unknown;
             };
+            /** @description Additional system instructions for the Stagehand agent. */
             systemPrompt?: string;
             target?: components["schemas"]["RuntimeTargetSelector"];
+            /** @description Sampling temperature for model-backed invocation work. */
             temperature?: number;
+            /** @description Maximum server-side runtime for this invocation, in seconds. */
             timeoutSeconds?: number;
+            /** @description Ad-hoc custom tool IDs to expose to the agent. Mutually exclusive with toolsetId. */
             toolIds?: string[];
+            /** @description Built-in managed tool groups to expose to the agent. Mutually exclusive with toolsetId. */
             tools?: ("files" | "vault" | "captcha" | "human_action")[];
-            /** Format: uuid */
+            /**
+             * Format: uuid
+             * @description Persisted toolset to expose to the agent. Mutually exclusive with tools and toolIds.
+             */
             toolsetId?: string;
+            /** @description Template variables available to the Stagehand agent prompt. */
             variables?: {
                 [key: string]: (string | number | boolean) | components["schemas"]["StagehandVariableObject"];
             };
@@ -4850,7 +5009,10 @@ export interface operations {
     "auth.whoami": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -6188,7 +6350,7 @@ export interface operations {
         parameters: {
             query?: {
                 topic?: string;
-                audience?: "api" | "sdk" | "cli";
+                audience?: "api" | "sdk" | "cli" | "mcp";
             };
             header?: never;
             path?: never;
@@ -6256,7 +6418,10 @@ export interface operations {
                 type?: "email" | "sms" | "whatsapp";
                 enabled?: boolean;
             };
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -6317,7 +6482,10 @@ export interface operations {
     "notification-recipients.create": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path?: never;
             cookie?: never;
         };
@@ -6432,7 +6600,10 @@ export interface operations {
     "notification-recipients.delete": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 recipientId: string;
             };
@@ -6529,7 +6700,10 @@ export interface operations {
     "notification-recipients.update": {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
             path: {
                 recipientId: string;
             };
@@ -9243,9 +9417,7 @@ export interface operations {
     };
     "runtimes.delete": {
         parameters: {
-            query?: {
-                force?: boolean;
-            };
+            query?: never;
             header?: {
                 /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
                 "BCTRL-Subaccount-Id"?: string;
@@ -12098,7 +12270,6 @@ export interface operations {
             query?: {
                 cursor?: string;
                 limit?: number;
-                subaccountId?: string;
             };
             header?: {
                 /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */

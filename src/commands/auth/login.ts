@@ -23,6 +23,7 @@ export type AuthLoginDeviceDeps = {
   startDeviceAuth?: typeof defaultStartDeviceAuth;
   pollDeviceAuth?: typeof defaultPollDeviceAuth;
   now?: () => number;
+  sleep?: (ms: number) => Promise<void>;
 };
 
 export type AuthLoginOptions = {
@@ -31,6 +32,7 @@ export type AuthLoginOptions = {
   withToken?: boolean;
   tokenFile?: string;
   url?: boolean;
+  wait?: boolean;
   validateToken?: typeof validateAuthToken;
   env?: NodeJS.ProcessEnv;
   // Injection seam for tests: overrides device-auth API calls and the clock.
@@ -58,21 +60,37 @@ export function createAuthLoginCommand(
       'Read an API key from a file instead of using the browser device flow'
     )
     .option('--url', 'Start a browser authorization, print the URL, and exit')
-    .action(async (options: { withToken?: boolean; tokenFile?: string; url?: boolean }) => {
-      await run({
-        io: factory.io,
-        config: factory.config,
-        withToken: options.withToken,
-        tokenFile: options.tokenFile,
-        url: options.url,
-      });
-    });
+    .option('--wait', 'Poll until the browser authorization is approved')
+    .action(
+      async (options: {
+        withToken?: boolean;
+        tokenFile?: string;
+        url?: boolean;
+        wait?: boolean;
+      }) => {
+        await run({
+          io: factory.io,
+          config: factory.config,
+          withToken: options.withToken,
+          tokenFile: options.tokenFile,
+          url: options.url,
+          wait: options.wait,
+        });
+      }
+    );
 }
 
 export async function authLoginRun(options: AuthLoginOptions): Promise<void> {
   const config = await options.config();
   if (options.url) {
-    await startPendingBrowserLogin(options, config);
+    const token = await startPendingBrowserLogin(options, config);
+    if (token) {
+      await persistResolvedLogin(options, config, {
+        token,
+        method: 'device',
+        source: 'device',
+      });
+    }
     return;
   }
 
@@ -83,9 +101,9 @@ export async function authLoginRun(options: AuthLoginOptions): Promise<void> {
 async function startPendingBrowserLogin(
   options: AuthLoginOptions,
   config: BctrlConfig
-): Promise<void> {
+): Promise<string | null> {
   if (options.withToken || options.tokenFile) {
-    throw new CliError('Use --url by itself, without --with-token or --token-file.');
+    throw new CliError('Use --url without --with-token or --token-file.');
   }
   const session = await startDeviceLoginSession({
     apiBaseUrl: config.apiBaseUrl,
@@ -98,6 +116,9 @@ async function startPendingBrowserLogin(
     options.deviceLoginDeps?.now
   );
   options.io.writeOut(`${session.verificationUriComplete}\n`);
+  if (!options.wait) return null;
+  options.io.writeErr('Waiting for browser approval...\n');
+  return completePendingDeviceLogin(options, config, { wait: true });
 }
 
 async function persistResolvedLogin(
@@ -132,15 +153,19 @@ async function persistResolvedLogin(
     );
   }
   options.io.writeErr(`Logged in to ${config.apiBaseUrl}\n`);
-  options.io.writeErr(`Credentials saved to ${saved.path} (store: ${saved.backend})\n`);
+  options.io.writeErr(
+    `Credentials saved to ${saved.path} (store: ${saved.backend})\n`
+  );
   options.io.writeErr(`Scope: ${whoami.scope}\n`);
   options.io.writeErr(`Organization: ${whoami.organizationId}\n`);
   if (whoami.subaccountId) {
     options.io.writeErr(`Subaccount: ${whoami.subaccountId}\n`);
   }
-  options.io.writeErr(`Default space: ${whoami.defaultSpaceId}\n`);
+  options.io.writeErr(`Default space: ${whoami.defaultSpaceId ?? '-'}\n`);
   if (config.activeToken?.source === 'BCTRL_API_KEY') {
-    options.io.writeErr('BCTRL_API_KEY is set and will take precedence over stored credentials.\n');
+    options.io.writeErr(
+      'BCTRL_API_KEY is set and will take precedence over stored credentials.\n'
+    );
   }
 }
 
@@ -176,16 +201,23 @@ async function resolveLogin(
   }
 
   if (config.activeToken?.source === 'BCTRL_API_KEY') {
-    return { token: config.activeToken.token, method: 'api-key', source: 'env' };
+    return {
+      token: config.activeToken.token,
+      method: 'api-key',
+      source: 'env',
+    };
   }
 
-  const token = await completePendingDeviceLogin(options, config);
+  const token = await completePendingDeviceLogin(options, config, {
+    wait: options.wait ?? false,
+  });
   return { token, method: 'device', source: 'device' };
 }
 
 async function completePendingDeviceLogin(
   options: AuthLoginOptions,
-  config: BctrlConfig
+  config: BctrlConfig,
+  polling: { wait: boolean }
 ): Promise<string> {
   const now = options.deviceLoginDeps?.now ?? Date.now;
   const pending = await readPendingDeviceAuth(options.env);
@@ -202,41 +234,49 @@ async function completePendingDeviceLogin(
     );
   }
 
-  if (pendingExpired(pending, now)) {
-    await clearPendingDeviceAuth(options.env);
-    throw new CliError(
-      'The pending browser login expired.\n\n' +
-        'Start a new one with:\n' +
-        '  bctrl auth login --url'
-    );
-  }
-
   const poll = options.deviceLoginDeps?.pollDeviceAuth ?? defaultPollDeviceAuth;
-  const result = await poll(config.apiBaseUrl, pending.deviceCode);
-  switch (result.status) {
-    case 'complete':
-      await clearPendingDeviceAuth(options.env);
-      options.io.writeErr('Approved.\n');
-      return result.token;
-    case 'access_denied':
-      await clearPendingDeviceAuth(options.env);
-      throw new CliError('The pending browser login was denied.');
-    case 'expired_token':
+  const sleep = options.deviceLoginDeps?.sleep ?? defaultSleep;
+
+  for (;;) {
+    if (pendingExpired(pending, now)) {
       await clearPendingDeviceAuth(options.env);
       throw new CliError(
         'The pending browser login expired.\n\n' +
           'Start a new one with:\n' +
           '  bctrl auth login --url'
       );
-    case 'rate_limited':
-    case 'authorization_pending':
-      throw new CliError(
-        'Pending browser login is not approved yet.\n\n' +
-          'Open and approve this URL:\n' +
-          `  ${pending.verificationUriComplete}\n\n` +
-          'Then run:\n' +
-          '  bctrl auth login'
-      );
+    }
+
+    const result = await poll(config.apiBaseUrl, pending.deviceCode);
+    switch (result.status) {
+      case 'complete':
+        await clearPendingDeviceAuth(options.env);
+        options.io.writeErr('Approved.\n');
+        return result.token;
+      case 'access_denied':
+        await clearPendingDeviceAuth(options.env);
+        throw new CliError('The pending browser login was denied.');
+      case 'expired_token':
+        await clearPendingDeviceAuth(options.env);
+        throw new CliError(
+          'The pending browser login expired.\n\n' +
+            'Start a new one with:\n' +
+            '  bctrl auth login --url'
+        );
+      case 'rate_limited':
+      case 'authorization_pending':
+        if (!polling.wait) {
+          throw new CliError(
+            'Pending browser login is not approved yet.\n\n' +
+              'Open and approve this URL:\n' +
+              `  ${pending.verificationUriComplete}\n\n` +
+              'Then run:\n' +
+              '  bctrl auth login'
+          );
+        }
+        await sleep(pending.interval * 1000);
+        break;
+    }
   }
 }
 
@@ -246,4 +286,8 @@ async function readStreamText(stream: NodeJS.ReadableStream): Promise<string> {
     chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(String(chunk)));
   }
   return Buffer.concat(chunks).toString('utf8');
+}
+
+function defaultSleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

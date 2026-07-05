@@ -88,7 +88,6 @@ export function createRuntimeCommand(factory: Factory): Command {
         .description('Delete a runtime and its browser state')
         .argument('<runtimeId>')
         .option('-y, --yes', 'Confirm deletion')
-        .option('--force', 'Stop the runtime first if it is still active')
         .option(
           '--params <json>',
           'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
@@ -98,7 +97,6 @@ export function createRuntimeCommand(factory: Factory): Command {
         runtimeId: string,
         options: {
           yes?: boolean;
-          force?: boolean;
           params?: string;
         } & OutputFlags
       ) => {
@@ -110,7 +108,6 @@ export function createRuntimeCommand(factory: Factory): Command {
           'runtimes.delete',
           await buildOperationInput('runtimes.delete', options, {
             pathParams: { runtimeId },
-            query: { force: options.force === true ? true : undefined },
             output: outputFlags(options),
           })
         );

@@ -10,26 +10,40 @@ npm install -g @bctrl/cli
 
 ## Auth
 
-The CLI authenticates with a BCTRL API key.
+The CLI authenticates with either a browser-approved CLI session or a BCTRL API key.
 
-Use an API key for the current shell:
+For a local terminal, start a browser approval and let the CLI poll until you approve it:
+
+```bash
+bctrl auth login --url --wait
+```
+
+For agents that need to hand the URL to a human, split the flow into two commands:
+
+```bash
+bctrl auth login --url
+# approve the printed URL
+bctrl auth login
+```
+
+Use an API key for CI or a single shell:
 
 ```bash
 export BCTRL_API_KEY="bctrl_..."
 ```
 
-Or save it locally:
-
-```bash
-bctrl auth login
-```
-
-If `BCTRL_API_KEY` is already set, `auth login` saves that key. Otherwise, it prompts you to paste an API key.
+`BCTRL_API_KEY` takes precedence over stored credentials.
 
 Check the active auth:
 
 ```bash
 bctrl auth status
+```
+
+Point contributors at a local or staging stack with `BCTRL_API_URL`:
+
+```bash
+BCTRL_API_URL=http://127.0.0.1:8787/v1 bctrl auth login --url --wait
 ```
 
 ## Browser Runtime Flow

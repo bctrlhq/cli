@@ -22,6 +22,8 @@
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "pnpm run clean && tsc -p tsconfig.json",
+    "generate:cli-reference": "tsx scripts/generate-cli-reference.ts",
+    "check:cli-reference": "tsx scripts/generate-cli-reference.ts --check",
     "dev": "tsx src/bin/bctrl.ts",
     "prepack": "pnpm run build",
     "test": "tsx --test \"tests/**/*.test.ts\"",
