@@ -8,10 +8,10 @@ Publish from a local terminal with the `bctrlhq` npm account:
 
 ```bash
 npm whoami
-npm publish --access public --provenance=false --otp <code>
+npm publish --access public --provenance=false
 ```
 
-Use `--provenance=false` for local publishes. Provenance is only available from supported CI providers.
+Use `--provenance=false` for local publishes. Provenance is only available from supported CI providers. Complete npm's 2FA prompt when it appears.
 
 After npm publish succeeds, tag the exact commit and create a GitHub release:
 
