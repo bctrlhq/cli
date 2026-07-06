@@ -1,4 +1,4 @@
-name: Publish
+name: Release Check
 
 on:
   workflow_dispatch:
@@ -8,12 +8,10 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 jobs:
-  npm:
+  check:
     runs-on: ubuntu-latest
-    environment: npm
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v5
@@ -29,4 +27,4 @@ jobs:
       - run: pnpm run typecheck:tests
       - run: pnpm test
       - run: pnpm run build
-      - run: pnpm publish --access public --provenance --no-git-checks
+      - run: npm pack --dry-run

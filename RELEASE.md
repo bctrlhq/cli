@@ -2,13 +2,26 @@
 
 This package is intended to live at `bctrlhq/cli` and publish `@bctrl/cli`.
 
-## Publish Setup
+## Manual Publish
 
-1. Create the GitHub repository under `bctrlhq`.
-2. Configure npm trusted publishing for package `@bctrl/cli` with this repository and the `npm` environment.
-3. Push a tag like `v0.1.7`.
+Publish from a local terminal with the `bctrlhq` npm account:
 
-The publish workflow uses GitHub OIDC plus npm provenance. Do not add long-lived npm tokens.
+```bash
+npm whoami
+npm publish --access public --provenance=false --otp <code>
+```
+
+Use `--provenance=false` for local publishes. Provenance is only available from supported CI providers.
+
+After npm publish succeeds, tag the exact commit and create a GitHub release:
+
+```bash
+git tag -a v0.1.8 -m "@bctrl/cli v0.1.8"
+git push origin v0.1.8
+gh release create v0.1.8 --title "@bctrl/cli v0.1.8" --notes "Published @bctrl/cli v0.1.8."
+```
+
+The GitHub Actions release workflow is a verification gate only. It does not publish to npm.
 
 ## Contract Sync
 
