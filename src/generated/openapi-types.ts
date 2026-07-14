@@ -3231,6 +3231,11 @@ export interface components {
             type: "browser";
             /** Format: date-time */
             updatedAt: string;
+            /**
+             * Format: uri
+             * @description Run-scoped Selenium WebDriver endpoint. Pass this URL to a Selenium Remote WebDriver client; it stops working when the run ends.
+             */
+            webdriverUrl?: string;
         };
         RuntimeFileCollectRequest: {
             destinationPath?: string;
@@ -3524,6 +3529,11 @@ export interface components {
             started: boolean;
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
+            /**
+             * Format: uri
+             * @description Run-scoped Selenium WebDriver endpoint for this same browser. Selenium, CDP clients, and hosted agents may connect concurrently.
+             */
+            webdriverUrl?: string;
         };
         RuntimeStopResponse: {
             runId: string | null;

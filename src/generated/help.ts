@@ -7570,6 +7570,13 @@ export const CLI_HELP_COMMANDS = {
           type: "datetime",
           required: true,
         },
+        {
+          name: "webdriverUrl",
+          type: "string",
+          required: false,
+          description:
+            "Run-scoped Selenium WebDriver endpoint. Pass this URL to a Selenium Remote WebDriver client; it stops working when the run ends.",
+        },
       ],
     },
     docs: [
@@ -7600,6 +7607,7 @@ export const CLI_HELP_COMMANDS = {
         "status",
         "type",
         "updatedAt",
+        "webdriverUrl",
       ],
     },
     sdk: [
@@ -9519,6 +9527,13 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           values: ["active", "stopped", "failed"],
         },
+        {
+          name: "webdriverUrl",
+          type: "string",
+          required: false,
+          description:
+            "Run-scoped Selenium WebDriver endpoint for this same browser. Selenium, CDP clients, and hosted agents may connect concurrently.",
+        },
       ],
     },
     docs: [
@@ -9542,6 +9557,7 @@ export const CLI_HELP_COMMANDS = {
         "runtimeId",
         "started",
         "status",
+        "webdriverUrl",
       ],
     },
     sdk: [
@@ -10293,6 +10309,13 @@ export const CLI_HELP_COMMANDS = {
           type: "datetime",
           required: true,
         },
+        {
+          name: "webdriverUrl",
+          type: "string",
+          required: false,
+          description:
+            "Run-scoped Selenium WebDriver endpoint. Pass this URL to a Selenium Remote WebDriver client; it stops working when the run ends.",
+        },
       ],
     },
     docs: [
@@ -10332,6 +10355,7 @@ export const CLI_HELP_COMMANDS = {
         "status",
         "type",
         "updatedAt",
+        "webdriverUrl",
       ],
     },
     sdk: [
