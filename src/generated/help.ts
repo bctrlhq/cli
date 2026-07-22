@@ -3700,9 +3700,15 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "provisioning | active | expired | renewal_failed",
+          type: "provisioning | provisioning_failed | active | expired | renewal_failed",
           required: false,
-          values: ["provisioning", "active", "expired", "renewal_failed"],
+          values: [
+            "provisioning",
+            "provisioning_failed",
+            "active",
+            "expired",
+            "renewal_failed",
+          ],
         },
       ],
     },
@@ -4179,9 +4185,15 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "provisioning | active | expired | renewal_failed",
+          type: "provisioning | provisioning_failed | active | expired | renewal_failed",
           required: false,
-          values: ["provisioning", "active", "expired", "renewal_failed"],
+          values: [
+            "provisioning",
+            "provisioning_failed",
+            "active",
+            "expired",
+            "renewal_failed",
+          ],
         },
       ],
     },
@@ -5077,9 +5089,15 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "provisioning | active | expired | renewal_failed",
+          type: "provisioning | provisioning_failed | active | expired | renewal_failed",
           required: false,
-          values: ["provisioning", "active", "expired", "renewal_failed"],
+          values: [
+            "provisioning",
+            "provisioning_failed",
+            "active",
+            "expired",
+            "renewal_failed",
+          ],
         },
       ],
     },
@@ -7533,6 +7551,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "latestRun",
+          type: "object | null",
+          required: false,
+          description:
+            "Most recent run of this runtime (the active one when a run is open). Null when the runtime has never run.",
+        },
+        {
           name: "metadata",
           type: "object | null",
           required: false,
@@ -7600,6 +7625,7 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "id",
         "lastActivityAt",
+        "latestRun",
         "metadata",
         "name",
         "protocol",
@@ -10272,6 +10298,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "latestRun",
+          type: "object | null",
+          required: false,
+          description:
+            "Most recent run of this runtime (the active one when a run is open). Null when the runtime has never run.",
+        },
+        {
           name: "metadata",
           type: "object | null",
           required: false,
@@ -10348,6 +10381,7 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "id",
         "lastActivityAt",
+        "latestRun",
         "metadata",
         "name",
         "protocol",
@@ -14534,6 +14568,350 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl help --topic vault.secrets.value",
+      },
+    ],
+  },
+  "views.create": {
+    type: "topic",
+    topic: "views.create",
+    aliases: ["views create"],
+    title: "Create a view URL",
+    summary:
+      "Mint a scoped, component-gated view link. The response contains the bearer token once; keep it private.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+      body: {
+        schema: "ViewCreateRequest",
+        schemaResource: "schemas://ViewCreateRequest",
+        fields: [
+          {
+            name: "scope",
+            type: "object",
+            required: true,
+          },
+          {
+            name: "components",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "expiresInSeconds",
+            type: "integer",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "components",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+        },
+        {
+          name: "expiresAt",
+          type: "datetime",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Public view resource id. It is safe to expose in URLs and logs.",
+        },
+        {
+          name: "scope",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "token",
+          type: "string",
+          required: true,
+          description:
+            "Short-lived bearer token returned once when a view is created.",
+        },
+        {
+          name: "url",
+          type: "string",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/views",
+      operationId: "views.create",
+      requestFields: ["scope", "components", "expiresInSeconds"],
+      responseFields: [
+        "components",
+        "createdAt",
+        "expiresAt",
+        "id",
+        "scope",
+        "token",
+        "url",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "views.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic views.create",
+      usage: "bctrl help --topic views.create",
+    },
+    mcp: {
+      toolName: "bctrl_views_create",
+      operationResource: "operations://views.create",
+      schemaResources: ["schemas://ViewCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic views.create",
+      },
+    ],
+  },
+  "views.delete": {
+    type: "topic",
+    topic: "views.delete",
+    aliases: ["views delete"],
+    title: "Revoke a view",
+    summary: "Revoke a view and immediately invalidate its bearer token.",
+    inputs: {
+      path: [
+        {
+          name: "viewId",
+          type: "string",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "deleted",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Public view resource id. It is safe to expose in URLs and logs.",
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/views/{viewId}",
+      operationId: "views.delete",
+      responseFields: ["deleted", "id"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "views.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic views.delete",
+      usage: "bctrl help --topic views.delete",
+    },
+    mcp: {
+      toolName: "bctrl_views_delete",
+      operationResource: "operations://views.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic views.delete",
+      },
+    ],
+  },
+  "views.get": {
+    type: "topic",
+    topic: "views.get",
+    aliases: ["views get"],
+    title: "Get a view",
+    summary:
+      "Read a view resource. Bearer view tokens may read only their own resource.",
+    inputs: {
+      path: [
+        {
+          name: "viewId",
+          type: "string",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "components",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+        },
+        {
+          name: "expiresAt",
+          type: "datetime",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Public view resource id. It is safe to expose in URLs and logs.",
+        },
+        {
+          name: "scope",
+          type: "object",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/views/{viewId}",
+      operationId: "views.get",
+      responseFields: ["components", "createdAt", "expiresAt", "id", "scope"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "views.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic views.get",
+      usage: "bctrl help --topic views.get",
+    },
+    mcp: {
+      toolName: "bctrl_views_get",
+      operationResource: "operations://views.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic views.get",
+      },
+    ],
+  },
+  "views.list": {
+    type: "topic",
+    topic: "views.list",
+    aliases: ["views list"],
+    title: "List active views",
+    summary: "List active view resources visible to the current API-key actor.",
+    inputs: {
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/views",
+      operationId: "views.list",
+      responseFields: ["data", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "views.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic views.list",
+      usage: "bctrl help --topic views.list",
+    },
+    mcp: {
+      toolName: "bctrl_views_list",
+      operationResource: "operations://views.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic views.list",
       },
     ],
   },

@@ -109,6 +109,10 @@ export const CLI_OPENAPI_ROUTES = {
   "vault.secrets.update": { method: "patch", path: "/vault/secrets/{key}" },
   "vault.secrets.upsert": { method: "put", path: "/vault/secrets/{key}" },
   "vault.secrets.value": { method: "get", path: "/vault/secrets/{key}/value" },
+  "views.create": { method: "post", path: "/views" },
+  "views.delete": { method: "delete", path: "/views/{viewId}" },
+  "views.get": { method: "get", path: "/views/{viewId}" },
+  "views.list": { method: "get", path: "/views" },
 } as const;
 
 export type CliOpenApiRouteId = keyof typeof CLI_OPENAPI_ROUTES;
