@@ -1730,8 +1730,8 @@ export interface paths {
         get: operations["views.list"];
         put?: never;
         /**
-         * Create a view URL
-         * @description Mint a scoped, component-gated view link. The response contains the bearer token once; keep it private.
+         * Create a hosted or embedded view
+         * @description Mint a scoped, component-gated hosted page or origin-restricted iframe composition. The response contains the bearer token once; keep it private.
          */
         post: operations["views.create"];
         delete?: never;
@@ -4415,6 +4415,7 @@ export interface components {
             expiresAt: string;
             /** @description Public view resource id. It is safe to expose in URLs and logs. */
             id: string;
+            presentation: components["schemas"]["ViewPresentationOutput"];
             scope: components["schemas"]["ViewScope"];
         };
         ViewBootstrap: {
@@ -4426,6 +4427,7 @@ export interface components {
             expiresAt: string;
             /** @description Public view resource id. It is safe to expose in URLs and logs. */
             id: string;
+            presentation: components["schemas"]["ViewPresentationOutput"];
             scope: components["schemas"]["ViewScope"];
             spaceName: string;
         };
@@ -4464,6 +4466,7 @@ export interface components {
         ViewCreateRequest: {
             components?: components["schemas"]["ViewComponents"];
             expiresInSeconds?: number;
+            presentation?: components["schemas"]["ViewPresentation"];
             scope: components["schemas"]["ViewScope"];
         };
         ViewCreateResponse: {
@@ -4475,6 +4478,7 @@ export interface components {
             expiresAt: string;
             /** @description Public view resource id. It is safe to expose in URLs and logs. */
             id: string;
+            presentation: components["schemas"]["ViewPresentationOutput"];
             scope: components["schemas"]["ViewScope"];
             /** @description Short-lived bearer token returned once when a view is created. */
             token: string;
@@ -4486,6 +4490,22 @@ export interface components {
             deleted: true;
             /** @description Public view resource id. It is safe to expose in URLs and logs. */
             id: string;
+        };
+        ViewPresentation: {
+            /** @constant */
+            mode: "hosted";
+        } | {
+            allowedOrigins: string[];
+            /** @constant */
+            mode: "embedded";
+        };
+        ViewPresentationOutput: {
+            /** @constant */
+            mode: "hosted";
+        } | {
+            allowedOrigins: unknown[];
+            /** @constant */
+            mode: "embedded";
         };
         ViewScope: {
             runtimeIds?: string[];

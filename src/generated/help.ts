@@ -15178,9 +15178,9 @@ export const CLI_HELP_COMMANDS = {
     type: "topic",
     topic: "views.create",
     aliases: ["views create"],
-    title: "Create a view URL",
+    title: "Create a hosted or embedded view",
     summary:
-      "Mint a scoped, component-gated view link. The response contains the bearer token once; keep it private.",
+      "Mint a scoped, component-gated hosted page or origin-restricted iframe composition. The response contains the bearer token once; keep it private.",
     inputs: {
       headers: [
         {
@@ -15202,6 +15202,11 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "components",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "presentation",
             type: "object",
             required: false,
           },
@@ -15243,6 +15248,11 @@ export const CLI_HELP_COMMANDS = {
             "Public view resource id. It is safe to expose in URLs and logs.",
         },
         {
+          name: "presentation",
+          type: "object",
+          required: true,
+        },
+        {
           name: "scope",
           type: "object",
           required: true,
@@ -15265,13 +15275,19 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/views",
       operationId: "views.create",
-      requestFields: ["scope", "components", "expiresInSeconds"],
+      requestFields: [
+        "scope",
+        "components",
+        "presentation",
+        "expiresInSeconds",
+      ],
       responseFields: [
         "branding",
         "components",
         "createdAt",
         "expiresAt",
         "id",
+        "presentation",
         "scope",
         "token",
         "url",
@@ -15424,6 +15440,11 @@ export const CLI_HELP_COMMANDS = {
             "Public view resource id. It is safe to expose in URLs and logs.",
         },
         {
+          name: "presentation",
+          type: "object",
+          required: true,
+        },
+        {
           name: "scope",
           type: "object",
           required: true,
@@ -15445,6 +15466,7 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "expiresAt",
         "id",
+        "presentation",
         "scope",
         "spaceName",
       ],
