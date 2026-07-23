@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import type { Factory } from './factory.js';
 import { createAiCommand } from './commands/ai/index.js';
+import { createAccountCommand } from './commands/account/index.js';
 import { createApiKeyCommand } from './commands/api-key/index.js';
 import { createAuthCommand } from './commands/auth/index.js';
 import { createBrowserExtensionCommand } from './commands/browser-extension/index.js';
@@ -17,7 +18,9 @@ import { createToolCallCommand } from './commands/tool-call/index.js';
 import { createToolsetCommand } from './commands/toolset/index.js';
 import { createUsageCommand } from './commands/usage/index.js';
 import { createVaultCommand } from './commands/vault/index.js';
+import { createViewsCommand } from './commands/view/index.js';
 import { createVersionCommand } from './commands/version/version.js';
+import { createWebhookCommand } from './commands/webhook/index.js';
 
 export function createRootCommand(factory: Factory): Command {
   const command = new Command();
@@ -31,6 +34,7 @@ export function createRootCommand(factory: Factory): Command {
     .option('--no-color', 'Disable color output');
 
   command.addCommand(createVersionCommand(factory));
+  command.addCommand(createAccountCommand(factory));
   command.addCommand(createAuthCommand(factory));
   command.addCommand(createAiCommand(factory));
   command.addCommand(createApiKeyCommand(factory));
@@ -48,6 +52,8 @@ export function createRootCommand(factory: Factory): Command {
   command.addCommand(createToolCallCommand(factory));
   command.addCommand(createUsageCommand(factory));
   command.addCommand(createVaultCommand(factory));
+  command.addCommand(createViewsCommand(factory));
+  command.addCommand(createWebhookCommand(factory));
 
   return command;
 }

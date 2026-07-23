@@ -3,13 +3,11 @@ import type { Factory } from '../../factory.js';
 import type { CliOperationJsonBody, CliOperationQuery } from '../../openapi.js';
 import { CliError } from '../../runtime/errors.js';
 import { writeBinary } from '../shared/io.js';
-import { parsePositiveInteger } from '../shared/options.js';
 import { addOutputFlags, type OutputFlags } from '../shared/output.js';
 import {
   actingSubaccountOption,
   addPaginationFlags,
   buildOperationInput,
-  createOperationJsonBodyCommand,
   createOperationListCommand,
   createOperationViewCommand,
   downloadOperation,
@@ -55,8 +53,6 @@ export function createRunCommand(factory: Factory): Command {
   command.addCommand(createRunFilesCommand(factory));
   command.addCommand(createRunInvocationsCommand(factory));
   command.addCommand(createRunInvocationCommand(factory));
-  command.addCommand(createRunViewerCommand(factory, 'live', 'Create a live viewer URL'));
-  command.addCommand(createRunViewerCommand(factory, 'recording', 'Create a recording viewer URL'));
   return command;
 }
 
@@ -226,15 +222,19 @@ function createRunFilesListCommand(factory: Factory): Command {
       runId: string,
       options: { type?: string; limit?: number; cursor?: string; params?: string } & OutputFlags
     ) => {
-      await requestOperationAndPrint(factory, 'runs.files.list', await buildOperationInput('runs.files.list', options, {
-        pathParams: { runId },
-        query: {
-          type: options.type,
-          limit: options.limit,
-          cursor: options.cursor,
-        } as CliOperationQuery<'runs.files.list'>,
-        output: outputFlags(options),
-      }));
+      await requestOperationAndPrint(
+        factory,
+        'files.list',
+        await buildOperationInput('files.list', options, {
+          query: {
+            runId,
+            type: options.type,
+            limit: options.limit,
+            cursor: options.cursor,
+          } as CliOperationQuery<'files.list'>,
+          output: outputFlags(options),
+        })
+      );
     }
   );
 }
@@ -333,34 +333,6 @@ function createRunInvocationCommand(factory: Factory): Command {
     )
   );
   return command;
-}
-
-function createRunViewerCommand(
-  factory: Factory,
-  name: 'live' | 'recording',
-  description: string
-): Command {
-  return createOperationJsonBodyCommand(factory, {
-    operationId: name === 'live' ? 'runs.live' : 'runs.recording',
-    name,
-    description,
-    argNames: ['runId'],
-    configure: (cmd) =>
-      cmd
-        .option(
-          '--expires-in-seconds <seconds>',
-          'Viewer expiration in seconds',
-          parsePositiveInteger
-        )
-        .option('--control <none|input>', 'Live viewer control mode'),
-    body: async (_args, options) => {
-      return {
-        expiresInSeconds:
-          typeof options.expiresInSeconds === 'number' ? options.expiresInSeconds : undefined,
-        control: name === 'live' ? options.control : undefined,
-      } as CliOperationJsonBody<'runs.live'> & CliOperationJsonBody<'runs.recording'>;
-    },
-  });
 }
 
 function createSseCommand(

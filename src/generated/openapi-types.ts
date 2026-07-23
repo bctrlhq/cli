@@ -4,6 +4,30 @@
  */
 
 export interface paths {
+    "/v1/account": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get organization settings
+         * @description Get organization settings and their fully resolved values.
+         */
+        get: operations["account.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update organization settings
+         * @description Update organization settings using JSON Merge Patch semantics. Pass dryRun=true to validate and resolve without persisting.
+         */
+        patch: operations["account.update"];
+        trace?: never;
+    };
     "/v1/ai/credentials": {
         parameters: {
             query?: never;
@@ -257,7 +281,7 @@ export interface paths {
         };
         /**
          * List files
-         * @description List durable files in a space using the canonical file resource. Use source, type, runId, runtimeId, path, prefix, and createdAfter filters to find uploaded inputs or produced run/runtime outputs. Pass include=folders with a prefix for an S3-style directory view: direct files plus rolled-up immediate subfolders.
+         * @description List the canonical durable File resource. Runtime file endpoints operate on a live machine disk: collect turns a machine file into a durable File, while stage performs the reverse. Use source, type, runId, runtimeId, path, prefix, and createdAfter filters here.
          */
         get: operations["files.list"];
         put?: never;
@@ -332,6 +356,26 @@ export interface paths {
          * @description Return global API, SDK, and CLI help, or help for one named topic. Use query parameters so help is easy to call from browsers, CLI tools, SDKs, and plain HTTP clients.
          */
         get: operations["help"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/invocations/{invocationId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get an invocation
+         * @description Get one durable invocation directly by id. Use this when an event or activity item gives you an invocation id without its parent run.
+         */
+        get: operations["invocations.get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -708,26 +752,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/runs/{runId}/files": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List run files
-         * @description List files produced by a run. This is the file-based view over run outputs.
-         */
-        get: operations["runs.files.list"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/runs/{runId}/files/export": {
         parameters: {
             query?: never;
@@ -788,46 +812,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/runs/{runId}/live": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create live viewer URL
-         * @description Create a live viewer URL for an active browser run.
-         */
-        post: operations["runs.live"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/runs/{runId}/recording": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Create recording viewer URL
-         * @description Create a recording playback viewer URL for a browser run.
-         */
-        post: operations["runs.recording"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/runtimes": {
         parameters: {
             query?: never;
@@ -842,8 +826,8 @@ export interface paths {
         get: operations["runtimes.list"];
         put?: never;
         /**
-         * Create a runtime definition
-         * @description Create a stopped browser runtime and return the simplified runtime detail resource. Omit spaceId to use the caller's default space.
+         * Create a runtime or session
+         * @description Create a browser runtime. Ephemeral runtimes (config.profile omitted or false) are sessions: by default they start in the same call and the response includes a `connection` with the run-scoped connect endpoint; pass start:false to create the session without booting it yet (e.g. to mint a share view first), then POST /start. Sessions archive themselves when their run finishes and never restart. Profile-backed runtimes (config.profile true) are durable machines created stopped by default; pass start:true for one-call create-and-start. Omit spaceId to use the caller's default space.
          */
         post: operations["runtimes.create"];
         delete?: never;
@@ -889,7 +873,7 @@ export interface paths {
         };
         /**
          * List collected runtime files
-         * @description List durable files that have been collected out of a runtime workspace and stored by BCTRL. This is the reviewable output surface for files produced by a runtime/run; files that were only staged or pushed into the live runtime but not collected back are not listed here.
+         * @description There is one durable File resource. This route lists durable Files collected out of a runtime workspace; files that only exist on the live machine are not durable or listed until collected.
          */
         get: operations["runtimes.files.list"];
         put?: never;
@@ -978,6 +962,86 @@ export interface paths {
          * @description Request human action for a live runtime. The request is stored durably and all enabled organization notification receivers are notified.
          */
         post: operations["runtimes.human-actions.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/runtimes/{runtimeId}/human-actions/{humanActionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a human action
+         * @description Get one human action by id under its runtime. Unlike the current-action route, this always addresses the same request.
+         */
+        get: operations["human-actions.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/runtimes/{runtimeId}/human-actions/{humanActionId}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel a human action
+         * @description Cancel the addressed human action if it is still pending.
+         */
+        post: operations["human-actions.cancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/runtimes/{runtimeId}/human-actions/{humanActionId}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Complete a human action
+         * @description Mark the addressed human action completed after a user performed the requested work. Id-addressed completion never races a newer request on the same runtime.
+         */
+        post: operations["human-actions.complete"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/runtimes/{runtimeId}/human-actions/{humanActionId}/wait": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Wait for a human action
+         * @description Wait until the addressed human action is completed, cancelled, or expired. When timeoutSeconds is provided, return timeout if that shorter wait window is reached first.
+         */
+        post: operations["human-actions.wait"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1115,7 +1179,7 @@ export interface paths {
         put?: never;
         /**
          * Start a runtime
-         * @description Start a runtime and open its active run.
+         * @description Start a profile-backed runtime and open its active run. Ephemeral runtimes cannot be restarted after their session ends — create a new runtime instead.
          */
         post: operations["runtimes.start"];
         delete?: never;
@@ -1700,10 +1764,152 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/webhooks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List webhooks
+         * @description List webhook endpoints visible to the current organization or subaccount scope.
+         */
+        get: operations["webhooks.list"];
+        put?: never;
+        /**
+         * Create a webhook
+         * @description Create a signed webhook endpoint. The signing secret is returned once; store it securely and verify every delivery signature.
+         */
+        post: operations["webhooks.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/webhooks/{webhookId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a webhook
+         * @description Get one webhook endpoint without exposing its signing secret.
+         */
+        get: operations["webhooks.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a webhook
+         * @description Delete a webhook endpoint. Historical delivery records remain in the audit ledger.
+         */
+        delete: operations["webhooks.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a webhook
+         * @description Update a webhook destination, event subscriptions, label, or enabled state.
+         */
+        patch: operations["webhooks.update"];
+        trace?: never;
+    };
+    "/v1/webhooks/{webhookId}/deliveries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List webhook deliveries
+         * @description List delivery attempts for one webhook endpoint, including response status and retry state.
+         */
+        get: operations["webhooks.deliveries.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/webhooks/{webhookId}/deliveries/{deliveryId}/redeliver": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Redeliver a webhook event
+         * @description Reset one delivery and queue it for another signed delivery attempt.
+         */
+        post: operations["webhooks.deliveries.redeliver"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/webhooks/{webhookId}/rotate-secret": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Rotate a webhook secret
+         * @description Replace a webhook signing secret immediately. The new secret is returned once.
+         */
+        post: operations["webhooks.rotate-secret"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/webhooks/{webhookId}/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Test a webhook
+         * @description Queue a signed test event for a webhook endpoint and return its delivery record.
+         */
+        post: operations["webhooks.test"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        Account: {
+            branding: components["schemas"]["BrandingSettings"];
+            id: string;
+            name: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AccountPatchRequest: {
+            branding?: components["schemas"]["BrandingPatch"] | null;
+        };
         AccountUsage: {
             blockedReasons: "insufficientCredits"[];
             /** Format: date-time */
@@ -2013,6 +2219,36 @@ export interface components {
             /** @enum {string} */
             scope: "organization" | "subaccount";
             subaccountId: string | null;
+        };
+        BrandingConfig: {
+            accent?: string;
+            logo?: string;
+            productName?: string;
+            showPoweredBy?: boolean;
+        };
+        BrandingPatch: {
+            accent?: string | null;
+            logo?: string | null;
+            productName?: string | null;
+            showPoweredBy?: boolean | null;
+        };
+        BrandingSettings: {
+            config: components["schemas"]["BrandingConfig"];
+            resolved: components["schemas"]["ResolvedBranding"];
+        };
+        BrandingTokens: {
+            accent: string;
+            accentBorder: string;
+            accentSoft: string;
+            bg: string;
+            borderStrong: string;
+            hairline: string;
+            inset: string;
+            panel: string;
+            surfaceRaised: string;
+            text: string;
+            textFaint: string;
+            textMuted: string;
         };
         BrowserExtension: {
             contentHash?: string;
@@ -3109,6 +3345,12 @@ export interface components {
             url?: string;
             username?: string | null;
         };
+        ResolvedBranding: {
+            logo: string | null;
+            productName: string;
+            showPoweredBy: boolean;
+            tokens: components["schemas"]["BrandingTokens"];
+        };
         Run: {
             counts?: components["schemas"]["RunCounts"];
             createdAt: string;
@@ -3177,11 +3419,6 @@ export interface components {
             code: string;
             message: string;
         };
-        RunFileListResponse: {
-            data: components["schemas"]["File"][];
-            folders?: components["schemas"]["FileFolder"][];
-            nextCursor: string | null;
-        };
         RunInvocationListResponse: {
             data: components["schemas"]["InvocationSummary"][];
             nextCursor: string | null;
@@ -3232,9 +3469,37 @@ export interface components {
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
         };
-        Runtime: {
+        RuntimeCaptchaTargetSelector: "active" | {
+            id: string;
+        };
+        RuntimeCreateConnection: {
+            /**
+             * Format: uri
+             * @description Run-scoped endpoint — attach Playwright/Puppeteer/Stagehand here. Identical to the URL POST /start would return for this run; it stops working when the run ends.
+             */
+            connectUrl: string;
+            /** @enum {string} */
+            protocol: "cdp";
+            /** Format: uuid */
+            runId: string;
+            /** Format: uri */
+            webdriverUrl?: string;
+        };
+        RuntimeCreateRequest: {
+            config?: components["schemas"]["BrowserRuntimeCreateConfig"];
+            metadata?: components["schemas"]["RuntimeMetadata"];
+            name?: string;
+            spaceId?: string | "default";
+            start?: boolean;
+            /** @constant */
+            type?: "browser";
+        };
+        RuntimeCreateResponse: {
             activeRunId: string | null;
+            /** Format: date-time */
+            archivedAt?: string;
             config?: components["schemas"]["BrowserRuntimeConfig"];
+            connection?: components["schemas"]["RuntimeCreateConnection"];
             /** Format: date-time */
             createdAt: string;
             /** Format: uuid */
@@ -3243,6 +3508,7 @@ export interface components {
             lastActivityAt?: string;
             metadata?: components["schemas"]["JsonObject"] | null;
             name: string;
+            needsHumanAction?: boolean;
             /** Format: uuid */
             spaceId: string;
             /** @enum {string} */
@@ -3252,17 +3518,6 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
-        RuntimeCaptchaTargetSelector: "active" | {
-            id: string;
-        };
-        RuntimeCreateRequest: {
-            config?: components["schemas"]["BrowserRuntimeCreateConfig"];
-            metadata?: components["schemas"]["RuntimeMetadata"];
-            name?: string;
-            spaceId?: string | "default";
-            /** @constant */
-            type?: "browser";
-        };
         RuntimeDeleteResponse: {
             /** @constant */
             deleted: true;
@@ -3271,6 +3526,8 @@ export interface components {
         };
         RuntimeDetail: {
             activeRunId: string | null;
+            /** Format: date-time */
+            archivedAt?: string;
             config?: components["schemas"]["BrowserRuntimeConfig"];
             /**
              * Format: uri
@@ -3287,6 +3544,7 @@ export interface components {
             latestRun?: components["schemas"]["RuntimeLatestRun"] | null;
             metadata?: components["schemas"]["JsonObject"] | null;
             name: string;
+            needsHumanAction?: boolean;
             /** @enum {string} */
             protocol?: "cdp";
             /** Format: uuid */
@@ -3621,12 +3879,15 @@ export interface components {
         RuntimeSummary: {
             activeRunId: string | null;
             /** Format: date-time */
+            archivedAt?: string;
+            /** Format: date-time */
             createdAt: string;
             /** Format: uuid */
             id: string;
             /** Format: date-time */
             lastActivityAt?: string;
             name: string;
+            needsHumanAction?: boolean;
             /** Format: uuid */
             spaceId: string;
             /** @enum {string} */
@@ -4146,6 +4407,7 @@ export interface components {
             value: string;
         };
         View: {
+            branding: components["schemas"]["ResolvedBranding"];
             components: components["schemas"]["ViewComponentsOutput"];
             /** Format: date-time */
             createdAt: string;
@@ -4154,6 +4416,18 @@ export interface components {
             /** @description Public view resource id. It is safe to expose in URLs and logs. */
             id: string;
             scope: components["schemas"]["ViewScope"];
+        };
+        ViewBootstrap: {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponentsOutput"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            expiresAt: string;
+            /** @description Public view resource id. It is safe to expose in URLs and logs. */
+            id: string;
+            scope: components["schemas"]["ViewScope"];
+            spaceName: string;
         };
         ViewComponents: {
             activity?: Record<string, never>;
@@ -4193,6 +4467,7 @@ export interface components {
             scope: components["schemas"]["ViewScope"];
         };
         ViewCreateResponse: {
+            branding: components["schemas"]["ResolvedBranding"];
             components: components["schemas"]["ViewComponentsOutput"];
             /** Format: date-time */
             createdAt: string;
@@ -4225,6 +4500,79 @@ export interface components {
         };
         ViewsListResponse: {
             data: components["schemas"]["View"][];
+            nextCursor: string | null;
+        };
+        Webhook: {
+            /** Format: date-time */
+            createdAt: string;
+            enabled: boolean;
+            events: ("run.started" | "run.completed" | "run.failed" | "human_action.requested" | "human_action.completed" | "view.created" | "view.revoked" | "recording.ready")[];
+            /** Format: uuid */
+            id: string;
+            name: string | null;
+            subaccountId: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: uri */
+            url: string;
+        };
+        WebhookCreateRequest: {
+            events: ("run.started" | "run.completed" | "run.failed" | "human_action.requested" | "human_action.completed" | "view.created" | "view.revoked" | "recording.ready")[];
+            name?: string;
+            /** Format: uri */
+            url: string;
+        };
+        WebhookCreateResponse: {
+            /** Format: date-time */
+            createdAt: string;
+            enabled: boolean;
+            events: ("run.started" | "run.completed" | "run.failed" | "human_action.requested" | "human_action.completed" | "view.created" | "view.revoked" | "recording.ready")[];
+            /** Format: uuid */
+            id: string;
+            name: string | null;
+            secret: string;
+            subaccountId: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: uri */
+            url: string;
+        };
+        WebhookDeleteResponse: {
+            /** @constant */
+            deleted: true;
+            /** Format: uuid */
+            id: string;
+        };
+        WebhookDeliveriesListResponse: {
+            data: components["schemas"]["WebhookDelivery"][];
+            nextCursor: string | null;
+        };
+        WebhookDelivery: {
+            attemptCount: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: uuid */
+            eventId: string;
+            eventType: string;
+            /** Format: uuid */
+            id: string;
+            lastError: string | null;
+            nextAttemptAt: string | null;
+            responseStatus: number | null;
+            sentAt: string | null;
+            /** @enum {string} */
+            status: "pending" | "sending" | "sent" | "failed" | "cancelled";
+            /** Format: date-time */
+            updatedAt: string;
+            webhookId: string | null;
+        };
+        WebhookRotateSecretResponse: {
+            /** Format: uuid */
+            id: string;
+            secret: string;
+        };
+        WebhooksListResponse: {
+            data: components["schemas"]["Webhook"][];
             nextCursor: string | null;
         };
         WebhookTool: {
@@ -4277,6 +4625,13 @@ export interface components {
             /** Format: uri */
             url: string;
         };
+        WebhookUpdateRequest: {
+            enabled?: boolean;
+            events?: ("run.started" | "run.completed" | "run.failed" | "human_action.requested" | "human_action.completed" | "view.created" | "view.revoked" | "recording.ready")[];
+            name?: string | null;
+            /** Format: uri */
+            url?: string;
+        };
         WorkflowTool: {
             createdAt: string;
             description: string | null;
@@ -4310,6 +4665,168 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    "account.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "account.update": {
+        parameters: {
+            query?: {
+                dryRun?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AccountPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Account"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "request.invalid",
+                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "reasonClass": "invalid_input"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     "ai.credentials.list": {
         parameters: {
             query?: {
@@ -6712,6 +7229,88 @@ export interface operations {
             };
         };
     };
+    "invocations.get": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                invocationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Invocation"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     "notification-recipients.list": {
         parameters: {
             query?: {
@@ -8713,93 +9312,6 @@ export interface operations {
             };
         };
     };
-    "runs.files.list": {
-        parameters: {
-            query?: {
-                /** @description Filter by one or more file artifact types. Repeat the query parameter for multiple values. */
-                type?: string[];
-                cursor?: string;
-                limit?: number;
-            };
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                runId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RunFileListResponse"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `run.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
     "runs.files.export": {
         parameters: {
             query?: never;
@@ -9142,301 +9654,16 @@ export interface operations {
             };
         };
     };
-    "runs.live": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                runId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RunLiveRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RunLiveResponse"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `run.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The request conflicts with the current resource state. Example code: `run.live_not_active`. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "run.live_not_active",
-                     *       "error": "The request conflicts with the current resource state.",
-                     *       "reasonClass": "conflict"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
-            429: {
-                headers: {
-                    /** @description Seconds to wait before retrying. */
-                    "Retry-After"?: number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
-                     *       "reasonClass": "rate_limited"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description An unexpected server error occurred. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
-                     *       "reasonClass": "server"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description An upstream dependency was unavailable. Retry later. Example code: `viewer.mint_failed`. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "viewer.mint_failed",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
-                     *       "reasonClass": "upstream"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    "runs.recording": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                runId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RunRecordingRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RunRecordingResponse"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `run.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
-            429: {
-                headers: {
-                    /** @description Seconds to wait before retrying. */
-                    "Retry-After"?: number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
-                     *       "reasonClass": "rate_limited"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description An unexpected server error occurred. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "server.error",
-                     *       "error": "An unexpected server error occurred.",
-                     *       "reasonClass": "server"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description An upstream dependency was unavailable. Retry later. Example code: `viewer.mint_failed`. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "viewer.mint_failed",
-                     *       "error": "An upstream dependency was unavailable. Retry later.",
-                     *       "reasonClass": "upstream"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
     "runtimes.list": {
         parameters: {
             query?: {
                 /** @description Filter by a space UUID, or pass `default` to use the caller default space. */
                 spaceId?: string;
+                /** @description Case-insensitive search across runtime name and id. */
+                q?: string;
                 /** @description Filter by one or more runtime statuses. Repeat the query parameter for multiple values. */
                 status?: ("active" | "stopped" | "failed")[];
+                include?: "archived";
                 cursor?: string;
                 limit?: number;
             };
@@ -9523,7 +9750,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Runtime"];
+                    "application/json": components["schemas"]["RuntimeCreateResponse"];
                 };
             };
             /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
@@ -9601,6 +9828,22 @@ export interface operations {
                      *       "code": "space.not_found",
                      *       "error": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "tool.name_conflict",
+                     *       "error": "The request conflicts with the current resource state.",
+                     *       "reasonClass": "conflict"
                      *     }
                      */
                     "application/json": components["schemas"]["ErrorResponse"];
@@ -10684,6 +10927,428 @@ export interface operations {
                      *       "code": "tool.name_conflict",
                      *       "error": "The request conflicts with the current resource state.",
                      *       "reasonClass": "conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "human-actions.get": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                runtimeId: string;
+                humanActionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HumanAction"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "human-actions.cancel": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                runtimeId: string;
+                humanActionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HumanAction"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "tool.name_conflict",
+                     *       "error": "The request conflicts with the current resource state.",
+                     *       "reasonClass": "conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "human-actions.complete": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                runtimeId: string;
+                humanActionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HumanAction"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "tool.name_conflict",
+                     *       "error": "The request conflicts with the current resource state.",
+                     *       "reasonClass": "conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "human-actions.wait": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                runtimeId: string;
+                humanActionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HumanActionWaitRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HumanActionWait"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
                      *     }
                      */
                     "application/json": components["schemas"]["ErrorResponse"];
@@ -16172,7 +16837,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["View"];
+                    "application/json": components["schemas"]["ViewBootstrap"];
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -16255,6 +16920,863 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ViewDeleteResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "webhooks.list": {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+            };
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhooksListResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "webhooks.create": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhookCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookCreateResponse"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "request.invalid",
+                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "reasonClass": "invalid_input"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "webhooks.get": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                webhookId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Webhook"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "webhooks.delete": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                webhookId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookDeleteResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "webhooks.update": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                webhookId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WebhookUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Webhook"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "request.invalid",
+                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "reasonClass": "invalid_input"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "webhooks.deliveries.list": {
+        parameters: {
+            query?: {
+                cursor?: string;
+                limit?: number;
+            };
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                webhookId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookDeliveriesListResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "webhooks.deliveries.redeliver": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                webhookId: string;
+                deliveryId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Accepted */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookDelivery"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "webhooks.rotate-secret": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                webhookId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookRotateSecretResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "runtime.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "webhooks.test": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                webhookId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Accepted */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookDelivery"];
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */

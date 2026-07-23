@@ -183,6 +183,110 @@ test('run routes map to current v1 paths', async () => {
   ]);
 });
 
+test('run files use the canonical files query and raw viewer commands stay hidden', async () => {
+  const calls: ApiCall[] = [];
+  const { command } = buildCommand(calls, { data: [] });
+
+  await command.parseAsync(['run', 'files', 'list', 'run_test', '--type', 'download'], {
+    from: 'user',
+  });
+
+  assert.deepEqual(calls, [
+    {
+      method: 'get',
+      path: '/files',
+      options: {
+        query: {
+          runId: 'run_test',
+          type: 'download',
+          limit: undefined,
+          cursor: undefined,
+        },
+      },
+    },
+  ]);
+  const run = command.commands.find((child) => child.name() === 'run');
+  assert.ok(run);
+  assert.equal(run.commands.some((child) => child.name() === 'live'), false);
+  assert.equal(run.commands.some((child) => child.name() === 'recording'), false);
+});
+
+test('account, view, and webhook commands map to the new public resources', async () => {
+  const calls: ApiCall[] = [];
+
+  await buildCommand(calls).command.parseAsync(['account', 'get'], { from: 'user' });
+  await buildCommand(calls).command.parseAsync(
+    [
+      'account',
+      'patch',
+      '--dry-run',
+      '--body',
+      '{"branding":{"productName":"Acme Ops","accent":"#6f8fd4"}}',
+    ],
+    { from: 'user' }
+  );
+  await buildCommand(calls).command.parseAsync(
+    [
+      'view',
+      'create',
+      '--body',
+      '{"scope":{"runtimeId":"runtime_test"},"components":{"live":{"control":"none"}}}',
+    ],
+    { from: 'user' }
+  );
+  await buildCommand(calls).command.parseAsync(
+    ['webhook', 'rotate-secret', 'webhook_test'],
+    { from: 'user' }
+  );
+  await buildCommand(calls).command.parseAsync(
+    ['webhook', 'deliveries', 'list', 'webhook_test', '--limit', '5'],
+    { from: 'user' }
+  );
+
+  assert.deepEqual(calls, [
+    {
+      method: 'get',
+      path: '/account',
+      options: undefined,
+    },
+    {
+      method: 'patch',
+      path: '/account',
+      options: {
+        query: { dryRun: true },
+        body: {
+          branding: {
+            productName: 'Acme Ops',
+            accent: '#6f8fd4',
+          },
+        },
+      },
+    },
+    {
+      method: 'post',
+      path: '/views',
+      options: {
+        body: {
+          scope: { runtimeId: 'runtime_test' },
+          components: { live: { control: 'none' } },
+        },
+      },
+    },
+    {
+      method: 'post',
+      path: '/webhooks/webhook_test/rotate-secret',
+      options: undefined,
+    },
+    {
+      method: 'get',
+      path: '/webhooks/webhook_test/deliveries',
+      options: {
+        query: { limit: 5, cursor: undefined },
+      },
+    },
+  ]);
+});
+
 test('new root commands map to current v1 route groups', async () => {
   const calls: ApiCall[] = [];
   const { command } = buildCommand(calls, { data: [] });
@@ -232,6 +336,7 @@ test('new root commands map to current v1 route groups', async () => {
 test('removed legacy commands are not registered', () => {
   const { command } = buildCommand([]);
   assert.deepEqual(command.commands.map((child) => child.name()).sort(), [
+    'account',
     'ai',
     'api-key',
     'auth',
@@ -250,6 +355,8 @@ test('removed legacy commands are not registered', () => {
     'usage',
     'vault',
     'version',
+    'view',
+    'webhook',
   ]);
 
   const run = command.commands.find((child) => child.name() === 'run');
@@ -258,5 +365,7 @@ test('removed legacy commands are not registered', () => {
   assert.ok(space);
   assert.equal(run.commands.some((child) => child.name() === 'wait'), false);
   assert.equal(run.commands.some((child) => child.name() === 'commands'), false);
+  assert.equal(run.commands.some((child) => child.name() === 'live'), false);
+  assert.equal(run.commands.some((child) => child.name() === 'recording'), false);
   assert.equal(space.commands.some((child) => child.name() === 'agent-context'), false);
 });
