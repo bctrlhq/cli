@@ -25,6 +25,9 @@ test('file list maps --space to v1 spaceId query', async () => {
       options: {
         query: {
           spaceId: 'sp_test',
+          runId: undefined,
+          runtimeId: undefined,
+          type: undefined,
           source: undefined,
           prefix: 'runs/',
           include: undefined,

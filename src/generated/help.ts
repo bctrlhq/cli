@@ -4760,7 +4760,7 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "query",
+          name: "q",
           type: "string",
           required: false,
         },
@@ -5222,7 +5222,7 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "query",
+          name: "q",
           type: "string",
           required: false,
         },
@@ -6858,173 +6858,6 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "runs.invocations.get": {
-    type: "topic",
-    topic: "runs.invocations.get",
-    aliases: ["runs invocations get"],
-    title: "Get a run invocation",
-    summary:
-      "Get one durable invocation under its run using the bare invocation resource.",
-    inputs: {
-      path: [
-        {
-          name: "runId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "action",
-          type: "act | observe | extract | browserUse | stagehandAgent | solveCaptcha",
-          required: true,
-          values: [
-            "act",
-            "observe",
-            "extract",
-            "browserUse",
-            "stagehandAgent",
-            "solveCaptcha",
-          ],
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "durationSeconds",
-          type: "number | null",
-          required: false,
-        },
-        {
-          name: "error",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "finishedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "output",
-          type: "unknown",
-          required: false,
-          description:
-            "Any valid JSON value: object, array, string, number, boolean, or null.",
-        },
-        {
-          name: "runId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "startedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "status",
-          type: "queued | dispatching | running | cancelling | succeeded | failed | cancelled | timed_out",
-          required: true,
-          values: [
-            "queued",
-            "dispatching",
-            "running",
-            "cancelling",
-            "succeeded",
-            "failed",
-            "cancelled",
-            "timed_out",
-          ],
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Invocations",
-        url: "https://platform.bctrl.ai/sdk/invocations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/invocations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/invocations.md",
-        description:
-          "Hosted agent work BCTRL runs inside a runtime - act, observe, extract, and browser-use.",
-      },
-      {
-        title: "Runs",
-        url: "https://platform.bctrl.ai/sdk/runs",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "The durable record of a runtime's lifecycle - events, activity, live view, recording, and files.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runs/{runId}/invocations/{invocationId}",
-      operationId: "runs.invocations.get",
-      responseFields: [
-        "action",
-        "createdAt",
-        "durationSeconds",
-        "error",
-        "finishedAt",
-        "id",
-        "output",
-        "runId",
-        "runtimeId",
-        "startedAt",
-        "status",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runs.invocations.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runs.invocations.get",
-      usage: "bctrl help --topic runs.invocations.get",
-    },
-    mcp: {
-      toolName: "bctrl_runs_invocations_get",
-      operationResource: "operations://runs.invocations.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runs.invocations.get",
-      },
-    ],
-  },
   "runs.invocations.list": {
     type: "topic",
     topic: "runs.invocations.list",
@@ -7241,7 +7074,7 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["runtimes create"],
     title: "Create a runtime or session",
     summary:
-      "Create a browser runtime. Ephemeral runtimes (config.profile omitted or false) are sessions: by default they start in the same call and the response includes a `connection` with the run-scoped connect endpoint; pass start:false to create the session without booting it yet (e.g. to mint a share view first), then POST /start. Sessions archive themselves when their run finishes and never restart. Profile-backed runtimes (config.profile true) are durable machines created stopped by default; pass start:true for one-call create-and-start. Omit spaceId to use the caller's default space.",
+      "Create a browser runtime. Ephemeral runtimes (profile omitted or false) are single-session: by default they start in the same call and the response includes a `connection` with the run-scoped connect endpoint; pass start:false to defer startup (for example, to mint a share view first), then POST /start. They archive when their run finishes and never restart. Profile-backed runtimes (profile true) retain browser identity, remain reusable, and are created stopped by default; pass start:true for one-call create-and-start. Omit spaceId to use the caller's default space.",
     inputs: {
       headers: [
         {
@@ -7270,6 +7103,11 @@ export const CLI_HELP_COMMANDS = {
           {
             name: "name",
             type: "string",
+            required: false,
+          },
+          {
+            name: "profile",
+            type: "boolean",
             required: false,
           },
           {
@@ -7343,6 +7181,11 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "profile",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "spaceId",
           type: "uuid",
           required: true,
@@ -7388,7 +7231,15 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes",
       operationId: "runtimes.create",
-      requestFields: ["spaceId", "type", "name", "config", "metadata", "start"],
+      requestFields: [
+        "spaceId",
+        "type",
+        "name",
+        "profile",
+        "config",
+        "metadata",
+        "start",
+      ],
       responseFields: [
         "activeRunId",
         "archivedAt",
@@ -7400,6 +7251,7 @@ export const CLI_HELP_COMMANDS = {
         "metadata",
         "name",
         "needsHumanAction",
+        "profile",
         "spaceId",
         "status",
         "type",
@@ -7704,110 +7556,6 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl help --topic runtimes.files.collect",
-      },
-    ],
-  },
-  "runtimes.files.list": {
-    type: "topic",
-    topic: "runtimes.files.list",
-    aliases: ["runtimes files list"],
-    title: "List collected runtime files",
-    summary:
-      "There is one durable File resource. This route lists durable Files collected out of a runtime workspace; files that only exist on the live machine are not durable or listed until collected.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      query: [
-        {
-          name: "type",
-          type: "string[]",
-          required: false,
-          description:
-            "Filter by one or more file artifact types. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
-          type: "object[]",
-          required: true,
-        },
-        {
-          name: "nextCursor",
-          type: "string | null",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Files",
-        url: "https://platform.bctrl.ai/sdk/files",
-        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
-        description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runtimes/{runtimeId}/files",
-      operationId: "runtimes.files.list",
-      responseFields: ["data", "nextCursor"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.files.list",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.files.list",
-      usage: "bctrl help --topic runtimes.files.list",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_files_list",
-      operationResource: "operations://runtimes.files.list",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.files.list",
       },
     ],
   },
@@ -8144,6 +7892,11 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "profile",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "protocol",
           type: "cdp",
           required: false,
@@ -8206,6 +7959,7 @@ export const CLI_HELP_COMMANDS = {
         "metadata",
         "name",
         "needsHumanAction",
+        "profile",
         "protocol",
         "spaceId",
         "status",
@@ -8233,303 +7987,6 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl help --topic runtimes.get",
-      },
-    ],
-  },
-  "runtimes.human-actions.cancel": {
-    type: "topic",
-    topic: "runtimes.human-actions.cancel",
-    aliases: ["runtimes human-actions cancel"],
-    title: "Cancel human action",
-    summary: "Cancel a pending human action request.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelledAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "completedAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiredAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "message",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "requested | completed | cancelled | expired",
-          required: true,
-          values: ["requested", "completed", "cancelled", "expired"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Human-in-the-Loop",
-        url: "https://platform.bctrl.ai/sdk/human-in-the-loop",
-        markdownUrl: "https://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        description:
-          "Request human action on a running runtime, notify recipients, and wait until the human completes it.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/human-actions/cancel",
-      operationId: "runtimes.human-actions.cancel",
-      responseFields: [
-        "cancelledAt",
-        "completedAt",
-        "createdAt",
-        "expiredAt",
-        "expiresAt",
-        "id",
-        "invocationId",
-        "message",
-        "runId",
-        "runtimeId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.humanActions.cancel",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.human-actions.cancel",
-      usage: "bctrl help --topic runtimes.human-actions.cancel",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_human_actions_cancel",
-      operationResource: "operations://runtimes.human-actions.cancel",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.human-actions.cancel",
-      },
-    ],
-  },
-  "runtimes.human-actions.complete": {
-    type: "topic",
-    topic: "runtimes.human-actions.complete",
-    aliases: ["runtimes human-actions complete"],
-    title: "Complete human action",
-    summary:
-      "Mark a human action request completed after a user has taken control and performed the requested work.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelledAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "completedAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiredAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "message",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "requested | completed | cancelled | expired",
-          required: true,
-          values: ["requested", "completed", "cancelled", "expired"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Human-in-the-Loop",
-        url: "https://platform.bctrl.ai/sdk/human-in-the-loop",
-        markdownUrl: "https://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        description:
-          "Request human action on a running runtime, notify recipients, and wait until the human completes it.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/human-actions/complete",
-      operationId: "runtimes.human-actions.complete",
-      responseFields: [
-        "cancelledAt",
-        "completedAt",
-        "createdAt",
-        "expiredAt",
-        "expiresAt",
-        "id",
-        "invocationId",
-        "message",
-        "runId",
-        "runtimeId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.humanActions.complete",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.human-actions.complete",
-      usage: "bctrl help --topic runtimes.human-actions.complete",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_human_actions_complete",
-      operationResource: "operations://runtimes.human-actions.complete",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.human-actions.complete",
       },
     ],
   },
@@ -8707,13 +8164,13 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "runtimes.human-actions.get": {
+  "runtimes.human-actions.current": {
     type: "topic",
-    topic: "runtimes.human-actions.get",
-    aliases: ["runtimes human-actions get"],
+    topic: "runtimes.human-actions.current",
+    aliases: ["runtimes human-actions current"],
     title: "Get current human action",
     summary:
-      "Get the current pending human action for a runtime, or the latest historical human action when none is pending.",
+      "Get the current pending human action for a runtime. Returns not found when no action is pending; historical actions remain addressable by id.",
     inputs: {
       path: [
         {
@@ -8817,8 +8274,8 @@ export const CLI_HELP_COMMANDS = {
     ],
     api: {
       method: "GET",
-      path: "/v1/runtimes/{runtimeId}/human-actions",
-      operationId: "runtimes.human-actions.get",
+      path: "/v1/runtimes/{runtimeId}/human-actions/current",
+      operationId: "runtimes.human-actions.current",
       responseFields: [
         "cancelledAt",
         "completedAt",
@@ -8837,197 +8294,22 @@ export const CLI_HELP_COMMANDS = {
     sdk: [
       {
         language: "typescript",
-        method: "runtimes.humanActions.get",
+        method: "runtimes.humanActions.current",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic runtimes.human-actions.get",
-      usage: "bctrl help --topic runtimes.human-actions.get",
+      command: "bctrl help --topic runtimes.human-actions.current",
+      usage: "bctrl help --topic runtimes.human-actions.current",
     },
     mcp: {
-      toolName: "bctrl_runtimes_human_actions_get",
-      operationResource: "operations://runtimes.human-actions.get",
+      toolName: "bctrl_runtimes_human_actions_current",
+      operationResource: "operations://runtimes.human-actions.current",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runtimes.human-actions.get",
-      },
-    ],
-  },
-  "runtimes.human-actions.wait": {
-    type: "topic",
-    topic: "runtimes.human-actions.wait",
-    aliases: ["runtimes human-actions wait"],
-    title: "Wait for human action",
-    summary:
-      "Wait until the current pending human action request is completed, cancelled, or expired. When timeoutSeconds is provided, return timeout if that shorter wait window is reached first.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "HumanActionWaitRequest",
-        schemaResource: "schemas://HumanActionWaitRequest",
-        fields: [
-          {
-            name: "timeoutSeconds",
-            type: "integer",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelledAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "completedAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiredAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "message",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "retryAfterSeconds",
-          type: "integer",
-          required: false,
-        },
-        {
-          name: "runId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "requested | completed | cancelled | expired",
-          required: true,
-          values: ["requested", "completed", "cancelled", "expired"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "waitStatus",
-          type: "resolved | timeout",
-          required: true,
-          values: ["resolved", "timeout"],
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Human-in-the-Loop",
-        url: "https://platform.bctrl.ai/sdk/human-in-the-loop",
-        markdownUrl: "https://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        description:
-          "Request human action on a running runtime, notify recipients, and wait until the human completes it.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/human-actions/wait",
-      operationId: "runtimes.human-actions.wait",
-      requestFields: ["timeoutSeconds"],
-      responseFields: [
-        "cancelledAt",
-        "completedAt",
-        "createdAt",
-        "expiredAt",
-        "expiresAt",
-        "id",
-        "invocationId",
-        "message",
-        "retryAfterSeconds",
-        "runId",
-        "runtimeId",
-        "status",
-        "updatedAt",
-        "waitStatus",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.humanActions.wait",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.human-actions.wait",
-      usage: "bctrl help --topic runtimes.human-actions.wait",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_human_actions_wait",
-      operationResource: "operations://runtimes.human-actions.wait",
-      schemaResources: ["schemas://HumanActionWaitRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.human-actions.wait",
+        command: "bctrl help --topic runtimes.human-actions.current",
       },
     ],
   },
@@ -10916,6 +10198,11 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "profile",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "protocol",
           type: "cdp",
           required: false,
@@ -10987,6 +10274,7 @@ export const CLI_HELP_COMMANDS = {
         "metadata",
         "name",
         "needsHumanAction",
+        "profile",
         "protocol",
         "spaceId",
         "status",
@@ -12071,7 +11359,7 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "query",
+          name: "q",
           type: "string",
           required: false,
         },

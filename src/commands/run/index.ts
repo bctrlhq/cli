@@ -52,7 +52,6 @@ export function createRunCommand(factory: Factory): Command {
   command.addCommand(createRunEventsCommand(factory));
   command.addCommand(createRunFilesCommand(factory));
   command.addCommand(createRunInvocationsCommand(factory));
-  command.addCommand(createRunInvocationCommand(factory));
   return command;
 }
 
@@ -201,42 +200,9 @@ function createRunEventsListCommand(factory: Factory): Command {
 }
 
 function createRunFilesCommand(factory: Factory): Command {
-  const command = new Command('files').description('Inspect run files');
-  command.addCommand(createRunFilesListCommand(factory));
+  const command = new Command('files').description('Export run files');
   command.addCommand(createRunFilesExportCommand(factory));
   return command;
-}
-
-function createRunFilesListCommand(factory: Factory): Command {
-  return addOutputFlags(
-    addPaginationFlags(
-      new Command('list').description('List run files').argument('<runId>')
-    )
-      .option('--type <type>', 'Filter by file type')
-      .option(
-        '--params <json>',
-        'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
-      )
-  ).action(
-    async (
-      runId: string,
-      options: { type?: string; limit?: number; cursor?: string; params?: string } & OutputFlags
-    ) => {
-      await requestOperationAndPrint(
-        factory,
-        'files.list',
-        await buildOperationInput('files.list', options, {
-          query: {
-            runId,
-            type: options.type,
-            limit: options.limit,
-            cursor: options.cursor,
-          } as CliOperationQuery<'files.list'>,
-          output: outputFlags(options),
-        })
-      );
-    }
-  );
 }
 
 function createRunFilesExportCommand(factory: Factory): Command {
@@ -307,30 +273,6 @@ function createRunInvocationsCommand(factory: Factory): Command {
         output: outputFlags(options),
       }));
     }
-  );
-  return command;
-}
-
-function createRunInvocationCommand(factory: Factory): Command {
-  const command = new Command('invocation').description('Inspect run invocations');
-  command.addCommand(
-    addOutputFlags(
-      new Command('get')
-        .description('Get a run invocation')
-        .argument('<runId>')
-        .argument('<invocationId>')
-        .option(
-          '--params <json>',
-          'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
-        )
-    ).action(
-      async (runId: string, invocationId: string, options: { params?: string } & OutputFlags) => {
-        await requestOperationAndPrint(factory, 'runs.invocations.get', await buildOperationInput('runs.invocations.get', options, {
-          pathParams: { runId, invocationId },
-          output: outputFlags(options),
-        }));
-      }
-    )
   );
   return command;
 }

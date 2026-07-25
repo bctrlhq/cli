@@ -10,6 +10,7 @@ import { createHelpCommand } from './commands/help/index.js';
 import { createNotificationRecipientCommand } from './commands/notification-recipient/index.js';
 import { createProxyCommand } from './commands/proxy/index.js';
 import { createRunCommand } from './commands/run/index.js';
+import { createInvocationCommand } from './commands/invocation/index.js';
 import { createRuntimeCommand } from './commands/runtime/index.js';
 import { createSpaceCommand } from './commands/space/index.js';
 import { createSubaccountCommand } from './commands/subaccount/index.js';
@@ -43,6 +44,7 @@ export function createRootCommand(factory: Factory): Command {
   command.addCommand(createHelpCommand(factory));
   command.addCommand(createNotificationRecipientCommand(factory));
   command.addCommand(createRunCommand(factory));
+  command.addCommand(createInvocationCommand(factory));
   command.addCommand(createRuntimeCommand(factory));
   command.addCommand(createProxyCommand(factory));
   command.addCommand(createSpaceCommand(factory));

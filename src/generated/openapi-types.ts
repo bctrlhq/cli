@@ -792,26 +792,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/runs/{runId}/invocations/{invocationId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get a run invocation
-         * @description Get one durable invocation under its run using the bare invocation resource.
-         */
-        get: operations["runs.invocations.get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/runtimes": {
         parameters: {
             query?: never;
@@ -827,7 +807,7 @@ export interface paths {
         put?: never;
         /**
          * Create a runtime or session
-         * @description Create a browser runtime. Ephemeral runtimes (config.profile omitted or false) are sessions: by default they start in the same call and the response includes a `connection` with the run-scoped connect endpoint; pass start:false to create the session without booting it yet (e.g. to mint a share view first), then POST /start. Sessions archive themselves when their run finishes and never restart. Profile-backed runtimes (config.profile true) are durable machines created stopped by default; pass start:true for one-call create-and-start. Omit spaceId to use the caller's default space.
+         * @description Create a browser runtime. Ephemeral runtimes (profile omitted or false) are single-session: by default they start in the same call and the response includes a `connection` with the run-scoped connect endpoint; pass start:false to defer startup (for example, to mint a share view first), then POST /start. They archive when their run finishes and never restart. Profile-backed runtimes (profile true) retain browser identity, remain reusable, and are created stopped by default; pass start:true for one-call create-and-start. Omit spaceId to use the caller's default space.
          */
         post: operations["runtimes.create"];
         delete?: never;
@@ -862,26 +842,6 @@ export interface paths {
          * @description Update a runtime: name and idleTimeoutSeconds any time, launch config only while the runtime is stopped.
          */
         patch: operations["runtimes.update"];
-        trace?: never;
-    };
-    "/v1/runtimes/{runtimeId}/files": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List collected runtime files
-         * @description There is one durable File resource. This route lists durable Files collected out of a runtime workspace; files that only exist on the live machine are not durable or listed until collected.
-         */
-        get: operations["runtimes.files.list"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/v1/runtimes/{runtimeId}/files/collect": {
@@ -951,11 +911,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get current human action
-         * @description Get the current pending human action for a runtime, or the latest historical human action when none is pending.
-         */
-        get: operations["runtimes.human-actions.get"];
+        get?: never;
         put?: never;
         /**
          * Request human action
@@ -1048,60 +1004,20 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/runtimes/{runtimeId}/human-actions/cancel": {
+    "/v1/runtimes/{runtimeId}/human-actions/current": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
         /**
-         * Cancel human action
-         * @description Cancel a pending human action request.
+         * Get current human action
+         * @description Get the current pending human action for a runtime. Returns not found when no action is pending; historical actions remain addressable by id.
          */
-        post: operations["runtimes.human-actions.cancel"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/runtimes/{runtimeId}/human-actions/complete": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
+        get: operations["runtimes.human-actions.current"];
         put?: never;
-        /**
-         * Complete human action
-         * @description Mark a human action request completed after a user has taken control and performed the requested work.
-         */
-        post: operations["runtimes.human-actions.complete"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/runtimes/{runtimeId}/human-actions/wait": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Wait for human action
-         * @description Wait until the current pending human action request is completed, cancelled, or expired. When timeoutSeconds is provided, return timeout if that shorter wait window is reached first.
-         */
-        post: operations["runtimes.human-actions.wait"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2310,7 +2226,6 @@ export interface components {
             headless: boolean;
             idleTimeoutSeconds?: number;
             networkTraffic?: components["schemas"]["BrowserNetworkTrafficConfig"];
-            profile: boolean;
             proxy?: components["schemas"]["RuntimeProxyConfig"] | null;
             /** @enum {string} */
             stealth?: "normal" | "best" | "experimental";
@@ -2331,7 +2246,6 @@ export interface components {
             headless?: boolean;
             idleTimeoutSeconds?: number;
             networkTraffic?: components["schemas"]["BrowserNetworkTrafficConfig"];
-            profile?: boolean;
             proxy?: components["schemas"]["RuntimeProxyInput"] | null;
             /** @enum {string} */
             stealth?: "normal" | "best" | "experimental";
@@ -3489,6 +3403,7 @@ export interface components {
             config?: components["schemas"]["BrowserRuntimeCreateConfig"];
             metadata?: components["schemas"]["RuntimeMetadata"];
             name?: string;
+            profile?: boolean;
             spaceId?: string | "default";
             start?: boolean;
             /** @constant */
@@ -3509,6 +3424,7 @@ export interface components {
             metadata?: components["schemas"]["JsonObject"] | null;
             name: string;
             needsHumanAction?: boolean;
+            profile: boolean;
             /** Format: uuid */
             spaceId: string;
             /** @enum {string} */
@@ -3545,6 +3461,7 @@ export interface components {
             metadata?: components["schemas"]["JsonObject"] | null;
             name: string;
             needsHumanAction?: boolean;
+            profile: boolean;
             /** @enum {string} */
             protocol?: "cdp";
             /** Format: uuid */
@@ -3567,10 +3484,6 @@ export interface components {
             name?: string;
             runtimePath: string;
             type?: string;
-        };
-        RuntimeFileListResponse: {
-            data: components["schemas"]["File"][];
-            nextCursor: string | null;
         };
         RuntimeFileStageRequest: {
             /** Format: uuid */
@@ -3888,6 +3801,7 @@ export interface components {
             lastActivityAt?: string;
             name: string;
             needsHumanAction?: boolean;
+            profile: boolean;
             /** Format: uuid */
             spaceId: string;
             /** @enum {string} */
@@ -8458,7 +8372,7 @@ export interface operations {
             query?: {
                 cursor?: string;
                 limit?: number;
-                query?: string;
+                q?: string;
                 country?: string;
                 region?: string;
                 type?: "country" | "subdivision" | "region" | "city";
@@ -8527,7 +8441,7 @@ export interface operations {
             query?: {
                 cursor?: string;
                 limit?: number;
-                query?: string;
+                q?: string;
                 country?: string;
                 region?: string;
                 type?: "country" | "subdivision" | "region" | "city";
@@ -9591,89 +9505,6 @@ export interface operations {
             };
         };
     };
-    "runs.invocations.get": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                runId: string;
-                invocationId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Invocation"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `run.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "run.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
     "runtimes.list": {
         parameters: {
             query?: {
@@ -10200,111 +10031,6 @@ export interface operations {
             };
         };
     };
-    "runtimes.files.list": {
-        parameters: {
-            query?: {
-                /** @description Filter by one or more file artifact types. Repeat the query parameter for multiple values. */
-                type?: string[];
-                cursor?: string;
-                limit?: number;
-            };
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                runtimeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RuntimeFileListResponse"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
-            429: {
-                headers: {
-                    /** @description Seconds to wait before retrying. */
-                    "Retry-After"?: number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
-                     *       "reasonClass": "rate_limited"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
     "runtimes.files.collect": {
         parameters: {
             query?: never;
@@ -10745,88 +10471,6 @@ export interface operations {
                      *       "code": "storage.unavailable",
                      *       "error": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    "runtimes.human-actions.get": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                runtimeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HumanAction"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
                      *     }
                      */
                     "application/json": components["schemas"]["ErrorResponse"];
@@ -11403,7 +11047,7 @@ export interface operations {
             };
         };
     };
-    "runtimes.human-actions.cancel": {
+    "runtimes.human-actions.current": {
         parameters: {
             query?: never;
             header?: {
@@ -11469,276 +11113,6 @@ export interface operations {
                      *       "code": "runtime.not_found",
                      *       "error": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
-                     *       "reasonClass": "conflict"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
-            429: {
-                headers: {
-                    /** @description Seconds to wait before retrying. */
-                    "Retry-After"?: number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
-                     *       "reasonClass": "rate_limited"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    "runtimes.human-actions.complete": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                runtimeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HumanAction"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
-                     *       "reasonClass": "conflict"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
-            429: {
-                headers: {
-                    /** @description Seconds to wait before retrying. */
-                    "Retry-After"?: number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
-                     *       "reasonClass": "rate_limited"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    "runtimes.human-actions.wait": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                runtimeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["HumanActionWaitRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HumanActionWait"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "runtime.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
-                     *       "reasonClass": "conflict"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
-            429: {
-                headers: {
-                    /** @description Seconds to wait before retrying. */
-                    "Retry-After"?: number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
-                     *       "reasonClass": "rate_limited"
                      *     }
                      */
                     "application/json": components["schemas"]["ErrorResponse"];
@@ -13985,7 +13359,7 @@ export interface operations {
                 /** @description Filter subaccounts by lifecycle status. */
                 status?: "active" | "archived";
                 externalId?: string;
-                query?: string;
+                q?: string;
             };
             header?: never;
             path?: never;

@@ -35,6 +35,7 @@ test('runtime create omits spaceId when caller uses the default space', async ()
           type: 'browser',
           spaceId: undefined,
           name: 'checkout-test',
+          profile: undefined,
           config: undefined,
           metadata: undefined,
         },
@@ -144,7 +145,7 @@ test('run routes map to current v1 paths', async () => {
   await second.parseAsync(['run', 'events', 'stream', 'run_test', '--page-id', 'page_1'], {
     from: 'user',
   });
-  await third.parseAsync(['run', 'invocation', 'get', 'run_test', 'inv_test'], { from: 'user' });
+  await third.parseAsync(['invocation', 'get', 'inv_test'], { from: 'user' });
 
   assert.deepEqual(calls, [
     {
@@ -177,17 +178,17 @@ test('run routes map to current v1 paths', async () => {
     },
     {
       method: 'get',
-      path: '/runs/run_test/invocations/inv_test',
+      path: '/invocations/inv_test',
       options: undefined,
     },
   ]);
 });
 
-test('run files use the canonical files query and raw viewer commands stay hidden', async () => {
+test('files use the canonical run filter and raw viewer commands stay hidden', async () => {
   const calls: ApiCall[] = [];
   const { command } = buildCommand(calls, { data: [] });
 
-  await command.parseAsync(['run', 'files', 'list', 'run_test', '--type', 'download'], {
+  await command.parseAsync(['file', 'list', '--run', 'run_test', '--type', 'download'], {
     from: 'user',
   });
 
@@ -197,8 +198,15 @@ test('run files use the canonical files query and raw viewer commands stay hidde
       path: '/files',
       options: {
         query: {
+          spaceId: undefined,
           runId: 'run_test',
-          type: 'download',
+          runtimeId: undefined,
+          type: ['download'],
+          source: undefined,
+          prefix: undefined,
+          include: undefined,
+          createdAfter: undefined,
+          q: undefined,
           limit: undefined,
           cursor: undefined,
         },
@@ -207,6 +215,9 @@ test('run files use the canonical files query and raw viewer commands stay hidde
   ]);
   const run = command.commands.find((child) => child.name() === 'run');
   assert.ok(run);
+  const runFiles = run.commands.find((child) => child.name() === 'files');
+  assert.ok(runFiles);
+  assert.equal(runFiles.commands.some((child) => child.name() === 'list'), false);
   assert.equal(run.commands.some((child) => child.name() === 'live'), false);
   assert.equal(run.commands.some((child) => child.name() === 'recording'), false);
 });
@@ -343,6 +354,7 @@ test('removed legacy commands are not registered', () => {
     'browser-extension',
     'file',
     'help',
+    'invocation',
     'notification-recipient',
     'proxy',
     'run',

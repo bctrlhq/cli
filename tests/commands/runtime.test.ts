@@ -67,6 +67,7 @@ test('runtime create builds a native v1 runtime body from flags', async () => {
           type: 'browser',
           spaceId: 'sp_test',
           name: 'checkout-test',
+          profile: undefined,
           config: undefined,
           metadata: undefined,
         },
@@ -119,8 +120,8 @@ test('runtime create builds runtime config from flat proxy and fingerprint flags
           type: 'browser',
           spaceId: undefined,
           name: 'mobile-de',
+          profile: true,
           config: {
-            profile: true,
             proxy: 'pxy_test',
             fingerprint: {
               device: 'mobile',
@@ -180,6 +181,7 @@ test('runtime create merges flat flags into config file', async () => {
             type: 'browser',
             spaceId: undefined,
             name: undefined,
+            profile: undefined,
             config: {
               idleTimeoutMinutes: 10,
               proxy: 'http://user:pass@example.com:8080',

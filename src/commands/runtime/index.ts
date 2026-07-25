@@ -355,6 +355,7 @@ function createRuntimeCreateCommand(factory: Factory): Command {
             type: 'browser',
             spaceId: options.space,
             name: options.name,
+            profile: options.profile === true ? true : undefined,
             config: buildRuntimeCreateConfig(config, options),
             metadata:
               typeof options.metadataFile === 'string'
@@ -379,7 +380,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 function buildRuntimeCreateConfig(
   config: unknown,
   options: {
-    profile?: boolean;
     proxy?: string;
     device?: string;
     os?: string;
@@ -397,7 +397,6 @@ function buildRuntimeCreateConfig(
     ...(options.locale && options.locale.length > 1 ? { locale: options.locale } : {}),
   };
   const overrides = {
-    ...(options.profile === true ? { profile: true } : {}),
     ...(options.proxy ? { proxy: options.proxy } : {}),
     ...(Object.keys(fingerprint).length > 0 ? { fingerprint } : {}),
   };
@@ -642,25 +641,56 @@ function createRuntimeHumanActionCommand(factory: Factory): Command {
   command.addCommand(
     addOutputFlags(
       addCliOperationHelp(
-        new Command('get')
-          .description('Get a human action')
+        new Command('current')
+          .description('Get the current pending human action')
           .argument('<runtimeId>')
           .option(
             '--params <json>',
             'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
           ),
-        'runtimes.human-actions.get'
+        'runtimes.human-actions.current'
       )
     ).action(async (runtimeId: string, options: { params?: string } & OutputFlags) => {
       await requestOperationAndPrint(
         factory,
-        'runtimes.human-actions.get',
-        await buildOperationInput('runtimes.human-actions.get', options, {
+        'runtimes.human-actions.current',
+        await buildOperationInput('runtimes.human-actions.current', options, {
           pathParams: { runtimeId },
           output: outputFlags(options),
         })
       );
     })
+  );
+
+  command.addCommand(
+    addOutputFlags(
+      addCliOperationHelp(
+        new Command('get')
+          .description('Get a human action by id')
+          .argument('<runtimeId>')
+          .argument('<humanActionId>')
+          .option(
+            '--params <json>',
+            'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
+          ),
+        'human-actions.get'
+      )
+    ).action(
+      async (
+        runtimeId: string,
+        humanActionId: string,
+        options: { params?: string } & OutputFlags
+      ) => {
+        await requestOperationAndPrint(
+          factory,
+          'human-actions.get',
+          await buildOperationInput('human-actions.get', options, {
+            pathParams: { runtimeId, humanActionId },
+            output: outputFlags(options),
+          })
+        );
+      }
+    )
   );
 
   command.addCommand(
@@ -669,22 +699,29 @@ function createRuntimeHumanActionCommand(factory: Factory): Command {
         new Command('complete')
           .description('Complete a human action')
           .argument('<runtimeId>')
+          .argument('<humanActionId>')
           .option(
             '--params <json>',
             'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
           ),
-        'runtimes.human-actions.complete'
+        'human-actions.complete'
       )
-    ).action(async (runtimeId: string, options: { params?: string } & OutputFlags) => {
-      await requestOperationAndPrint(
-        factory,
-        'runtimes.human-actions.complete',
-        await buildOperationInput('runtimes.human-actions.complete', options, {
-          pathParams: { runtimeId },
-          output: outputFlags(options),
-        })
-      );
-    })
+    ).action(
+      async (
+        runtimeId: string,
+        humanActionId: string,
+        options: { params?: string } & OutputFlags
+      ) => {
+        await requestOperationAndPrint(
+          factory,
+          'human-actions.complete',
+          await buildOperationInput('human-actions.complete', options, {
+            pathParams: { runtimeId, humanActionId },
+            output: outputFlags(options),
+          })
+        );
+      }
+    )
   );
 
   command.addCommand(
@@ -693,22 +730,29 @@ function createRuntimeHumanActionCommand(factory: Factory): Command {
         new Command('cancel')
           .description('Cancel a human action')
           .argument('<runtimeId>')
+          .argument('<humanActionId>')
           .option(
             '--params <json>',
             'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
           ),
-        'runtimes.human-actions.cancel'
+        'human-actions.cancel'
       )
-    ).action(async (runtimeId: string, options: { params?: string } & OutputFlags) => {
-      await requestOperationAndPrint(
-        factory,
-        'runtimes.human-actions.cancel',
-        await buildOperationInput('runtimes.human-actions.cancel', options, {
-          pathParams: { runtimeId },
-          output: outputFlags(options),
-        })
-      );
-    })
+    ).action(
+      async (
+        runtimeId: string,
+        humanActionId: string,
+        options: { params?: string } & OutputFlags
+      ) => {
+        await requestOperationAndPrint(
+          factory,
+          'human-actions.cancel',
+          await buildOperationInput('human-actions.cancel', options, {
+            pathParams: { runtimeId, humanActionId },
+            output: outputFlags(options),
+          })
+        );
+      }
+    )
   );
 
   command.addCommand(
@@ -717,24 +761,26 @@ function createRuntimeHumanActionCommand(factory: Factory): Command {
         new Command('wait')
           .description('Wait for a human action')
           .argument('<runtimeId>')
+          .argument('<humanActionId>')
           .option('--timeout-seconds <seconds>', 'Long-poll timeout', parsePositiveInteger)
           .option(
             '--params <json>',
             'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
           )
           .option('--body <json>', 'Request body as JSON (inline, @file, or - for stdin)'),
-        'runtimes.human-actions.wait'
+        'human-actions.wait'
       )
     ).action(
       async (
         runtimeId: string,
+        humanActionId: string,
         options: { timeoutSeconds?: number; params?: string; body?: string } & OutputFlags
       ) => {
         await requestOperationAndPrint(
           factory,
-          'runtimes.human-actions.wait',
-          await buildOperationInput('runtimes.human-actions.wait', options, {
-            pathParams: { runtimeId },
+          'human-actions.wait',
+          await buildOperationInput('human-actions.wait', options, {
+            pathParams: { runtimeId, humanActionId },
             body: {
               timeoutSeconds: options.timeoutSeconds,
             },
@@ -750,37 +796,6 @@ function createRuntimeHumanActionCommand(factory: Factory): Command {
 
 function createRuntimeFileCommand(factory: Factory): Command {
   const command = new Command('file').description('Move files into and out of runtimes');
-  command.addCommand(
-    addOutputFlags(
-      addPaginationFlags(
-        new Command('list').description('List runtime files').argument('<runtimeId>')
-      )
-        .option('--type <type>', 'Filter by file type')
-        .option(
-          '--params <json>',
-          'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
-        )
-    ).action(
-      async (
-        runtimeId: string,
-        options: { type?: string; limit?: number; cursor?: string; params?: string } & OutputFlags
-      ) => {
-        await requestOperationAndPrint(
-          factory,
-          'runtimes.files.list',
-          await buildOperationInput('runtimes.files.list', options, {
-            pathParams: { runtimeId },
-            query: {
-              type: options.type,
-              limit: options.limit,
-              cursor: options.cursor,
-            } as CliOperationQuery<'runtimes.files.list'>,
-            output: outputFlags(options),
-          })
-        );
-      }
-    )
-  );
   command.addCommand(createRuntimeFileUploadCommand(factory));
   command.addCommand(createRuntimeFileStageCommand(factory));
   command.addCommand(createRuntimeFileCollectCommand(factory));

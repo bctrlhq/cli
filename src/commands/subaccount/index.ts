@@ -27,14 +27,14 @@ export function createSubaccountCommand(factory: Factory): Command {
           include: options.includeUsage === true ? 'usage' : undefined,
           status: typeof options.status === 'string' ? options.status : undefined,
           externalId: typeof options.externalId === 'string' ? options.externalId : undefined,
-          query: typeof options.query === 'string' ? options.query : undefined,
+          q: typeof options.q === 'string' ? options.q : undefined,
         }) as CliOperationQuery<'subaccounts.list'>,
       configure: (cmd) =>
         addPaginationFlags(cmd)
           .option('--include-usage', 'Inline current usage')
           .option('--status <status>', 'Filter by status')
           .option('--external-id <id>', 'Filter by external id')
-          .option('--query <text>', 'Search by id, name, or external id'),
+          .option('--q <text>', 'Search by id, name, or external id'),
     })
   );
   command.addCommand(

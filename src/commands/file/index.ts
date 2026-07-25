@@ -22,11 +22,14 @@ export function createFileCommand(factory: Factory): Command {
       configure: (cmd) =>
         cmd
           .option('--space <id>', 'Filter by space id')
+          .option('--run <id>', 'Filter by run id')
+          .option('--runtime <id>', 'Filter by runtime id')
+          .option('--type <type...>', 'Filter by file artifact type')
           .option('--source <source>', 'Filter by file source')
           .option('--prefix <path>', 'Filter by path prefix')
           .option('--folders', 'Directory view: direct files plus subfolder rollups')
           .option('--created-after <iso>', 'Only files created after this timestamp')
-          .option('--query <text>', 'Search query')
+          .option('--q <text>', 'Search query')
           .option(
             '-L, --limit <number>',
             'Maximum number of results to return',
@@ -36,12 +39,14 @@ export function createFileCommand(factory: Factory): Command {
       query: (options) =>
         ({
           spaceId: typeof options.space === 'string' ? options.space : undefined,
+          runId: typeof options.run === 'string' ? options.run : undefined,
+          runtimeId: typeof options.runtime === 'string' ? options.runtime : undefined,
+          type: Array.isArray(options.type) ? options.type : undefined,
           source: typeof options.source === 'string' ? options.source : undefined,
           prefix: typeof options.prefix === 'string' ? options.prefix : undefined,
           include: options.folders === true ? 'folders' : undefined,
           createdAfter: typeof options.createdAfter === 'string' ? options.createdAfter : undefined,
-          // The public query param is `q` (was sent as `query`, which the API ignores).
-          q: typeof options.query === 'string' ? options.query : undefined,
+          q: typeof options.q === 'string' ? options.q : undefined,
           limit: typeof options.limit === 'number' ? options.limit : undefined,
           cursor: typeof options.cursor === 'string' ? options.cursor : undefined,
         }) as CliOperationQuery<'files.list'>,
