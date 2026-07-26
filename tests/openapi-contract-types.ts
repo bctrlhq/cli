@@ -46,10 +46,11 @@ type CliOpenApiContractPairs = [
   Assert<Equal<CliOperationJsonBody<'runtimes.update'>, OpenApiJsonBody<'runtimes.update'>>>,
   Assert<
     Equal<
-      CliOperationJsonBody<'runtimes.targets.create'>,
-      OpenApiJsonBody<'runtimes.targets.create'>
+      CliOperationJsonBody<'conversations.messages.create'>,
+      OpenApiJsonBody<'conversations.messages.create'>
     >
   >,
+  Assert<Equal<CliOperationPathParams<'tools.call'>, OpenApiPathParams<'tools.call'>>>,
 ];
 
 export type _CliOpenApiContractPairs = CliOpenApiContractPairs;

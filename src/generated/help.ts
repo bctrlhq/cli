@@ -140,6 +140,69 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "agents.list": {
+    type: "topic",
+    topic: "agents.list",
+    aliases: ["agents list"],
+    title: "List available runtime automation agents",
+    summary: "List the runtime automation agents available to the caller.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Agents",
+        url: "https://platform.bctrl.ai/sdk/agents",
+        markdownUrl: "https://platform.bctrl.ai/sdk/agents.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/agents.md",
+        description: "Discover long-running automation implementations.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/agents",
+      operationId: "agents.list",
+      responseFields: ["data"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic agents.list",
+      usage: "bctrl help --topic agents.list",
+    },
+    mcp: {
+      toolName: "bctrl_agents_list",
+      operationResource: "operations://agents.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic agents.list",
+      },
+    ],
+  },
   "ai.credentials.create": {
     type: "topic",
     topic: "ai.credentials.create",
@@ -287,16 +350,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "AI Models & Credentials",
-        url: "https://platform.bctrl.ai/sdk/ai",
-        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
-        description:
-          "Choose managed models or bring your own provider keys for hosted agents.",
-      },
-    ],
     api: {
       method: "POST",
       path: "/v1/ai/credentials",
@@ -385,16 +438,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "AI Models & Credentials",
-        url: "https://platform.bctrl.ai/sdk/ai",
-        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
-        description:
-          "Choose managed models or bring your own provider keys for hosted agents.",
-      },
-    ],
     api: {
       method: "DELETE",
       path: "/v1/ai/credentials/{credentialId}",
@@ -518,16 +561,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "AI Models & Credentials",
-        url: "https://platform.bctrl.ai/sdk/ai",
-        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
-        description:
-          "Choose managed models or bring your own provider keys for hosted agents.",
-      },
-    ],
     api: {
       method: "GET",
       path: "/v1/ai/credentials/{credentialId}",
@@ -643,16 +676,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "AI Models & Credentials",
-        url: "https://platform.bctrl.ai/sdk/ai",
-        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
-        description:
-          "Choose managed models or bring your own provider keys for hosted agents.",
-      },
-    ],
     api: {
       method: "GET",
       path: "/v1/ai/credentials",
@@ -729,16 +752,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "AI Models & Credentials",
-        url: "https://platform.bctrl.ai/sdk/ai",
-        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
-        description:
-          "Choose managed models or bring your own provider keys for hosted agents.",
-      },
-    ],
     api: {
       method: "POST",
       path: "/v1/ai/credentials/{credentialId}/test",
@@ -895,16 +908,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "AI Models & Credentials",
-        url: "https://platform.bctrl.ai/sdk/ai",
-        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
-        description:
-          "Choose managed models or bring your own provider keys for hosted agents.",
-      },
-    ],
     api: {
       method: "PATCH",
       path: "/v1/ai/credentials/{credentialId}",
@@ -1011,16 +1014,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "AI Models & Credentials",
-        url: "https://platform.bctrl.ai/sdk/ai",
-        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
-        description:
-          "Choose managed models or bring your own provider keys for hosted agents.",
-      },
-    ],
     api: {
       method: "GET",
       path: "/v1/ai/models",
@@ -1312,7 +1305,7 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "defaultSpaceId",
-          type: "uuid | null",
+          type: "string | null",
           required: true,
         },
         {
@@ -1401,10 +1394,146 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "browser-extensions.delete": {
+  "browser.extensions.create": {
     type: "topic",
-    topic: "browser-extensions.delete",
-    aliases: ["browser-extensions delete"],
+    topic: "browser.extensions.create",
+    aliases: ["browser extensions create"],
+    title: "Create a browser extension from an upload or store URL",
+    summary:
+      "Create a browser extension from an uploaded package or Chrome Web Store URL.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+      body: {
+        schema: "BrowserExtensionCreateRequest",
+        schemaResource: "schemas://BrowserExtensionCreateRequest",
+        fields: [
+          {
+            name: "name",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "url",
+            type: "string",
+            required: true,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "contentHash",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+        },
+        {
+          name: "format",
+          type: "crx",
+          required: true,
+          values: ["crx"],
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "profileCount",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sizeBytes",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "sourceUrl",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "subaccountId",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+        },
+        {
+          name: "version",
+          type: "string",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browser/extensions",
+      operationId: "browser.extensions.create",
+      requestFields: ["name", "url"],
+      responseFields: [
+        "contentHash",
+        "createdAt",
+        "format",
+        "id",
+        "name",
+        "profileCount",
+        "sizeBytes",
+        "sourceUrl",
+        "subaccountId",
+        "updatedAt",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browser.extensions.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browser.extensions.create",
+      usage: "bctrl help --topic browser.extensions.create",
+    },
+    mcp: {
+      toolName: "bctrl_browser_extensions_create",
+      operationResource: "operations://browser.extensions.create",
+      schemaResources: ["schemas://BrowserExtensionCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browser.extensions.create",
+      },
+    ],
+  },
+  "browser.extensions.delete": {
+    type: "topic",
+    topic: "browser.extensions.delete",
+    aliases: ["browser extensions delete"],
     title: "Delete a browser extension",
     summary:
       "Delete a managed browser extension that should no longer be used by browser runtimes.",
@@ -1441,48 +1570,38 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Extensions",
-        url: "https://platform.bctrl.ai/sdk/extensions",
-        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
-        description:
-          "Upload or import browser extensions and load them into runtimes.",
-      },
-    ],
     api: {
       method: "DELETE",
-      path: "/v1/browser-extensions/{extensionId}",
-      operationId: "browser-extensions.delete",
+      path: "/v1/browser/extensions/{extensionId}",
+      operationId: "browser.extensions.delete",
       responseFields: ["deleted", "id"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "browser-extensions.delete",
+        method: "browser.extensions.delete",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic browser-extensions.delete",
-      usage: "bctrl help --topic browser-extensions.delete",
+      command: "bctrl help --topic browser.extensions.delete",
+      usage: "bctrl help --topic browser.extensions.delete",
     },
     mcp: {
       toolName: "bctrl_browser_extensions_delete",
-      operationResource: "operations://browser-extensions.delete",
+      operationResource: "operations://browser.extensions.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser-extensions.delete",
+        command: "bctrl help --topic browser.extensions.delete",
       },
     ],
   },
-  "browser-extensions.get": {
+  "browser.extensions.get": {
     type: "topic",
-    topic: "browser-extensions.get",
-    aliases: ["browser-extensions get"],
+    topic: "browser.extensions.get",
+    aliases: ["browser extensions get"],
     title: "Get a browser extension",
     summary:
       "Get one managed browser extension using the simplified browser extension resource.",
@@ -1564,20 +1683,10 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Extensions",
-        url: "https://platform.bctrl.ai/sdk/extensions",
-        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
-        description:
-          "Upload or import browser extensions and load them into runtimes.",
-      },
-    ],
     api: {
       method: "GET",
-      path: "/v1/browser-extensions/{extensionId}",
-      operationId: "browser-extensions.get",
+      path: "/v1/browser/extensions/{extensionId}",
+      operationId: "browser.extensions.get",
       responseFields: [
         "contentHash",
         "createdAt",
@@ -1595,175 +1704,29 @@ export const CLI_HELP_COMMANDS = {
     sdk: [
       {
         language: "typescript",
-        method: "browser-extensions.get",
+        method: "browser.extensions.get",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic browser-extensions.get",
-      usage: "bctrl help --topic browser-extensions.get",
+      command: "bctrl help --topic browser.extensions.get",
+      usage: "bctrl help --topic browser.extensions.get",
     },
     mcp: {
       toolName: "bctrl_browser_extensions_get",
-      operationResource: "operations://browser-extensions.get",
+      operationResource: "operations://browser.extensions.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser-extensions.get",
+        command: "bctrl help --topic browser.extensions.get",
       },
     ],
   },
-  "browser-extensions.import": {
+  "browser.extensions.list": {
     type: "topic",
-    topic: "browser-extensions.import",
-    aliases: ["browser-extensions import"],
-    title: "Import a browser extension from a Chrome Web Store URL",
-    summary:
-      "Import a browser extension from a Chrome Web Store detail URL and return the simplified browser extension resource.",
-    inputs: {
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "BrowserExtensionImportRequest",
-        schemaResource: "schemas://BrowserExtensionImportRequest",
-        fields: [
-          {
-            name: "url",
-            type: "string",
-            required: true,
-          },
-          {
-            name: "name",
-            type: "string",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "contentHash",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-        },
-        {
-          name: "format",
-          type: "crx",
-          required: true,
-          values: ["crx"],
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "profileCount",
-          type: "integer",
-          required: true,
-        },
-        {
-          name: "sizeBytes",
-          type: "integer",
-          required: false,
-        },
-        {
-          name: "sourceUrl",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "subaccountId",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-        },
-        {
-          name: "version",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Extensions",
-        url: "https://platform.bctrl.ai/sdk/extensions",
-        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
-        description:
-          "Upload or import browser extensions and load them into runtimes.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/browser-extensions/import",
-      operationId: "browser-extensions.import",
-      requestFields: ["url", "name"],
-      responseFields: [
-        "contentHash",
-        "createdAt",
-        "format",
-        "id",
-        "name",
-        "profileCount",
-        "sizeBytes",
-        "sourceUrl",
-        "subaccountId",
-        "updatedAt",
-        "version",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "browser-extensions.import",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic browser-extensions.import",
-      usage: "bctrl help --topic browser-extensions.import",
-    },
-    mcp: {
-      toolName: "bctrl_browser_extensions_import",
-      operationResource: "operations://browser-extensions.import",
-      schemaResources: ["schemas://BrowserExtensionImportRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic browser-extensions.import",
-      },
-    ],
-  },
-  "browser-extensions.list": {
-    type: "topic",
-    topic: "browser-extensions.list",
-    aliases: ["browser-extensions list"],
+    topic: "browser.extensions.list",
+    aliases: ["browser extensions list"],
     title: "List browser extensions",
     summary:
       "List managed browser extensions using the simplified response envelope.",
@@ -1821,48 +1784,38 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Extensions",
-        url: "https://platform.bctrl.ai/sdk/extensions",
-        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
-        description:
-          "Upload or import browser extensions and load them into runtimes.",
-      },
-    ],
     api: {
       method: "GET",
-      path: "/v1/browser-extensions",
-      operationId: "browser-extensions.list",
+      path: "/v1/browser/extensions",
+      operationId: "browser.extensions.list",
       responseFields: ["data", "nextCursor"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "browser-extensions.list",
+        method: "browser.extensions.list",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic browser-extensions.list",
-      usage: "bctrl help --topic browser-extensions.list",
+      command: "bctrl help --topic browser.extensions.list",
+      usage: "bctrl help --topic browser.extensions.list",
     },
     mcp: {
       toolName: "bctrl_browser_extensions_list",
-      operationResource: "operations://browser-extensions.list",
+      operationResource: "operations://browser.extensions.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser-extensions.list",
+        command: "bctrl help --topic browser.extensions.list",
       },
     ],
   },
-  "browser-extensions.update": {
+  "browser.extensions.update": {
     type: "topic",
-    topic: "browser-extensions.update",
-    aliases: ["browser-extensions update"],
+    topic: "browser.extensions.update",
+    aliases: ["browser extensions update"],
     title: "Update a browser extension",
     summary:
       "Update customer-controlled browser extension metadata such as the display name.",
@@ -1955,20 +1908,10 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Extensions",
-        url: "https://platform.bctrl.ai/sdk/extensions",
-        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
-        description:
-          "Upload or import browser extensions and load them into runtimes.",
-      },
-    ],
     api: {
       method: "PATCH",
-      path: "/v1/browser-extensions/{extensionId}",
-      operationId: "browser-extensions.update",
+      path: "/v1/browser/extensions/{extensionId}",
+      operationId: "browser.extensions.update",
       requestFields: ["name"],
       responseFields: [
         "contentHash",
@@ -1987,34 +1930,40 @@ export const CLI_HELP_COMMANDS = {
     sdk: [
       {
         language: "typescript",
-        method: "browser-extensions.update",
+        method: "browser.extensions.update",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic browser-extensions.update",
-      usage: "bctrl help --topic browser-extensions.update",
+      command: "bctrl help --topic browser.extensions.update",
+      usage: "bctrl help --topic browser.extensions.update",
     },
     mcp: {
       toolName: "bctrl_browser_extensions_update",
-      operationResource: "operations://browser-extensions.update",
+      operationResource: "operations://browser.extensions.update",
       schemaResources: ["schemas://BrowserExtensionUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser-extensions.update",
+        command: "bctrl help --topic browser.extensions.update",
       },
     ],
   },
-  "browser-extensions.upload": {
+  "conversations.cancel": {
     type: "topic",
-    topic: "browser-extensions.upload",
-    aliases: ["browser-extensions upload"],
-    title: "Upload a browser extension",
-    summary:
-      "Upload a browser extension package and return the simplified browser extension resource.",
+    topic: "conversations.cancel",
+    aliases: ["conversations cancel"],
+    title: "Cancel the active agent turn",
+    summary: "Cancel the active turn in a conversation.",
     inputs: {
+      path: [
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+        },
+      ],
       headers: [
         {
           name: "BCTRL-Subaccount-Id",
@@ -2028,9 +1977,121 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "contentHash",
+          name: "cancelled",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "turnId",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent, streamable Agent message threads.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/conversations/{conversationId}/cancel",
+      operationId: "conversations.cancel",
+      responseFields: ["cancelled", "conversationId", "turnId"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.cancel",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic conversations.cancel",
+      usage: "bctrl help --topic conversations.cancel",
+    },
+    mcp: {
+      toolName: "bctrl_conversations_cancel",
+      operationResource: "operations://conversations.cancel",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic conversations.cancel",
+      },
+    ],
+  },
+  "conversations.create": {
+    type: "topic",
+    topic: "conversations.create",
+    aliases: ["conversations create"],
+    title: "Create a conversation bound to an active runtime",
+    summary: "Create an agent conversation bound to an active runtime.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+      body: {
+        schema: "ConversationCreateRequest",
+        schemaResource: "schemas://ConversationCreateRequest",
+        fields: [
+          {
+            name: "agent",
+            type: "stagehand | browser-use",
+            required: true,
+            values: ["stagehand", "browser-use"],
+          },
+          {
+            name: "runtimeId",
+            type: "string",
+            required: true,
+          },
+          {
+            name: "model",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "toolsetId",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "title",
+            type: "string",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "activeTurnId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "agent",
+          type: "stagehand | browser-use",
+          required: true,
+          values: ["stagehand", "browser-use"],
         },
         {
           name: "createdAt",
@@ -2038,10 +2099,146 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "format",
-          type: "crx",
+          name: "id",
+          type: "string",
           required: true,
-          values: ["crx"],
+        },
+        {
+          name: "model",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "runtimeId",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "idle | active",
+          required: true,
+          values: ["idle", "active"],
+        },
+        {
+          name: "title",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "toolsetId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent, streamable Agent message threads.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/conversations",
+      operationId: "conversations.create",
+      requestFields: ["agent", "runtimeId", "model", "toolsetId", "title"],
+      responseFields: [
+        "activeTurnId",
+        "agent",
+        "createdAt",
+        "id",
+        "model",
+        "runtimeId",
+        "status",
+        "title",
+        "toolsetId",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic conversations.create",
+      usage: "bctrl help --topic conversations.create",
+    },
+    mcp: {
+      toolName: "bctrl_conversations_create",
+      operationResource: "operations://conversations.create",
+      schemaResources: ["schemas://ConversationCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic conversations.create",
+      },
+    ],
+  },
+  "conversations.get": {
+    type: "topic",
+    topic: "conversations.get",
+    aliases: ["conversations get"],
+    title: "Get a conversation with its messages and turns",
+    summary: "Get a conversation with its durable messages and turns.",
+    inputs: {
+      path: [
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+        },
+      ],
+      query: [
+        {
+          name: "messageCursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "messageLimit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "activeTurnId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "agent",
+          type: "stagehand | browser-use",
+          required: true,
+          values: ["stagehand", "browser-use"],
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
         },
         {
           name: "id",
@@ -2049,37 +2246,295 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "name",
+          name: "messages",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "model",
           type: "string",
           required: true,
         },
         {
-          name: "profileCount",
-          type: "integer",
+          name: "nextMessageCursor",
+          type: "string | null",
           required: true,
         },
         {
-          name: "sizeBytes",
-          type: "integer",
-          required: false,
+          name: "runtimeId",
+          type: "string",
+          required: true,
         },
         {
-          name: "sourceUrl",
-          type: "string",
-          required: false,
+          name: "status",
+          type: "idle | active",
+          required: true,
+          values: ["idle", "active"],
         },
         {
-          name: "subaccountId",
+          name: "streamCursor",
           type: "string",
-          required: false,
+          required: true,
+        },
+        {
+          name: "title",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "toolsetId",
+          type: "string | null",
+          required: true,
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
         },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent, streamable Agent message threads.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/conversations/{conversationId}",
+      operationId: "conversations.get",
+      responseFields: [
+        "activeTurnId",
+        "agent",
+        "createdAt",
+        "id",
+        "messages",
+        "model",
+        "nextMessageCursor",
+        "runtimeId",
+        "status",
+        "streamCursor",
+        "title",
+        "toolsetId",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic conversations.get",
+      usage: "bctrl help --topic conversations.get",
+    },
+    mcp: {
+      toolName: "bctrl_conversations_get",
+      operationResource: "operations://conversations.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic conversations.get",
+      },
+    ],
+  },
+  "conversations.list": {
+    type: "topic",
+    topic: "conversations.list",
+    aliases: ["conversations list"],
+    title: "List agent conversations",
+    summary: "List durable agent conversations.",
+    inputs: {
+      query: [
         {
-          name: "version",
+          name: "runtimeId",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "status",
+          type: "idle | active",
+          required: false,
+          values: ["idle", "active"],
+        },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: false,
+          description:
+            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent, streamable Agent message threads.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/conversations",
+      operationId: "conversations.list",
+      responseFields: ["data", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic conversations.list",
+      usage: "bctrl help --topic conversations.list",
+    },
+    mcp: {
+      toolName: "bctrl_conversations_list",
+      operationResource: "operations://conversations.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic conversations.list",
+      },
+    ],
+  },
+  "conversations.messages.create": {
+    type: "topic",
+    topic: "conversations.messages.create",
+    aliases: ["conversations messages create"],
+    title: "Append a user message and start one agent turn",
+    summary: "Append a user message and start one agent turn.",
+    inputs: {
+      path: [
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "ConversationMessageCreateRequest",
+        schemaResource: "schemas://ConversationMessageCreateRequest",
+        fields: [
+          {
+            name: "text",
+            type: "string",
+            required: true,
+          },
+          {
+            name: "agent",
+            type: "stagehand | browser-use",
+            required: false,
+            values: ["stagehand", "browser-use"],
+          },
+          {
+            name: "model",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "pageId",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "fileIds",
+            type: "string[]",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "messageId",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "spanId",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued",
+          required: true,
+          values: ["queued"],
+        },
+        {
+          name: "streamCursor",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "turnId",
           type: "string",
           required: true,
         },
@@ -2087,51 +2542,114 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Extensions",
-        url: "https://platform.bctrl.ai/sdk/extensions",
-        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
-        description:
-          "Upload or import browser extensions and load them into runtimes.",
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent, streamable Agent message threads.",
       },
     ],
     api: {
       method: "POST",
-      path: "/v1/browser-extensions/upload",
-      operationId: "browser-extensions.upload",
+      path: "/v1/conversations/{conversationId}/messages",
+      operationId: "conversations.messages.create",
+      requestFields: ["text", "agent", "model", "pageId", "fileIds"],
       responseFields: [
-        "contentHash",
-        "createdAt",
-        "format",
-        "id",
-        "name",
-        "profileCount",
-        "sizeBytes",
-        "sourceUrl",
-        "subaccountId",
-        "updatedAt",
-        "version",
+        "messageId",
+        "runId",
+        "spanId",
+        "status",
+        "streamCursor",
+        "turnId",
       ],
     },
     sdk: [
       {
         language: "typescript",
-        method: "browser-extensions.upload",
+        method: "conversations.messages.create",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic browser-extensions.upload",
-      usage: "bctrl help --topic browser-extensions.upload",
+      command: "bctrl help --topic conversations.messages.create",
+      usage: "bctrl help --topic conversations.messages.create",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_upload",
-      operationResource: "operations://browser-extensions.upload",
+      toolName: "bctrl_conversations_messages_create",
+      operationResource: "operations://conversations.messages.create",
+      schemaResources: ["schemas://ConversationMessageCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser-extensions.upload",
+        command: "bctrl help --topic conversations.messages.create",
+      },
+    ],
+  },
+  "conversations.stream": {
+    type: "topic",
+    topic: "conversations.stream",
+    aliases: ["conversations stream"],
+    title: "Stream normalized conversation events",
+    summary: "Stream normalized durable conversation events.",
+    inputs: {
+      path: [
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+        },
+      ],
+      query: [
+        {
+          name: "after",
+          type: "string",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent, streamable Agent message threads.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/conversations/{conversationId}/stream",
+      operationId: "conversations.stream",
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.stream",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic conversations.stream",
+      usage: "bctrl help --topic conversations.stream",
+    },
+    mcp: {
+      toolName: "bctrl_conversations_stream",
+      operationResource: "operations://conversations.stream",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic conversations.stream",
       },
     ],
   },
@@ -2230,7 +2748,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
       ],
@@ -2321,7 +2839,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -2341,12 +2859,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
           name: "runtimeId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
@@ -2362,7 +2880,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -2439,7 +2957,7 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
           description:
-            "Filter by a space UUID, or pass `default` to use the caller default space.",
+            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
         },
         {
           name: "source",
@@ -2464,12 +2982,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
           name: "runtimeId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
@@ -2632,7 +3150,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -2652,12 +3170,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
           name: "runtimeId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
@@ -2673,7 +3191,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -2752,7 +3270,7 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
           description:
-            "Filter by a space UUID, or pass `default` to use the caller default space.",
+            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
         },
       ],
       headers: [
@@ -2789,7 +3307,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -2809,12 +3327,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
           name: "runtimeId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
@@ -2830,7 +3348,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -3046,719 +3564,6 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "human-actions.cancel": {
-    type: "topic",
-    topic: "human-actions.cancel",
-    aliases: ["human-actions cancel"],
-    title: "Cancel a human action",
-    summary: "Cancel the addressed human action if it is still pending.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "humanActionId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelledAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "completedAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiredAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "message",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "requested | completed | cancelled | expired",
-          required: true,
-          values: ["requested", "completed", "cancelled", "expired"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/human-actions/{humanActionId}/cancel",
-      operationId: "human-actions.cancel",
-      responseFields: [
-        "cancelledAt",
-        "completedAt",
-        "createdAt",
-        "expiredAt",
-        "expiresAt",
-        "id",
-        "invocationId",
-        "message",
-        "runId",
-        "runtimeId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "human-actions.cancel",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic human-actions.cancel",
-      usage: "bctrl help --topic human-actions.cancel",
-    },
-    mcp: {
-      toolName: "bctrl_human_actions_cancel",
-      operationResource: "operations://human-actions.cancel",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic human-actions.cancel",
-      },
-    ],
-  },
-  "human-actions.complete": {
-    type: "topic",
-    topic: "human-actions.complete",
-    aliases: ["human-actions complete"],
-    title: "Complete a human action",
-    summary:
-      "Mark the addressed human action completed after a user performed the requested work. Id-addressed completion never races a newer request on the same runtime.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "humanActionId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelledAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "completedAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiredAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "message",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "requested | completed | cancelled | expired",
-          required: true,
-          values: ["requested", "completed", "cancelled", "expired"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/human-actions/{humanActionId}/complete",
-      operationId: "human-actions.complete",
-      responseFields: [
-        "cancelledAt",
-        "completedAt",
-        "createdAt",
-        "expiredAt",
-        "expiresAt",
-        "id",
-        "invocationId",
-        "message",
-        "runId",
-        "runtimeId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "human-actions.complete",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic human-actions.complete",
-      usage: "bctrl help --topic human-actions.complete",
-    },
-    mcp: {
-      toolName: "bctrl_human_actions_complete",
-      operationResource: "operations://human-actions.complete",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic human-actions.complete",
-      },
-    ],
-  },
-  "human-actions.get": {
-    type: "topic",
-    topic: "human-actions.get",
-    aliases: ["human-actions get"],
-    title: "Get a human action",
-    summary:
-      "Get one human action by id under its runtime. Unlike the current-action route, this always addresses the same request.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "humanActionId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelledAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "completedAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiredAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "message",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "requested | completed | cancelled | expired",
-          required: true,
-          values: ["requested", "completed", "cancelled", "expired"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    api: {
-      method: "GET",
-      path: "/v1/runtimes/{runtimeId}/human-actions/{humanActionId}",
-      operationId: "human-actions.get",
-      responseFields: [
-        "cancelledAt",
-        "completedAt",
-        "createdAt",
-        "expiredAt",
-        "expiresAt",
-        "id",
-        "invocationId",
-        "message",
-        "runId",
-        "runtimeId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "human-actions.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic human-actions.get",
-      usage: "bctrl help --topic human-actions.get",
-    },
-    mcp: {
-      toolName: "bctrl_human_actions_get",
-      operationResource: "operations://human-actions.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic human-actions.get",
-      },
-    ],
-  },
-  "human-actions.wait": {
-    type: "topic",
-    topic: "human-actions.wait",
-    aliases: ["human-actions wait"],
-    title: "Wait for a human action",
-    summary:
-      "Wait until the addressed human action is completed, cancelled, or expired. When timeoutSeconds is provided, return timeout if that shorter wait window is reached first.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "humanActionId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "HumanActionWaitRequest",
-        schemaResource: "schemas://HumanActionWaitRequest",
-        fields: [
-          {
-            name: "timeoutSeconds",
-            type: "integer",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelledAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "completedAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiredAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "message",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "retryAfterSeconds",
-          type: "integer",
-          required: false,
-        },
-        {
-          name: "runId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "requested | completed | cancelled | expired",
-          required: true,
-          values: ["requested", "completed", "cancelled", "expired"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "waitStatus",
-          type: "resolved | timeout",
-          required: true,
-          values: ["resolved", "timeout"],
-        },
-      ],
-    },
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/human-actions/{humanActionId}/wait",
-      operationId: "human-actions.wait",
-      requestFields: ["timeoutSeconds"],
-      responseFields: [
-        "cancelledAt",
-        "completedAt",
-        "createdAt",
-        "expiredAt",
-        "expiresAt",
-        "id",
-        "invocationId",
-        "message",
-        "retryAfterSeconds",
-        "runId",
-        "runtimeId",
-        "status",
-        "updatedAt",
-        "waitStatus",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "human-actions.wait",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic human-actions.wait",
-      usage: "bctrl help --topic human-actions.wait",
-    },
-    mcp: {
-      toolName: "bctrl_human_actions_wait",
-      operationResource: "operations://human-actions.wait",
-      schemaResources: ["schemas://HumanActionWaitRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic human-actions.wait",
-      },
-    ],
-  },
-  "invocations.get": {
-    type: "topic",
-    topic: "invocations.get",
-    aliases: ["invocations get"],
-    title: "Get an invocation",
-    summary:
-      "Get one durable invocation directly by id. Use this when an event or activity item gives you an invocation id without its parent run.",
-    inputs: {
-      path: [
-        {
-          name: "invocationId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "action",
-          type: "act | observe | extract | browserUse | stagehandAgent | solveCaptcha",
-          required: true,
-          values: [
-            "act",
-            "observe",
-            "extract",
-            "browserUse",
-            "stagehandAgent",
-            "solveCaptcha",
-          ],
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "durationSeconds",
-          type: "number | null",
-          required: false,
-        },
-        {
-          name: "error",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "finishedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "output",
-          type: "unknown",
-          required: false,
-          description:
-            "Any valid JSON value: object, array, string, number, boolean, or null.",
-        },
-        {
-          name: "runId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "startedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "status",
-          type: "queued | dispatching | running | cancelling | succeeded | failed | cancelled | timed_out",
-          required: true,
-          values: [
-            "queued",
-            "dispatching",
-            "running",
-            "cancelling",
-            "succeeded",
-            "failed",
-            "cancelled",
-            "timed_out",
-          ],
-        },
-      ],
-    },
-    api: {
-      method: "GET",
-      path: "/v1/invocations/{invocationId}",
-      operationId: "invocations.get",
-      responseFields: [
-        "action",
-        "createdAt",
-        "durationSeconds",
-        "error",
-        "finishedAt",
-        "id",
-        "output",
-        "runId",
-        "runtimeId",
-        "startedAt",
-        "status",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "invocations.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic invocations.get",
-      usage: "bctrl help --topic invocations.get",
-    },
-    mcp: {
-      toolName: "bctrl_invocations_get",
-      operationResource: "operations://invocations.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic invocations.get",
-      },
-    ],
-  },
   "notification-recipients.create": {
     type: "topic",
     topic: "notification-recipients.create",
@@ -3813,7 +3618,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -3928,7 +3733,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
       ],
@@ -3977,7 +3782,7 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["notification-recipients list"],
     title: "List notification recipients",
     summary:
-      "List notification receivers used for human action requests. Use BCTRL-Subaccount-Id to scope the request to a subaccount.",
+      "List notification receivers used for input requests. Use BCTRL-Subaccount-Id to scope the request to a subaccount.",
     inputs: {
       query: [
         {
@@ -4123,7 +3928,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -6050,266 +5855,12 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "runs.activity.list": {
-    type: "topic",
-    topic: "runs.activity.list",
-    aliases: ["runs activity list"],
-    title: "List run activities",
-    summary:
-      "List unified activities for a run, including runtime, browser, invocation, tool, and system work.",
-    inputs: {
-      path: [
-        {
-          name: "runId",
-          type: "string",
-          required: true,
-        },
-      ],
-      query: [
-        {
-          name: "view",
-          type: "normal | debug",
-          required: false,
-          values: ["normal", "debug"],
-        },
-        {
-          name: "type",
-          type: "string[]",
-          required: false,
-          description:
-            "Filter by one or more activity types. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "category",
-          type: "runtime | browser | network | console | file | invocation | tool | captcha | agent | llm | system[]",
-          required: false,
-          description:
-            "Filter by one or more activity categories. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "severity",
-          type: "info | warning | error[]",
-          required: false,
-          description:
-            "Filter by one or more activity severities. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "invocationId",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "fileId",
-          type: "uuid",
-          required: false,
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
-          type: "object[]",
-          required: true,
-        },
-        {
-          name: "nextCursor",
-          type: "string | null",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Events & Activity",
-        url: "https://platform.bctrl.ai/sdk/events",
-        markdownUrl: "https://platform.bctrl.ai/sdk/events.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/events.md",
-        description:
-          "The structured event timeline and higher-level activity view of a run.",
-      },
-      {
-        title: "Runs",
-        url: "https://platform.bctrl.ai/sdk/runs",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "The durable record of a runtime's lifecycle - events, activity, live view, recording, and files.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runs/{runId}/activity",
-      operationId: "runs.activity.list",
-      responseFields: ["data", "nextCursor"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runs.activity.list",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runs.activity.list",
-      usage: "bctrl help --topic runs.activity.list",
-    },
-    mcp: {
-      toolName: "bctrl_runs_activity_list",
-      operationResource: "operations://runs.activity.list",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runs.activity.list",
-      },
-    ],
-  },
-  "runs.activity.stream": {
-    type: "topic",
-    topic: "runs.activity.stream",
-    aliases: ["runs activity stream"],
-    title: "Stream run activities",
-    summary:
-      'Stream unified run activities as Server-Sent Events.\n\nEach frame uses an `event:` line and a JSON `data:` body. Durable activity frames also include an `id:` line that can be used as the next `cursor`.\n\n### Event frames\n\n| Event | Has `id` | Data schema | When it is sent |\n|---|---:|---|---|\n| `run.activity` | Yes | `RunActivityItem` | A new activity item is available. |\n| `heartbeat` | No | `{ time: string }` | Keeps the stream alive while no activity is emitted. |\n| `run.ended` | No | `{ runId: string, status: RunStatus, finishedAt: string | null, failure: RunFailure | null }` | Terminal frame emitted when the run finishes. |\n\n### Example\n\n```text\nevent: run.activity\nid: act_123\ndata: {"id":"act_123","runId":"run_123","type":"log","time":"2026-06-25T12:00:00.000Z"}\n\nevent: heartbeat\ndata: {"time":"2026-06-25T12:00:05.000Z"}\n\nevent: run.ended\ndata: {"runId":"run_123","status":"completed","finishedAt":"2026-06-25T12:01:00.000Z","failure":null}\n```',
-    inputs: {
-      path: [
-        {
-          name: "runId",
-          type: "string",
-          required: true,
-        },
-      ],
-      query: [
-        {
-          name: "view",
-          type: "normal | debug",
-          required: false,
-          values: ["normal", "debug"],
-        },
-        {
-          name: "type",
-          type: "string[]",
-          required: false,
-          description:
-            "Filter by one or more activity types. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "category",
-          type: "runtime | browser | network | console | file | invocation | tool | captcha | agent | llm | system[]",
-          required: false,
-          description:
-            "Filter by one or more activity categories. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "severity",
-          type: "info | warning | error[]",
-          required: false,
-          description:
-            "Filter by one or more activity severities. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "invocationId",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "fileId",
-          type: "uuid",
-          required: false,
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Events & Activity",
-        url: "https://platform.bctrl.ai/sdk/events",
-        markdownUrl: "https://platform.bctrl.ai/sdk/events.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/events.md",
-        description:
-          "The structured event timeline and higher-level activity view of a run.",
-      },
-      {
-        title: "Runs",
-        url: "https://platform.bctrl.ai/sdk/runs",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "The durable record of a runtime's lifecycle - events, activity, live view, recording, and files.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runs/{runId}/activity/stream",
-      operationId: "runs.activity.stream",
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runs.activity.stream",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runs.activity.stream",
-      usage: "bctrl help --topic runs.activity.stream",
-    },
-    mcp: {
-      toolName: "bctrl_runs_activity_stream",
-      operationResource: "operations://runs.activity.stream",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runs.activity.stream",
-      },
-    ],
-  },
   "runs.events.list": {
     type: "topic",
     topic: "runs.events.list",
     aliases: ["runs events list"],
     title: "List run events",
-    summary:
-      "List the canonical machine-readable event stream for a run using the simplified response envelope.",
+    summary: "List raw machine-readable runtime events for a run.",
     inputs: {
       path: [
         {
@@ -6321,17 +5872,22 @@ export const CLI_HELP_COMMANDS = {
       query: [
         {
           name: "type",
-          type: "runtime.lifecycle | navigation | network.request | network.response | network.failed | console.message | page.error | page.crash | dialog | download | captcha.solve.started | captcha.solve.succeeded | captcha.solve.failed[]",
+          type: "string[]",
           required: false,
           description:
-            "Filter by one or more event types. Repeat the query parameter for multiple values.",
+            "Filter by one or more namespaced event types. Repeat the query parameter for multiple values.",
         },
         {
-          name: "status",
-          type: "started | stopped | failed | finished | received[]",
+          name: "source",
+          type: "control-plane | browser-host | runtime-agent | gateway | cdp | webdriver[]",
           required: false,
           description:
-            "Filter by one or more event statuses. Repeat the query parameter for multiple values.",
+            "Filter by one or more event sources. Repeat the query parameter for multiple values.",
+        },
+        {
+          name: "spanId",
+          type: "string",
+          required: false,
         },
         {
           name: "pageId",
@@ -6339,11 +5895,6 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "contextId",
-          type: "string",
-          required: false,
-        },
-        {
           name: "cursor",
           type: "string",
           required: false,
@@ -6380,20 +5931,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Events & Activity",
-        url: "https://platform.bctrl.ai/sdk/events",
-        markdownUrl: "https://platform.bctrl.ai/sdk/events.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/events.md",
-        description:
-          "The structured event timeline and higher-level activity view of a run.",
-      },
-      {
-        title: "Runs",
+        title: "Runs and traces",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
         description:
-          "The durable record of a runtime's lifecycle - events, activity, live view, recording, and files.",
+          "One observability root for every runtime automation path.",
       },
     ],
     api: {
@@ -6424,13 +5967,12 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "runs.events.stream": {
+  "runs.files.list": {
     type: "topic",
-    topic: "runs.events.stream",
-    aliases: ["runs events stream"],
-    title: "Stream run events",
-    summary:
-      'Stream canonical run events as Server-Sent Events.\n\nEach frame uses an `event:` line and a JSON `data:` body. Durable run-event frames also include an `id:` line that can be used as the next `cursor`.\n\n### Event frames\n\n| Event | Has `id` | Data schema | When it is sent |\n|---|---:|---|---|\n| `run.event` | Yes | `RunEvent` | A new canonical run event is available. |\n| `heartbeat` | No | `{ time: string }` | Keeps the stream alive while no event is emitted. |\n| `run.ended` | No | `{ runId: string, status: RunStatus, finishedAt: string | null, failure: RunFailure | null }` | Terminal frame emitted when the run finishes. |\n\n### Example\n\n```text\nevent: run.event\nid: evt_123\ndata: {"id":"evt_123","runId":"run_123","type":"runtime.lifecycle","status":"completed"}\n\nevent: heartbeat\ndata: {"time":"2026-06-25T12:00:05.000Z"}\n\nevent: run.ended\ndata: {"runId":"run_123","status":"completed","finishedAt":"2026-06-25T12:01:00.000Z","failure":null}\n```',
+    topic: "runs.files.list",
+    aliases: ["runs files list"],
+    title: "List files attached to a run",
+    summary: "List durable files attached to a run.",
     inputs: {
       path: [
         {
@@ -6440,30 +5982,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       query: [
-        {
-          name: "type",
-          type: "runtime.lifecycle | navigation | network.request | network.response | network.failed | console.message | page.error | page.crash | dialog | download | captcha.solve.started | captcha.solve.succeeded | captcha.solve.failed[]",
-          required: false,
-          description:
-            "Filter by one or more event types. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "status",
-          type: "started | stopped | failed | finished | received[]",
-          required: false,
-          description:
-            "Filter by one or more event statuses. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "pageId",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "contextId",
-          type: "string",
-          required: false,
-        },
         {
           name: "cursor",
           type: "string",
@@ -6485,235 +6003,55 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
     docs: [
       {
-        title: "Events & Activity",
-        url: "https://platform.bctrl.ai/sdk/events",
-        markdownUrl: "https://platform.bctrl.ai/sdk/events.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/events.md",
-        description:
-          "The structured event timeline and higher-level activity view of a run.",
-      },
-      {
-        title: "Runs",
+        title: "Runs and traces",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
         description:
-          "The durable record of a runtime's lifecycle - events, activity, live view, recording, and files.",
+          "One observability root for every runtime automation path.",
       },
     ],
     api: {
       method: "GET",
-      path: "/v1/runs/{runId}/events/stream",
-      operationId: "runs.events.stream",
+      path: "/v1/runs/{runId}/files",
+      operationId: "runs.files.list",
+      responseFields: ["data", "nextCursor"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "runs.events.stream",
+        method: "runs.files.list",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.events.stream",
-      usage: "bctrl help --topic runs.events.stream",
+      command: "bctrl help --topic runs.files.list",
+      usage: "bctrl help --topic runs.files.list",
     },
     mcp: {
-      toolName: "bctrl_runs_events_stream",
-      operationResource: "operations://runs.events.stream",
+      toolName: "bctrl_runs_files_list",
+      operationResource: "operations://runs.files.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.events.stream",
-      },
-    ],
-  },
-  "runs.files.export": {
-    type: "topic",
-    topic: "runs.files.export",
-    aliases: ["runs files export"],
-    title: "Export run files",
-    summary: "Export run files as a ZIP file.",
-    inputs: {
-      path: [
-        {
-          name: "runId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "RunsFilesExportRequest",
-        schemaResource: "schemas://RunsFilesExportRequest",
-        fields: [
-          {
-            name: "name",
-            type: "string",
-            required: false,
-            description:
-              "File name for the exported archive (no path segments; must end with .zip).",
-          },
-          {
-            name: "type",
-            type: "string[]",
-            required: false,
-            description: "Restrict the export to these artifact types.",
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "contentType",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-        },
-        {
-          name: "downloadUrl",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "datetime",
-          required: false,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "path",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "uuid",
-          required: false,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: false,
-        },
-        {
-          name: "sizeBytes",
-          type: "integer",
-          required: true,
-        },
-        {
-          name: "source",
-          type: "upload | runtime",
-          required: true,
-          values: ["upload", "runtime"],
-        },
-        {
-          name: "spaceId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "type",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Run Files",
-        url: "https://platform.bctrl.ai/sdk/run-files",
-        markdownUrl: "https://platform.bctrl.ai/sdk/run-files.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/run-files.md",
-        description: "List and export the files a run produced.",
-      },
-      {
-        title: "Runs",
-        url: "https://platform.bctrl.ai/sdk/runs",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "The durable record of a runtime's lifecycle - events, activity, live view, recording, and files.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runs/{runId}/files/export",
-      operationId: "runs.files.export",
-      requestFields: ["name", "type"],
-      responseFields: [
-        "contentType",
-        "createdAt",
-        "downloadUrl",
-        "expiresAt",
-        "id",
-        "metadata",
-        "name",
-        "path",
-        "runId",
-        "runtimeId",
-        "sizeBytes",
-        "source",
-        "spaceId",
-        "type",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runs.files.export",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runs.files.export",
-      usage: "bctrl help --topic runs.files.export",
-    },
-    mcp: {
-      toolName: "bctrl_runs_files_export",
-      operationResource: "operations://runs.files.export",
-      schemaResources: ["schemas://RunsFilesExportRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runs.files.export",
+        command: "bctrl help --topic runs.files.list",
       },
     ],
   },
@@ -6746,52 +6084,52 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "counts",
           type: "object",
-          required: false,
+          required: true,
         },
         {
           name: "createdAt",
-          type: "string",
+          type: "datetime",
           required: true,
         },
         {
           name: "durationSeconds",
           type: "number | null",
-          required: false,
+          required: true,
         },
         {
           name: "failure",
           type: "object | null",
-          required: false,
+          required: true,
         },
         {
           name: "finishedAt",
-          type: "string | null",
-          required: false,
+          type: "datetime | null",
+          required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
           name: "runtimeId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
           name: "runtimeType",
-          type: "browser",
+          type: "browser | desktop | spreadsheet",
           required: true,
-          values: ["browser"],
+          values: ["browser", "desktop", "spreadsheet"],
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
           name: "startedAt",
-          type: "string",
+          type: "datetime",
           required: true,
         },
         {
@@ -6809,12 +6147,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runs",
+        title: "Runs and traces",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
         description:
-          "The durable record of a runtime's lifecycle - events, activity, live view, recording, and files.",
+          "One observability root for every runtime automation path.",
       },
     ],
     api: {
@@ -6858,117 +6196,6 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "runs.invocations.list": {
-    type: "topic",
-    topic: "runs.invocations.list",
-    aliases: ["runs invocations list"],
-    title: "List run invocations",
-    summary:
-      "List the invocations a run produced using the simplified response envelope. This is the observability view over invocation history.",
-    inputs: {
-      path: [
-        {
-          name: "runId",
-          type: "string",
-          required: true,
-        },
-      ],
-      query: [
-        {
-          name: "status",
-          type: "queued | dispatching | running | cancelling | succeeded | failed | cancelled | timed_out[]",
-          required: false,
-          description:
-            "Filter by one or more invocation statuses. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "action",
-          type: "act | observe | extract | browserUse | stagehandAgent | solveCaptcha[]",
-          required: false,
-          description:
-            "Filter by one or more invocation actions. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
-          type: "object[]",
-          required: true,
-        },
-        {
-          name: "nextCursor",
-          type: "string | null",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Invocations",
-        url: "https://platform.bctrl.ai/sdk/invocations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/invocations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/invocations.md",
-        description:
-          "Hosted agent work BCTRL runs inside a runtime - act, observe, extract, and browser-use.",
-      },
-      {
-        title: "Runs",
-        url: "https://platform.bctrl.ai/sdk/runs",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "The durable record of a runtime's lifecycle - events, activity, live view, recording, and files.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runs/{runId}/invocations",
-      operationId: "runs.invocations.list",
-      responseFields: ["data", "nextCursor"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runs.invocations.list",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runs.invocations.list",
-      usage: "bctrl help --topic runs.invocations.list",
-    },
-    mcp: {
-      toolName: "bctrl_runs_invocations_list",
-      operationResource: "operations://runs.invocations.list",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runs.invocations.list",
-      },
-    ],
-  },
   "runs.list": {
     type: "topic",
     topic: "runs.list",
@@ -6987,12 +6214,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
           name: "runtimeId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
@@ -7032,12 +6259,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runs",
+        title: "Runs and traces",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
         description:
-          "The durable record of a runtime's lifecycle - events, activity, live view, recording, and files.",
+          "One observability root for every runtime automation path.",
       },
     ],
     api: {
@@ -7068,6 +6295,201 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "runs.stream": {
+    type: "topic",
+    topic: "runs.stream",
+    aliases: ["runs stream"],
+    title: "Stream trace and runtime events for a run",
+    summary: "Stream ordered trace and runtime events for a run.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+        },
+      ],
+      query: [
+        {
+          name: "include",
+          type: "trace | events | trace | events[]",
+          required: false,
+        },
+        {
+          name: "after",
+          type: "string",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Runs and traces",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description:
+          "One observability root for every runtime automation path.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/runs/{runId}/stream",
+      operationId: "runs.stream",
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.stream",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic runs.stream",
+      usage: "bctrl help --topic runs.stream",
+    },
+    mcp: {
+      toolName: "bctrl_runs_stream",
+      operationResource: "operations://runs.stream",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic runs.stream",
+      },
+    ],
+  },
+  "runs.trace.list": {
+    type: "topic",
+    topic: "runs.trace.list",
+    aliases: ["runs trace list"],
+    title: "List trace spans for a run",
+    summary: "List structured trace spans for a run.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+        },
+      ],
+      query: [
+        {
+          name: "parentId",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "kind",
+          type: "runtime | agent | tool | llm | browser | network | file | system[]",
+          required: false,
+          description:
+            "Filter by one or more trace span kinds. Repeat the query parameter for multiple values.",
+        },
+        {
+          name: "status",
+          type: "queued | running | requires_input | suspended | succeeded | failed | cancelled | timed_out[]",
+          required: false,
+          description:
+            "Filter by one or more trace span statuses. Repeat the query parameter for multiple values.",
+        },
+        {
+          name: "resourceType",
+          type: "run | runtime | tool_call | agent_turn | message | file | artifact | connection",
+          required: false,
+          values: [
+            "run",
+            "runtime",
+            "tool_call",
+            "agent_turn",
+            "message",
+            "file",
+            "artifact",
+            "connection",
+          ],
+        },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Runs and traces",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description:
+          "One observability root for every runtime automation path.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/runs/{runId}/trace",
+      operationId: "runs.trace.list",
+      responseFields: ["data", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.trace.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic runs.trace.list",
+      usage: "bctrl help --topic runs.trace.list",
+    },
+    mcp: {
+      toolName: "bctrl_runs_trace_list",
+      operationResource: "operations://runs.trace.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic runs.trace.list",
+      },
+    ],
+  },
   "runtimes.create": {
     type: "topic",
     topic: "runtimes.create",
@@ -7091,7 +6513,7 @@ export const CLI_HELP_COMMANDS = {
         fields: [
           {
             name: "spaceId",
-            type: "uuid | default",
+            type: "string | default",
             required: false,
           },
           {
@@ -7132,7 +6554,7 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "activeRunId",
-          type: "uuid | null",
+          type: "string | null",
           required: true,
         },
         {
@@ -7157,7 +6579,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -7176,7 +6598,7 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "needsHumanAction",
+          name: "needsInput",
           type: "boolean",
           required: false,
         },
@@ -7187,7 +6609,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -7218,14 +6640,6 @@ export const CLI_HELP_COMMANDS = {
         description:
           "Configure stealth, proxy, fingerprint, extensions, and network behaviour on a browser runtime.",
       },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
     ],
     api: {
       method: "POST",
@@ -7250,7 +6664,7 @@ export const CLI_HELP_COMMANDS = {
         "lastActivityAt",
         "metadata",
         "name",
-        "needsHumanAction",
+        "needsInput",
         "profile",
         "spaceId",
         "status",
@@ -7316,21 +6730,11 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
     api: {
       method: "DELETE",
       path: "/v1/runtimes/{runtimeId}",
@@ -7356,453 +6760,6 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl help --topic runtimes.delete",
-      },
-    ],
-  },
-  "runtimes.files.collect": {
-    type: "topic",
-    topic: "runtimes.files.collect",
-    aliases: ["runtimes files collect"],
-    title: "Collect a runtime file",
-    summary:
-      "Copy a runtime-workspace file back into durable storage as a produced file for the active run.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "RuntimeFileCollectRequest",
-        schemaResource: "schemas://RuntimeFileCollectRequest",
-        fields: [
-          {
-            name: "runtimePath",
-            type: "string",
-            required: true,
-          },
-          {
-            name: "destinationPath",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "name",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "type",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "metadata",
-            type: "object",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "contentType",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-        },
-        {
-          name: "downloadUrl",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "datetime",
-          required: false,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "path",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "uuid",
-          required: false,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: false,
-        },
-        {
-          name: "sizeBytes",
-          type: "integer",
-          required: true,
-        },
-        {
-          name: "source",
-          type: "upload | runtime",
-          required: true,
-          values: ["upload", "runtime"],
-        },
-        {
-          name: "spaceId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "type",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Files",
-        url: "https://platform.bctrl.ai/sdk/files",
-        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
-        description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/files/collect",
-      operationId: "runtimes.files.collect",
-      requestFields: [
-        "runtimePath",
-        "destinationPath",
-        "name",
-        "type",
-        "metadata",
-      ],
-      responseFields: [
-        "contentType",
-        "createdAt",
-        "downloadUrl",
-        "expiresAt",
-        "id",
-        "metadata",
-        "name",
-        "path",
-        "runId",
-        "runtimeId",
-        "sizeBytes",
-        "source",
-        "spaceId",
-        "type",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.files.collect",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.files.collect",
-      usage: "bctrl help --topic runtimes.files.collect",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_files_collect",
-      operationResource: "operations://runtimes.files.collect",
-      schemaResources: ["schemas://RuntimeFileCollectRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.files.collect",
-      },
-    ],
-  },
-  "runtimes.files.stage": {
-    type: "topic",
-    topic: "runtimes.files.stage",
-    aliases: ["runtimes files stage"],
-    title: "Stage a runtime file",
-    summary:
-      "Copy a durable space storage file into a runtime. Use this when an agent needs a local file path inside the runtime.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "RuntimeFileStageRequest",
-        schemaResource: "schemas://RuntimeFileStageRequest",
-        fields: [
-          {
-            name: "fileId",
-            type: "uuid",
-            required: true,
-          },
-          {
-            name: "runtimePath",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "name",
-            type: "string",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "expiresAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "runtimePath",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "sizeBytes",
-          type: "integer",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Files",
-        url: "https://platform.bctrl.ai/sdk/files",
-        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
-        description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/files/stage",
-      operationId: "runtimes.files.stage",
-      requestFields: ["fileId", "runtimePath", "name"],
-      responseFields: [
-        "expiresAt",
-        "id",
-        "name",
-        "runtimeId",
-        "runtimePath",
-        "sizeBytes",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.files.stage",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.files.stage",
-      usage: "bctrl help --topic runtimes.files.stage",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_files_stage",
-      operationResource: "operations://runtimes.files.stage",
-      schemaResources: ["schemas://RuntimeFileStageRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.files.stage",
-      },
-    ],
-  },
-  "runtimes.files.upload": {
-    type: "topic",
-    topic: "runtimes.files.upload",
-    aliases: ["runtimes files upload"],
-    title: "Upload a file into a runtime",
-    summary:
-      "Upload a local file directly into the runtime workspace (also stored as a space file). Use `stage` if the file is already in the store.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "expiresAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "runtimePath",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "sizeBytes",
-          type: "integer",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Files",
-        url: "https://platform.bctrl.ai/sdk/files",
-        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
-        description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/files/upload",
-      operationId: "runtimes.files.upload",
-      responseFields: [
-        "expiresAt",
-        "id",
-        "name",
-        "runtimeId",
-        "runtimePath",
-        "sizeBytes",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.files.upload",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.files.upload",
-      usage: "bctrl help --topic runtimes.files.upload",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_files_upload",
-      operationResource: "operations://runtimes.files.upload",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.files.upload",
       },
     ],
   },
@@ -7834,7 +6791,7 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "activeRunId",
-          type: "uuid | null",
+          type: "string | null",
           required: true,
         },
         {
@@ -7861,7 +6818,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -7887,7 +6844,7 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "needsHumanAction",
+          name: "needsInput",
           type: "boolean",
           required: false,
         },
@@ -7904,7 +6861,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -7933,16 +6890,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
     api: {
       method: "GET",
       path: "/v1/runtimes/{runtimeId}",
@@ -7958,7 +6905,7 @@ export const CLI_HELP_COMMANDS = {
         "latestRun",
         "metadata",
         "name",
-        "needsHumanAction",
+        "needsInput",
         "profile",
         "protocol",
         "spaceId",
@@ -7990,1266 +6937,6 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "runtimes.human-actions.create": {
-    type: "topic",
-    topic: "runtimes.human-actions.create",
-    aliases: ["runtimes human-actions create"],
-    title: "Request human action",
-    summary:
-      "Request human action for a live runtime. The request is stored durably and all enabled organization notification receivers are notified.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "HumanActionCreateRequest",
-        schemaResource: "schemas://HumanActionCreateRequest",
-        fields: [
-          {
-            name: "message",
-            type: "string",
-            required: true,
-          },
-          {
-            name: "timeoutSeconds",
-            type: "integer",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelledAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "completedAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiredAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "message",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "requested | completed | cancelled | expired",
-          required: true,
-          values: ["requested", "completed", "cancelled", "expired"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Human-in-the-Loop",
-        url: "https://platform.bctrl.ai/sdk/human-in-the-loop",
-        markdownUrl: "https://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        description:
-          "Request human action on a running runtime, notify recipients, and wait until the human completes it.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/human-actions",
-      operationId: "runtimes.human-actions.create",
-      requestFields: ["message", "timeoutSeconds"],
-      responseFields: [
-        "cancelledAt",
-        "completedAt",
-        "createdAt",
-        "expiredAt",
-        "expiresAt",
-        "id",
-        "invocationId",
-        "message",
-        "runId",
-        "runtimeId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.humanActions.create",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.human-actions.create",
-      usage: "bctrl help --topic runtimes.human-actions.create",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_human_actions_create",
-      operationResource: "operations://runtimes.human-actions.create",
-      schemaResources: ["schemas://HumanActionCreateRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.human-actions.create",
-      },
-    ],
-  },
-  "runtimes.human-actions.current": {
-    type: "topic",
-    topic: "runtimes.human-actions.current",
-    aliases: ["runtimes human-actions current"],
-    title: "Get current human action",
-    summary:
-      "Get the current pending human action for a runtime. Returns not found when no action is pending; historical actions remain addressable by id.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelledAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "completedAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiredAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "message",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "uuid | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "requested | completed | cancelled | expired",
-          required: true,
-          values: ["requested", "completed", "cancelled", "expired"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Human-in-the-Loop",
-        url: "https://platform.bctrl.ai/sdk/human-in-the-loop",
-        markdownUrl: "https://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/human-in-the-loop.md",
-        description:
-          "Request human action on a running runtime, notify recipients, and wait until the human completes it.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runtimes/{runtimeId}/human-actions/current",
-      operationId: "runtimes.human-actions.current",
-      responseFields: [
-        "cancelledAt",
-        "completedAt",
-        "createdAt",
-        "expiredAt",
-        "expiresAt",
-        "id",
-        "invocationId",
-        "message",
-        "runId",
-        "runtimeId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.humanActions.current",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.human-actions.current",
-      usage: "bctrl help --topic runtimes.human-actions.current",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_human_actions_current",
-      operationResource: "operations://runtimes.human-actions.current",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.human-actions.current",
-      },
-    ],
-  },
-  "runtimes.invocations.cancel": {
-    type: "topic",
-    topic: "runtimes.invocations.cancel",
-    aliases: ["runtimes invocations cancel"],
-    title: "Cancel an invocation",
-    summary:
-      "Request cancellation for one durable invocation on its live runtime.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "action",
-          type: "act | observe | extract | browserUse | stagehandAgent | solveCaptcha",
-          required: true,
-          values: [
-            "act",
-            "observe",
-            "extract",
-            "browserUse",
-            "stagehandAgent",
-            "solveCaptcha",
-          ],
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "durationSeconds",
-          type: "number | null",
-          required: false,
-        },
-        {
-          name: "error",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "finishedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "output",
-          type: "unknown",
-          required: false,
-          description:
-            "Any valid JSON value: object, array, string, number, boolean, or null.",
-        },
-        {
-          name: "runId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "startedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "status",
-          type: "queued | dispatching | running | cancelling | succeeded | failed | cancelled | timed_out",
-          required: true,
-          values: [
-            "queued",
-            "dispatching",
-            "running",
-            "cancelling",
-            "succeeded",
-            "failed",
-            "cancelled",
-            "timed_out",
-          ],
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Hosted agents",
-        url: "https://platform.bctrl.ai/sdk/hosted-agents",
-        markdownUrl: "https://platform.bctrl.ai/sdk/hosted-agents.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/hosted-agents.md",
-        description:
-          "Run Stagehand and browser-use agents inside a runtime with a single call.",
-      },
-      {
-        title: "Invocations",
-        url: "https://platform.bctrl.ai/sdk/invocations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/invocations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/invocations.md",
-        description:
-          "Hosted agent work BCTRL runs inside a runtime - act, observe, extract, and browser-use.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/invocations/{invocationId}/cancel",
-      operationId: "runtimes.invocations.cancel",
-      responseFields: [
-        "action",
-        "createdAt",
-        "durationSeconds",
-        "error",
-        "finishedAt",
-        "id",
-        "output",
-        "runId",
-        "runtimeId",
-        "startedAt",
-        "status",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.invocations.cancel",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.invocations.cancel",
-      usage: "bctrl help --topic runtimes.invocations.cancel",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_invocations_cancel",
-      operationResource: "operations://runtimes.invocations.cancel",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.invocations.cancel",
-      },
-    ],
-  },
-  "runtimes.invocations.create": {
-    type: "topic",
-    topic: "runtimes.invocations.create",
-    aliases: ["runtimes invocations create"],
-    title: "Create a durable invocation for a live runtime",
-    summary:
-      "Submit durable browser work to a live runtime. The invocation action chooses what BCTRL does: act, observe, extract, stagehandAgent, browserUse, or solveCaptcha.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "RuntimeInvocationCreateRequest",
-        schemaResource: "schemas://RuntimeInvocationCreateRequest",
-        description:
-          "fields is the union-wide field superset. For valid bodies, use discriminator.variants and each variant required/example as authoritative.",
-        fields: [
-          {
-            name: "action",
-            type: "act | observe | extract | stagehandAgent | browserUse | solveCaptcha",
-            required: true,
-            values: [
-              "act",
-              "observe",
-              "extract",
-              "stagehandAgent",
-              "browserUse",
-              "solveCaptcha",
-            ],
-          },
-          {
-            name: "target",
-            type: "active | new | object",
-            required: false,
-            description:
-              "Browser target for this invocation: 'active' uses the active page, 'new' opens a new page, or pass { id } from runtimes.targets.list.",
-          },
-          {
-            name: "instruction",
-            type: "string",
-            required: false,
-            description:
-              "Variant-specific field; use discriminator.variants to choose the valid body shape.",
-          },
-          {
-            name: "stagehandAction",
-            type: "object",
-            required: false,
-            description:
-              "Structured Stagehand action to perform instead of a natural-language instruction.",
-          },
-          {
-            name: "selector",
-            type: "string",
-            required: false,
-            description:
-              "Variant-specific field; use discriminator.variants to choose the valid body shape.",
-          },
-          {
-            name: "timeoutSeconds",
-            type: "integer",
-            required: false,
-            description:
-              "Maximum server-side runtime for this invocation, in seconds.",
-          },
-          {
-            name: "model",
-            type: "string | object",
-            required: false,
-            description:
-              "Model to use for this invocation. Pass a managed model string or an object that references credentials.",
-          },
-          {
-            name: "temperature",
-            type: "number",
-            required: false,
-            description:
-              "Sampling temperature for model-backed invocation work.",
-          },
-          {
-            name: "maxSteps",
-            type: "integer",
-            required: false,
-            description:
-              "Variant-specific field; use discriminator.variants to choose the valid body shape.",
-          },
-          {
-            name: "variables",
-            type: "object",
-            required: false,
-            description:
-              "Template variables available to the Stagehand agent prompt.",
-          },
-          {
-            name: "executionModel",
-            type: "string | object",
-            required: false,
-            description:
-              "Optional Stagehand execution model override for this invocation.",
-          },
-          {
-            name: "extractionModel",
-            type: "string | object",
-            required: false,
-            description:
-              "Optional model override for browser-use extraction steps.",
-          },
-          {
-            name: "fallbackModel",
-            type: "string | object",
-            required: false,
-            description:
-              "Optional fallback model if the primary browser-use model cannot complete the task.",
-          },
-          {
-            name: "tools",
-            type: "files | vault | captcha | human_action[]",
-            required: false,
-            description:
-              "Built-in managed tool groups to expose to the agent. Mutually exclusive with toolsetId.",
-          },
-          {
-            name: "toolIds",
-            type: "uuid[]",
-            required: false,
-            description:
-              "Ad-hoc custom tool IDs to expose to the agent. Mutually exclusive with toolsetId.",
-          },
-          {
-            name: "outputSchema",
-            type: "object",
-            required: false,
-            description:
-              "Variant-specific field; use discriminator.variants to choose the valid body shape.",
-          },
-          {
-            name: "toolsetId",
-            type: "uuid",
-            required: false,
-            description:
-              "Persisted toolset to expose to the agent. Mutually exclusive with tools and toolIds.",
-          },
-          {
-            name: "metadata",
-            type: "object",
-            required: false,
-          },
-          {
-            name: "files",
-            type: "object[]",
-            required: false,
-            description:
-              "Files to stage into the runtime workspace before the invocation starts.",
-          },
-          {
-            name: "highlightCursor",
-            type: "boolean",
-            required: false,
-            description:
-              "Show a visible cursor highlight while the Stagehand agent acts.",
-          },
-          {
-            name: "systemPrompt",
-            type: "string",
-            required: false,
-            description:
-              "Additional system instructions for the Stagehand agent.",
-          },
-          {
-            name: "directlyOpenUrl",
-            type: "boolean",
-            required: false,
-            description:
-              "Allow browser-use to navigate directly to URLs when useful for the task.",
-          },
-          {
-            name: "enablePlanning",
-            type: "boolean",
-            required: false,
-            description:
-              "Allow browser-use to create an explicit plan before acting.",
-          },
-          {
-            name: "extendSystemMessage",
-            type: "string",
-            required: false,
-            description:
-              "Append extra instructions to the default browser-use system message.",
-          },
-          {
-            name: "flashMode",
-            type: "boolean",
-            required: false,
-            description:
-              "Enable browser-use flash mode for faster visual actions.",
-          },
-          {
-            name: "includeAttributes",
-            type: "string[]",
-            required: false,
-            description:
-              "DOM attributes browser-use should include in page observations.",
-          },
-          {
-            name: "maxActionsPerStep",
-            type: "integer",
-            required: false,
-            description:
-              "Maximum browser-use browser actions to allow in one step.",
-          },
-          {
-            name: "maxFailures",
-            type: "integer",
-            required: false,
-            description:
-              "Maximum browser-use step failures before the invocation fails.",
-          },
-          {
-            name: "maxHistoryItems",
-            type: "integer | null",
-            required: false,
-            description:
-              "Maximum number of browser-use history items to keep in context; null disables the cap.",
-          },
-          {
-            name: "overrideSystemMessage",
-            type: "string",
-            required: false,
-            description:
-              "Replace the default browser-use system message for this invocation.",
-          },
-          {
-            name: "sensitiveData",
-            type: "object",
-            required: false,
-            description:
-              "Sensitive values browser-use may use without exposing them in normal page context.",
-          },
-          {
-            name: "stepTimeoutSeconds",
-            type: "integer",
-            required: false,
-            description:
-              "Per-step timeout for browser-use actions, in seconds.",
-          },
-          {
-            name: "useThinking",
-            type: "boolean",
-            required: false,
-            description:
-              "Allow browser-use to use model reasoning when supported.",
-          },
-          {
-            name: "useVision",
-            type: "boolean | auto",
-            required: false,
-            description:
-              "Whether browser-use may use visual page understanding. 'auto' lets BCTRL decide.",
-          },
-          {
-            name: "visionDetailLevel",
-            type: "low | high | auto",
-            required: false,
-            description:
-              "Vision detail level for browser-use visual page understanding.",
-            values: ["low", "high", "auto"],
-          },
-        ],
-        discriminator: {
-          property: "action",
-          variants: [
-            {
-              value: "act",
-              schema: "ActRequest",
-              schemaResource: "schemas://ActRequest",
-              summary:
-                "Use act for one targeted browser action, such as clicking, typing, or selecting. Provide either instruction or stagehandAction.",
-              required: ["action"],
-              example: {
-                action: "act",
-                instruction: "Click the export button.",
-              },
-            },
-            {
-              value: "observe",
-              schema: "ObserveRequest",
-              schemaResource: "schemas://ObserveRequest",
-              summary:
-                "Use observe to inspect the current page before acting. Requires instruction and returns candidate actions or page state.",
-              required: ["action", "instruction"],
-              example: {
-                action: "observe",
-                instruction: "Find the primary call-to-action on the page.",
-              },
-            },
-            {
-              value: "extract",
-              schema: "ExtractRequest",
-              schemaResource: "schemas://ExtractRequest",
-              summary:
-                "Use extract to pull structured data from the current page. Provide instruction, outputSchema, or both to guide the extraction.",
-              required: ["action"],
-              example: {
-                action: "extract",
-                instruction: "Extract the invoice total.",
-                outputSchema: {
-                  properties: {
-                    total: {
-                      type: "number",
-                    },
-                  },
-                  required: ["total"],
-                  type: "object",
-                },
-              },
-            },
-            {
-              value: "stagehandAgent",
-              schema: "StagehandAgentRequest",
-              schemaResource: "schemas://StagehandAgentRequest",
-              summary:
-                "Use stagehandAgent for multi-step Stagehand tasks where DOM/action semantics matter. Requires instruction; provide either toolsetId or inline tools/toolIds, not both.",
-              required: ["action", "instruction"],
-              example: {
-                action: "stagehandAgent",
-                instruction: "Download every invoice from the last quarter.",
-                maxSteps: 30,
-              },
-            },
-            {
-              value: "browserUse",
-              schema: "BrowserUseAgentRequest",
-              schemaResource: "schemas://BrowserUseAgentRequest",
-              summary:
-                "Use browserUse for exploratory or visual multi-step browser tasks. Requires instruction; provide either toolsetId or inline tools/toolIds, not both.",
-              required: ["action", "instruction"],
-              example: {
-                action: "browserUse",
-                instruction: "Find the cheapest flight and add it to the cart.",
-                maxSteps: 50,
-              },
-            },
-            {
-              value: "solveCaptcha",
-              schema: "SolveCaptchaRequest",
-              schemaResource: "schemas://SolveCaptchaRequest",
-              summary:
-                "Use solveCaptcha when the active page or a named target contains a CAPTCHA challenge to solve.",
-              required: ["action"],
-              example: {
-                action: "solveCaptcha",
-                target: "active",
-              },
-            },
-          ],
-        },
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "action",
-          type: "act | observe | extract | browserUse | stagehandAgent | solveCaptcha",
-          required: true,
-          values: [
-            "act",
-            "observe",
-            "extract",
-            "browserUse",
-            "stagehandAgent",
-            "solveCaptcha",
-          ],
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "durationSeconds",
-          type: "number | null",
-          required: false,
-        },
-        {
-          name: "error",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "finishedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "output",
-          type: "unknown",
-          required: false,
-          description:
-            "Any valid JSON value: object, array, string, number, boolean, or null.",
-        },
-        {
-          name: "runId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "startedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "status",
-          type: "queued | dispatching | running | cancelling | succeeded | failed | cancelled | timed_out",
-          required: true,
-          values: [
-            "queued",
-            "dispatching",
-            "running",
-            "cancelling",
-            "succeeded",
-            "failed",
-            "cancelled",
-            "timed_out",
-          ],
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Hosted agents",
-        url: "https://platform.bctrl.ai/sdk/hosted-agents",
-        markdownUrl: "https://platform.bctrl.ai/sdk/hosted-agents.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/hosted-agents.md",
-        description:
-          "Run Stagehand and browser-use agents inside a runtime with a single call.",
-      },
-      {
-        title: "Invocations",
-        url: "https://platform.bctrl.ai/sdk/invocations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/invocations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/invocations.md",
-        description:
-          "Hosted agent work BCTRL runs inside a runtime - act, observe, extract, and browser-use.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/invocations",
-      operationId: "runtimes.invocations.create",
-      requestFields: [
-        "action",
-        "target",
-        "instruction",
-        "stagehandAction",
-        "selector",
-        "timeoutSeconds",
-        "model",
-        "temperature",
-        "maxSteps",
-        "variables",
-        "executionModel",
-        "extractionModel",
-        "fallbackModel",
-        "tools",
-        "toolIds",
-        "outputSchema",
-        "toolsetId",
-        "metadata",
-        "files",
-        "highlightCursor",
-        "systemPrompt",
-        "directlyOpenUrl",
-        "enablePlanning",
-        "extendSystemMessage",
-        "flashMode",
-        "includeAttributes",
-        "maxActionsPerStep",
-        "maxFailures",
-        "maxHistoryItems",
-        "overrideSystemMessage",
-        "sensitiveData",
-        "stepTimeoutSeconds",
-        "useThinking",
-        "useVision",
-        "visionDetailLevel",
-      ],
-      responseFields: [
-        "action",
-        "createdAt",
-        "durationSeconds",
-        "error",
-        "finishedAt",
-        "id",
-        "output",
-        "runId",
-        "runtimeId",
-        "startedAt",
-        "status",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.invocations.create",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.invocations.create",
-      usage: "bctrl help --topic runtimes.invocations.create",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_invocations_create",
-      operationResource: "operations://runtimes.invocations.create",
-      schemaResources: ["schemas://RuntimeInvocationCreateRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.invocations.create",
-      },
-    ],
-  },
-  "runtimes.invocations.wait": {
-    type: "topic",
-    topic: "runtimes.invocations.wait",
-    aliases: ["runtimes invocations wait"],
-    title: "Wait for an invocation",
-    summary:
-      "Wait for a durable invocation on its live runtime to complete or time out waiting. Timeout values are in seconds.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "invocationId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "InvocationWaitRequest",
-        schemaResource: "schemas://InvocationWaitRequest",
-        fields: [
-          {
-            name: "timeoutSeconds",
-            type: "integer",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "action",
-          type: "act | observe | extract | browserUse | stagehandAgent | solveCaptcha",
-          required: true,
-          values: [
-            "act",
-            "observe",
-            "extract",
-            "browserUse",
-            "stagehandAgent",
-            "solveCaptcha",
-          ],
-        },
-        {
-          name: "createdAt",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "durationSeconds",
-          type: "number | null",
-          required: false,
-        },
-        {
-          name: "error",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "finishedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "id",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "output",
-          type: "unknown",
-          required: false,
-          description:
-            "Any valid JSON value: object, array, string, number, boolean, or null.",
-        },
-        {
-          name: "retryAfterSeconds",
-          type: "integer",
-          required: false,
-        },
-        {
-          name: "runId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "startedAt",
-          type: "string | null",
-          required: false,
-        },
-        {
-          name: "status",
-          type: "queued | dispatching | running | cancelling | succeeded | failed | cancelled | timed_out",
-          required: true,
-          values: [
-            "queued",
-            "dispatching",
-            "running",
-            "cancelling",
-            "succeeded",
-            "failed",
-            "cancelled",
-            "timed_out",
-          ],
-        },
-        {
-          name: "waitStatus",
-          type: "completed | timeout",
-          required: true,
-          values: ["completed", "timeout"],
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Hosted agents",
-        url: "https://platform.bctrl.ai/sdk/hosted-agents",
-        markdownUrl: "https://platform.bctrl.ai/sdk/hosted-agents.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/hosted-agents.md",
-        description:
-          "Run Stagehand and browser-use agents inside a runtime with a single call.",
-      },
-      {
-        title: "Invocations",
-        url: "https://platform.bctrl.ai/sdk/invocations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/invocations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/invocations.md",
-        description:
-          "Hosted agent work BCTRL runs inside a runtime - act, observe, extract, and browser-use.",
-      },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/invocations/{invocationId}/wait",
-      operationId: "runtimes.invocations.wait",
-      requestFields: ["timeoutSeconds"],
-      responseFields: [
-        "action",
-        "createdAt",
-        "durationSeconds",
-        "error",
-        "finishedAt",
-        "id",
-        "output",
-        "retryAfterSeconds",
-        "runId",
-        "runtimeId",
-        "startedAt",
-        "status",
-        "waitStatus",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.invocations.wait",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.invocations.wait",
-      usage: "bctrl help --topic runtimes.invocations.wait",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_invocations_wait",
-      operationResource: "operations://runtimes.invocations.wait",
-      schemaResources: ["schemas://InvocationWaitRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.invocations.wait",
-      },
-    ],
-  },
   "runtimes.list": {
     type: "topic",
     topic: "runtimes.list",
@@ -9264,7 +6951,7 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
           description:
-            "Filter by a space UUID, or pass `default` to use the caller default space.",
+            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
         },
         {
           name: "q",
@@ -9320,16 +7007,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
     api: {
       method: "GET",
       path: "/v1/runtimes",
@@ -9407,12 +7084,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
           name: "runtimeId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -9435,16 +7112,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
     api: {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/start",
@@ -9509,12 +7176,12 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "runId",
-          type: "uuid | null",
+          type: "string | null",
           required: true,
         },
         {
           name: "runtimeId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -9530,16 +7197,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
     api: {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/stop",
@@ -9565,528 +7222,6 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl help --topic runtimes.stop",
-      },
-    ],
-  },
-  "runtimes.targets.activate": {
-    type: "topic",
-    topic: "runtimes.targets.activate",
-    aliases: ["runtimes targets activate"],
-    title: "Activate runtime target",
-    summary: "Make a live runtime target active for future work.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "targetId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "active",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "label",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "metadata",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "type",
-          type: "browser_page",
-          required: true,
-          values: ["browser_page"],
-        },
-        {
-          name: "uri",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/targets/{targetId}/activate",
-      operationId: "runtimes.targets.activate",
-      responseFields: [
-        "active",
-        "id",
-        "label",
-        "metadata",
-        "runtimeId",
-        "type",
-        "uri",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.targets.activate",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.targets.activate",
-      usage: "bctrl help --topic runtimes.targets.activate",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_targets_activate",
-      operationResource: "operations://runtimes.targets.activate",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.targets.activate",
-      },
-    ],
-  },
-  "runtimes.targets.create": {
-    type: "topic",
-    topic: "runtimes.targets.create",
-    aliases: ["runtimes targets create"],
-    title: "Create runtime target",
-    summary: "Create a new live target in an active runtime.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "RuntimeTargetCreateRequest",
-        schemaResource: "schemas://RuntimeTargetCreateRequest",
-        fields: [
-          {
-            name: "type",
-            type: "browser_page",
-            required: false,
-            values: ["browser_page"],
-          },
-          {
-            name: "uri",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "activate",
-            type: "boolean",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "active",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "label",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "metadata",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "type",
-          type: "browser_page",
-          required: true,
-          values: ["browser_page"],
-        },
-        {
-          name: "uri",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/targets",
-      operationId: "runtimes.targets.create",
-      requestFields: ["type", "uri", "activate"],
-      responseFields: [
-        "active",
-        "id",
-        "label",
-        "metadata",
-        "runtimeId",
-        "type",
-        "uri",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.targets.create",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.targets.create",
-      usage: "bctrl help --topic runtimes.targets.create",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_targets_create",
-      operationResource: "operations://runtimes.targets.create",
-      schemaResources: ["schemas://RuntimeTargetCreateRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.targets.create",
-      },
-    ],
-  },
-  "runtimes.targets.delete": {
-    type: "topic",
-    topic: "runtimes.targets.delete",
-    aliases: ["runtimes targets delete"],
-    title: "Delete runtime target",
-    summary: "Close or delete one live runtime target.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "targetId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "deleted",
-          type: "true",
-          required: true,
-          values: ["true"],
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "DELETE",
-      path: "/v1/runtimes/{runtimeId}/targets/{targetId}",
-      operationId: "runtimes.targets.delete",
-      responseFields: ["deleted", "id"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.targets.delete",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.targets.delete",
-      usage: "bctrl help --topic runtimes.targets.delete",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_targets_delete",
-      operationResource: "operations://runtimes.targets.delete",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.targets.delete",
-      },
-    ],
-  },
-  "runtimes.targets.get": {
-    type: "topic",
-    topic: "runtimes.targets.get",
-    aliases: ["runtimes targets get"],
-    title: "Get runtime target",
-    summary: "Get one live runtime target.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "targetId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "active",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "label",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "metadata",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "runtimeId",
-          type: "uuid",
-          required: true,
-        },
-        {
-          name: "type",
-          type: "browser_page",
-          required: true,
-          values: ["browser_page"],
-        },
-        {
-          name: "uri",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runtimes/{runtimeId}/targets/{targetId}",
-      operationId: "runtimes.targets.get",
-      responseFields: [
-        "active",
-        "id",
-        "label",
-        "metadata",
-        "runtimeId",
-        "type",
-        "uri",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.targets.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.targets.get",
-      usage: "bctrl help --topic runtimes.targets.get",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_targets_get",
-      operationResource: "operations://runtimes.targets.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.targets.get",
-      },
-    ],
-  },
-  "runtimes.targets.list": {
-    type: "topic",
-    topic: "runtimes.targets.list",
-    aliases: ["runtimes targets list"],
-    title: "List runtime targets",
-    summary: "List live targets available in an active runtime.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
-          type: "object[]",
-          required: true,
-        },
-        {
-          name: "nextCursor",
-          type: "string | null",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runtimes/{runtimeId}/targets",
-      operationId: "runtimes.targets.list",
-      responseFields: ["data", "nextCursor"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.targets.list",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.targets.list",
-      usage: "bctrl help --topic runtimes.targets.list",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_targets_list",
-      operationResource: "operations://runtimes.targets.list",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.targets.list",
       },
     ],
   },
@@ -10140,7 +7275,7 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "activeRunId",
-          type: "uuid | null",
+          type: "string | null",
           required: true,
         },
         {
@@ -10167,7 +7302,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -10193,7 +7328,7 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "needsHumanAction",
+          name: "needsInput",
           type: "boolean",
           required: false,
         },
@@ -10210,7 +7345,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -10248,14 +7383,6 @@ export const CLI_HELP_COMMANDS = {
         description:
           "Configure stealth, proxy, fingerprint, extensions, and network behaviour on a browser runtime.",
       },
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Create, configure, start, and stop managed cloud browsers.",
-      },
     ],
     api: {
       method: "PATCH",
@@ -10273,7 +7400,7 @@ export const CLI_HELP_COMMANDS = {
         "latestRun",
         "metadata",
         "name",
-        "needsHumanAction",
+        "needsInput",
         "profile",
         "protocol",
         "spaceId",
@@ -10349,7 +7476,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -10443,7 +7570,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
       ],
@@ -10719,7 +7846,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -10910,7 +8037,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -11644,6 +8771,196 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "tool-calls.cancel": {
+    type: "topic",
+    topic: "tool-calls.cancel",
+    aliases: ["tool-calls cancel"],
+    title: "Cancel a cancellable tool call",
+    summary: "Cancel one active cancellable tool call.",
+    inputs: {
+      path: [
+        {
+          name: "toolCallId",
+          type: "string",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "callerType",
+          type: "api | agent | system | test",
+          required: true,
+          values: ["api", "agent", "system", "test"],
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "errorMessage",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "finishedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "parentId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "prompt",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "responseExpiresAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "responseSchema",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "resultAvailable",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "retryable",
+          type: "boolean | null",
+          required: true,
+        },
+        {
+          name: "runId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "runtimeId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spanId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "requires_input",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "timed_out",
+          ],
+        },
+        {
+          name: "tool",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          required: true,
+        },
+        {
+          name: "turnId",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Tools and ToolCalls",
+        url: "https://platform.bctrl.ai/sdk/tools",
+        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
+        description: "One generic API for built-in and custom capabilities.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/tool-calls/{toolCallId}/cancel",
+      operationId: "tool-calls.cancel",
+      responseFields: [
+        "callerType",
+        "createdAt",
+        "errorCode",
+        "errorMessage",
+        "finishedAt",
+        "id",
+        "parentId",
+        "prompt",
+        "responseExpiresAt",
+        "responseSchema",
+        "resultAvailable",
+        "retryable",
+        "runId",
+        "runtimeId",
+        "spanId",
+        "startedAt",
+        "status",
+        "tool",
+        "turnId",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tool-calls.cancel",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic tool-calls.cancel",
+      usage: "bctrl help --topic tool-calls.cancel",
+    },
+    mcp: {
+      toolName: "bctrl_tool_calls_cancel",
+      operationResource: "operations://tool-calls.cancel",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic tool-calls.cancel",
+      },
+    ],
+  },
   "tool-calls.get": {
     type: "topic",
     topic: "tool-calls.get",
@@ -11672,116 +8989,119 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "actor",
-          type: "test | agent | invocation",
+          name: "callerType",
+          type: "api | agent | system | test",
           required: true,
-          values: ["test", "agent", "invocation"],
+          values: ["api", "agent", "system", "test"],
         },
         {
           name: "createdAt",
-          type: "string",
+          type: "datetime",
           required: true,
         },
         {
-          name: "durationSeconds",
-          type: "number",
+          name: "errorCode",
+          type: "string | null",
           required: true,
         },
         {
-          name: "error",
-          type: "object | null",
-          required: false,
+          name: "errorMessage",
+          type: "string | null",
+          required: true,
         },
         {
           name: "finishedAt",
-          type: "string",
+          type: "datetime | null",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
-          name: "inputSummary",
+          name: "parentId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "prompt",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "responseExpiresAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "responseSchema",
           type: "object | null",
-          required: false,
+          required: true,
         },
         {
-          name: "invocationId",
-          type: "uuid | null",
-          required: false,
+          name: "resultAvailable",
+          type: "boolean",
+          required: true,
         },
         {
-          name: "outputSummary",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "redactedError",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "redactedInput",
-          type: "unknown",
-          required: false,
-          description:
-            "Any valid JSON value: object, array, string, number, boolean, or null.",
-        },
-        {
-          name: "redactedOutput",
-          type: "unknown",
-          required: false,
-          description:
-            "Any valid JSON value: object, array, string, number, boolean, or null.",
+          name: "retryable",
+          type: "boolean | null",
+          required: true,
         },
         {
           name: "runId",
-          type: "uuid | null",
-          required: false,
+          type: "string | null",
+          required: true,
         },
         {
-          name: "spaceId",
-          type: "uuid",
+          name: "runtimeId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spanId",
+          type: "string | null",
           required: true,
         },
         {
           name: "startedAt",
-          type: "string",
+          type: "datetime | null",
           required: true,
         },
         {
           name: "status",
-          type: "succeeded | failed",
+          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
           required: true,
-          values: ["succeeded", "failed"],
+          values: [
+            "queued",
+            "running",
+            "requires_input",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "timed_out",
+          ],
         },
         {
           name: "tool",
-          type: "object",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
         },
         {
-          name: "toolCallId",
-          type: "string",
+          name: "turnId",
+          type: "string | null",
           required: true,
-        },
-        {
-          name: "toolsetId",
-          type: "uuid | null",
-          required: false,
         },
       ],
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
@@ -11789,25 +9109,25 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/tool-calls/{toolCallId}",
       operationId: "tool-calls.get",
       responseFields: [
-        "actor",
+        "callerType",
         "createdAt",
-        "durationSeconds",
-        "error",
+        "errorCode",
+        "errorMessage",
         "finishedAt",
         "id",
-        "inputSummary",
-        "invocationId",
-        "outputSummary",
-        "redactedError",
-        "redactedInput",
-        "redactedOutput",
+        "parentId",
+        "prompt",
+        "responseExpiresAt",
+        "responseSchema",
+        "resultAvailable",
+        "retryable",
         "runId",
-        "spaceId",
+        "runtimeId",
+        "spanId",
         "startedAt",
         "status",
         "tool",
-        "toolCallId",
-        "toolsetId",
+        "turnId",
       ],
     },
     sdk: [
@@ -11837,43 +9157,42 @@ export const CLI_HELP_COMMANDS = {
     topic: "tool-calls.list",
     aliases: ["tool-calls list"],
     title: "List tool calls",
-    summary:
-      "List audit records for tool executions from tests and agent invocations. Use filters such as tool, run, invocation, status, or actor to debug what happened.",
+    summary: "List durable tool execution lifecycle and audit records.",
     inputs: {
       query: [
         {
-          name: "spaceId",
+          name: "runtimeId",
           type: "string",
-          required: false,
-          description:
-            "Filter by a space UUID, or pass `default` to use the caller default space.",
-        },
-        {
-          name: "toolId",
-          type: "uuid",
           required: false,
         },
         {
           name: "runId",
-          type: "uuid",
+          type: "string",
           required: false,
         },
         {
-          name: "invocationId",
-          type: "uuid",
+          name: "turnId",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "tool",
+          type: "string",
           required: false,
         },
         {
           name: "status",
-          type: "succeeded | failed",
+          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
           required: false,
-          values: ["succeeded", "failed"],
-        },
-        {
-          name: "actor",
-          type: "test | agent | invocation",
-          required: false,
-          values: ["test", "agent", "invocation"],
+          values: [
+            "queued",
+            "running",
+            "requires_input",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "timed_out",
+          ],
         },
         {
           name: "cursor",
@@ -11884,6 +9203,13 @@ export const CLI_HELP_COMMANDS = {
           name: "limit",
           type: "integer",
           required: false,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: false,
+          description:
+            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
         },
       ],
       headers: [
@@ -11912,12 +9238,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
@@ -11948,6 +9273,571 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "tool-calls.respond": {
+    type: "topic",
+    topic: "tool-calls.respond",
+    aliases: ["tool-calls respond"],
+    title: "Respond to a tool call that requires input",
+    summary: "Provide bounded input requested by a suspended tool call.",
+    inputs: {
+      path: [
+        {
+          name: "toolCallId",
+          type: "string",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+      body: {
+        schema: "JsonValue",
+        schemaResource: "schemas://JsonValue",
+        fields: [
+          {
+            name: "body",
+            type: "unknown",
+            required: true,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "callerType",
+          type: "api | agent | system | test",
+          required: true,
+          values: ["api", "agent", "system", "test"],
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "errorMessage",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "finishedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "parentId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "prompt",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "responseExpiresAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "responseSchema",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "resultAvailable",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "retryable",
+          type: "boolean | null",
+          required: true,
+        },
+        {
+          name: "runId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "runtimeId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spanId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "requires_input",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "timed_out",
+          ],
+        },
+        {
+          name: "tool",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          required: true,
+        },
+        {
+          name: "turnId",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Tools and ToolCalls",
+        url: "https://platform.bctrl.ai/sdk/tools",
+        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
+        description: "One generic API for built-in and custom capabilities.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/tool-calls/{toolCallId}/respond",
+      operationId: "tool-calls.respond",
+      requestFields: ["body"],
+      responseFields: [
+        "callerType",
+        "createdAt",
+        "errorCode",
+        "errorMessage",
+        "finishedAt",
+        "id",
+        "parentId",
+        "prompt",
+        "responseExpiresAt",
+        "responseSchema",
+        "resultAvailable",
+        "retryable",
+        "runId",
+        "runtimeId",
+        "spanId",
+        "startedAt",
+        "status",
+        "tool",
+        "turnId",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tool-calls.respond",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic tool-calls.respond",
+      usage: "bctrl help --topic tool-calls.respond",
+    },
+    mcp: {
+      toolName: "bctrl_tool_calls_respond",
+      operationResource: "operations://tool-calls.respond",
+      schemaResources: ["schemas://JsonValue"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic tool-calls.respond",
+      },
+    ],
+  },
+  "tool-calls.result": {
+    type: "topic",
+    topic: "tool-calls.result",
+    aliases: ["tool-calls result"],
+    title: "Get a completed tool call result",
+    summary:
+      "Retrieve a persisted result for an authorized completed tool call.",
+    inputs: {
+      path: [
+        {
+          name: "toolCallId",
+          type: "string",
+          required: true,
+        },
+      ],
+      query: [
+        {
+          name: "waitSeconds",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "body",
+          type: "unknown",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Tools and ToolCalls",
+        url: "https://platform.bctrl.ai/sdk/tools",
+        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
+        description: "One generic API for built-in and custom capabilities.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/tool-calls/{toolCallId}/result",
+      operationId: "tool-calls.result",
+      responseFields: ["body"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tool-calls.result",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic tool-calls.result",
+      usage: "bctrl help --topic tool-calls.result",
+    },
+    mcp: {
+      toolName: "bctrl_tool_calls_result",
+      operationResource: "operations://tool-calls.result",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic tool-calls.result",
+      },
+    ],
+  },
+  "tools.call": {
+    type: "topic",
+    topic: "tools.call",
+    aliases: ["tools call"],
+    title: "Call a synchronous tool and wait for its result",
+    summary: "Call a synchronous tool and wait for its validated result.",
+    inputs: {
+      path: [
+        {
+          name: "toolRef",
+          type: "string",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "JsonObject",
+        schemaResource: "schemas://JsonObject",
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "body",
+          type: "unknown",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Tools and ToolCalls",
+        url: "https://platform.bctrl.ai/sdk/tools",
+        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
+        description: "One generic API for built-in and custom capabilities.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/tools/{toolRef}/call",
+      operationId: "tools.call",
+      responseFields: ["body"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tools.call",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic tools.call",
+      usage: "bctrl help --topic tools.call",
+    },
+    mcp: {
+      toolName: "bctrl_tools_call",
+      operationResource: "operations://tools.call",
+      schemaResources: ["schemas://JsonObject"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic tools.call",
+      },
+    ],
+  },
+  "tools.calls.create": {
+    type: "topic",
+    topic: "tools.calls.create",
+    aliases: ["tools calls create"],
+    title: "Start a durable asynchronous tool call",
+    summary: "Start one durable asynchronous tool call.",
+    inputs: {
+      path: [
+        {
+          name: "toolRef",
+          type: "string",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "JsonObject",
+        schemaResource: "schemas://JsonObject",
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "callerType",
+          type: "api | agent | system | test",
+          required: true,
+          values: ["api", "agent", "system", "test"],
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "errorMessage",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "finishedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "parentId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "prompt",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "responseExpiresAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "responseSchema",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "resultAvailable",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "retryable",
+          type: "boolean | null",
+          required: true,
+        },
+        {
+          name: "runId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "runtimeId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spanId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "requires_input",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "timed_out",
+          ],
+        },
+        {
+          name: "tool",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          required: true,
+        },
+        {
+          name: "turnId",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Tools and ToolCalls",
+        url: "https://platform.bctrl.ai/sdk/tools",
+        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
+        description: "One generic API for built-in and custom capabilities.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/tools/{toolRef}/calls",
+      operationId: "tools.calls.create",
+      responseFields: [
+        "callerType",
+        "createdAt",
+        "errorCode",
+        "errorMessage",
+        "finishedAt",
+        "id",
+        "parentId",
+        "prompt",
+        "responseExpiresAt",
+        "responseSchema",
+        "resultAvailable",
+        "retryable",
+        "runId",
+        "runtimeId",
+        "spanId",
+        "startedAt",
+        "status",
+        "tool",
+        "turnId",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tools.calls.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic tools.calls.create",
+      usage: "bctrl help --topic tools.calls.create",
+    },
+    mcp: {
+      toolName: "bctrl_tools_calls_create",
+      operationResource: "operations://tools.calls.create",
+      schemaResources: ["schemas://JsonObject"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic tools.calls.create",
+      },
+    ],
+  },
   "tools.create": {
     type: "topic",
     topic: "tools.create",
@@ -11968,19 +9858,11 @@ export const CLI_HELP_COMMANDS = {
       body: {
         schema: "ToolCreateRequest",
         schemaResource: "schemas://ToolCreateRequest",
-        description:
-          "fields is the union-wide field superset. For valid bodies, use discriminator.variants and each variant required/example as authoritative.",
         fields: [
           {
             name: "spaceId",
-            type: "uuid | default",
+            type: "string | default",
             required: false,
-          },
-          {
-            name: "type",
-            type: "webhook | hosted",
-            required: true,
-            values: ["webhook", "hosted"],
           },
           {
             name: "name",
@@ -11989,18 +9871,24 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "description",
-            type: "string | null",
+            type: "string",
             required: false,
           },
           {
             name: "inputSchema",
             type: "object",
-            required: false,
+            required: true,
           },
           {
             name: "outputSchema",
             type: "object",
-            required: false,
+            required: true,
+          },
+          {
+            name: "executionType",
+            type: "webhook | hosted",
+            required: true,
+            values: ["webhook", "hosted"],
           },
           {
             name: "url",
@@ -12008,7 +9896,7 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
-            name: "authSecretId",
+            name: "authSecretName",
             type: "string",
             required: false,
           },
@@ -12018,7 +9906,7 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
-            name: "timeoutSeconds",
+            name: "timeoutMs",
             type: "integer",
             required: false,
           },
@@ -12027,58 +9915,50 @@ export const CLI_HELP_COMMANDS = {
             type: "object",
             required: false,
           },
-          {
-            name: "status",
-            type: "enabled | disabled",
-            required: false,
-            values: ["enabled", "disabled"],
-          },
-          {
-            name: "metadata",
-            type: "object | null",
-            required: false,
-          },
         ],
-        discriminator: {
-          property: "type",
-          variants: [
-            {
-              value: "webhook",
-              schema: "WebhookToolCreateRequest",
-              schemaResource: "schemas://WebhookToolCreateRequest",
-              required: ["name", "type", "url"],
-            },
-            {
-              value: "hosted",
-              schema: "HostedToolCreateRequest",
-              schemaResource: "schemas://HostedToolCreateRequest",
-              required: ["name", "type", "source"],
-            },
-          ],
-        },
       },
     },
     output: {
       fields: [
         {
-          name: "authSecretId",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "createdAt",
+          name: "description",
           type: "string",
           required: true,
         },
         {
-          name: "description",
-          type: "string | null",
+          name: "executionModes",
+          type: "sync | async[]",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
+          values: [
+            "stagehand.act",
+            "stagehand.observe",
+            "stagehand.extract",
+            "captcha.solve",
+            "human.request",
+            "browser.pages.list",
+            "browser.pages.open",
+            "browser.pages.get",
+            "browser.pages.activate",
+            "browser.pages.close",
+            "runtime.files.list",
+            "runtime.files.stage",
+            "runtime.files.collect",
+            "run.files.export",
+            "files.list",
+            "files.read_text",
+            "vault.secrets.list",
+            "vault.secrets.get",
+            "vault.secrets.set",
+            "vault.secrets.update",
+            "vault.secrets.delete",
+            "vault.secrets.value",
+            "vault.totp.generate",
+          ],
         },
         {
           name: "inputSchema",
@@ -12086,14 +9966,45 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "metadata",
-          type: "object | null",
-          required: false,
+          name: "kind",
+          type: "builtin | custom",
+          required: true,
+          values: ["builtin", "custom"],
+        },
+        {
+          name: "maxSyncDurationMs",
+          type: "integer | null",
+          required: true,
         },
         {
           name: "name",
-          type: "string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
+          values: [
+            "stagehand.act",
+            "stagehand.observe",
+            "stagehand.extract",
+            "captcha.solve",
+            "human.request",
+            "browser.pages.list",
+            "browser.pages.open",
+            "browser.pages.get",
+            "browser.pages.activate",
+            "browser.pages.close",
+            "runtime.files.list",
+            "runtime.files.stage",
+            "runtime.files.collect",
+            "run.files.export",
+            "files.list",
+            "files.read_text",
+            "vault.secrets.list",
+            "vault.secrets.get",
+            "vault.secrets.set",
+            "vault.secrets.update",
+            "vault.secrets.delete",
+            "vault.secrets.value",
+            "vault.totp.generate",
+          ],
         },
         {
           name: "outputSchema",
@@ -12101,31 +10012,51 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "spaceId",
-          type: "uuid | null",
+          name: "requiresActiveRuntime",
+          type: "boolean",
           required: true,
         },
         {
-          name: "status",
-          type: "enabled | disabled",
+          name: "resultPersistence",
+          type: "none | redacted | encrypted | artifact",
           required: true,
-          values: ["enabled", "disabled"],
+          values: ["none", "redacted", "encrypted", "artifact"],
         },
         {
-          name: "timeoutSeconds",
-          type: "integer",
+          name: "runtimeTypes",
+          type: "browser | desktop | spreadsheet[]",
+          required: true,
+        },
+        {
+          name: "supportsCancellation",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "authSecretName",
+          type: "string | null",
           required: false,
         },
         {
-          name: "type",
-          type: "webhook | hosted | mcp | workflow | builtin",
-          required: true,
-          values: ["webhook", "hosted", "mcp", "workflow", "builtin"],
+          name: "createdAt",
+          type: "datetime",
+          required: false,
+        },
+        {
+          name: "executionType",
+          type: "workflow",
+          required: false,
+          values: ["workflow"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: false,
         },
         {
           name: "updatedAt",
-          type: "string",
-          required: true,
+          type: "datetime",
+          required: false,
         },
         {
           name: "url",
@@ -12134,7 +10065,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "currentVersionId",
-          type: "uuid | null",
+          type: "string | null",
+          required: false,
+        },
+        {
+          name: "remoteToolName",
+          type: "string",
           required: false,
         },
         {
@@ -12143,31 +10079,19 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "toolName",
-          type: "string",
-          required: false,
-        },
-        {
           name: "workflowId",
           type: "string",
           required: false,
-        },
-        {
-          name: "builtin",
-          type: "files | vault | captcha | human_action",
-          required: false,
-          values: ["files", "vault", "captcha", "human_action"],
         },
       ],
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
@@ -12176,39 +10100,40 @@ export const CLI_HELP_COMMANDS = {
       operationId: "tools.create",
       requestFields: [
         "spaceId",
-        "type",
         "name",
         "description",
         "inputSchema",
         "outputSchema",
+        "executionType",
         "url",
-        "authSecretId",
+        "authSecretName",
         "source",
-        "timeoutSeconds",
+        "timeoutMs",
         "env",
-        "status",
-        "metadata",
       ],
       responseFields: [
-        "authSecretId",
-        "createdAt",
         "description",
+        "executionModes",
         "id",
         "inputSchema",
-        "metadata",
+        "kind",
+        "maxSyncDurationMs",
         "name",
         "outputSchema",
+        "requiresActiveRuntime",
+        "resultPersistence",
+        "runtimeTypes",
+        "supportsCancellation",
+        "authSecretName",
+        "createdAt",
+        "executionType",
         "spaceId",
-        "status",
-        "timeoutSeconds",
-        "type",
         "updatedAt",
         "url",
         "currentVersionId",
+        "remoteToolName",
         "serverId",
-        "toolName",
         "workflowId",
-        "builtin",
       ],
     },
     sdk: [
@@ -12244,7 +10169,7 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       path: [
         {
-          name: "toolId",
+          name: "toolRef",
           type: "string",
           required: true,
         },
@@ -12269,24 +10194,23 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
       ],
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
       method: "DELETE",
-      path: "/v1/tools/{toolId}",
+      path: "/v1/tools/{toolRef}",
       operationId: "tools.delete",
       responseFields: ["deleted", "id"],
     },
@@ -12322,7 +10246,7 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       path: [
         {
-          name: "toolId",
+          name: "toolRef",
           type: "string",
           required: true,
         },
@@ -12340,24 +10264,44 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "authSecretId",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "createdAt",
+          name: "description",
           type: "string",
           required: true,
         },
         {
-          name: "description",
-          type: "string | null",
+          name: "executionModes",
+          type: "sync | async[]",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
+          values: [
+            "stagehand.act",
+            "stagehand.observe",
+            "stagehand.extract",
+            "captcha.solve",
+            "human.request",
+            "browser.pages.list",
+            "browser.pages.open",
+            "browser.pages.get",
+            "browser.pages.activate",
+            "browser.pages.close",
+            "runtime.files.list",
+            "runtime.files.stage",
+            "runtime.files.collect",
+            "run.files.export",
+            "files.list",
+            "files.read_text",
+            "vault.secrets.list",
+            "vault.secrets.get",
+            "vault.secrets.set",
+            "vault.secrets.update",
+            "vault.secrets.delete",
+            "vault.secrets.value",
+            "vault.totp.generate",
+          ],
         },
         {
           name: "inputSchema",
@@ -12365,14 +10309,45 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "metadata",
-          type: "object | null",
-          required: false,
+          name: "kind",
+          type: "builtin | custom",
+          required: true,
+          values: ["builtin", "custom"],
+        },
+        {
+          name: "maxSyncDurationMs",
+          type: "integer | null",
+          required: true,
         },
         {
           name: "name",
-          type: "string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
+          values: [
+            "stagehand.act",
+            "stagehand.observe",
+            "stagehand.extract",
+            "captcha.solve",
+            "human.request",
+            "browser.pages.list",
+            "browser.pages.open",
+            "browser.pages.get",
+            "browser.pages.activate",
+            "browser.pages.close",
+            "runtime.files.list",
+            "runtime.files.stage",
+            "runtime.files.collect",
+            "run.files.export",
+            "files.list",
+            "files.read_text",
+            "vault.secrets.list",
+            "vault.secrets.get",
+            "vault.secrets.set",
+            "vault.secrets.update",
+            "vault.secrets.delete",
+            "vault.secrets.value",
+            "vault.totp.generate",
+          ],
         },
         {
           name: "outputSchema",
@@ -12380,31 +10355,51 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "spaceId",
-          type: "uuid | null",
+          name: "requiresActiveRuntime",
+          type: "boolean",
           required: true,
         },
         {
-          name: "status",
-          type: "enabled | disabled",
+          name: "resultPersistence",
+          type: "none | redacted | encrypted | artifact",
           required: true,
-          values: ["enabled", "disabled"],
+          values: ["none", "redacted", "encrypted", "artifact"],
         },
         {
-          name: "timeoutSeconds",
-          type: "integer",
+          name: "runtimeTypes",
+          type: "browser | desktop | spreadsheet[]",
+          required: true,
+        },
+        {
+          name: "supportsCancellation",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "authSecretName",
+          type: "string | null",
           required: false,
         },
         {
-          name: "type",
-          type: "webhook | hosted | mcp | workflow | builtin",
-          required: true,
-          values: ["webhook", "hosted", "mcp", "workflow", "builtin"],
+          name: "createdAt",
+          type: "datetime",
+          required: false,
+        },
+        {
+          name: "executionType",
+          type: "workflow",
+          required: false,
+          values: ["workflow"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: false,
         },
         {
           name: "updatedAt",
-          type: "string",
-          required: true,
+          type: "datetime",
+          required: false,
         },
         {
           name: "url",
@@ -12413,7 +10408,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "currentVersionId",
-          type: "uuid | null",
+          type: "string | null",
+          required: false,
+        },
+        {
+          name: "remoteToolName",
+          type: "string",
           required: false,
         },
         {
@@ -12422,57 +10422,48 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "toolName",
-          type: "string",
-          required: false,
-        },
-        {
           name: "workflowId",
           type: "string",
           required: false,
-        },
-        {
-          name: "builtin",
-          type: "files | vault | captcha | human_action",
-          required: false,
-          values: ["files", "vault", "captcha", "human_action"],
         },
       ],
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
       method: "GET",
-      path: "/v1/tools/{toolId}",
+      path: "/v1/tools/{toolRef}",
       operationId: "tools.get",
       responseFields: [
-        "authSecretId",
-        "createdAt",
         "description",
+        "executionModes",
         "id",
         "inputSchema",
-        "metadata",
+        "kind",
+        "maxSyncDurationMs",
         "name",
         "outputSchema",
+        "requiresActiveRuntime",
+        "resultPersistence",
+        "runtimeTypes",
+        "supportsCancellation",
+        "authSecretName",
+        "createdAt",
+        "executionType",
         "spaceId",
-        "status",
-        "timeoutSeconds",
-        "type",
         "updatedAt",
         "url",
         "currentVersionId",
+        "remoteToolName",
         "serverId",
-        "toolName",
         "workflowId",
-        "builtin",
       ],
     },
     sdk: [
@@ -12502,8 +10493,7 @@ export const CLI_HELP_COMMANDS = {
     topic: "tools.list",
     aliases: ["tools list"],
     title: "List tools",
-    summary:
-      "List organization custom tools using a space as the authorization context.",
+    summary: "List built-in and custom tools available in a space.",
     inputs: {
       query: [
         {
@@ -12511,7 +10501,13 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
           description:
-            "Filter by a space UUID, or pass `default` to use the caller default space.",
+            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
+        },
+        {
+          name: "kind",
+          type: "builtin | custom",
+          required: false,
+          values: ["builtin", "custom"],
         },
         {
           name: "cursor",
@@ -12550,12 +10546,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
@@ -12586,124 +10581,6 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "tools.test": {
-    type: "topic",
-    topic: "tools.test",
-    aliases: ["tools test"],
-    title: "Test a tool",
-    summary:
-      "Execute a tool once without starting an agent invocation. Use this to validate the schema, authentication, response shape, and latency.",
-    inputs: {
-      path: [
-        {
-          name: "toolId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "ToolTestRequest",
-        schemaResource: "schemas://ToolTestRequest",
-        fields: [
-          {
-            name: "input",
-            type: "unknown",
-            required: false,
-          },
-          {
-            name: "record",
-            type: "boolean",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "error",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "errorDetail",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "latencySeconds",
-          type: "number",
-          required: false,
-        },
-        {
-          name: "ok",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "output",
-          type: "unknown",
-          required: false,
-          description:
-            "Any valid JSON value: object, array, string, number, boolean, or null.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Tools & Toolsets",
-        url: "https://platform.bctrl.ai/sdk/tools",
-        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/tools/{toolId}/test",
-      operationId: "tools.test",
-      requestFields: ["input", "record"],
-      responseFields: [
-        "error",
-        "errorDetail",
-        "latencySeconds",
-        "ok",
-        "output",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "tools.test",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic tools.test",
-      usage: "bctrl help --topic tools.test",
-    },
-    mcp: {
-      toolName: "bctrl_tools_test",
-      operationResource: "operations://tools.test",
-      schemaResources: ["schemas://ToolTestRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic tools.test",
-      },
-    ],
-  },
   "tools.update": {
     type: "topic",
     topic: "tools.update",
@@ -12714,7 +10591,7 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       path: [
         {
-          name: "toolId",
+          name: "toolRef",
           type: "string",
           required: true,
         },
@@ -12739,7 +10616,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "description",
-            type: "string | null",
+            type: "string",
             required: false,
           },
           {
@@ -12753,24 +10630,18 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
-            name: "status",
-            type: "enabled | disabled",
-            required: false,
-            values: ["enabled", "disabled"],
-          },
-          {
-            name: "timeoutSeconds",
+            name: "timeoutMs",
             type: "integer",
             required: false,
           },
           {
-            name: "authSecretId",
+            name: "authSecretName",
             type: "string | null",
             required: false,
           },
           {
-            name: "metadata",
-            type: "object | null",
+            name: "url",
+            type: "string",
             required: false,
           },
         ],
@@ -12779,24 +10650,44 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "authSecretId",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "createdAt",
+          name: "description",
           type: "string",
           required: true,
         },
         {
-          name: "description",
-          type: "string | null",
+          name: "executionModes",
+          type: "sync | async[]",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
+          values: [
+            "stagehand.act",
+            "stagehand.observe",
+            "stagehand.extract",
+            "captcha.solve",
+            "human.request",
+            "browser.pages.list",
+            "browser.pages.open",
+            "browser.pages.get",
+            "browser.pages.activate",
+            "browser.pages.close",
+            "runtime.files.list",
+            "runtime.files.stage",
+            "runtime.files.collect",
+            "run.files.export",
+            "files.list",
+            "files.read_text",
+            "vault.secrets.list",
+            "vault.secrets.get",
+            "vault.secrets.set",
+            "vault.secrets.update",
+            "vault.secrets.delete",
+            "vault.secrets.value",
+            "vault.totp.generate",
+          ],
         },
         {
           name: "inputSchema",
@@ -12804,14 +10695,45 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "metadata",
-          type: "object | null",
-          required: false,
+          name: "kind",
+          type: "builtin | custom",
+          required: true,
+          values: ["builtin", "custom"],
+        },
+        {
+          name: "maxSyncDurationMs",
+          type: "integer | null",
+          required: true,
         },
         {
           name: "name",
-          type: "string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
+          values: [
+            "stagehand.act",
+            "stagehand.observe",
+            "stagehand.extract",
+            "captcha.solve",
+            "human.request",
+            "browser.pages.list",
+            "browser.pages.open",
+            "browser.pages.get",
+            "browser.pages.activate",
+            "browser.pages.close",
+            "runtime.files.list",
+            "runtime.files.stage",
+            "runtime.files.collect",
+            "run.files.export",
+            "files.list",
+            "files.read_text",
+            "vault.secrets.list",
+            "vault.secrets.get",
+            "vault.secrets.set",
+            "vault.secrets.update",
+            "vault.secrets.delete",
+            "vault.secrets.value",
+            "vault.totp.generate",
+          ],
         },
         {
           name: "outputSchema",
@@ -12819,31 +10741,51 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "spaceId",
-          type: "uuid | null",
+          name: "requiresActiveRuntime",
+          type: "boolean",
           required: true,
         },
         {
-          name: "status",
-          type: "enabled | disabled",
+          name: "resultPersistence",
+          type: "none | redacted | encrypted | artifact",
           required: true,
-          values: ["enabled", "disabled"],
+          values: ["none", "redacted", "encrypted", "artifact"],
         },
         {
-          name: "timeoutSeconds",
-          type: "integer",
+          name: "runtimeTypes",
+          type: "browser | desktop | spreadsheet[]",
+          required: true,
+        },
+        {
+          name: "supportsCancellation",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "authSecretName",
+          type: "string | null",
           required: false,
         },
         {
-          name: "type",
-          type: "webhook | hosted | mcp | workflow | builtin",
-          required: true,
-          values: ["webhook", "hosted", "mcp", "workflow", "builtin"],
+          name: "createdAt",
+          type: "datetime",
+          required: false,
+        },
+        {
+          name: "executionType",
+          type: "workflow",
+          required: false,
+          values: ["workflow"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: false,
         },
         {
           name: "updatedAt",
-          type: "string",
-          required: true,
+          type: "datetime",
+          required: false,
         },
         {
           name: "url",
@@ -12852,7 +10794,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "currentVersionId",
-          type: "uuid | null",
+          type: "string | null",
+          required: false,
+        },
+        {
+          name: "remoteToolName",
+          type: "string",
           required: false,
         },
         {
@@ -12861,67 +10808,57 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "toolName",
-          type: "string",
-          required: false,
-        },
-        {
           name: "workflowId",
           type: "string",
           required: false,
-        },
-        {
-          name: "builtin",
-          type: "files | vault | captcha | human_action",
-          required: false,
-          values: ["files", "vault", "captcha", "human_action"],
         },
       ],
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
       method: "PATCH",
-      path: "/v1/tools/{toolId}",
+      path: "/v1/tools/{toolRef}",
       operationId: "tools.update",
       requestFields: [
         "name",
         "description",
         "inputSchema",
         "outputSchema",
-        "status",
-        "timeoutSeconds",
-        "authSecretId",
-        "metadata",
+        "timeoutMs",
+        "authSecretName",
+        "url",
       ],
       responseFields: [
-        "authSecretId",
-        "createdAt",
         "description",
+        "executionModes",
         "id",
         "inputSchema",
-        "metadata",
+        "kind",
+        "maxSyncDurationMs",
         "name",
         "outputSchema",
+        "requiresActiveRuntime",
+        "resultPersistence",
+        "runtimeTypes",
+        "supportsCancellation",
+        "authSecretName",
+        "createdAt",
+        "executionType",
         "spaceId",
-        "status",
-        "timeoutSeconds",
-        "type",
         "updatedAt",
         "url",
         "currentVersionId",
+        "remoteToolName",
         "serverId",
-        "toolName",
         "workflowId",
-        "builtin",
       ],
     },
     sdk: [
@@ -12952,8 +10889,7 @@ export const CLI_HELP_COMMANDS = {
     topic: "toolsets.create",
     aliases: ["toolsets create"],
     title: "Create a toolset",
-    summary:
-      "Create a reusable bundle of built-in and custom tools for agent invocations.",
+    summary: "Create an ordered reusable bundle of built-in and custom tools.",
     inputs: {
       headers: [
         {
@@ -12970,7 +10906,7 @@ export const CLI_HELP_COMMANDS = {
         fields: [
           {
             name: "spaceId",
-            type: "uuid | default",
+            type: "string | default",
             required: false,
           },
           {
@@ -12979,18 +10915,13 @@ export const CLI_HELP_COMMANDS = {
             required: true,
           },
           {
-            name: "builtins",
-            type: "files | vault | captcha | human_action[]",
+            name: "description",
+            type: "string | null",
             required: false,
           },
           {
-            name: "toolIds",
-            type: "uuid[]",
-            required: false,
-          },
-          {
-            name: "metadata",
-            type: "object | null",
+            name: "tools",
+            type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
             required: false,
           },
         ],
@@ -12999,24 +10930,19 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "builtins",
-          type: "files | vault | captcha | human_action[]",
+          name: "createdAt",
+          type: "datetime",
           required: true,
         },
         {
-          name: "createdAt",
-          type: "string",
+          name: "description",
+          type: "string | null",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
         },
         {
           name: "name",
@@ -13025,44 +10951,42 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
-          name: "toolIds",
-          type: "uuid[]",
+          name: "tools",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
           required: true,
         },
         {
           name: "updatedAt",
-          type: "string",
+          type: "datetime",
           required: true,
         },
       ],
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
       method: "POST",
       path: "/v1/toolsets",
       operationId: "toolsets.create",
-      requestFields: ["spaceId", "name", "builtins", "toolIds", "metadata"],
+      requestFields: ["spaceId", "name", "description", "tools"],
       responseFields: [
-        "builtins",
         "createdAt",
+        "description",
         "id",
-        "metadata",
         "name",
         "spaceId",
-        "toolIds",
+        "tools",
         "updatedAt",
       ],
     },
@@ -13094,8 +11018,7 @@ export const CLI_HELP_COMMANDS = {
     topic: "toolsets.delete",
     aliases: ["toolsets delete"],
     title: "Delete a toolset",
-    summary:
-      "Delete a toolset when that bundle should no longer be used for new agent invocations.",
+    summary: "Delete a toolset when it should no longer be used for new work.",
     inputs: {
       path: [
         {
@@ -13124,19 +11047,18 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
       ],
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
@@ -13195,24 +11117,19 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "builtins",
-          type: "files | vault | captcha | human_action[]",
+          name: "createdAt",
+          type: "datetime",
           required: true,
         },
         {
-          name: "createdAt",
-          type: "string",
+          name: "description",
+          type: "string | null",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
         },
         {
           name: "name",
@@ -13221,29 +11138,28 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
-          name: "toolIds",
-          type: "uuid[]",
+          name: "tools",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
           required: true,
         },
         {
           name: "updatedAt",
-          type: "string",
+          type: "datetime",
           required: true,
         },
       ],
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
@@ -13251,13 +11167,12 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/toolsets/{toolsetId}",
       operationId: "toolsets.get",
       responseFields: [
-        "builtins",
         "createdAt",
+        "description",
         "id",
-        "metadata",
         "name",
         "spaceId",
-        "toolIds",
+        "tools",
         "updatedAt",
       ],
     },
@@ -13297,7 +11212,7 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
           description:
-            "Filter by a space UUID, or pass `default` to use the caller default space.",
+            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
         },
         {
           name: "cursor",
@@ -13336,12 +11251,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
@@ -13406,18 +11320,13 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
-            name: "builtins",
-            type: "files | vault | captcha | human_action[]",
+            name: "description",
+            type: "string | null",
             required: false,
           },
           {
-            name: "toolIds",
-            type: "uuid[]",
-            required: false,
-          },
-          {
-            name: "metadata",
-            type: "object | null",
+            name: "tools",
+            type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
             required: false,
           },
         ],
@@ -13426,24 +11335,19 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "builtins",
-          type: "files | vault | captcha | human_action[]",
+          name: "createdAt",
+          type: "datetime",
           required: true,
         },
         {
-          name: "createdAt",
-          type: "string",
+          name: "description",
+          type: "string | null",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
         },
         {
           name: "name",
@@ -13452,44 +11356,42 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "spaceId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
-          name: "toolIds",
-          type: "uuid[]",
+          name: "tools",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
           required: true,
         },
         {
           name: "updatedAt",
-          type: "string",
+          type: "datetime",
           required: true,
         },
       ],
     },
     docs: [
       {
-        title: "Tools & Toolsets",
+        title: "Tools and ToolCalls",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Define callable tools and bundle them into toolsets for agents.",
+        description: "One generic API for built-in and custom capabilities.",
       },
     ],
     api: {
       method: "PATCH",
       path: "/v1/toolsets/{toolsetId}",
       operationId: "toolsets.update",
-      requestFields: ["name", "builtins", "toolIds", "metadata"],
+      requestFields: ["name", "description", "tools"],
       responseFields: [
-        "builtins",
         "createdAt",
+        "description",
         "id",
-        "metadata",
         "name",
         "spaceId",
-        "toolIds",
+        "tools",
         "updatedAt",
       ],
     },
@@ -13598,867 +11500,6 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl help --topic usage.get",
-      },
-    ],
-  },
-  "vault.secrets.delete": {
-    type: "topic",
-    topic: "vault.secrets.delete",
-    aliases: ["vault secrets delete"],
-    title: "Delete a vault secret",
-    summary: "Delete one vault secret.",
-    inputs: {
-      path: [
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "deleted",
-          type: "true",
-          required: true,
-          values: ["true"],
-        },
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Vault",
-        url: "https://platform.bctrl.ai/sdk/vault",
-        markdownUrl: "https://platform.bctrl.ai/sdk/vault.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/vault.md",
-        description:
-          "Encrypted secrets and TOTP, scoped per space and injected into runtimes by reference.",
-      },
-    ],
-    api: {
-      method: "DELETE",
-      path: "/v1/vault/secrets/{key}",
-      operationId: "vault.secrets.delete",
-      responseFields: ["deleted", "key"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "vault.secrets.delete",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic vault.secrets.delete",
-      usage: "bctrl help --topic vault.secrets.delete",
-    },
-    mcp: {
-      toolName: "bctrl_vault_secrets_delete",
-      operationResource: "operations://vault.secrets.delete",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic vault.secrets.delete",
-      },
-    ],
-  },
-  "vault.secrets.get": {
-    type: "topic",
-    topic: "vault.secrets.get",
-    aliases: ["vault secrets get"],
-    title: "Get vault secret metadata",
-    summary: "Get vault secret metadata without returning the secret value.",
-    inputs: {
-      path: [
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "createdAt",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "hasTotp",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "label",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "originPatterns",
-          type: "string[]",
-          required: false,
-        },
-        {
-          name: "origins",
-          type: "string[]",
-          required: false,
-        },
-        {
-          name: "type",
-          type: "login | value",
-          required: true,
-          values: ["login", "value"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Vault",
-        url: "https://platform.bctrl.ai/sdk/vault",
-        markdownUrl: "https://platform.bctrl.ai/sdk/vault.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/vault.md",
-        description:
-          "Encrypted secrets and TOTP, scoped per space and injected into runtimes by reference.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/vault/secrets/{key}",
-      operationId: "vault.secrets.get",
-      responseFields: [
-        "createdAt",
-        "hasTotp",
-        "key",
-        "label",
-        "originPatterns",
-        "origins",
-        "type",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "vault.secrets.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic vault.secrets.get",
-      usage: "bctrl help --topic vault.secrets.get",
-    },
-    mcp: {
-      toolName: "bctrl_vault_secrets_get",
-      operationResource: "operations://vault.secrets.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic vault.secrets.get",
-      },
-    ],
-  },
-  "vault.secrets.list": {
-    type: "topic",
-    topic: "vault.secrets.list",
-    aliases: ["vault secrets list"],
-    title: "List vault secrets",
-    summary:
-      "List vault secret metadata using the simplified response envelope. Use this to discover available secrets without returning secret values.",
-    inputs: {
-      query: [
-        {
-          name: "prefix",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "origin",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "hasTotp",
-          type: "boolean",
-          required: false,
-          description:
-            "Filter to secrets that have or do not have TOTP configured.",
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
-          type: "object[]",
-          required: true,
-        },
-        {
-          name: "nextCursor",
-          type: "string | null",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Vault",
-        url: "https://platform.bctrl.ai/sdk/vault",
-        markdownUrl: "https://platform.bctrl.ai/sdk/vault.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/vault.md",
-        description:
-          "Encrypted secrets and TOTP, scoped per space and injected into runtimes by reference.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/vault/secrets",
-      operationId: "vault.secrets.list",
-      responseFields: ["data", "nextCursor"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "vault.secrets.list",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic vault.secrets.list",
-      usage: "bctrl help --topic vault.secrets.list",
-    },
-    mcp: {
-      toolName: "bctrl_vault_secrets_list",
-      operationResource: "operations://vault.secrets.list",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic vault.secrets.list",
-      },
-    ],
-  },
-  "vault.secrets.totp": {
-    type: "topic",
-    topic: "vault.secrets.totp",
-    aliases: ["vault secrets totp"],
-    title: "Generate current TOTP code",
-    summary:
-      "Generate the current TOTP code for one vault secret identified by key in the path.",
-    inputs: {
-      path: [
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "code",
-          type: "string",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Vault",
-        url: "https://platform.bctrl.ai/sdk/vault",
-        markdownUrl: "https://platform.bctrl.ai/sdk/vault.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/vault.md",
-        description:
-          "Encrypted secrets and TOTP, scoped per space and injected into runtimes by reference.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/vault/secrets/{key}/totp",
-      operationId: "vault.secrets.totp",
-      responseFields: ["code"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "vault.secrets.totp",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic vault.secrets.totp",
-      usage: "bctrl help --topic vault.secrets.totp",
-    },
-    mcp: {
-      toolName: "bctrl_vault_secrets_totp",
-      operationResource: "operations://vault.secrets.totp",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic vault.secrets.totp",
-      },
-    ],
-  },
-  "vault.secrets.update": {
-    type: "topic",
-    topic: "vault.secrets.update",
-    aliases: ["vault secrets update"],
-    title: "Update a vault secret",
-    summary:
-      "Update one vault secret in place. Use this to rotate a password, value, TOTP seed, or metadata without reading the existing secret value first.",
-    inputs: {
-      path: [
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "VaultSecretPatchRequest",
-        schemaResource: "schemas://VaultSecretPatchRequest",
-        fields: [
-          {
-            name: "username",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "password",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "value",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "totpSecret",
-            type: "string | null",
-            required: false,
-          },
-          {
-            name: "label",
-            type: "string | null",
-            required: false,
-          },
-          {
-            name: "origins",
-            type: "string[] | null",
-            required: false,
-          },
-          {
-            name: "originPatterns",
-            type: "string[] | null",
-            required: false,
-          },
-          {
-            name: "notes",
-            type: "string | null",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "createdAt",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "hasTotp",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "label",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "originPatterns",
-          type: "string[]",
-          required: false,
-        },
-        {
-          name: "origins",
-          type: "string[]",
-          required: false,
-        },
-        {
-          name: "type",
-          type: "login | value",
-          required: true,
-          values: ["login", "value"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Vault",
-        url: "https://platform.bctrl.ai/sdk/vault",
-        markdownUrl: "https://platform.bctrl.ai/sdk/vault.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/vault.md",
-        description:
-          "Encrypted secrets and TOTP, scoped per space and injected into runtimes by reference.",
-      },
-    ],
-    api: {
-      method: "PATCH",
-      path: "/v1/vault/secrets/{key}",
-      operationId: "vault.secrets.update",
-      requestFields: [
-        "username",
-        "password",
-        "value",
-        "totpSecret",
-        "label",
-        "origins",
-        "originPatterns",
-        "notes",
-      ],
-      responseFields: [
-        "createdAt",
-        "hasTotp",
-        "key",
-        "label",
-        "originPatterns",
-        "origins",
-        "type",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "vault.secrets.update",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic vault.secrets.update",
-      usage: "bctrl help --topic vault.secrets.update",
-    },
-    mcp: {
-      toolName: "bctrl_vault_secrets_update",
-      operationResource: "operations://vault.secrets.update",
-      schemaResources: ["schemas://VaultSecretPatchRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic vault.secrets.update",
-      },
-    ],
-  },
-  "vault.secrets.upsert": {
-    type: "topic",
-    topic: "vault.secrets.upsert",
-    aliases: ["vault secrets upsert"],
-    title: "Create or replace a vault secret",
-    summary:
-      "Create or replace one vault secret using the key from the path. Secret values are write-only on this route: reads and lists return metadata by default, and raw value access is limited to the dedicated value endpoint and the caller’s vault policy.",
-    inputs: {
-      path: [
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "VaultSecretUpsertRequest",
-        schemaResource: "schemas://VaultSecretUpsertRequest",
-        description:
-          "fields is the union-wide field superset. For valid bodies, use discriminator.variants and each variant required/example as authoritative.",
-        fields: [
-          {
-            name: "type",
-            type: "login | value",
-            required: true,
-            values: ["login", "value"],
-          },
-          {
-            name: "username",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "password",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "value",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "totpSecret",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "label",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "origins",
-            type: "string[]",
-            required: false,
-          },
-          {
-            name: "originPatterns",
-            type: "string[]",
-            required: false,
-          },
-          {
-            name: "notes",
-            type: "string",
-            required: false,
-          },
-        ],
-        discriminator: {
-          property: "type",
-          variants: [
-            {
-              value: "login",
-              schema: "VaultLoginSecretUpsertRequest",
-              schemaResource: "schemas://VaultLoginSecretUpsertRequest",
-              required: ["type", "username", "password"],
-            },
-            {
-              value: "value",
-              schema: "VaultValueSecretUpsertRequest",
-              schemaResource: "schemas://VaultValueSecretUpsertRequest",
-              required: ["type", "value"],
-            },
-          ],
-        },
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "createdAt",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "hasTotp",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "label",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "originPatterns",
-          type: "string[]",
-          required: false,
-        },
-        {
-          name: "origins",
-          type: "string[]",
-          required: false,
-        },
-        {
-          name: "type",
-          type: "login | value",
-          required: true,
-          values: ["login", "value"],
-        },
-        {
-          name: "updatedAt",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Vault",
-        url: "https://platform.bctrl.ai/sdk/vault",
-        markdownUrl: "https://platform.bctrl.ai/sdk/vault.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/vault.md",
-        description:
-          "Encrypted secrets and TOTP, scoped per space and injected into runtimes by reference.",
-      },
-    ],
-    api: {
-      method: "PUT",
-      path: "/v1/vault/secrets/{key}",
-      operationId: "vault.secrets.upsert",
-      requestFields: [
-        "type",
-        "username",
-        "password",
-        "value",
-        "totpSecret",
-        "label",
-        "origins",
-        "originPatterns",
-        "notes",
-      ],
-      responseFields: [
-        "createdAt",
-        "hasTotp",
-        "key",
-        "label",
-        "originPatterns",
-        "origins",
-        "type",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "vault.secrets.upsert",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic vault.secrets.upsert",
-      usage: "bctrl help --topic vault.secrets.upsert",
-    },
-    mcp: {
-      toolName: "bctrl_vault_secrets_upsert",
-      operationResource: "operations://vault.secrets.upsert",
-      schemaResources: ["schemas://VaultSecretUpsertRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic vault.secrets.upsert",
-      },
-    ],
-  },
-  "vault.secrets.value": {
-    type: "topic",
-    topic: "vault.secrets.value",
-    aliases: ["vault secrets value"],
-    title: "Read vault secret value",
-    summary:
-      "Read one vault secret value. Runtime-bound callers are still governed by vault policy and raw-read settings.",
-    inputs: {
-      path: [
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "key",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "label",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "notes",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "originPatterns",
-          type: "string[]",
-          required: false,
-        },
-        {
-          name: "origins",
-          type: "string[]",
-          required: false,
-        },
-        {
-          name: "password",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "type",
-          type: "login | value",
-          required: true,
-          values: ["login", "value"],
-        },
-        {
-          name: "username",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "value",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Vault",
-        url: "https://platform.bctrl.ai/sdk/vault",
-        markdownUrl: "https://platform.bctrl.ai/sdk/vault.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/vault.md",
-        description:
-          "Encrypted secrets and TOTP, scoped per space and injected into runtimes by reference.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/vault/secrets/{key}/value",
-      operationId: "vault.secrets.value",
-      responseFields: [
-        "key",
-        "label",
-        "notes",
-        "originPatterns",
-        "origins",
-        "password",
-        "type",
-        "username",
-        "value",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "vault.secrets.value",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic vault.secrets.value",
-      usage: "bctrl help --topic vault.secrets.value",
-    },
-    mcp: {
-      toolName: "bctrl_vault_secrets_value",
-      operationResource: "operations://vault.secrets.value",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic vault.secrets.value",
       },
     ],
   },
@@ -14885,7 +11926,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | run.completed | run.failed | human_action.requested | human_action.completed | view.created | view.revoked | recording.ready[]",
+            type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
             required: true,
           },
         ],
@@ -14905,12 +11946,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | run.completed | run.failed | human_action.requested | human_action.completed | view.created | view.revoked | recording.ready[]",
+          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -15015,7 +12056,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
       ],
@@ -15171,7 +12212,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "eventId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -15181,7 +12222,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -15217,7 +12258,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "webhookId",
-          type: "uuid | null",
+          type: "string | null",
           required: true,
         },
       ],
@@ -15301,12 +12342,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | run.completed | run.failed | human_action.requested | human_action.completed | view.created | view.revoked | recording.ready[]",
+          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -15469,7 +12510,7 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -15546,7 +12587,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "eventId",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -15556,7 +12597,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {
@@ -15592,7 +12633,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "webhookId",
-          type: "uuid | null",
+          type: "string | null",
           required: true,
         },
       ],
@@ -15678,7 +12719,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | run.completed | run.failed | human_action.requested | human_action.completed | view.created | view.revoked | recording.ready[]",
+            type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
             required: false,
           },
           {
@@ -15703,12 +12744,12 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | run.completed | run.failed | human_action.requested | human_action.completed | view.created | view.revoked | recording.ready[]",
+          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
           required: true,
         },
         {
           name: "id",
-          type: "uuid",
+          type: "string",
           required: true,
         },
         {

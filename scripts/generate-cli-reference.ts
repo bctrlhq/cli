@@ -54,8 +54,8 @@ const groups: ReferenceGroup[] = [
     slug: 'runs',
     title: 'Run Commands',
     navTitle: 'Runs',
-    description: 'Inspect run activity, events, files, and invocations.',
-    commands: ['run'],
+    description: 'Inspect trace spans and events, or stream both live.',
+    commands: ['runs'],
   },
   {
     slug: 'views',
@@ -79,18 +79,18 @@ const groups: ReferenceGroup[] = [
     commands: ['file'],
   },
   {
-    slug: 'vault',
-    title: 'Vault Commands',
-    navTitle: 'Vault',
-    description: 'Store secrets, read values, and generate TOTP codes.',
-    commands: ['vault'],
-  },
-  {
     slug: 'tools',
     title: 'Tool Commands',
     navTitle: 'Tools',
     description: 'Define tools, bundle toolsets, and inspect tool calls.',
-    commands: ['tool', 'toolset', 'tool-call'],
+    commands: ['tools', 'toolsets', 'tool-calls'],
+  },
+  {
+    slug: 'agents',
+    title: 'Agent Commands',
+    navTitle: 'Agents',
+    description: 'Discover agents and manage streaming conversations.',
+    commands: ['agents', 'conversations'],
   },
   {
     slug: 'ai',

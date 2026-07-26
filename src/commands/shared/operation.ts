@@ -279,9 +279,7 @@ export async function requestOperation<OperationId extends CliOperationId>(
         ? await client.post(path, options)
         : route.method === 'patch'
           ? await client.patch(path, options)
-          : route.method === 'put'
-            ? await client.put(path, options)
-            : await client.delete(path, options);
+          : await client.delete(path, options);
   return result;
 }
 
@@ -337,18 +335,24 @@ export function createOperationListCommand<OperationId extends CliOperationId>(
   config: {
     operationId: OperationId;
     name?: string;
+    argNames?: string[];
     description: string;
     configure?: (command: Command) => Command;
     query?: (options: Record<string, unknown>) => CliOperationQuery<OperationId>;
     actingSubaccountId?: (options: Record<string, unknown>) => string | undefined;
   }
 ): Command {
+  const argNames = config.argNames ?? [];
   let command = new Command(config.name ?? 'list').description(config.description);
   command = addCliOperationHelp(command, config.operationId);
+  for (const arg of argNames) command = command.argument(`<${arg}>`);
   command = config.configure ? config.configure(command) : addPaginationFlags(command);
   command = addRequestOverrideFlags(command);
   command = addOutputFlags(command);
-  return command.action(async (options: Record<string, unknown>) => {
+  return command.action(async (...actionArgs: unknown[]) => {
+    const options = getActionOptions(actionArgs);
+    const args: Record<string, string> = {};
+    for (let i = 0; i < argNames.length; i += 1) args[argNames[i]!] = String(actionArgs[i]);
     const overrides = await resolveRequestOverrides(config.operationId, options);
     const curatedQuery = config.query ? config.query(options) : defaultListQuery(options);
     const actingSubaccountId = config.actingSubaccountId?.(options);
@@ -357,7 +361,9 @@ export function createOperationListCommand<OperationId extends CliOperationId>(
       config.operationId,
       withActingSubaccount(
         {
-          ...(overrides.pathParams ? { pathParams: overrides.pathParams } : {}),
+          ...(argNames.length > 0 || overrides.pathParams
+            ? { pathParams: overlayDefined(overrides.pathParams, args) }
+            : {}),
           query: overlayDefined(overrides.query, curatedQuery as Record<string, unknown>),
           output: outputFlags(options),
         },

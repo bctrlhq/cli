@@ -2,7 +2,7 @@
 
 `@bctrl/cli` — the `bctrl` command for managing BCTRL platform resources from scripts and AI agents.
 
-Translates CLI options/args into authenticated requests against the control-plane v1 REST API. Covers auth, plus CRUD/introspection for spaces, runtimes, runs, files, vault, tools/toolsets, AI models/credentials, browser extensions, and subaccounts. Output supports JSON field projection, `--jq` filtering, and Handlebars `--template`.
+Translates CLI options/args into authenticated requests against the control-plane v1 REST API. Covers auth, plus CRUD/introspection for spaces, runtimes, runs, files, tools/toolsets, agents/conversations, AI models/credentials, browser extensions, and subaccounts. Output supports JSON field projection, `--jq` filtering, and Handlebars `--template`.
 
 ## Key entry points
 

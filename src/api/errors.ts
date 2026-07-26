@@ -100,8 +100,8 @@ function suggestionForApiError(error: ApiErrorInfo): string | null {
       return commandWithOptionalSpace('bctrl toolset list', error.details);
     case 'tool_call.not_found':
       return 'bctrl tool-call list';
-    case 'vault_secret.not_found':
-      return 'bctrl vault list';
+    case 'tool.not_found':
+      return 'bctrl tools list';
     case 'browser_extension.not_found':
       return 'bctrl browser extension list';
     case 'ai_credential.not_found':

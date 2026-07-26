@@ -1,113 +1,38 @@
 # BCTRL CLI
 
-Command-line tools for BCTRL cloud browser automation. Use it to create browser runtimes, start live sessions, submit hosted invocations, inspect runs and files, and manage account resources from a terminal or script.
-
-## Install
-
 ```bash
 npm install -g @bctrl/cli
+bctrl auth login
 ```
 
-Requires Node.js 22.14 or newer.
-
-## Authenticate
-
-For an interactive terminal, start the browser approval flow and wait for completion:
+Create and start runtimes with `bctrl runtime`. Automation is exposed through a
+small generic Tool interface:
 
 ```bash
-bctrl auth login --url --wait
+bctrl tools call stagehand.act \
+  --body '{"runtimeId":"rt_...","instruction":"Click Continue"}'
+
+bctrl tools start captcha.solve --body '{"runtimeId":"rt_..."}'
+bctrl tool-calls result call_... --params '{"waitSeconds":60}'
 ```
 
-For CI, agents, or one-off shells, use an API key:
+Use persistent conversations for long-running agents:
 
 ```bash
-export BCTRL_API_KEY="bctrl_..."
-bctrl auth status
+bctrl agents list
+bctrl conversations create \
+  --body '{"agent":"browser-use","runtimeId":"rt_..."}'
+bctrl conversations message conv_... --body '{"text":"Complete checkout"}'
+bctrl conversations stream conv_...
 ```
 
-`BCTRL_API_KEY` takes precedence over credentials stored by `bctrl auth login`.
-
-## Quick Start
-
-Create a browser runtime, start it, run an extraction task, then stop it:
+Every automation path contributes to one Run:
 
 ```bash
-bctrl runtime create --name research-browser --json
-bctrl runtime start <runtime-id> --json
-
-bctrl runtime invocation create <runtime-id> \
-  --action extract \
-  --instruction "Extract the page title." \
-  --json
-
-bctrl runtime invocation wait <runtime-id> <invocation-id> --json
-bctrl runtime stop <runtime-id>
+bctrl runs trace run_...
+bctrl runs events run_...
+bctrl runs stream run_...
 ```
 
-For full request bodies, pass JSON with `--body`. Inline JSON, `@file`, and `-` for stdin are supported:
-
-```bash
-bctrl runtime invocation create <runtime-id> \
-  --body '{"action":"observe","instruction":"Summarize the current page."}' \
-  --json
-
-cat invocation.json | bctrl runtime invocation create <runtime-id> --body - --json
-```
-
-Use `--params` for path and query overrides when you need the exact API surface:
-
-```bash
-bctrl run list --params '{"limit":25}' --json
-```
-
-## Output
-
-Print full JSON:
-
-```bash
-bctrl runtime list --json
-```
-
-Print selected fields:
-
-```bash
-bctrl runtime list --json id,status,name
-```
-
-Filter with jq syntax:
-
-```bash
-bctrl runtime list --json --jq '.data[] | select(.status == "active")'
-```
-
-Render with a template:
-
-```bash
-bctrl runtime list \
-  --json \
-  --template '{{#each data}}{{id}} {{status}}{{newline}}{{/each}}'
-```
-
-## Common Commands
-
-```bash
-bctrl space list
-bctrl runtime create --name browser-task
-bctrl runtime start <runtime-id>
-bctrl runtime target create <runtime-id> --uri https://example.com --activate
-bctrl runtime invocation create <runtime-id> --action act --instruction "Click the sign in button"
-bctrl run list --json
-bctrl runtime stop <runtime-id>
-```
-
-Run any command with `--help` for the exact arguments and flags:
-
-```bash
-bctrl runtime invocation create --help
-```
-
-## Documentation
-
-- CLI guide: https://platform.bctrl.ai/cli
-- Command reference: https://platform.bctrl.ai/cli/reference
-- API reference: https://platform.bctrl.ai/api-reference
+All JSON-body commands accept inline JSON, `@file.json`, or `-` for stdin through
+`--body`. Use `--json`, `--jq`, or `--template` to control output.

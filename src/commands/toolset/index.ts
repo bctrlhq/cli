@@ -9,7 +9,7 @@ import {
 } from '../shared/operation.js';
 
 export function createToolsetCommand(factory: Factory): Command {
-  const command = new Command('toolset').description('Manage BCTRL toolsets');
+  const command = new Command('toolsets').description('Manage BCTRL toolsets');
   command.addCommand(
     createOperationListCommand(factory, {
       operationId: 'toolsets.list',

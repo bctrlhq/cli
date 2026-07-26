@@ -16,7 +16,7 @@ export function createBrowserExtensionCommand(factory: Factory): Command {
   const command = new Command('browser-extension').description('Manage browser extensions');
   command.addCommand(
     createOperationListCommand(factory, {
-      operationId: 'browser-extensions.list',
+      operationId: 'browser.extensions.list',
       description: 'List browser extensions',
       configure: (cmd) =>
         cmd
@@ -29,13 +29,13 @@ export function createBrowserExtensionCommand(factory: Factory): Command {
           q: typeof options.q === 'string' ? options.q : undefined,
           format: typeof options.format === 'string' ? options.format : undefined,
           source: typeof options.source === 'string' ? options.source : undefined,
-        }) as CliOperationQuery<'browser-extensions.list'>,
+        }) as CliOperationQuery<'browser.extensions.list'>,
       actingSubaccountId: actingSubaccountOption(),
     })
   );
   command.addCommand(
     createOperationViewCommand(factory, {
-      operationId: 'browser-extensions.get',
+      operationId: 'browser.extensions.get',
       name: 'get',
       description: 'Get a browser extension',
       argName: 'extensionId',
@@ -51,7 +51,7 @@ export function createBrowserExtensionCommand(factory: Factory): Command {
     ).action(
       async (path: string, options: { name?: string; subaccountId?: string } & OutputFlags) => {
         const file = await readBlob(path);
-        const result = await uploadOperationFile(factory, 'browser-extensions.upload', {
+        const result = await uploadOperationFile(factory, 'browser.extensions.create', {
           file: file.blob,
           fileName: file.fileName,
           fields: {
@@ -65,7 +65,7 @@ export function createBrowserExtensionCommand(factory: Factory): Command {
   );
   command.addCommand(
     createOperationJsonBodyCommand(factory, {
-      operationId: 'browser-extensions.import',
+      operationId: 'browser.extensions.create',
       name: 'import',
       description: 'Import a browser extension from a URL',
       configure: (cmd) =>
@@ -77,14 +77,14 @@ export function createBrowserExtensionCommand(factory: Factory): Command {
         return {
           url: options.url,
           name: options.name,
-        } as CliOperationJsonBody<'browser-extensions.import'>;
+        } as CliOperationJsonBody<'browser.extensions.create'>;
       },
       actingSubaccountId: (_args, options) => actingSubaccountOption()(options),
     })
   );
   command.addCommand(
     createOperationJsonBodyCommand(factory, {
-      operationId: 'browser-extensions.update',
+      operationId: 'browser.extensions.update',
       name: 'patch',
       description: 'Update a browser extension',
       argNames: ['extensionId'],
@@ -92,13 +92,13 @@ export function createBrowserExtensionCommand(factory: Factory): Command {
         cmd
           .option('--name <name>', 'Display name'),
       body: async (_args, options) => {
-        return { name: options.name } as CliOperationJsonBody<'browser-extensions.update'>;
+        return { name: options.name } as CliOperationJsonBody<'browser.extensions.update'>;
       },
     })
   );
   command.addCommand(
     createOperationDeleteCommand(factory, {
-      operationId: 'browser-extensions.delete',
+      operationId: 'browser.extensions.delete',
       description: 'Delete a browser extension',
       argNames: ['extensionId'],
     })

@@ -10,7 +10,7 @@ import {
 } from '../shared/operation.js';
 
 export function createToolCommand(factory: Factory): Command {
-  const command = new Command('tool').description('Manage tools');
+  const command = new Command('tools').description('Manage tools');
   command.addCommand(
     createOperationListCommand(factory, {
       operationId: 'tools.list',
@@ -56,10 +56,18 @@ export function createToolCommand(factory: Factory): Command {
   );
   command.addCommand(
     createOperationJsonBodyCommand(factory, {
-      operationId: 'tools.test',
-      name: 'test',
-      description: 'Test a tool',
-      argNames: ['id'],
+      operationId: 'tools.call',
+      name: 'call',
+      description: 'Call a tool and wait for its result',
+      argNames: ['toolRef'],
+    })
+  );
+  command.addCommand(
+    createOperationJsonBodyCommand(factory, {
+      operationId: 'tools.calls.create',
+      name: 'start',
+      description: 'Start an asynchronous tool call',
+      argNames: ['toolRef'],
     })
   );
   command.addCommand(
