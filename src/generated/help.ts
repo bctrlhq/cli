@@ -6112,6 +6112,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "recording",
+          type: "object",
+          required: true,
+        },
+        {
           name: "runtimeId",
           type: "string",
           required: true,
@@ -6166,6 +6171,7 @@ export const CLI_HELP_COMMANDS = {
         "failure",
         "finishedAt",
         "id",
+        "recording",
         "runtimeId",
         "runtimeType",
         "spaceId",
@@ -6547,6 +6553,11 @@ export const CLI_HELP_COMMANDS = {
             type: "boolean",
             required: false,
           },
+          {
+            name: "recording",
+            type: "boolean",
+            required: false,
+          },
         ],
       },
     },
@@ -6653,6 +6664,7 @@ export const CLI_HELP_COMMANDS = {
         "config",
         "metadata",
         "start",
+        "recording",
       ],
       responseFields: [
         "activeRunId",
@@ -7066,6 +7078,17 @@ export const CLI_HELP_COMMANDS = {
             "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
         },
       ],
+      body: {
+        schema: "RuntimeStartRequest",
+        schemaResource: "schemas://RuntimeStartRequest",
+        fields: [
+          {
+            name: "recording",
+            type: "boolean",
+            required: false,
+          },
+        ],
+      },
     },
     output: {
       fields: [
@@ -7081,6 +7104,11 @@ export const CLI_HELP_COMMANDS = {
           type: "cdp",
           required: true,
           values: ["cdp"],
+        },
+        {
+          name: "recording",
+          type: "object",
+          required: true,
         },
         {
           name: "runId",
@@ -7116,9 +7144,11 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/start",
       operationId: "runtimes.start",
+      requestFields: ["recording"],
       responseFields: [
         "connectUrl",
         "protocol",
+        "recording",
         "runId",
         "runtimeId",
         "started",
@@ -7140,6 +7170,7 @@ export const CLI_HELP_COMMANDS = {
     mcp: {
       toolName: "bctrl_runtimes_start",
       operationResource: "operations://runtimes.start",
+      schemaResources: ["schemas://RuntimeStartRequest"],
     },
     examples: [
       {
@@ -11573,8 +11604,6 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
-          description:
-            "Public view resource id. It is safe to expose in URLs and logs.",
         },
         {
           name: "presentation",
@@ -11765,8 +11794,6 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
-          description:
-            "Public view resource id. It is safe to expose in URLs and logs.",
         },
         {
           name: "presentation",
