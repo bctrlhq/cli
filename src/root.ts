@@ -2,7 +2,6 @@ import { Command } from 'commander';
 import type { Factory } from './factory.js';
 import { createAiCommand } from './commands/ai/index.js';
 import { createAccountCommand } from './commands/account/index.js';
-import { createAgentCommand } from './commands/agent/index.js';
 import { createApiKeyCommand } from './commands/api-key/index.js';
 import { createAuthCommand } from './commands/auth/index.js';
 import { createBrowserExtensionCommand } from './commands/browser-extension/index.js';
@@ -36,7 +35,6 @@ export function createRootCommand(factory: Factory): Command {
 
   command.addCommand(createVersionCommand(factory));
   command.addCommand(createAccountCommand(factory));
-  command.addCommand(createAgentCommand(factory));
   command.addCommand(createAuthCommand(factory));
   command.addCommand(createAiCommand(factory));
   command.addCommand(createApiKeyCommand(factory));

@@ -131,28 +131,33 @@ test('space delete keeps the confirmation guard and uses the OpenAPI route', asy
   ]);
 });
 
-test('space environment commands use OpenAPI operation routes', async () => {
+test('space patch accepts the environment in the resource body', async () => {
   const calls: ApiCall[] = [];
   const { command } = buildCommand(calls, {});
 
-  await command.parseAsync(['space', 'env', 'get', 'sp_test'], {
-    from: 'user',
-  });
-  await command.parseAsync(['space', 'env', 'patch', 'sp_test'], {
-    from: 'user',
-  });
+  await command.parseAsync(
+    [
+      'space',
+      'patch',
+      'sp_test',
+      '--body',
+      '{"environment":{"storage":{"namespace":"team-files"}}}',
+    ],
+    { from: 'user' }
+  );
 
   assert.deepEqual(calls, [
     {
-      method: 'get',
-      path: '/spaces/sp_test/environment',
-      options: undefined,
-    },
-    {
       method: 'patch',
-      path: '/spaces/sp_test/environment',
+      path: '/spaces/sp_test',
       options: {
-        body: {},
+        body: {
+          environment: {
+            storage: {
+              namespace: 'team-files',
+            },
+          },
+        },
       },
     },
   ]);

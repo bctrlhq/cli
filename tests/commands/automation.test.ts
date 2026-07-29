@@ -37,9 +37,12 @@ test('automation commands map to the canonical tools, conversations, and trace r
     ['conversations', 'message', 'conv_1', '--body', '{"text":"Complete checkout"}'],
     { from: 'user' }
   );
+  await buildCommand(calls).parseAsync(
+    ['conversations', 'patch', 'conv_1', '--body', '{"agent":"stagehand"}'],
+    { from: 'user' }
+  );
   await buildCommand(calls).parseAsync(['runs', 'trace', 'run_1'], { from: 'user' });
   await buildCommand(calls).parseAsync(['runs', 'events', 'run_1'], { from: 'user' });
-  await buildCommand(calls).parseAsync(['agents', 'list'], { from: 'user' });
 
   assert.deepEqual(
     calls.map(({ method, path }) => `${method} ${path}`),
@@ -47,9 +50,9 @@ test('automation commands map to the canonical tools, conversations, and trace r
       'post /tools/stagehand.act/call',
       'post /tools/captcha.solve/calls',
       'post /conversations/conv_1/messages',
+      'patch /conversations/conv_1',
       'get /runs/run_1/trace',
       'get /runs/run_1/events',
-      'get /agents',
     ]
   );
 });

@@ -118,58 +118,5 @@ export function createSpaceCommand(factory: Factory): Command {
       );
     })
   );
-  command.addCommand(createSpaceEnvironmentCommand(factory));
-  return command;
-}
-
-function createSpaceEnvironmentCommand(factory: Factory): Command {
-  const command = new Command('env').description('Manage a space environment');
-  command.addCommand(
-    addOutputFlags(
-      new Command('get')
-        .description('Get a space environment')
-        .argument('<spaceId>')
-        .option(
-          '--params <json>',
-          'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
-        )
-    ).action(async (spaceId: string, options: { params?: string } & OutputFlags) => {
-      await requestOperationAndPrint(
-        factory,
-        'spaces.environment.get',
-        await buildOperationInput('spaces.environment.get', options, {
-          pathParams: { spaceId },
-          output: outputFlags(options),
-        })
-      );
-    })
-  );
-  command.addCommand(
-    addOutputFlags(
-      new Command('patch')
-        .description('Update a space environment')
-        .argument('<spaceId>')
-        .option(
-          '--params <json>',
-          'Path/query parameters as a JSON object (inline, @file, or - for stdin)'
-        )
-        .option('--body <json>', 'Request body as JSON (inline, @file, or - for stdin)')
-    ).action(
-      async (
-        spaceId: string,
-        options: { params?: string; body?: string } & OutputFlags
-      ) => {
-        await requestOperationAndPrint(
-          factory,
-          'spaces.environment.update',
-          await buildOperationInput('spaces.environment.update', options, {
-            pathParams: { spaceId },
-            body: {},
-            output: outputFlags(options),
-          })
-        );
-      }
-    )
-  );
   return command;
 }

@@ -19,7 +19,6 @@ bctrl tool-calls result call_... --params '{"waitSeconds":60}'
 Use persistent conversations for long-running agents:
 
 ```bash
-bctrl agents list
 bctrl conversations create \
   --body '{"agent":"browser-use","runtimeId":"rt_..."}'
 bctrl conversations message conv_... --body '{"text":"Complete checkout"}'

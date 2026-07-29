@@ -32,6 +32,14 @@ export function createConversationCommand(factory: Factory): Command {
   );
   command.addCommand(
     createOperationJsonBodyCommand(factory, {
+      operationId: 'conversations.update',
+      name: 'patch',
+      description: 'Update the default agent, model, toolset, or title',
+      argNames: ['conversationId'],
+    })
+  );
+  command.addCommand(
+    createOperationJsonBodyCommand(factory, {
       operationId: 'conversations.messages.create',
       name: 'message',
       description: 'Send a message and start an agent turn',

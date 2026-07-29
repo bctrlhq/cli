@@ -28,26 +28,6 @@ export interface paths {
         patch: operations["account.update"];
         trace?: never;
     };
-    "/v1/agents": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List available runtime automation agents
-         * @description List the runtime automation agents available to the caller.
-         */
-        get: operations["agents.list"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/ai/credentials": {
         parameters: {
             query?: never;
@@ -297,7 +277,11 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /**
+         * Update conversation defaults
+         * @description Update the defaults used by future turns in a conversation.
+         */
+        patch: operations["conversations.update"];
         trace?: never;
     };
     "/v1/conversations/{conversationId}/cancel": {
@@ -873,13 +857,13 @@ export interface paths {
         };
         /**
          * List spaces
-         * @description List spaces visible to the current API key using the simplified response envelope.
+         * @description List complete spaces visible to the current API key.
          */
         get: operations["spaces.list"];
         put?: never;
         /**
          * Create a space
-         * @description Create a space and return the simplified space resource. The name and environment are optional; omitted values use server defaults.
+         * @description Create a space. Name, region, and environment are optional; omitted values use server defaults.
          */
         post: operations["spaces.create"];
         delete?: never;
@@ -897,7 +881,7 @@ export interface paths {
         };
         /**
          * Get a space
-         * @description Get one space using the simplified space resource shape.
+         * @description Get one complete space, including its environment.
          */
         get: operations["spaces.get"];
         put?: never;
@@ -911,33 +895,9 @@ export interface paths {
         head?: never;
         /**
          * Update a space
-         * @description Update one space and return the simplified space resource.
+         * @description Update a space name or environment.
          */
         patch: operations["spaces.update"];
-        trace?: never;
-    };
-    "/v1/spaces/{spaceId}/environment": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Get space environment
-         * @description Get the environment mounted into one space. The response is the clean storage, vault, and AI environment object available to agents working in the space.
-         */
-        get: operations["spaces.environment.get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /**
-         * Update space environment
-         * @description Patch the environment mounted into one space. Omit a field to leave it unchanged, use null to remove it, or provide a value to add or replace that capability.
-         */
-        patch: operations["spaces.environment.update"];
         trace?: never;
     };
     "/v1/subaccounts": {
@@ -1480,16 +1440,14 @@ export interface components {
             branding: components["schemas"]["BrandingSettings"];
             id: string;
             name: string;
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         AccountPatchRequest: {
             branding?: components["schemas"]["BrandingPatch"] | null;
         };
         AccountUsage: {
             blockedReasons: "insufficientCredits"[];
-            /** Format: date-time */
-            computedAt: string;
+            computedAt: components["schemas"]["Rfc3339Timestamp"];
             credits: {
                 available: number;
                 breakdown: components["schemas"]["AccountUsageBreakdown"];
@@ -1501,8 +1459,8 @@ export interface components {
                 purchasedRemaining: number;
             };
             cycle: {
-                endsAt: string | null;
-                startedAt: string | null;
+                endsAt: components["schemas"]["Rfc3339Timestamp"] | null;
+                startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             };
             isBlocked: boolean;
             organizationId: string;
@@ -1515,38 +1473,39 @@ export interface components {
             notificationsCredits: number;
             proxyCredits: number;
         };
-        Agent: {
-            canManageRuntime: boolean;
-            /** @enum {string} */
-            contextMode: "latest_message" | "message_history";
-            defaultModel: string;
-            /** @enum {string} */
-            id: "stagehand" | "browser-use";
-            models: string[];
-            name: string;
-            requiresActiveRuntime: boolean;
-            runtimeTypes: ("browser" | "desktop" | "spreadsheet")[];
-            /** @enum {string} */
-            streamingMode: "lifecycle_steps" | "lifecycle_steps_and_text";
-            supportsTools: boolean;
-        };
-        AgentListResponse: {
-            data: components["schemas"]["Agent"][];
-        };
         AgentTurnAccepted: {
+            /**
+             * MessageId
+             * @description Unique message identifier generated by BCTRL.
+             * @example msg_AAAAAAAAAAAAAAAAAAAAAA
+             */
             messageId: string;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
+            /**
+             * TraceSpanId
+             * @description Unique traceSpan identifier generated by BCTRL.
+             * @example span_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spanId: string;
             /** @constant */
             status: "queued";
             streamCursor: string;
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
         };
         AiCredential: {
             /** Format: uri */
             baseUrl?: string;
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             defaultModel?: string;
             hasApiKey: boolean;
             id: string;
@@ -1555,9 +1514,8 @@ export interface components {
             provider: "openai" | "anthropic" | "google" | "azure" | "groq" | "deepseek" | "mistral" | "cerebras" | "openrouter" | "xai" | "perplexity" | "togetherai" | "vercel-ai-gateway" | "custom";
             /** @enum {string} */
             status: "enabled" | "disabled";
-            subaccountId?: string;
-            /** Format: date-time */
-            updatedAt: string;
+            subaccountId?: components["schemas"]["SubaccountId"];
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         AiCredentialCreateRequest: {
             apiKey?: string;
@@ -1581,8 +1539,7 @@ export interface components {
             nextCursor: string | null;
         };
         AiCredentialTestResponse: {
-            /** Format: date-time */
-            checkedAt: string;
+            checkedAt: components["schemas"]["Rfc3339Timestamp"];
             error?: string;
             latencySeconds?: number;
             ok: boolean;
@@ -1676,24 +1633,24 @@ export interface components {
             credential: string;
         };
         ApiKey: {
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             expiresAt: string | null;
             id: string;
             keyPrefix: string;
-            lastUsedAt: string | null;
+            lastUsedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             name: string | null;
             scopes: "*"[];
-            subaccountId: string | null;
+            subaccountId: components["schemas"]["SubaccountId"] | null;
             /** @enum {string} */
             type: "organization" | "subaccount";
-            updatedAt: string;
-            usageCount: number;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
+            usageCount: components["schemas"]["NonNegativeCount"];
         };
         ApiKeyCreateRequest: {
             expiresAt?: string | null;
-            name?: string;
+            name?: components["schemas"]["ResourceName"];
             scopes?: "*"[];
-            subaccountId?: string;
+            subaccountId?: components["schemas"]["SubaccountId"];
         };
         ApiKeyCreateResponse: {
             data: components["schemas"]["ApiKey"];
@@ -1713,7 +1670,7 @@ export interface components {
             organizationId: string;
             /** @enum {string} */
             scope: "organization" | "subaccount";
-            subaccountId: string | null;
+            subaccountId: components["schemas"]["SubaccountId"] | null;
         };
         AuthWhoamiResponse: {
             defaultSpaceId: string | null;
@@ -1725,7 +1682,7 @@ export interface components {
             plan: "free" | "developer" | "business" | "enterprise";
             /** @enum {string} */
             scope: "organization" | "subaccount";
-            subaccountId: string | null;
+            subaccountId: components["schemas"]["SubaccountId"] | null;
         };
         BrandingConfig: {
             accent?: string;
@@ -1758,20 +1715,18 @@ export interface components {
             textMuted: string;
         };
         BrowserExtension: {
-            contentHash?: string;
-            /** Format: date-time */
-            createdAt: string;
+            contentHash?: components["schemas"]["Sha256Digest"];
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             /** @constant */
             format: "crx";
-            id: string;
-            name: string;
-            profileCount: number;
-            sizeBytes?: number;
+            id: components["schemas"]["ExtensionId"];
+            name: components["schemas"]["ResourceName"];
+            profileCount: components["schemas"]["NonNegativeCount"];
+            sizeBytes?: components["schemas"]["ByteCount"];
             /** Format: uri */
             sourceUrl?: string;
-            subaccountId?: string;
-            /** Format: date-time */
-            updatedAt: string;
+            subaccountId?: components["schemas"]["SubaccountId"];
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
             version: string;
         };
         BrowserExtensionCreateRequest: {
@@ -1791,14 +1746,14 @@ export interface components {
         BrowserExtensionDeleteResponse: {
             /** @constant */
             deleted: true;
-            id: string;
+            id: components["schemas"]["ExtensionId"];
         };
         BrowserExtensionListResponse: {
             data: components["schemas"]["BrowserExtension"][];
             nextCursor: string | null;
         };
         BrowserExtensionUpdateRequest: {
-            name?: string;
+            name?: components["schemas"]["ResourceName"];
         };
         BrowserNetworkTrafficConfig: {
             blockAds?: boolean;
@@ -1824,7 +1779,7 @@ export interface components {
         };
         BrowserRuntimeCreateConfig: {
             autoUpgrade?: boolean;
-            extensionIds?: string[];
+            extensionIds?: components["schemas"]["ExtensionId"][];
             fingerprint?: {
                 /** @constant */
                 browser?: "chrome";
@@ -1860,25 +1815,44 @@ export interface components {
             runtimeTypes: ("browser" | "desktop" | "spreadsheet")[];
             supportsCancellation: boolean;
         };
+        /**
+         * ByteCount
+         * @description Non-negative number of bytes.
+         * @example 1024
+         */
+        ByteCount: number;
         Conversation: {
             activeTurnId: string | null;
             /** @enum {string} */
             agent: "stagehand" | "browser-use";
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             model: string;
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runtimeId: string;
             /** @enum {string} */
             status: "idle" | "active";
             title: string | null;
             toolsetId: string | null;
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         ConversationCancelResponse: {
             /** @constant */
             cancelled: true;
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             turnId: string | null;
         };
@@ -1886,181 +1860,409 @@ export interface components {
             /** @enum {string} */
             agent: "stagehand" | "browser-use";
             model?: string;
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             */
             runtimeId: string;
             title?: string;
+            /**
+             * ToolsetId
+             * @description Unique toolset identifier generated by BCTRL.
+             */
             toolsetId?: string;
         };
         ConversationDetail: {
             activeTurnId: string | null;
             /** @enum {string} */
             agent: "stagehand" | "browser-use";
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             messages: components["schemas"]["Message"][];
             model: string;
             nextMessageCursor: string | null;
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runtimeId: string;
             /** @enum {string} */
             status: "idle" | "active";
             streamCursor: string;
             title: string | null;
             toolsetId: string | null;
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         ConversationEvent: {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
+            /**
+             * TraceSpanId
+             * @description Unique traceSpan identifier generated by BCTRL.
+             * @example span_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spanId: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "turn.started";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
             text: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "turn.progress";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
+            /**
+             * MessageId
+             * @description Unique message identifier generated by BCTRL.
+             * @example msg_AAAAAAAAAAAAAAAAAAAAAA
+             */
             messageId: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "message.started";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
+            /**
+             * MessageId
+             * @description Unique message identifier generated by BCTRL.
+             * @example msg_AAAAAAAAAAAAAAAAAAAAAA
+             */
             messageId: string;
             text: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "message.delta";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
+            /**
+             * MessageId
+             * @description Unique message identifier generated by BCTRL.
+             * @example msg_AAAAAAAAAAAAAAAAAAAAAA
+             */
             messageId: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "message.completed";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
             tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
+            /**
+             * ToolCallId
+             * @description Unique toolCall identifier generated by BCTRL.
+             * @example tc_AAAAAAAAAAAAAAAAAAAAAA
+             */
             toolCallId: string;
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "tool.started";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
             text: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * ToolCallId
+             * @description Unique toolCall identifier generated by BCTRL.
+             * @example tc_AAAAAAAAAAAAAAAAAAAAAA
+             */
             toolCallId: string;
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "tool.progress";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * ToolCallId
+             * @description Unique toolCall identifier generated by BCTRL.
+             * @example tc_AAAAAAAAAAAAAAAAAAAAAA
+             */
             toolCallId: string;
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "tool.requires_input";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * ToolCallId
+             * @description Unique toolCall identifier generated by BCTRL.
+             * @example tc_AAAAAAAAAAAAAAAAAAAAAA
+             */
             toolCallId: string;
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "tool.completed";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             errorCode: string;
             errorMessage: string;
             id: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * ToolCallId
+             * @description Unique toolCall identifier generated by BCTRL.
+             * @example tc_AAAAAAAAAAAAAAAAAAAAAA
+             */
             toolCallId: string;
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "tool.failed";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
-            /** Format: date-time */
-            expiresAt: string;
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
             id: string;
             prompt: string;
             responseSchema: components["schemas"]["JsonObject"] | null;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * ToolCallId
+             * @description Unique toolCall identifier generated by BCTRL.
+             * @example tc_AAAAAAAAAAAAAAAAAAAAAA
+             */
             toolCallId: string;
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "input.required";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * ToolCallId
+             * @description Unique toolCall identifier generated by BCTRL.
+             * @example tc_AAAAAAAAAAAAAAAAAAAAAA
+             */
             toolCallId: string;
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "input.responded";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
+            /** @enum {string} */
+            executionMode: "agent" | "deterministic" | "assisted";
             id: string;
-            messageId: string | null;
-            /** Format: date-time */
-            timestamp: string;
+            /**
+             * MessageId
+             * @description Unique message identifier generated by BCTRL.
+             * @example msg_AAAAAAAAAAAAAAAAAAAAAA
+             */
+            messageId: string;
+            /** @enum {string} */
+            replayStatus: "bypass" | "miss" | "hit" | "healed";
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "turn.completed";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             errorCode: string;
             errorMessage: string;
             id: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "turn.failed";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
             messageId: string | null;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "turn.cancelled";
         } | {
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
             id: string;
             messageId: string | null;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
             turnId: string;
             /** @constant */
             type: "turn.timed_out";
@@ -2074,17 +2276,36 @@ export interface components {
             agent?: "stagehand" | "browser-use";
             fileIds?: string[];
             model?: string;
+            /**
+             * PageId
+             * @description Unique page identifier generated by BCTRL.
+             */
             pageId?: string;
             text: string;
+            variables?: components["schemas"]["ConversationVariables"];
+        };
+        ConversationUpdateRequest: {
+            /** @enum {string} */
+            agent?: "stagehand" | "browser-use";
+            model?: string;
+            title?: string | null;
+            toolsetId?: string | null;
+        };
+        ConversationVariables: {
+            [key: string]: string | number | boolean | null;
         };
         CustomTool: {
             authSecretName: string | null;
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             description: string;
             executionModes: ("sync" | "async")[];
             /** @constant */
             executionType: "webhook";
+            /**
+             * ToolId
+             * @description Unique tool identifier generated by BCTRL.
+             * @example tool_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             inputSchema: components["schemas"]["JsonObject"];
             /** @constant */
@@ -2098,18 +2319,21 @@ export interface components {
             runtimeTypes: ("browser" | "desktop" | "spreadsheet")[];
             spaceId: string | null;
             supportsCancellation: boolean;
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
             /** Format: uri */
             url: string;
         } | {
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             currentVersionId: string | null;
             description: string;
             executionModes: ("sync" | "async")[];
             /** @constant */
             executionType: "hosted";
+            /**
+             * ToolId
+             * @description Unique tool identifier generated by BCTRL.
+             * @example tool_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             inputSchema: components["schemas"]["JsonObject"];
             /** @constant */
@@ -2123,15 +2347,18 @@ export interface components {
             runtimeTypes: ("browser" | "desktop" | "spreadsheet")[];
             spaceId: string | null;
             supportsCancellation: boolean;
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         } | {
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             description: string;
             executionModes: ("sync" | "async")[];
             /** @constant */
             executionType: "mcp";
+            /**
+             * ToolId
+             * @description Unique tool identifier generated by BCTRL.
+             * @example tool_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             inputSchema: components["schemas"]["JsonObject"];
             /** @constant */
@@ -2147,15 +2374,18 @@ export interface components {
             serverId: string;
             spaceId: string | null;
             supportsCancellation: boolean;
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         } | {
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             description: string;
             executionModes: ("sync" | "async")[];
             /** @constant */
             executionType: "workflow";
+            /**
+             * ToolId
+             * @description Unique tool identifier generated by BCTRL.
+             * @example tool_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             inputSchema: components["schemas"]["JsonObject"];
             /** @constant */
@@ -2167,11 +2397,15 @@ export interface components {
             /** @enum {string} */
             resultPersistence: "none" | "redacted" | "encrypted" | "artifact";
             runtimeTypes: ("browser" | "desktop" | "spreadsheet")[];
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             * @example turn_AAAAAAAAAAAAAAAAAAAAAA
+             */
+            sourceTurnId: string;
             spaceId: string | null;
             supportsCancellation: boolean;
-            /** Format: date-time */
-            updatedAt: string;
-            workflowId: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         EnvironmentAiMount: {
             credentialIds?: string[];
@@ -2221,37 +2455,66 @@ export interface components {
             reasonClass?: "invalid_input" | "unauthorized" | "capability_denied" | "capability_limit_exceeded" | "rate_limited" | "not_found" | "conflict" | "upstream" | "server";
             requestId?: string;
         };
+        /**
+         * ExtensionId
+         * @description Unique browser extension identifier generated by BCTRL.
+         * @example ext_550e8400-e29b-41d4-a716-446655440000
+         */
+        ExtensionId: string;
         /** @description A durable BCTRL file, distinguished by `source`, `runId`, and `runtimeId`: a durable File (`source: "upload"`, no `runId`/`runtimeId`); and a produced runtime/run file (`source: "runtime"`, `runId`/`runtimeId` set when known). */
         File: {
             contentType: string;
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             downloadUrl: string;
-            /** Format: date-time */
-            expiresAt?: string;
+            expiresAt?: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * FileId
+             * @description Unique file identifier generated by BCTRL.
+             * @example file_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             metadata?: components["schemas"]["JsonObject"] | null;
-            name: string;
+            name: components["schemas"]["ResourceName"];
             path: string;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId?: string;
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runtimeId?: string;
-            sizeBytes: number;
+            sizeBytes: components["schemas"]["ByteCount"];
             /** @enum {string} */
             source: "upload" | "runtime";
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spaceId: string;
             type?: string;
         };
         FileDeleteResponse: {
             /** @constant */
             deleted: true;
+            /**
+             * FileId
+             * @description Unique file identifier generated by BCTRL.
+             * @example file_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
         };
         FileFolder: {
-            fileCount: number;
-            lastCreatedAt: string | null;
-            name: string;
+            fileCount: components["schemas"]["NonNegativeCount"];
+            lastCreatedAt: components["schemas"]["Rfc3339Timestamp"] | null;
+            name: components["schemas"]["ResourceName"];
             path: string;
-            totalBytes: number;
+            totalBytes: components["schemas"]["ByteCount"];
         };
         FileListResponse: {
             data: components["schemas"]["File"][];
@@ -2260,7 +2523,7 @@ export interface components {
         };
         FileUpdateRequest: {
             metadata?: components["schemas"]["JsonObject"] | null;
-            name?: string;
+            name?: components["schemas"]["ResourceName"];
         };
         FileUploadRequest: {
             /**
@@ -2425,17 +2688,16 @@ export interface components {
             assignedIp?: string;
             autoRenew: boolean;
             createdAt: string;
-            /** Format: date-time */
-            expiresAt?: string;
+            expiresAt?: components["schemas"]["Rfc3339Timestamp"];
             id: string;
             location?: components["schemas"]["ManagedStaticProxyLocation"];
             name: string;
             poolId: string;
             pricing?: components["schemas"]["ManagedStaticProxyPricing"];
-            renewsAt?: string | null;
+            renewsAt?: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @enum {string} */
             status: "provisioning" | "provisioning_failed" | "active" | "expired" | "renewal_failed";
-            subaccountId?: string | null;
+            subaccountId?: components["schemas"]["SubaccountId"] | null;
             /** @constant */
             type: "managed-static";
             updatedAt: string;
@@ -2459,12 +2721,25 @@ export interface components {
             termDays: number;
         };
         Message: {
+            /** @description Agent selected for this message's turn, or null when the message has no turn. */
+            agent: ("stagehand" | "browser-use") | null;
+            /**
+             * ConversationId
+             * @description Unique conversation identifier generated by BCTRL.
+             * @example conv_AAAAAAAAAAAAAAAAAAAAAA
+             */
             conversationId: string;
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             fileIds: string[];
+            /**
+             * MessageId
+             * @description Unique message identifier generated by BCTRL.
+             * @example msg_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             metadata: components["schemas"]["JsonObject"] | null;
+            /** @description Model selected for this message's turn, or null when unavailable. */
+            model: string | null;
             /** @enum {string} */
             role: "system" | "user" | "assistant";
             runId: string | null;
@@ -2473,12 +2748,23 @@ export interface components {
             text: string;
             turnId: string | null;
         };
+        /**
+         * NonNegativeCount
+         * @description Non-negative whole-number count.
+         * @example 0
+         */
+        NonNegativeCount: number;
         NotificationRecipient: {
             createdAt: string;
             enabled: boolean;
+            /**
+             * NotificationRecipientId
+             * @description Unique notificationRecipient identifier generated by BCTRL.
+             * @example nrec_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             name: string | null;
-            subaccountId: string | null;
+            subaccountId: components["schemas"]["SubaccountId"] | null;
             /** @enum {string} */
             type: "email" | "sms" | "whatsapp";
             updatedAt: string;
@@ -2493,6 +2779,11 @@ export interface components {
         NotificationRecipientDeleteResponse: {
             /** @constant */
             deleted: true;
+            /**
+             * NotificationRecipientId
+             * @description Unique notificationRecipient identifier generated by BCTRL.
+             * @example nrec_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
         };
         NotificationRecipientsListResponse: {
@@ -2564,7 +2855,7 @@ export interface components {
             port: number;
             /** @enum {string} */
             protocol: "http" | "socks5";
-            subaccountId?: string | null;
+            subaccountId?: components["schemas"]["SubaccountId"] | null;
             /** @constant */
             type: "custom";
             /** @enum {string} */
@@ -2639,7 +2930,7 @@ export interface components {
             /** @enum {string} */
             rotation?: "sticky" | "rotating";
             stickyKey?: string;
-            subaccountId?: string | null;
+            subaccountId?: components["schemas"]["SubaccountId"] | null;
             /** @constant */
             type: "managed-rotating";
             /** @enum {string} */
@@ -2664,7 +2955,7 @@ export interface components {
             rotation?: "sticky" | "rotating";
             state?: string;
             stickyKey?: string;
-            subaccountId?: string | null;
+            subaccountId?: components["schemas"]["SubaccountId"] | null;
             /** @constant */
             type: "managed-rotating";
             /** @enum {string} */
@@ -2783,23 +3074,49 @@ export interface components {
             showPoweredBy: boolean;
             tokens: components["schemas"]["BrandingTokens"];
         };
+        /**
+         * ResourceName
+         * @description Customer-facing resource name. 1–200 characters.
+         * @example Production browser
+         */
+        ResourceName: string;
+        /**
+         * Rfc3339Timestamp
+         * Format: date-time
+         * @description RFC 3339 timestamp with a UTC offset.
+         * @example 2026-07-26T12:00:00Z
+         */
+        Rfc3339Timestamp: string;
         Run: {
             counts: components["schemas"]["RunCounts"];
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             durationSeconds: number | null;
             failure: components["schemas"]["RunFailure"] | null;
-            finishedAt: string | null;
+            finishedAt: components["schemas"]["Rfc3339Timestamp"] | null;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             recording: {
                 enabled: boolean;
             };
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runtimeId: string;
             /** @enum {string} */
             runtimeType: "browser" | "desktop" | "spreadsheet";
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spaceId: string;
-            /** Format: date-time */
-            startedAt: string;
+            startedAt: components["schemas"]["Rfc3339Timestamp"];
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
             usage?: components["schemas"]["RunUsage"];
@@ -2811,14 +3128,23 @@ export interface components {
         };
         RunEvent: {
             data: components["schemas"]["JsonObject"];
+            /**
+             * RunEventId
+             * @description Unique runEvent identifier generated by BCTRL.
+             * @example evt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             pageId: string | null;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
             /** @enum {string} */
             source: "control-plane" | "browser-host" | "runtime-agent" | "gateway" | "cdp" | "webdriver";
             spanId: string | null;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
             type: string;
         };
         RunEventListResponse: {
@@ -2830,8 +3156,12 @@ export interface components {
             message: string;
         };
         RunFile: {
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * FileId
+             * @description Unique file identifier generated by BCTRL.
+             * @example file_AAAAAAAAAAAAAAAAAAAAAA
+             */
             fileId: string;
             name: string;
             size: number;
@@ -2846,62 +3176,95 @@ export interface components {
         };
         RunStreamEvent: {
             id: string;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
             span: components["schemas"]["TraceSpan"];
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
             /** @constant */
             type: "span.started";
         } | {
             id: string;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
             span: components["schemas"]["TraceSpan"];
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
             /** @constant */
             type: "span.updated";
         } | {
             id: string;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
             span: components["schemas"]["TraceSpan"];
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
             /** @constant */
             type: "span.completed";
         } | {
             event: components["schemas"]["RunEvent"];
             id: string;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
             /** @constant */
             type: "runtime.event";
         } | {
             id: string;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
-            /** Format: date-time */
-            timestamp: string;
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
             /** @constant */
             type: "run.ended";
         };
         RunSummary: {
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             durationSeconds: number | null;
             failure: components["schemas"]["RunFailure"] | null;
-            finishedAt: string | null;
+            finishedAt: components["schemas"]["Rfc3339Timestamp"] | null;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             recording: {
                 enabled: boolean;
             };
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runtimeId: string;
             /** @enum {string} */
             runtimeType: "browser" | "desktop" | "spreadsheet";
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spaceId: string;
-            /** Format: date-time */
-            startedAt: string;
+            startedAt: components["schemas"]["Rfc3339Timestamp"];
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
         };
@@ -2916,9 +3279,16 @@ export interface components {
             recording: {
                 enabled: boolean;
             };
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
             /** Format: uri */
             webdriverUrl?: string;
+            /** Format: uri */
+            webmcpUrl?: string;
         };
         RuntimeCreateRequest: {
             config?: components["schemas"]["BrowserRuntimeCreateConfig"];
@@ -2933,47 +3303,60 @@ export interface components {
         };
         RuntimeCreateResponse: {
             activeRunId: string | null;
-            /** Format: date-time */
-            archivedAt?: string;
+            archivedAt?: components["schemas"]["Rfc3339Timestamp"];
             config?: components["schemas"]["BrowserRuntimeConfig"];
             connection?: components["schemas"]["RuntimeCreateConnection"];
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
-            /** Format: date-time */
-            lastActivityAt?: string;
+            lastActivityAt?: components["schemas"]["Rfc3339Timestamp"];
             metadata?: components["schemas"]["JsonObject"] | null;
             name: string;
             needsInput?: boolean;
             profile: boolean;
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spaceId: string;
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
             /** @constant */
             type: "browser";
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         RuntimeDeleteResponse: {
             /** @constant */
             deleted: true;
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
         };
         RuntimeDetail: {
             activeRunId: string | null;
-            /** Format: date-time */
-            archivedAt?: string;
+            archivedAt?: components["schemas"]["Rfc3339Timestamp"];
             config?: components["schemas"]["BrowserRuntimeConfig"];
             /**
              * Format: uri
              * @description Run-scoped CDP endpoint. The same URL is returned on every read and start for this run; one external controller may be connected at a time, and the URL stops working when the run ends. Present only while the runtime is active with a run open.
              */
             connectUrl?: string;
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
-            /** Format: date-time */
-            lastActivityAt?: string;
+            lastActivityAt?: components["schemas"]["Rfc3339Timestamp"];
             /** @description Most recent run of this runtime (the active one when a run is open). Null when the runtime has never run. */
             latestRun?: components["schemas"]["RuntimeLatestRun"] | null;
             metadata?: components["schemas"]["JsonObject"] | null;
@@ -2982,18 +3365,27 @@ export interface components {
             profile: boolean;
             /** @enum {string} */
             protocol?: "cdp";
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spaceId: string;
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
             /** @constant */
             type: "browser";
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
             /**
              * Format: uri
              * @description Run-scoped Selenium WebDriver endpoint. Pass this URL to a Selenium Remote WebDriver client; it stops working when the run ends.
              */
             webdriverUrl?: string;
+            /**
+             * Format: uri
+             * @description Run-scoped MCP endpoint exposing tools declared by the active webpage through WebMCP. It stops working when the run ends.
+             */
+            webmcpUrl?: string;
         };
         RuntimeFingerprint: {
             browser?: "chrome" | string;
@@ -3107,10 +3499,14 @@ export interface components {
             udpMode?: "disabled" | "auto" | "required";
         };
         RuntimeLatestRun: {
-            finishedAt: string | null;
+            finishedAt: components["schemas"]["Rfc3339Timestamp"] | null;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
-            /** Format: date-time */
-            startedAt: string;
+            startedAt: components["schemas"]["Rfc3339Timestamp"];
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
         };
@@ -3241,7 +3637,17 @@ export interface components {
             recording: {
                 enabled: boolean;
             };
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runtimeId: string;
             started: boolean;
             /** @enum {string} */
@@ -3251,9 +3657,19 @@ export interface components {
              * @description Run-scoped Selenium WebDriver endpoint for this same browser. Selenium, CDP clients, and hosted agents may connect concurrently.
              */
             webdriverUrl?: string;
+            /**
+             * Format: uri
+             * @description Run-scoped MCP endpoint for tools declared by the active webpage through WebMCP.
+             */
+            webmcpUrl?: string;
         };
         RuntimeStopResponse: {
             runId: string | null;
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runtimeId: string;
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
@@ -3261,23 +3677,29 @@ export interface components {
         };
         RuntimeSummary: {
             activeRunId: string | null;
-            /** Format: date-time */
-            archivedAt?: string;
-            /** Format: date-time */
-            createdAt: string;
+            archivedAt?: components["schemas"]["Rfc3339Timestamp"];
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
-            /** Format: date-time */
-            lastActivityAt?: string;
+            lastActivityAt?: components["schemas"]["Rfc3339Timestamp"];
             name: string;
             needsInput?: boolean;
             profile: boolean;
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spaceId: string;
             /** @enum {string} */
             status: "active" | "stopped" | "failed";
             /** @constant */
             type: "browser";
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         RuntimeUpdateRequest: {
             config?: components["schemas"]["BrowserRuntimeCreateConfig"];
@@ -3289,32 +3711,50 @@ export interface components {
             /** @enum {string} */
             billingStatus: "pending" | "settled" | "unavailable";
             captchaSolves: number;
-            /** Format: date-time */
-            computedAt: string;
+            computedAt: components["schemas"]["Rfc3339Timestamp"];
             creditsUsed: number | null;
             filesBytes: number;
             proxyBytes: number | null;
             runtimeSeconds: number | null;
         };
+        /**
+         * Sha256Digest
+         * @description SHA-256 digest encoded as 64 lowercase hexadecimal characters.
+         * @example 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
+         */
+        Sha256Digest: string;
         Space: {
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            environment: components["schemas"]["EnvironmentMountsOutput"];
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
+            isDefault: boolean;
             name: string;
-            subaccountId?: string;
-            /** Format: date-time */
-            updatedAt: string;
+            /** @enum {string} */
+            region: "us-east-1";
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         SpaceCreateRequest: {
             environment?: components["schemas"]["EnvironmentMounts"];
             name?: string;
+            /** @enum {string} */
+            region?: "us-east-1";
         };
         SpaceDeleteResponse: {
             /** @constant */
             deleted: true;
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
         };
-        SpaceEnvironmentUpdateRequest: {
+        SpaceEnvironmentPatch: {
             ai?: {
                 credentialIds?: string[] | null;
                 defaults?: {
@@ -3334,17 +3774,8 @@ export interface components {
             nextCursor: string | null;
         };
         SpaceUpdateRequest: {
+            environment?: components["schemas"]["SpaceEnvironmentPatch"];
             name?: string;
-        };
-        SpaceWithEnvironment: {
-            /** Format: date-time */
-            createdAt: string;
-            environment?: components["schemas"]["EnvironmentMountsOutput"];
-            id: string;
-            name: string;
-            subaccountId?: string;
-            /** Format: date-time */
-            updatedAt: string;
         };
         Subaccount: {
             archivedAt?: string | null;
@@ -3352,10 +3783,10 @@ export interface components {
             /** Format: uuid */
             defaultSpaceId: string;
             externalId?: string | null;
-            id: string;
+            id: components["schemas"]["SubaccountId"];
             limits: components["schemas"]["SubaccountLimits"];
             metadata?: components["schemas"]["JsonObject"] | null;
-            name: string;
+            name: components["schemas"]["ResourceName"];
             /** @enum {string} */
             status: "active" | "archived";
             updatedAt: string;
@@ -3364,7 +3795,7 @@ export interface components {
         SubaccountArchiveResponse: {
             /** @constant */
             archived: true;
-            id: string;
+            id: components["schemas"]["SubaccountId"];
         };
         SubaccountCreateRequest: {
             externalId?: string;
@@ -3372,6 +3803,12 @@ export interface components {
             metadata?: components["schemas"]["JsonObject"];
             name: string;
         };
+        /**
+         * SubaccountId
+         * @description Opaque identifier for a BCTRL subaccount.
+         * @example V1StGXR8_Z5jdHi6B-myT
+         */
+        SubaccountId: string;
         SubaccountLimits: {
             maxActiveRuns: number | null;
             maxSpaces: number | null;
@@ -3394,8 +3831,7 @@ export interface components {
         };
         SubaccountUsage: {
             blockedReasons: ("monthlySpendLimit" | "activeRunLimit" | "spaceLimit")[];
-            /** Format: date-time */
-            computedAt: string;
+            computedAt: components["schemas"]["Rfc3339Timestamp"];
             credits: {
                 breakdown: components["schemas"]["SubaccountUsageBreakdown"];
                 estimated: number;
@@ -3406,10 +3842,8 @@ export interface components {
             };
             isBlocked: boolean;
             period: {
-                /** Format: date-time */
-                endsAt: string;
-                /** Format: date-time */
-                startedAt: string;
+                endsAt: components["schemas"]["Rfc3339Timestamp"];
+                startedAt: components["schemas"]["Rfc3339Timestamp"];
             };
             runs: {
                 active: number;
@@ -3421,7 +3855,7 @@ export interface components {
                 limit: number | null;
                 used: number;
             };
-            subaccountId: string;
+            subaccountId: components["schemas"]["SubaccountId"];
         };
         SubaccountUsageBreakdown: {
             aiCredits: number;
@@ -3439,22 +3873,26 @@ export interface components {
         ToolCall: {
             /** @enum {string} */
             callerType: "api" | "agent" | "system" | "test";
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             errorCode: string | null;
             errorMessage: string | null;
-            finishedAt: string | null;
+            finishedAt: components["schemas"]["Rfc3339Timestamp"] | null;
+            /**
+             * ToolCallId
+             * @description Unique toolCall identifier generated by BCTRL.
+             * @example tc_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             parentId: string | null;
             prompt: string | null;
-            responseExpiresAt: string | null;
+            responseExpiresAt: components["schemas"]["Rfc3339Timestamp"] | null;
             responseSchema: components["schemas"]["JsonObject"] | null;
             resultAvailable: boolean;
             retryable: boolean | null;
             runId: string | null;
             runtimeId: string | null;
             spanId: string | null;
-            startedAt: string | null;
+            startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @enum {string} */
             status: "queued" | "running" | "requires_input" | "succeeded" | "failed" | "cancelled" | "timed_out";
             tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
@@ -3493,10 +3931,27 @@ export interface components {
             spaceId?: string | "default";
             /** @default 30000 */
             timeoutMs: number;
+        } | {
+            /** @default  */
+            description: string;
+            /** @constant */
+            executionType: "workflow";
+            name: string;
+            /**
+             * AgentTurnId
+             * @description Unique agentTurn identifier generated by BCTRL.
+             */
+            sourceTurnId: string;
+            spaceId?: string | "default";
         };
         ToolDeleteResponse: {
             /** @constant */
             deleted: true;
+            /**
+             * ToolId
+             * @description Unique tool identifier generated by BCTRL.
+             * @example tool_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
         };
         ToolListResponse: {
@@ -3504,15 +3959,23 @@ export interface components {
             nextCursor: string | null;
         };
         Toolset: {
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             description: string | null;
+            /**
+             * ToolsetId
+             * @description Unique toolset identifier generated by BCTRL.
+             * @example tset_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             name: string;
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spaceId: string;
             tools: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string)[];
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         ToolsetCreateRequest: {
             description?: string | null;
@@ -3523,6 +3986,11 @@ export interface components {
         ToolsetDeleteResponse: {
             /** @constant */
             deleted: true;
+            /**
+             * ToolsetId
+             * @description Unique toolset identifier generated by BCTRL.
+             * @example tset_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
         };
         ToolsetListResponse: {
@@ -3547,7 +4015,12 @@ export interface components {
         TraceSpan: {
             data: components["schemas"]["JsonObject"];
             durationMs: number | null;
-            finishedAt: string | null;
+            finishedAt: components["schemas"]["Rfc3339Timestamp"] | null;
+            /**
+             * TraceSpanId
+             * @description Unique traceSpan identifier generated by BCTRL.
+             * @example span_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             /** @enum {string} */
             kind: "runtime" | "agent" | "tool" | "llm" | "browser" | "network" | "file" | "system";
@@ -3555,8 +4028,13 @@ export interface components {
             parentId: string | null;
             resourceId: string | null;
             resourceType: ("run" | "runtime" | "tool_call" | "agent_turn" | "message" | "file" | "artifact" | "connection") | null;
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
-            startedAt: string | null;
+            startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @enum {string} */
             status: "queued" | "running" | "requires_input" | "suspended" | "succeeded" | "failed" | "cancelled" | "timed_out";
         };
@@ -3567,10 +4045,8 @@ export interface components {
         View: {
             branding: components["schemas"]["ResolvedBranding"];
             components: components["schemas"]["ViewComponentsOutput"];
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            expiresAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
             id: string;
             presentation: {
                 /** @constant */
@@ -3580,10 +4056,8 @@ export interface components {
         } | {
             branding: components["schemas"]["ResolvedBranding"];
             components: components["schemas"]["ViewComponentsOutput"];
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            expiresAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
             id: string;
             presentation: {
                 allowedOrigins: unknown[];
@@ -3595,10 +4069,8 @@ export interface components {
         ViewBootstrap: {
             branding: components["schemas"]["ResolvedBranding"];
             components: components["schemas"]["ViewComponentsOutput"];
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            expiresAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
             id: string;
             presentation: {
                 /** @constant */
@@ -3609,10 +4081,8 @@ export interface components {
         } | {
             branding: components["schemas"]["ResolvedBranding"];
             components: components["schemas"]["ViewComponentsOutput"];
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            expiresAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
             id: string;
             presentation: {
                 allowedOrigins: unknown[];
@@ -3663,10 +4133,8 @@ export interface components {
         ViewCreateResponse: {
             branding: components["schemas"]["ResolvedBranding"];
             components: components["schemas"]["ViewComponentsOutput"];
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            expiresAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
             id: string;
             presentation: {
                 /** @constant */
@@ -3680,10 +4148,8 @@ export interface components {
         } | {
             branding: components["schemas"]["ResolvedBranding"];
             components: components["schemas"]["ViewComponentsOutput"];
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            expiresAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
             id: string;
             presentation: {
                 allowedOrigins: unknown[];
@@ -3712,24 +4178,50 @@ export interface components {
         };
         ViewScope: {
             runtimeIds?: string[];
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
             spaceId: string;
         } | {
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runtimeId: string;
         } | {
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             * @example run_AAAAAAAAAAAAAAAAAAAAAA
+             */
             runId: string;
         };
         ViewScopeInput: {
             runtimeIds?: string[];
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             */
             spaceId: string;
         } | {
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             */
             runtimeId: string;
         } | {
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             */
             runId: string;
         };
         ViewSession: {
             durationSeconds?: number;
-            /** Format: date-time */
-            expiresAt: string;
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
             /** @enum {string} */
             status?: "available" | "processing" | "unavailable" | "failed";
             /** @enum {string} */
@@ -3740,6 +4232,10 @@ export interface components {
             url: string;
         };
         ViewSessionCreateRequest: {
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             */
             runId: string;
             /** @enum {string} */
             surface: "live" | "recording";
@@ -3749,15 +4245,18 @@ export interface components {
             nextCursor: string | null;
         };
         Webhook: {
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             enabled: boolean;
             events: ("run.started" | "run.completed" | "run.failed" | "tool_input.requested" | "tool_input.responded" | "tool_input.expired" | "view.created" | "view.revoked" | "recording.ready")[];
+            /**
+             * WebhookId
+             * @description Unique webhook identifier generated by BCTRL.
+             * @example wh_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             name: string | null;
             subaccountId: string | null;
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
             /** Format: uri */
             url: string;
         };
@@ -3768,22 +4267,30 @@ export interface components {
             url: string;
         };
         WebhookCreateResponse: {
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             enabled: boolean;
             events: ("run.started" | "run.completed" | "run.failed" | "tool_input.requested" | "tool_input.responded" | "tool_input.expired" | "view.created" | "view.revoked" | "recording.ready")[];
+            /**
+             * WebhookId
+             * @description Unique webhook identifier generated by BCTRL.
+             * @example wh_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             name: string | null;
             secret: string;
             subaccountId: string | null;
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
             /** Format: uri */
             url: string;
         };
         WebhookDeleteResponse: {
             /** @constant */
             deleted: true;
+            /**
+             * WebhookId
+             * @description Unique webhook identifier generated by BCTRL.
+             * @example wh_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
         };
         WebhookDeliveriesListResponse: {
@@ -3792,22 +4299,35 @@ export interface components {
         };
         WebhookDelivery: {
             attemptCount: number;
-            /** Format: date-time */
-            createdAt: string;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            /**
+             * RunEventId
+             * @description Unique runEvent identifier generated by BCTRL.
+             * @example evt_AAAAAAAAAAAAAAAAAAAAAA
+             */
             eventId: string;
             eventType: string;
+            /**
+             * WebhookDeliveryId
+             * @description Unique webhookDelivery identifier generated by BCTRL.
+             * @example whd_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             lastError: string | null;
-            nextAttemptAt: string | null;
+            nextAttemptAt: components["schemas"]["Rfc3339Timestamp"] | null;
             responseStatus: number | null;
-            sentAt: string | null;
+            sentAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @enum {string} */
             status: "pending" | "sending" | "sent" | "failed" | "cancelled";
-            /** Format: date-time */
-            updatedAt: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
             webhookId: string | null;
         };
         WebhookRotateSecretResponse: {
+            /**
+             * WebhookId
+             * @description Unique webhook identifier generated by BCTRL.
+             * @example wh_AAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             secret: string;
         };
@@ -3977,70 +4497,6 @@ export interface operations {
                      *       "code": "rate_limited",
                      *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *       "reasonClass": "rate_limited"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    "agents.list": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AgentListResponse"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
                      *     }
                      */
                     "application/json": components["schemas"]["ErrorResponse"];
@@ -4782,7 +5238,7 @@ export interface operations {
             query?: {
                 cursor?: string;
                 limit?: number;
-                subaccountId?: string;
+                subaccountId?: components["schemas"]["SubaccountId"];
                 type?: "organization" | "subaccount";
             };
             header?: never;
@@ -5932,6 +6388,142 @@ export interface operations {
             };
         };
     };
+    "conversations.update": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                conversationId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Conversation"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "request.invalid",
+                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "reasonClass": "invalid_input"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `conversation.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "conversation.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "tool.name_conflict",
+                     *       "error": "The request conflicts with the current resource state.",
+                     *       "reasonClass": "conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     "conversations.cancel": {
         parameters: {
             query?: never;
@@ -6324,7 +6916,7 @@ export interface operations {
                 runtimeId?: string;
                 /** @description Filter by one or more file artifact types. Repeat the query parameter for multiple values. */
                 type?: string[];
-                createdAfter?: string;
+                createdAfter?: components["schemas"]["Rfc3339Timestamp"];
                 include?: "folders";
                 cursor?: string;
                 limit?: number;
@@ -10000,9 +10592,7 @@ export interface operations {
     };
     "spaces.get": {
         parameters: {
-            query?: {
-                include?: "environment";
-            };
+            query?: never;
             header?: {
                 /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
                 "BCTRL-Subaccount-Id"?: string;
@@ -10020,7 +10610,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SpaceWithEnvironment"];
+                    "application/json": components["schemas"]["Space"];
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -10284,224 +10874,6 @@ export interface operations {
                      *       "code": "space.not_found",
                      *       "error": "The requested resource was not found.",
                      *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
-            429: {
-                headers: {
-                    /** @description Seconds to wait before retrying. */
-                    "Retry-After"?: number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "rate_limited",
-                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
-                     *       "reasonClass": "rate_limited"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    "spaces.environment.get": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                spaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EnvironmentMountsOutput"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `space.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "space.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    "spaces.environment.update": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-            };
-            path: {
-                spaceId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SpaceEnvironmentUpdateRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EnvironmentMountsOutput"];
-                };
-            };
-            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "request.invalid",
-                     *       "error": "The request was invalid. See `code` and `details`.",
-                     *       "reasonClass": "invalid_input"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.required",
-                     *       "error": "Authentication required: the API key is missing or invalid.",
-                     *       "reasonClass": "unauthorized"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "auth.forbidden",
-                     *       "error": "Forbidden: the API key cannot access this resource.",
-                     *       "reasonClass": "capability_denied"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The requested resource was not found. Example code: `space.not_found`. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "space.not_found",
-                     *       "error": "The requested resource was not found.",
-                     *       "reasonClass": "not_found"
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description The request conflicts with the current resource state. Example code: `tool.name_conflict`. */
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "code": "tool.name_conflict",
-                     *       "error": "The request conflicts with the current resource state.",
-                     *       "reasonClass": "conflict"
                      *     }
                      */
                     "application/json": components["schemas"]["ErrorResponse"];

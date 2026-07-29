@@ -28,6 +28,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -107,6 +108,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -137,69 +139,6 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl help --topic account.update",
-      },
-    ],
-  },
-  "agents.list": {
-    type: "topic",
-    topic: "agents.list",
-    aliases: ["agents list"],
-    title: "List available runtime automation agents",
-    summary: "List the runtime automation agents available to the caller.",
-    inputs: {
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
-          type: "object[]",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Agents",
-        url: "https://platform.bctrl.ai/sdk/agents",
-        markdownUrl: "https://platform.bctrl.ai/sdk/agents.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/agents.md",
-        description: "Discover long-running automation implementations.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/agents",
-      operationId: "agents.list",
-      responseFields: ["data"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "agents.list",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic agents.list",
-      usage: "bctrl help --topic agents.list",
-    },
-    mcp: {
-      toolName: "bctrl_agents_list",
-      operationResource: "operations://agents.list",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic agents.list",
       },
     ],
   },
@@ -290,6 +229,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "defaultModel",
@@ -342,14 +282,26 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: false,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
+    docs: [
+      {
+        title: "AI models and credentials",
+        url: "https://platform.bctrl.ai/sdk/ai",
+        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
+        description:
+          "Select managed models or store provider credentials for Agents.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/ai/credentials",
@@ -438,6 +390,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "AI models and credentials",
+        url: "https://platform.bctrl.ai/sdk/ai",
+        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
+        description:
+          "Select managed models or store provider credentials for Agents.",
+      },
+    ],
     api: {
       method: "DELETE",
       path: "/v1/ai/credentials/{credentialId}",
@@ -501,6 +463,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "defaultModel",
@@ -553,14 +516,26 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: false,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
+    docs: [
+      {
+        title: "AI models and credentials",
+        url: "https://platform.bctrl.ai/sdk/ai",
+        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
+        description:
+          "Select managed models or store provider credentials for Agents.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/ai/credentials/{credentialId}",
@@ -676,6 +651,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "AI models and credentials",
+        url: "https://platform.bctrl.ai/sdk/ai",
+        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
+        description:
+          "Select managed models or store provider credentials for Agents.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/ai/credentials",
@@ -734,6 +719,7 @@ export const CLI_HELP_COMMANDS = {
           name: "checkedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "error",
@@ -752,6 +738,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "AI models and credentials",
+        url: "https://platform.bctrl.ai/sdk/ai",
+        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
+        description:
+          "Select managed models or store provider credentials for Agents.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/ai/credentials/{credentialId}/test",
@@ -848,6 +844,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "defaultModel",
@@ -900,14 +897,26 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: false,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
+    docs: [
+      {
+        title: "AI models and credentials",
+        url: "https://platform.bctrl.ai/sdk/ai",
+        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
+        description:
+          "Select managed models or store provider credentials for Agents.",
+      },
+    ],
     api: {
       method: "PATCH",
       path: "/v1/ai/credentials/{credentialId}",
@@ -1014,6 +1023,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "AI models and credentials",
+        url: "https://platform.bctrl.ai/sdk/ai",
+        markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
+        description:
+          "Select managed models or store provider credentials for Agents.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/ai/models",
@@ -1058,11 +1077,13 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "subaccountId",
             type: "string",
             required: false,
+            description: "Opaque identifier for a BCTRL subaccount.",
           },
           {
             name: "scopes",
@@ -1222,6 +1243,7 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: false,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "type",
@@ -1434,11 +1456,14 @@ export const CLI_HELP_COMMANDS = {
           name: "contentHash",
           type: "string",
           required: false,
+          description:
+            "SHA-256 digest encoded as 64 lowercase hexadecimal characters.",
         },
         {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "format",
@@ -1450,21 +1475,26 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description:
+            "Unique browser extension identifier generated by BCTRL.",
         },
         {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
         },
         {
           name: "profileCount",
           type: "integer",
           required: true,
+          description: "Non-negative whole-number count.",
         },
         {
           name: "sizeBytes",
           type: "integer",
           required: false,
+          description: "Non-negative number of bytes.",
         },
         {
           name: "sourceUrl",
@@ -1475,11 +1505,13 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: false,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "version",
@@ -1488,6 +1520,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Browser extensions",
+        url: "https://platform.bctrl.ai/sdk/extensions",
+        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
+        description:
+          "Reusable Chromium extension packages under the browser runtime namespace.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/browser/extensions",
@@ -1567,9 +1609,21 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description:
+            "Unique browser extension identifier generated by BCTRL.",
         },
       ],
     },
+    docs: [
+      {
+        title: "Browser extensions",
+        url: "https://platform.bctrl.ai/sdk/extensions",
+        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
+        description:
+          "Reusable Chromium extension packages under the browser runtime namespace.",
+      },
+    ],
     api: {
       method: "DELETE",
       path: "/v1/browser/extensions/{extensionId}",
@@ -1629,11 +1683,14 @@ export const CLI_HELP_COMMANDS = {
           name: "contentHash",
           type: "string",
           required: false,
+          description:
+            "SHA-256 digest encoded as 64 lowercase hexadecimal characters.",
         },
         {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "format",
@@ -1645,21 +1702,26 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description:
+            "Unique browser extension identifier generated by BCTRL.",
         },
         {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
         },
         {
           name: "profileCount",
           type: "integer",
           required: true,
+          description: "Non-negative whole-number count.",
         },
         {
           name: "sizeBytes",
           type: "integer",
           required: false,
+          description: "Non-negative number of bytes.",
         },
         {
           name: "sourceUrl",
@@ -1670,11 +1732,13 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: false,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "version",
@@ -1683,6 +1747,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Browser extensions",
+        url: "https://platform.bctrl.ai/sdk/extensions",
+        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
+        description:
+          "Reusable Chromium extension packages under the browser runtime namespace.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/browser/extensions/{extensionId}",
@@ -1784,6 +1858,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Browser extensions",
+        url: "https://platform.bctrl.ai/sdk/extensions",
+        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
+        description:
+          "Reusable Chromium extension packages under the browser runtime namespace.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/browser/extensions",
@@ -1844,6 +1928,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
         ],
       },
@@ -1854,11 +1939,14 @@ export const CLI_HELP_COMMANDS = {
           name: "contentHash",
           type: "string",
           required: false,
+          description:
+            "SHA-256 digest encoded as 64 lowercase hexadecimal characters.",
         },
         {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "format",
@@ -1870,21 +1958,26 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description:
+            "Unique browser extension identifier generated by BCTRL.",
         },
         {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
         },
         {
           name: "profileCount",
           type: "integer",
           required: true,
+          description: "Non-negative whole-number count.",
         },
         {
           name: "sizeBytes",
           type: "integer",
           required: false,
+          description: "Non-negative number of bytes.",
         },
         {
           name: "sourceUrl",
@@ -1895,11 +1988,13 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: false,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "version",
@@ -1908,6 +2003,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Browser extensions",
+        url: "https://platform.bctrl.ai/sdk/extensions",
+        markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
+        description:
+          "Reusable Chromium extension packages under the browser runtime namespace.",
+      },
+    ],
     api: {
       method: "PATCH",
       path: "/v1/browser/extensions/{extensionId}",
@@ -1986,6 +2091,7 @@ export const CLI_HELP_COMMANDS = {
           name: "conversationId",
           type: "string",
           required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
         },
         {
           name: "turnId",
@@ -2061,6 +2167,7 @@ export const CLI_HELP_COMMANDS = {
             name: "runtimeId",
             type: "string",
             required: true,
+            description: "Unique runtime identifier generated by BCTRL.",
           },
           {
             name: "model",
@@ -2071,6 +2178,7 @@ export const CLI_HELP_COMMANDS = {
             name: "toolsetId",
             type: "string",
             required: false,
+            description: "Unique toolset identifier generated by BCTRL.",
           },
           {
             name: "title",
@@ -2097,11 +2205,13 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
         },
         {
           name: "model",
@@ -2112,6 +2222,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "status",
@@ -2133,6 +2244,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -2239,11 +2351,13 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
         },
         {
           name: "messages",
@@ -2264,6 +2378,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "status",
@@ -2290,6 +2405,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -2356,6 +2472,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "status",
@@ -2482,6 +2599,11 @@ export const CLI_HELP_COMMANDS = {
             required: true,
           },
           {
+            name: "variables",
+            type: "object",
+            required: false,
+          },
+          {
             name: "agent",
             type: "stagehand | browser-use",
             required: false,
@@ -2496,6 +2618,7 @@ export const CLI_HELP_COMMANDS = {
             name: "pageId",
             type: "string",
             required: false,
+            description: "Unique page identifier generated by BCTRL.",
           },
           {
             name: "fileIds",
@@ -2511,16 +2634,19 @@ export const CLI_HELP_COMMANDS = {
           name: "messageId",
           type: "string",
           required: true,
+          description: "Unique message identifier generated by BCTRL.",
         },
         {
           name: "runId",
           type: "string",
           required: true,
+          description: "Unique run identifier generated by BCTRL.",
         },
         {
           name: "spanId",
           type: "string",
           required: true,
+          description: "Unique traceSpan identifier generated by BCTRL.",
         },
         {
           name: "status",
@@ -2537,6 +2663,7 @@ export const CLI_HELP_COMMANDS = {
           name: "turnId",
           type: "string",
           required: true,
+          description: "Unique agentTurn identifier generated by BCTRL.",
         },
       ],
     },
@@ -2553,7 +2680,14 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/conversations/{conversationId}/messages",
       operationId: "conversations.messages.create",
-      requestFields: ["text", "agent", "model", "pageId", "fileIds"],
+      requestFields: [
+        "text",
+        "variables",
+        "agent",
+        "model",
+        "pageId",
+        "fileIds",
+      ],
       responseFields: [
         "messageId",
         "runId",
@@ -2650,6 +2784,167 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl help --topic conversations.stream",
+      },
+    ],
+  },
+  "conversations.update": {
+    type: "topic",
+    topic: "conversations.update",
+    aliases: ["conversations update"],
+    title: "Update conversation defaults",
+    summary: "Update the defaults used by future turns in a conversation.",
+    inputs: {
+      path: [
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+      body: {
+        schema: "ConversationUpdateRequest",
+        schemaResource: "schemas://ConversationUpdateRequest",
+        fields: [
+          {
+            name: "agent",
+            type: "stagehand | browser-use",
+            required: false,
+            values: ["stagehand", "browser-use"],
+          },
+          {
+            name: "model",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "toolsetId",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "title",
+            type: "string | null",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "activeTurnId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "agent",
+          type: "stagehand | browser-use",
+          required: true,
+          values: ["stagehand", "browser-use"],
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+        {
+          name: "model",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "runtimeId",
+          type: "string",
+          required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "idle | active",
+          required: true,
+          values: ["idle", "active"],
+        },
+        {
+          name: "title",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "toolsetId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent, streamable Agent message threads.",
+      },
+    ],
+    api: {
+      method: "PATCH",
+      path: "/v1/conversations/{conversationId}",
+      operationId: "conversations.update",
+      requestFields: ["agent", "model", "toolsetId", "title"],
+      responseFields: [
+        "activeTurnId",
+        "agent",
+        "createdAt",
+        "id",
+        "model",
+        "runtimeId",
+        "status",
+        "title",
+        "toolsetId",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic conversations.update",
+      usage: "bctrl help --topic conversations.update",
+    },
+    mcp: {
+      toolName: "bctrl_conversations_update",
+      operationResource: "operations://conversations.update",
+      schemaResources: ["schemas://ConversationUpdateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic conversations.update",
       },
     ],
   },
@@ -2750,6 +3045,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique file identifier generated by BCTRL.",
         },
       ],
     },
@@ -2826,6 +3122,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "downloadUrl",
@@ -2836,11 +3133,13 @@ export const CLI_HELP_COMMANDS = {
           name: "expiresAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique file identifier generated by BCTRL.",
         },
         {
           name: "metadata",
@@ -2851,6 +3150,7 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
         },
         {
           name: "path",
@@ -2861,16 +3161,19 @@ export const CLI_HELP_COMMANDS = {
           name: "runId",
           type: "string",
           required: false,
+          description: "Unique run identifier generated by BCTRL.",
         },
         {
           name: "runtimeId",
           type: "string",
           required: false,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
           type: "integer",
           required: true,
+          description: "Non-negative number of bytes.",
         },
         {
           name: "source",
@@ -2882,6 +3185,7 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "type",
@@ -2984,11 +3288,13 @@ export const CLI_HELP_COMMANDS = {
           name: "runId",
           type: "string",
           required: false,
+          description: "Unique run identifier generated by BCTRL.",
         },
         {
           name: "runtimeId",
           type: "string",
           required: false,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "type",
@@ -3001,6 +3307,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAfter",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "include",
@@ -3117,6 +3424,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "metadata",
@@ -3137,6 +3445,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "downloadUrl",
@@ -3147,11 +3456,13 @@ export const CLI_HELP_COMMANDS = {
           name: "expiresAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique file identifier generated by BCTRL.",
         },
         {
           name: "metadata",
@@ -3162,6 +3473,7 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
         },
         {
           name: "path",
@@ -3172,16 +3484,19 @@ export const CLI_HELP_COMMANDS = {
           name: "runId",
           type: "string",
           required: false,
+          description: "Unique run identifier generated by BCTRL.",
         },
         {
           name: "runtimeId",
           type: "string",
           required: false,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
           type: "integer",
           required: true,
+          description: "Non-negative number of bytes.",
         },
         {
           name: "source",
@@ -3193,6 +3508,7 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "type",
@@ -3294,6 +3610,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "downloadUrl",
@@ -3304,11 +3621,13 @@ export const CLI_HELP_COMMANDS = {
           name: "expiresAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique file identifier generated by BCTRL.",
         },
         {
           name: "metadata",
@@ -3319,6 +3638,7 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
         },
         {
           name: "path",
@@ -3329,16 +3649,19 @@ export const CLI_HELP_COMMANDS = {
           name: "runId",
           type: "string",
           required: false,
+          description: "Unique run identifier generated by BCTRL.",
         },
         {
           name: "runtimeId",
           type: "string",
           required: false,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
           type: "integer",
           required: true,
+          description: "Non-negative number of bytes.",
         },
         {
           name: "source",
@@ -3350,6 +3673,7 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "type",
@@ -3620,6 +3944,8 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description:
+            "Unique notificationRecipient identifier generated by BCTRL.",
         },
         {
           name: "name",
@@ -3735,6 +4061,8 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description:
+            "Unique notificationRecipient identifier generated by BCTRL.",
         },
       ],
     },
@@ -3930,6 +4258,8 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description:
+            "Unique notificationRecipient identifier generated by BCTRL.",
         },
         {
           name: "name",
@@ -4334,6 +4664,7 @@ export const CLI_HELP_COMMANDS = {
           name: "expiresAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "location",
@@ -4819,6 +5150,7 @@ export const CLI_HELP_COMMANDS = {
           name: "expiresAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "location",
@@ -5723,6 +6055,7 @@ export const CLI_HELP_COMMANDS = {
           name: "expiresAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "location",
@@ -5888,11 +6221,13 @@ export const CLI_HELP_COMMANDS = {
           name: "spanId",
           type: "string",
           required: false,
+          description: "Unique traceSpan identifier generated by BCTRL.",
         },
         {
           name: "pageId",
           type: "string",
           required: false,
+          description: "Unique page identifier generated by BCTRL.",
         },
         {
           name: "cursor",
@@ -6090,6 +6425,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "durationSeconds",
@@ -6110,6 +6446,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique run identifier generated by BCTRL.",
         },
         {
           name: "recording",
@@ -6120,6 +6457,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "runtimeType",
@@ -6131,11 +6469,13 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "startedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "status",
@@ -6222,11 +6562,13 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: false,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "runtimeId",
           type: "string",
           required: false,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "cursor",
@@ -6393,6 +6735,7 @@ export const CLI_HELP_COMMANDS = {
           name: "parentId",
           type: "string",
           required: false,
+          description: "Unique traceSpan identifier generated by BCTRL.",
         },
         {
           name: "kind",
@@ -6572,6 +6915,7 @@ export const CLI_HELP_COMMANDS = {
           name: "archivedAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "config",
@@ -6587,16 +6931,19 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "lastActivityAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "metadata",
@@ -6622,6 +6969,7 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "status",
@@ -6639,6 +6987,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -6650,6 +6999,14 @@ export const CLI_HELP_COMMANDS = {
         mcpResource: "docs://platform.bctrl.ai/sdk/runtime-config.md",
         description:
           "Configure stealth, proxy, fingerprint, extensions, and network behaviour on a browser runtime.",
+      },
+      {
+        title: "Runtimes",
+        url: "https://platform.bctrl.ai/sdk/runtimes",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
+        description:
+          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
       },
     ],
     api: {
@@ -6744,9 +7101,20 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
       ],
     },
+    docs: [
+      {
+        title: "Runtimes",
+        url: "https://platform.bctrl.ai/sdk/runtimes",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
+        description:
+          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+      },
+    ],
     api: {
       method: "DELETE",
       path: "/v1/runtimes/{runtimeId}",
@@ -6810,6 +7178,7 @@ export const CLI_HELP_COMMANDS = {
           name: "archivedAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "config",
@@ -6827,16 +7196,19 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "lastActivityAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "latestRun",
@@ -6875,6 +7247,7 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "status",
@@ -6892,6 +7265,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "webdriverUrl",
@@ -6900,8 +7274,25 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Run-scoped Selenium WebDriver endpoint. Pass this URL to a Selenium Remote WebDriver client; it stops working when the run ends.",
         },
+        {
+          name: "webmcpUrl",
+          type: "string",
+          required: false,
+          description:
+            "Run-scoped MCP endpoint exposing tools declared by the active webpage through WebMCP. It stops working when the run ends.",
+        },
       ],
     },
+    docs: [
+      {
+        title: "Runtimes",
+        url: "https://platform.bctrl.ai/sdk/runtimes",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
+        description:
+          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/runtimes/{runtimeId}",
@@ -6925,6 +7316,7 @@ export const CLI_HELP_COMMANDS = {
         "type",
         "updatedAt",
         "webdriverUrl",
+        "webmcpUrl",
       ],
     },
     sdk: [
@@ -7019,6 +7411,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Runtimes",
+        url: "https://platform.bctrl.ai/sdk/runtimes",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
+        description:
+          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/runtimes",
@@ -7114,11 +7516,13 @@ export const CLI_HELP_COMMANDS = {
           name: "runId",
           type: "string",
           required: true,
+          description: "Unique run identifier generated by BCTRL.",
         },
         {
           name: "runtimeId",
           type: "string",
           required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "started",
@@ -7138,8 +7542,25 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Run-scoped Selenium WebDriver endpoint for this same browser. Selenium, CDP clients, and hosted agents may connect concurrently.",
         },
+        {
+          name: "webmcpUrl",
+          type: "string",
+          required: false,
+          description:
+            "Run-scoped MCP endpoint for tools declared by the active webpage through WebMCP.",
+        },
       ],
     },
+    docs: [
+      {
+        title: "Runtimes",
+        url: "https://platform.bctrl.ai/sdk/runtimes",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
+        description:
+          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/start",
@@ -7154,6 +7575,7 @@ export const CLI_HELP_COMMANDS = {
         "started",
         "status",
         "webdriverUrl",
+        "webmcpUrl",
       ],
     },
     sdk: [
@@ -7214,6 +7636,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "status",
@@ -7228,6 +7651,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Runtimes",
+        url: "https://platform.bctrl.ai/sdk/runtimes",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
+        description:
+          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/stop",
@@ -7313,6 +7746,7 @@ export const CLI_HELP_COMMANDS = {
           name: "archivedAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "config",
@@ -7330,16 +7764,19 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "lastActivityAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "latestRun",
@@ -7378,6 +7815,7 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "status",
@@ -7395,6 +7833,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "webdriverUrl",
@@ -7402,6 +7841,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Run-scoped Selenium WebDriver endpoint. Pass this URL to a Selenium Remote WebDriver client; it stops working when the run ends.",
+        },
+        {
+          name: "webmcpUrl",
+          type: "string",
+          required: false,
+          description:
+            "Run-scoped MCP endpoint exposing tools declared by the active webpage through WebMCP. It stops working when the run ends.",
         },
       ],
     },
@@ -7413,6 +7859,14 @@ export const CLI_HELP_COMMANDS = {
         mcpResource: "docs://platform.bctrl.ai/sdk/runtime-config.md",
         description:
           "Configure stealth, proxy, fingerprint, extensions, and network behaviour on a browser runtime.",
+      },
+      {
+        title: "Runtimes",
+        url: "https://platform.bctrl.ai/sdk/runtimes",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
+        description:
+          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
       },
     ],
     api: {
@@ -7439,6 +7893,7 @@ export const CLI_HELP_COMMANDS = {
         "type",
         "updatedAt",
         "webdriverUrl",
+        "webmcpUrl",
       ],
     },
     sdk: [
@@ -7470,7 +7925,7 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["spaces create"],
     title: "Create a space",
     summary:
-      "Create a space and return the simplified space resource. The name and environment are optional; omitted values use server defaults.",
+      "Create a space. Name, region, and environment are optional; omitted values use server defaults.",
     inputs: {
       headers: [
         {
@@ -7491,6 +7946,12 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
+            name: "region",
+            type: "us-east-1",
+            required: false,
+            values: ["us-east-1"],
+          },
+          {
             name: "environment",
             type: "object",
             required: false,
@@ -7504,10 +7965,22 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "environment",
+          type: "object",
+          required: true,
         },
         {
           name: "id",
           type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "isDefault",
+          type: "boolean",
           required: true,
         },
         {
@@ -7516,14 +7989,16 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "subaccountId",
-          type: "string",
-          required: false,
+          name: "region",
+          type: "us-east-1",
+          required: true,
+          values: ["us-east-1"],
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -7541,8 +8016,16 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/spaces",
       operationId: "spaces.create",
-      requestFields: ["name", "environment"],
-      responseFields: ["createdAt", "id", "name", "subaccountId", "updatedAt"],
+      requestFields: ["name", "region", "environment"],
+      responseFields: [
+        "createdAt",
+        "environment",
+        "id",
+        "isDefault",
+        "name",
+        "region",
+        "updatedAt",
+      ],
     },
     sdk: [
       {
@@ -7603,6 +8086,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
       ],
     },
@@ -7644,213 +8128,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "spaces.environment.get": {
-    type: "topic",
-    topic: "spaces.environment.get",
-    aliases: ["spaces environment get"],
-    title: "Get space environment",
-    summary:
-      "Get the environment mounted into one space. The response is the clean storage, vault, and AI environment object available to agents working in the space.",
-    inputs: {
-      path: [
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "ai",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "storage",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "vault",
-          type: "object",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Spaces",
-        url: "https://platform.bctrl.ai/sdk/spaces",
-        markdownUrl: "https://platform.bctrl.ai/sdk/spaces.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/spaces.md",
-        description:
-          "The boundary that scopes which storage, secrets, and AI credentials a runtime can use.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/spaces/{spaceId}/environment",
-      operationId: "spaces.environment.get",
-      responseFields: ["ai", "storage", "vault"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "spaces.environment.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic spaces.environment.get",
-      usage: "bctrl help --topic spaces.environment.get",
-    },
-    mcp: {
-      toolName: "bctrl_spaces_environment_get",
-      operationResource: "operations://spaces.environment.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic spaces.environment.get",
-      },
-    ],
-  },
-  "spaces.environment.update": {
-    type: "topic",
-    topic: "spaces.environment.update",
-    aliases: ["spaces environment update"],
-    title: "Update space environment",
-    summary:
-      "Patch the environment mounted into one space. Omit a field to leave it unchanged, use null to remove it, or provide a value to add or replace that capability.",
-    inputs: {
-      path: [
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-      body: {
-        schema: "SpaceEnvironmentUpdateRequest",
-        schemaResource: "schemas://SpaceEnvironmentUpdateRequest",
-        fields: [
-          {
-            name: "storage",
-            type: "object | null",
-            required: false,
-          },
-          {
-            name: "vault",
-            type: "object | null",
-            required: false,
-          },
-          {
-            name: "ai",
-            type: "object | null",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "ai",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "storage",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "vault",
-          type: "object",
-          required: false,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Spaces",
-        url: "https://platform.bctrl.ai/sdk/spaces",
-        markdownUrl: "https://platform.bctrl.ai/sdk/spaces.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/spaces.md",
-        description:
-          "The boundary that scopes which storage, secrets, and AI credentials a runtime can use.",
-      },
-    ],
-    api: {
-      method: "PATCH",
-      path: "/v1/spaces/{spaceId}/environment",
-      operationId: "spaces.environment.update",
-      requestFields: ["storage", "vault", "ai"],
-      responseFields: ["ai", "storage", "vault"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "spaces.environment.update",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic spaces.environment.update",
-      usage: "bctrl help --topic spaces.environment.update",
-    },
-    mcp: {
-      toolName: "bctrl_spaces_environment_update",
-      operationResource: "operations://spaces.environment.update",
-      schemaResources: ["schemas://SpaceEnvironmentUpdateRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic spaces.environment.update",
-      },
-    ],
-  },
   "spaces.get": {
     type: "topic",
     topic: "spaces.get",
     aliases: ["spaces get"],
     title: "Get a space",
-    summary: "Get one space using the simplified space resource shape.",
+    summary: "Get one complete space, including its environment.",
     inputs: {
       path: [
         {
           name: "spaceId",
           type: "string",
           required: true,
-        },
-      ],
-      query: [
-        {
-          name: "include",
-          type: "environment",
-          required: false,
-          values: ["environment"],
         },
       ],
       headers: [
@@ -7869,15 +8158,22 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "environment",
           type: "object",
-          required: false,
+          required: true,
         },
         {
           name: "id",
           type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "isDefault",
+          type: "boolean",
           required: true,
         },
         {
@@ -7886,14 +8182,16 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "subaccountId",
-          type: "string",
-          required: false,
+          name: "region",
+          type: "us-east-1",
+          required: true,
+          values: ["us-east-1"],
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -7915,8 +8213,9 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "environment",
         "id",
+        "isDefault",
         "name",
-        "subaccountId",
+        "region",
         "updatedAt",
       ],
     },
@@ -7947,8 +8246,7 @@ export const CLI_HELP_COMMANDS = {
     topic: "spaces.list",
     aliases: ["spaces list"],
     title: "List spaces",
-    summary:
-      "List spaces visible to the current API key using the simplified response envelope.",
+    summary: "List complete spaces visible to the current API key.",
     inputs: {
       query: [
         {
@@ -8029,7 +8327,7 @@ export const CLI_HELP_COMMANDS = {
     topic: "spaces.update",
     aliases: ["spaces update"],
     title: "Update a space",
-    summary: "Update one space and return the simplified space resource.",
+    summary: "Update a space name or environment.",
     inputs: {
       path: [
         {
@@ -8056,6 +8354,11 @@ export const CLI_HELP_COMMANDS = {
             type: "string",
             required: false,
           },
+          {
+            name: "environment",
+            type: "object",
+            required: false,
+          },
         ],
       },
     },
@@ -8065,10 +8368,22 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "environment",
+          type: "object",
+          required: true,
         },
         {
           name: "id",
           type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "isDefault",
+          type: "boolean",
           required: true,
         },
         {
@@ -8077,14 +8392,16 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "subaccountId",
-          type: "string",
-          required: false,
+          name: "region",
+          type: "us-east-1",
+          required: true,
+          values: ["us-east-1"],
         },
         {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -8102,8 +8419,16 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/spaces/{spaceId}",
       operationId: "spaces.update",
-      requestFields: ["name"],
-      responseFields: ["createdAt", "id", "name", "subaccountId", "updatedAt"],
+      requestFields: ["name", "environment"],
+      responseFields: [
+        "createdAt",
+        "environment",
+        "id",
+        "isDefault",
+        "name",
+        "region",
+        "updatedAt",
+      ],
     },
     sdk: [
       {
@@ -8155,6 +8480,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
       ],
     },
@@ -8257,6 +8583,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "limits",
@@ -8272,6 +8599,7 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
         },
         {
           name: "status",
@@ -8394,6 +8722,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "limits",
@@ -8409,6 +8738,7 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
         },
         {
           name: "status",
@@ -8643,6 +8973,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Opaque identifier for a BCTRL subaccount.",
         },
         {
           name: "limits",
@@ -8658,6 +8989,7 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
         },
         {
           name: "status",
@@ -8838,6 +9170,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "errorCode",
@@ -8858,6 +9191,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique toolCall identifier generated by BCTRL.",
         },
         {
           name: "parentId",
@@ -9029,6 +9363,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "errorCode",
@@ -9049,6 +9384,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique toolCall identifier generated by BCTRL.",
         },
         {
           name: "parentId",
@@ -9195,11 +9531,13 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
+          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
           name: "runId",
           type: "string",
           required: false,
+          description: "Unique run identifier generated by BCTRL.",
         },
         {
           name: "turnId",
@@ -9351,6 +9689,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "errorCode",
@@ -9371,6 +9710,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique toolCall identifier generated by BCTRL.",
         },
         {
           name: "parentId",
@@ -9714,6 +10054,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "errorCode",
@@ -9734,6 +10075,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique toolCall identifier generated by BCTRL.",
         },
         {
           name: "parentId",
@@ -9908,18 +10250,18 @@ export const CLI_HELP_COMMANDS = {
           {
             name: "inputSchema",
             type: "object",
-            required: true,
+            required: false,
           },
           {
             name: "outputSchema",
             type: "object",
-            required: true,
+            required: false,
           },
           {
             name: "executionType",
-            type: "webhook | hosted",
+            type: "webhook | hosted | workflow",
             required: true,
-            values: ["webhook", "hosted"],
+            values: ["webhook", "hosted", "workflow"],
           },
           {
             name: "url",
@@ -9946,6 +10288,12 @@ export const CLI_HELP_COMMANDS = {
             type: "object",
             required: false,
           },
+          {
+            name: "sourceTurnId",
+            type: "string",
+            required: false,
+            description: "Unique agentTurn identifier generated by BCTRL.",
+          },
         ],
       },
     },
@@ -9965,6 +10313,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
+          description: "Unique tool identifier generated by BCTRL.",
           values: [
             "stagehand.act",
             "stagehand.observe",
@@ -10072,6 +10421,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "executionType",
@@ -10088,6 +10438,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "url",
@@ -10110,9 +10461,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "workflowId",
+          name: "sourceTurnId",
           type: "string",
           required: false,
+          description: "Unique agentTurn identifier generated by BCTRL.",
         },
       ],
     },
@@ -10141,6 +10493,7 @@ export const CLI_HELP_COMMANDS = {
         "source",
         "timeoutMs",
         "env",
+        "sourceTurnId",
       ],
       responseFields: [
         "description",
@@ -10164,7 +10517,7 @@ export const CLI_HELP_COMMANDS = {
         "currentVersionId",
         "remoteToolName",
         "serverId",
-        "workflowId",
+        "sourceTurnId",
       ],
     },
     sdk: [
@@ -10227,6 +10580,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique tool identifier generated by BCTRL.",
         },
       ],
     },
@@ -10308,6 +10662,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
+          description: "Unique tool identifier generated by BCTRL.",
           values: [
             "stagehand.act",
             "stagehand.observe",
@@ -10415,6 +10770,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "executionType",
@@ -10431,6 +10787,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "url",
@@ -10453,9 +10810,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "workflowId",
+          name: "sourceTurnId",
           type: "string",
           required: false,
+          description: "Unique agentTurn identifier generated by BCTRL.",
         },
       ],
     },
@@ -10494,7 +10852,7 @@ export const CLI_HELP_COMMANDS = {
         "currentVersionId",
         "remoteToolName",
         "serverId",
-        "workflowId",
+        "sourceTurnId",
       ],
     },
     sdk: [
@@ -10694,6 +11052,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
           required: true,
+          description: "Unique tool identifier generated by BCTRL.",
           values: [
             "stagehand.act",
             "stagehand.observe",
@@ -10801,6 +11160,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "executionType",
@@ -10817,6 +11177,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "url",
@@ -10839,9 +11200,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "workflowId",
+          name: "sourceTurnId",
           type: "string",
           required: false,
+          description: "Unique agentTurn identifier generated by BCTRL.",
         },
       ],
     },
@@ -10889,7 +11251,7 @@ export const CLI_HELP_COMMANDS = {
         "currentVersionId",
         "remoteToolName",
         "serverId",
-        "workflowId",
+        "sourceTurnId",
       ],
     },
     sdk: [
@@ -10964,6 +11326,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "description",
@@ -10974,6 +11337,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique toolset identifier generated by BCTRL.",
         },
         {
           name: "name",
@@ -10984,6 +11348,7 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "tools",
@@ -10994,6 +11359,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -11080,6 +11446,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique toolset identifier generated by BCTRL.",
         },
       ],
     },
@@ -11151,6 +11518,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "description",
@@ -11161,6 +11529,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique toolset identifier generated by BCTRL.",
         },
         {
           name: "name",
@@ -11171,6 +11540,7 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "tools",
@@ -11181,6 +11551,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -11369,6 +11740,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "description",
@@ -11379,6 +11751,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique toolset identifier generated by BCTRL.",
         },
         {
           name: "name",
@@ -11389,6 +11762,7 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: true,
+          description: "Unique space identifier generated by BCTRL.",
         },
         {
           name: "tools",
@@ -11399,6 +11773,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -11466,6 +11841,7 @@ export const CLI_HELP_COMMANDS = {
           name: "computedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "credits",
@@ -11594,11 +11970,13 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "expiresAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
@@ -11629,6 +12007,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Views",
+        url: "https://platform.bctrl.ai/sdk/views",
+        markdownUrl: "https://platform.bctrl.ai/sdk/views.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/views.md",
+        description:
+          "Expiring, browser-safe embeds for live runtime and Run observability.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/views",
@@ -11715,6 +12103,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Views",
+        url: "https://platform.bctrl.ai/sdk/views",
+        markdownUrl: "https://platform.bctrl.ai/sdk/views.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/views.md",
+        description:
+          "Expiring, browser-safe embeds for live runtime and Run observability.",
+      },
+    ],
     api: {
       method: "DELETE",
       path: "/v1/views/{viewId}",
@@ -11784,11 +12182,13 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "expiresAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
@@ -11812,6 +12212,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Views",
+        url: "https://platform.bctrl.ai/sdk/views",
+        markdownUrl: "https://platform.bctrl.ai/sdk/views.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/views.md",
+        description:
+          "Expiring, browser-safe embeds for live runtime and Run observability.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/views/{viewId}",
@@ -11892,6 +12302,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Views",
+        url: "https://platform.bctrl.ai/sdk/views",
+        markdownUrl: "https://platform.bctrl.ai/sdk/views.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/views.md",
+        description:
+          "Expiring, browser-safe embeds for live runtime and Run observability.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/views",
@@ -11965,6 +12385,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "enabled",
@@ -11980,6 +12401,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique webhook identifier generated by BCTRL.",
         },
         {
           name: "name",
@@ -12000,6 +12422,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "url",
@@ -12008,6 +12431,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Webhooks",
+        url: "https://platform.bctrl.ai/sdk/webhooks",
+        markdownUrl: "https://platform.bctrl.ai/sdk/webhooks.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/webhooks.md",
+        description:
+          "Send signed BCTRL events to an HTTPS endpoint and manage delivery attempts.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/webhooks",
@@ -12085,9 +12518,20 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique webhook identifier generated by BCTRL.",
         },
       ],
     },
+    docs: [
+      {
+        title: "Webhooks",
+        url: "https://platform.bctrl.ai/sdk/webhooks",
+        markdownUrl: "https://platform.bctrl.ai/sdk/webhooks.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/webhooks.md",
+        description:
+          "Send signed BCTRL events to an HTTPS endpoint and manage delivery attempts.",
+      },
+    ],
     api: {
       method: "DELETE",
       path: "/v1/webhooks/{webhookId}",
@@ -12167,6 +12611,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Webhooks",
+        url: "https://platform.bctrl.ai/sdk/webhooks",
+        markdownUrl: "https://platform.bctrl.ai/sdk/webhooks.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/webhooks.md",
+        description:
+          "Send signed BCTRL events to an HTTPS endpoint and manage delivery attempts.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/webhooks/{webhookId}/deliveries",
@@ -12236,11 +12690,13 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "eventId",
           type: "string",
           required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
         },
         {
           name: "eventType",
@@ -12251,6 +12707,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique webhookDelivery identifier generated by BCTRL.",
         },
         {
           name: "lastError",
@@ -12282,6 +12739,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "webhookId",
@@ -12290,6 +12748,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Webhooks",
+        url: "https://platform.bctrl.ai/sdk/webhooks",
+        markdownUrl: "https://platform.bctrl.ai/sdk/webhooks.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/webhooks.md",
+        description:
+          "Send signed BCTRL events to an HTTPS endpoint and manage delivery attempts.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/webhooks/{webhookId}/deliveries/{deliveryId}/redeliver",
@@ -12361,6 +12829,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "enabled",
@@ -12376,6 +12845,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique webhook identifier generated by BCTRL.",
         },
         {
           name: "name",
@@ -12391,6 +12861,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "url",
@@ -12399,6 +12870,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Webhooks",
+        url: "https://platform.bctrl.ai/sdk/webhooks",
+        markdownUrl: "https://platform.bctrl.ai/sdk/webhooks.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/webhooks.md",
+        description:
+          "Send signed BCTRL events to an HTTPS endpoint and manage delivery attempts.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/webhooks/{webhookId}",
@@ -12480,6 +12961,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Webhooks",
+        url: "https://platform.bctrl.ai/sdk/webhooks",
+        markdownUrl: "https://platform.bctrl.ai/sdk/webhooks.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/webhooks.md",
+        description:
+          "Send signed BCTRL events to an HTTPS endpoint and manage delivery attempts.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/webhooks",
@@ -12539,6 +13030,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique webhook identifier generated by BCTRL.",
         },
         {
           name: "secret",
@@ -12547,6 +13039,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Webhooks",
+        url: "https://platform.bctrl.ai/sdk/webhooks",
+        markdownUrl: "https://platform.bctrl.ai/sdk/webhooks.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/webhooks.md",
+        description:
+          "Send signed BCTRL events to an HTTPS endpoint and manage delivery attempts.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/webhooks/{webhookId}/rotate-secret",
@@ -12611,11 +13113,13 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "eventId",
           type: "string",
           required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
         },
         {
           name: "eventType",
@@ -12626,6 +13130,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique webhookDelivery identifier generated by BCTRL.",
         },
         {
           name: "lastError",
@@ -12657,6 +13162,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "webhookId",
@@ -12665,6 +13171,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Webhooks",
+        url: "https://platform.bctrl.ai/sdk/webhooks",
+        markdownUrl: "https://platform.bctrl.ai/sdk/webhooks.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/webhooks.md",
+        description:
+          "Send signed BCTRL events to an HTTPS endpoint and manage delivery attempts.",
+      },
+    ],
     api: {
       method: "POST",
       path: "/v1/webhooks/{webhookId}/test",
@@ -12763,6 +13279,7 @@ export const CLI_HELP_COMMANDS = {
           name: "createdAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "enabled",
@@ -12778,6 +13295,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description: "Unique webhook identifier generated by BCTRL.",
         },
         {
           name: "name",
@@ -12793,6 +13311,7 @@ export const CLI_HELP_COMMANDS = {
           name: "updatedAt",
           type: "datetime",
           required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "url",
@@ -12801,6 +13320,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Webhooks",
+        url: "https://platform.bctrl.ai/sdk/webhooks",
+        markdownUrl: "https://platform.bctrl.ai/sdk/webhooks.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/webhooks.md",
+        description:
+          "Send signed BCTRL events to an HTTPS endpoint and manage delivery attempts.",
+      },
+    ],
     api: {
       method: "PATCH",
       path: "/v1/webhooks/{webhookId}",
