@@ -32,6 +32,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Account and organization",
+        url: "https://platform.bctrl.ai/sdk/account",
+        markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
+        description:
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
+      },
+    ],
     api: {
       method: "GET",
       path: "/v1/account",
@@ -112,6 +122,16 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
+    docs: [
+      {
+        title: "Account and organization",
+        url: "https://platform.bctrl.ai/sdk/account",
+        markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
+        description:
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
+      },
+    ],
     api: {
       method: "PATCH",
       path: "/v1/account",
@@ -294,12 +314,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "AI models and credentials",
+        title: "AI models",
         url: "https://platform.bctrl.ai/sdk/ai",
         markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
         description:
-          "Select managed models or store provider credentials for Agents.",
+          "Choose models and manage the credentials that Agents can use.",
       },
     ],
     api: {
@@ -392,12 +412,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "AI models and credentials",
+        title: "AI models",
         url: "https://platform.bctrl.ai/sdk/ai",
         markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
         description:
-          "Select managed models or store provider credentials for Agents.",
+          "Choose models and manage the credentials that Agents can use.",
       },
     ],
     api: {
@@ -528,12 +548,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "AI models and credentials",
+        title: "AI models",
         url: "https://platform.bctrl.ai/sdk/ai",
         markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
         description:
-          "Select managed models or store provider credentials for Agents.",
+          "Choose models and manage the credentials that Agents can use.",
       },
     ],
     api: {
@@ -653,12 +673,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "AI models and credentials",
+        title: "AI models",
         url: "https://platform.bctrl.ai/sdk/ai",
         markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
         description:
-          "Select managed models or store provider credentials for Agents.",
+          "Choose models and manage the credentials that Agents can use.",
       },
     ],
     api: {
@@ -740,12 +760,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "AI models and credentials",
+        title: "AI models",
         url: "https://platform.bctrl.ai/sdk/ai",
         markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
         description:
-          "Select managed models or store provider credentials for Agents.",
+          "Choose models and manage the credentials that Agents can use.",
       },
     ],
     api: {
@@ -909,12 +929,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "AI models and credentials",
+        title: "AI models",
         url: "https://platform.bctrl.ai/sdk/ai",
         markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
         description:
-          "Select managed models or store provider credentials for Agents.",
+          "Choose models and manage the credentials that Agents can use.",
       },
     ],
     api: {
@@ -1025,12 +1045,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "AI models and credentials",
+        title: "AI models",
         url: "https://platform.bctrl.ai/sdk/ai",
         markdownUrl: "https://platform.bctrl.ai/sdk/ai.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/ai.md",
         description:
-          "Select managed models or store provider credentials for Agents.",
+          "Choose models and manage the credentials that Agents can use.",
       },
     ],
     api: {
@@ -1114,12 +1134,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -1185,12 +1205,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -1269,12 +1289,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -1371,12 +1391,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -1527,7 +1547,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
         description:
-          "Reusable Chromium extension packages under the browser runtime namespace.",
+          "Store reusable CRX packages and load them into browser Runtimes.",
       },
     ],
     api: {
@@ -1621,7 +1641,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
         description:
-          "Reusable Chromium extension packages under the browser runtime namespace.",
+          "Store reusable CRX packages and load them into browser Runtimes.",
       },
     ],
     api: {
@@ -1754,7 +1774,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
         description:
-          "Reusable Chromium extension packages under the browser runtime namespace.",
+          "Store reusable CRX packages and load them into browser Runtimes.",
       },
     ],
     api: {
@@ -1865,7 +1885,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
         description:
-          "Reusable Chromium extension packages under the browser runtime namespace.",
+          "Store reusable CRX packages and load them into browser Runtimes.",
       },
     ],
     api: {
@@ -2010,7 +2030,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/extensions.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/extensions.md",
         description:
-          "Reusable Chromium extension packages under the browser runtime namespace.",
+          "Store reusable CRX packages and load them into browser Runtimes.",
       },
     ],
     api: {
@@ -2106,7 +2126,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/conversations",
         markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent, streamable Agent message threads.",
+        description: "Persistent Agent message threads bound to a Runtime.",
       },
     ],
     api: {
@@ -2254,7 +2274,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/conversations",
         markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent, streamable Agent message threads.",
+        description: "Persistent Agent message threads bound to a Runtime.",
       },
     ],
     api: {
@@ -2415,7 +2435,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/conversations",
         markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent, streamable Agent message threads.",
+        description: "Persistent Agent message threads bound to a Runtime.",
       },
     ],
     api: {
@@ -2528,7 +2548,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/conversations",
         markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent, streamable Agent message threads.",
+        description: "Persistent Agent message threads bound to a Runtime.",
       },
     ],
     api: {
@@ -2673,7 +2693,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/conversations",
         markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent, streamable Agent message threads.",
+        description: "Persistent Agent message threads bound to a Runtime.",
       },
     ],
     api: {
@@ -2757,7 +2777,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/conversations",
         markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent, streamable Agent message threads.",
+        description: "Persistent Agent message threads bound to a Runtime.",
       },
     ],
     api: {
@@ -2904,7 +2924,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/conversations",
         markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent, streamable Agent message threads.",
+        description: "Persistent Agent message threads bound to a Runtime.",
       },
     ],
     api: {
@@ -2979,7 +2999,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
         description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
       },
     ],
     api: {
@@ -3056,7 +3076,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
         description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
       },
     ],
     api: {
@@ -3201,7 +3221,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
         description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
       },
     ],
     api: {
@@ -3362,7 +3382,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
         description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
       },
     ],
     api: {
@@ -3524,7 +3544,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
         description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
       },
     ],
     api: {
@@ -3689,7 +3709,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
         description:
-          "Durable file storage scoped to a space - upload, list, browse by folder, and download.",
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
       },
     ],
     api: {
@@ -3977,12 +3997,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -4068,12 +4088,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -4161,12 +4181,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -4291,12 +4311,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -4707,7 +4727,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -4845,7 +4865,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -4945,7 +4965,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -5193,7 +5213,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -5308,7 +5328,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -5408,7 +5428,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -5515,7 +5535,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -5621,7 +5641,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -5718,7 +5738,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -6098,7 +6118,7 @@ export const CLI_HELP_COMMANDS = {
         markdownUrl: "https://platform.bctrl.ai/sdk/proxies.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/proxies.md",
         description:
-          "Attach your own proxies or draw from managed pools by country and category.",
+          "Save proxy configurations and attach them to browser Runtimes.",
       },
     ],
     api: {
@@ -6266,12 +6286,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runs and traces",
+        title: "Runs",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "One observability root for every runtime automation path.",
+        description: "The session record created when a runtime starts.",
       },
     ],
     api: {
@@ -6354,12 +6373,19 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runs and traces",
+        title: "Files",
+        url: "https://platform.bctrl.ai/sdk/files",
+        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
+        description:
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
+      },
+      {
+        title: "Runs",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "One observability root for every runtime automation path.",
+        description: "The session record created when a runtime starts.",
       },
     ],
     api: {
@@ -6492,12 +6518,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runs and traces",
+        title: "Runs",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "One observability root for every runtime automation path.",
+        description: "The session record created when a runtime starts.",
       },
     ],
     api: {
@@ -6607,12 +6632,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runs and traces",
+        title: "Runs",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "One observability root for every runtime automation path.",
+        description: "The session record created when a runtime starts.",
       },
     ],
     api: {
@@ -6681,12 +6705,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runs and traces",
+        title: "Runs",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "One observability root for every runtime automation path.",
+        description: "The session record created when a runtime starts.",
       },
     ],
     api: {
@@ -6803,12 +6826,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runs and traces",
+        title: "Runs",
         url: "https://platform.bctrl.ai/sdk/runs",
         markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
-        description:
-          "One observability root for every runtime automation path.",
+        description: "The session record created when a runtime starts.",
       },
     ],
     api: {
@@ -6993,20 +7015,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runtime configuration",
-        url: "https://platform.bctrl.ai/sdk/runtime-config",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtime-config.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtime-config.md",
-        description:
-          "Configure stealth, proxy, fingerprint, extensions, and network behaviour on a browser runtime.",
-      },
-      {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+        description: "Create and control durable resources for automation.",
       },
     ],
     api: {
@@ -7111,8 +7124,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+        description: "Create and control durable resources for automation.",
       },
     ],
     api: {
@@ -7289,8 +7301,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+        description: "Create and control durable resources for automation.",
       },
     ],
     api: {
@@ -7417,8 +7428,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+        description: "Create and control durable resources for automation.",
       },
     ],
     api: {
@@ -7557,8 +7567,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+        description: "Create and control durable resources for automation.",
       },
     ],
     api: {
@@ -7657,8 +7666,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+        description: "Create and control durable resources for automation.",
       },
     ],
     api: {
@@ -7853,20 +7861,11 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Runtime configuration",
-        url: "https://platform.bctrl.ai/sdk/runtime-config",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtime-config.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtime-config.md",
-        description:
-          "Configure stealth, proxy, fingerprint, extensions, and network behaviour on a browser runtime.",
-      },
-      {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description:
-          "Lifecycle and connections for browser, desktop, and spreadsheet environments.",
+        description: "Create and control durable resources for automation.",
       },
     ],
     api: {
@@ -8486,12 +8485,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -8621,12 +8620,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -8760,12 +8759,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -8869,12 +8868,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -9011,12 +9010,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -9098,12 +9097,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -9271,11 +9270,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -9464,11 +9464,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -9607,11 +9608,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -9790,11 +9792,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -9890,11 +9893,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -9971,11 +9975,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -10155,11 +10160,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -10470,11 +10476,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -10586,11 +10593,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -10819,11 +10827,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -10935,11 +10944,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -11209,11 +11219,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -11365,11 +11376,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -11452,11 +11464,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -11557,11 +11570,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -11653,11 +11667,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -11779,11 +11794,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Tools and ToolCalls",
+        title: "Tools",
         url: "https://platform.bctrl.ai/sdk/tools",
         markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description: "One generic API for built-in and custom capabilities.",
+        description:
+          "Give applications and Agents typed capabilities to perform work.",
       },
     ],
     api: {
@@ -11867,12 +11883,12 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Account & Org",
+        title: "Account and organization",
         url: "https://platform.bctrl.ai/sdk/account",
         markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
         description:
-          "API keys, notification recipients, subaccounts, usage metering, and the authenticated actor.",
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
       },
     ],
     api: {
@@ -12013,8 +12029,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/views",
         markdownUrl: "https://platform.bctrl.ai/sdk/views.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/views.md",
-        description:
-          "Expiring, browser-safe embeds for live runtime and Run observability.",
+        description: "Give people a scoped way to watch or control automation.",
       },
     ],
     api: {
@@ -12109,8 +12124,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/views",
         markdownUrl: "https://platform.bctrl.ai/sdk/views.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/views.md",
-        description:
-          "Expiring, browser-safe embeds for live runtime and Run observability.",
+        description: "Give people a scoped way to watch or control automation.",
       },
     ],
     api: {
@@ -12218,8 +12232,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/views",
         markdownUrl: "https://platform.bctrl.ai/sdk/views.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/views.md",
-        description:
-          "Expiring, browser-safe embeds for live runtime and Run observability.",
+        description: "Give people a scoped way to watch or control automation.",
       },
     ],
     api: {
@@ -12308,8 +12321,7 @@ export const CLI_HELP_COMMANDS = {
         url: "https://platform.bctrl.ai/sdk/views",
         markdownUrl: "https://platform.bctrl.ai/sdk/views.md",
         mcpResource: "docs://platform.bctrl.ai/sdk/views.md",
-        description:
-          "Expiring, browser-safe embeds for live runtime and Run observability.",
+        description: "Give people a scoped way to watch or control automation.",
       },
     ],
     api: {
