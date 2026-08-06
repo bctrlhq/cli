@@ -1362,7 +1362,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "keyId",
-          type: "string",
+          type: "string | null",
           required: true,
         },
         {
@@ -2606,7 +2606,7 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
           description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -2768,6 +2768,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Last-Event-ID",
+          type: "string",
+          required: false,
+          description:
+            "Optional last delivered event identifier used to resume an SSE stream.",
         },
       ],
     },
@@ -6430,6 +6437,14 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
       ],
+      query: [
+        {
+          name: "include",
+          type: "connection",
+          required: false,
+          values: ["connection"],
+        },
+      ],
       headers: [
         {
           name: "BCTRL-Subaccount-Id",
@@ -6442,6 +6457,11 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "connection",
+          type: "object",
+          required: false,
+        },
         {
           name: "counts",
           type: "object",
@@ -6530,6 +6550,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/runs/{runId}",
       operationId: "runs.get",
       responseFields: [
+        "connection",
         "counts",
         "createdAt",
         "durationSeconds",
@@ -6700,6 +6721,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Last-Event-ID",
+          type: "string",
+          required: false,
+          description:
+            "Optional last delivered event identifier used to resume an SSE stream.",
         },
       ],
     },
@@ -6876,6 +6904,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -7169,6 +7204,14 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
       ],
+      query: [
+        {
+          name: "include",
+          type: "connection",
+          required: false,
+          values: ["connection"],
+        },
+      ],
       headers: [
         {
           name: "BCTRL-Subaccount-Id",
@@ -7198,11 +7241,9 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "connectUrl",
-          type: "string",
+          name: "connection",
+          type: "object",
           required: false,
-          description:
-            "Run-scoped CDP endpoint. The same URL is returned on every read and start for this run; one external controller may be connected at a time, and the URL stops working when the run ends. Present only while the runtime is active with a run open.",
         },
         {
           name: "createdAt",
@@ -7250,12 +7291,6 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "protocol",
-          type: "cdp",
-          required: false,
-          values: ["cdp"],
-        },
-        {
           name: "spaceId",
           type: "string",
           required: true,
@@ -7279,20 +7314,6 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
-        {
-          name: "webdriverUrl",
-          type: "string",
-          required: false,
-          description:
-            "Run-scoped Selenium WebDriver endpoint. Pass this URL to a Selenium Remote WebDriver client; it stops working when the run ends.",
-        },
-        {
-          name: "webmcpUrl",
-          type: "string",
-          required: false,
-          description:
-            "Run-scoped MCP endpoint exposing tools declared by the active webpage through WebMCP. It stops working when the run ends.",
-        },
       ],
     },
     docs: [
@@ -7312,7 +7333,7 @@ export const CLI_HELP_COMMANDS = {
         "activeRunId",
         "archivedAt",
         "config",
-        "connectUrl",
+        "connection",
         "createdAt",
         "id",
         "lastActivityAt",
@@ -7321,13 +7342,10 @@ export const CLI_HELP_COMMANDS = {
         "name",
         "needsInput",
         "profile",
-        "protocol",
         "spaceId",
         "status",
         "type",
         "updatedAt",
-        "webdriverUrl",
-        "webmcpUrl",
       ],
     },
     sdk: [
@@ -7487,7 +7505,7 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
           description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -7505,20 +7523,7 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "connectUrl",
-          type: "string",
-          required: true,
-          description:
-            "Run-scoped endpoint — attach Playwright/Puppeteer/Stagehand here. The same URL is returned on every start and read for this run; one external controller may be connected at a time, and the URL stops working when the run ends.",
-        },
-        {
-          name: "protocol",
-          type: "cdp",
-          required: true,
-          values: ["cdp"],
-        },
-        {
-          name: "recording",
+          name: "connection",
           type: "object",
           required: true,
         },
@@ -7545,20 +7550,6 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           values: ["active", "stopped", "failed"],
         },
-        {
-          name: "webdriverUrl",
-          type: "string",
-          required: false,
-          description:
-            "Run-scoped Selenium WebDriver endpoint for this same browser. Selenium, CDP clients, and hosted agents may connect concurrently.",
-        },
-        {
-          name: "webmcpUrl",
-          type: "string",
-          required: false,
-          description:
-            "Run-scoped MCP endpoint for tools declared by the active webpage through WebMCP.",
-        },
       ],
     },
     docs: [
@@ -7575,17 +7566,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/runtimes/{runtimeId}/start",
       operationId: "runtimes.start",
       requestFields: ["recording"],
-      responseFields: [
-        "connectUrl",
-        "protocol",
-        "recording",
-        "runId",
-        "runtimeId",
-        "started",
-        "status",
-        "webdriverUrl",
-        "webmcpUrl",
-      ],
+      responseFields: ["connection", "runId", "runtimeId", "started", "status"],
     },
     sdk: [
       {
@@ -7762,13 +7743,6 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "connectUrl",
-          type: "string",
-          required: false,
-          description:
-            "Run-scoped CDP endpoint. The same URL is returned on every read and start for this run; one external controller may be connected at a time, and the URL stops working when the run ends. Present only while the runtime is active with a run open.",
-        },
-        {
           name: "createdAt",
           type: "datetime",
           required: true,
@@ -7785,13 +7759,6 @@ export const CLI_HELP_COMMANDS = {
           type: "datetime",
           required: false,
           description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "latestRun",
-          type: "object | null",
-          required: false,
-          description:
-            "Most recent run of this runtime (the active one when a run is open). Null when the runtime has never run.",
         },
         {
           name: "metadata",
@@ -7812,12 +7779,6 @@ export const CLI_HELP_COMMANDS = {
           name: "profile",
           type: "boolean",
           required: true,
-        },
-        {
-          name: "protocol",
-          type: "cdp",
-          required: false,
-          values: ["cdp"],
         },
         {
           name: "spaceId",
@@ -7843,20 +7804,6 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
-        {
-          name: "webdriverUrl",
-          type: "string",
-          required: false,
-          description:
-            "Run-scoped Selenium WebDriver endpoint. Pass this URL to a Selenium Remote WebDriver client; it stops working when the run ends.",
-        },
-        {
-          name: "webmcpUrl",
-          type: "string",
-          required: false,
-          description:
-            "Run-scoped MCP endpoint exposing tools declared by the active webpage through WebMCP. It stops working when the run ends.",
-        },
       ],
     },
     docs: [
@@ -7877,22 +7824,17 @@ export const CLI_HELP_COMMANDS = {
         "activeRunId",
         "archivedAt",
         "config",
-        "connectUrl",
         "createdAt",
         "id",
         "lastActivityAt",
-        "latestRun",
         "metadata",
         "name",
         "needsInput",
         "profile",
-        "protocol",
         "spaceId",
         "status",
         "type",
         "updatedAt",
-        "webdriverUrl",
-        "webmcpUrl",
       ],
     },
     sdk: [
@@ -9951,13 +9893,6 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
-        },
       ],
       body: {
         schema: "JsonObject",
@@ -10039,7 +9974,7 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
           description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays the original successful response; reusing it with a different request returns 409.",
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -10290,11 +10225,6 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
-            name: "env",
-            type: "object",
-            required: false,
-          },
-          {
             name: "sourceTurnId",
             type: "string",
             required: false,
@@ -10499,7 +10429,6 @@ export const CLI_HELP_COMMANDS = {
         "authSecretName",
         "source",
         "timeoutMs",
-        "env",
         "sourceTurnId",
       ],
       responseFields: [

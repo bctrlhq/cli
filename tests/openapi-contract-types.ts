@@ -34,12 +34,6 @@ type CliOpenApiContractPairs = [
   Assert<Equal<CliOperationPathParams<'spaces.get'>, OpenApiPathParams<'spaces.get'>>>,
   Assert<Equal<CliOperationJsonBody<'spaces.create'>, OpenApiJsonBody<'spaces.create'>>>,
   Assert<Equal<CliOperationJsonBody<'spaces.update'>, OpenApiJsonBody<'spaces.update'>>>,
-  Assert<
-    Equal<
-      CliOperationJsonBody<'spaces.environment.update'>,
-      OpenApiJsonBody<'spaces.environment.update'>
-    >
-  >,
   Assert<Equal<CliOperationQuery<'runtimes.list'>, OpenApiQuery<'runtimes.list'>>>,
   Assert<Equal<CliOperationPathParams<'runtimes.get'>, OpenApiPathParams<'runtimes.get'>>>,
   Assert<Equal<CliOperationJsonBody<'runtimes.create'>, OpenApiJsonBody<'runtimes.create'>>>,

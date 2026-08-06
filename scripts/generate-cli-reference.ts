@@ -86,11 +86,11 @@ const groups: ReferenceGroup[] = [
     commands: ['tools', 'toolsets', 'tool-calls'],
   },
   {
-    slug: 'agents',
-    title: 'Agent Commands',
-    navTitle: 'Agents',
-    description: 'Discover agents and manage streaming conversations.',
-    commands: ['agents', 'conversations'],
+    slug: 'conversations',
+    title: 'Conversation Commands',
+    navTitle: 'Conversations',
+    description: 'Manage persistent conversations and stream their events.',
+    commands: ['conversations'],
   },
   {
     slug: 'ai',
@@ -340,7 +340,11 @@ function renderIndexPage(root: Command): RenderedFile {
 }
 
 function normalizeContent(value: string): string {
-  return value.replace(/\r\n/g, '\n').replace(/[ \t]+$/gm, '').replace(/\n{3,}/g, '\n\n');
+  return value
+    .replace(/\r\n/g, '\n')
+    .replace(/[ \t]+$/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .replace(/\n+$/, '\n');
 }
 
 function renderFiles(): RenderedFile[] {
@@ -367,11 +371,10 @@ async function docsRoots(): Promise<string[]> {
 
 function referenceNavBlock(): string {
   return [
-    '      - section: Reference',
+    '      - section: Command reference',
     '        contents:',
-    '          - page: Command Reference',
+    '          - page: All commands',
     '            path: ../docs/pages/cli/reference/index.mdx',
-    '            icon: fa-duotone fa-list',
     ...groups.flatMap((group) => [
       `          - page: ${group.navTitle}`,
       `            path: ../docs/pages/cli/reference/${group.slug}.mdx`,
@@ -380,7 +383,7 @@ function referenceNavBlock(): string {
 }
 
 function replaceCliReferenceNav(source: string): string {
-  const start = source.indexOf('      - section: Reference\n        contents:\n          - page: Command Reference\n            path: ../docs/pages/cli/reference/index.mdx');
+  const start = source.indexOf('      - section: Command reference\n        contents:\n          - page: All commands\n            path: ../docs/pages/cli/reference/index.mdx');
   if (start < 0) throw new Error('Unable to find CLI Reference navigation block.');
   const nextTab = source.indexOf('\n  - tab: mcp', start);
   if (nextTab < 0) throw new Error('Unable to find end of CLI navigation block.');
