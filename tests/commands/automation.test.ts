@@ -24,13 +24,15 @@ test('automation commands map to the canonical tools, conversations, and trace r
       'tools',
       'call',
       'stagehand.act',
+      '--runtime',
+      'rt_1',
       '--body',
-      '{"runtimeId":"rt_1","instruction":"Continue"}',
+      '{"instruction":"Continue"}',
     ],
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(
-    ['tools', 'start', 'captcha.solve', '--body', '{"runtimeId":"rt_1"}'],
+    ['tools', 'start', 'captcha.solve', '--runtime', 'rt_1', '--body', '{}'],
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(
@@ -55,4 +57,7 @@ test('automation commands map to the canonical tools, conversations, and trace r
       'get /runs/run_1/events',
     ]
   );
+  assert.equal((calls[0]?.options as { runtimeId?: string } | undefined)?.runtimeId, 'rt_1');
+  assert.equal((calls[0]?.options as { body?: Record<string, unknown> } | undefined)?.body?.runtimeId, undefined);
+  assert.equal((calls[1]?.options as { runtimeId?: string } | undefined)?.runtimeId, 'rt_1');
 });

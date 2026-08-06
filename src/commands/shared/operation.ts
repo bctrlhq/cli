@@ -60,6 +60,7 @@ export type OperationRequestInput<OperationId extends CliOperationId> =
     OperationBodyInput<OperationId> & {
       idempotencyKey?: string;
       actingSubaccountId?: string;
+      runtimeId?: string;
       output?: OutputFlags;
     };
 
@@ -195,6 +196,7 @@ export async function buildOperationInput<OperationId extends CliOperationId>(
     body?: unknown;
     idempotencyKey?: string;
     actingSubaccountId?: string;
+    runtimeId?: string;
     output?: OutputFlags;
   };
   const merged: Record<string, unknown> = {};
@@ -206,6 +208,7 @@ export async function buildOperationInput<OperationId extends CliOperationId>(
   if (body !== undefined) merged.body = body;
   if (c.idempotencyKey) merged.idempotencyKey = c.idempotencyKey;
   if (c.actingSubaccountId) merged.actingSubaccountId = c.actingSubaccountId;
+  if (c.runtimeId) merged.runtimeId = c.runtimeId;
   if (c.output) merged.output = c.output;
   return merged as OperationRequestInput<OperationId>;
 }
@@ -270,6 +273,7 @@ export async function requestOperation<OperationId extends CliOperationId>(
     ...('body' in input && input.body !== undefined ? { body: input.body } : {}),
     ...(input.idempotencyKey ? { idempotencyKey: input.idempotencyKey } : {}),
     ...(input.actingSubaccountId ? { actingSubaccountId: input.actingSubaccountId } : {}),
+    ...(input.runtimeId ? { runtimeId: input.runtimeId } : {}),
   };
   const options = Object.keys(requestOptions).length > 0 ? requestOptions : undefined;
   const result =
@@ -489,6 +493,10 @@ export function createOperationJsonBodyCommand<OperationId extends CliOperationI
       args: Record<string, string>,
       options: Record<string, unknown>
     ) => string | undefined;
+    runtimeId?: (
+      args: Record<string, string>,
+      options: Record<string, unknown>
+    ) => string | undefined;
   }
 ): Command {
   const argNames = config.argNames ?? [];
@@ -509,21 +517,24 @@ export function createOperationJsonBodyCommand<OperationId extends CliOperationI
     const body = overrides.body !== undefined ? overrides.body : (curatedBody ?? {});
     const curatedQuery = config.query ? config.query(args, options) : undefined;
     const actingSubaccountId = config.actingSubaccountId?.(args, options);
+    const runtimeId = config.runtimeId?.(args, options);
+    const requestInput = withActingSubaccount(
+      {
+        pathParams: overlayDefined(overrides.pathParams, args),
+        body,
+        query: overlayDefined(
+          overrides.query,
+          curatedQuery as Record<string, unknown> | undefined
+        ),
+        output: outputFlags(options),
+        ...(runtimeId ? { runtimeId } : {}),
+      },
+      actingSubaccountId
+    );
     await requestOperationAndPrint(
       factory,
       config.operationId,
-      withActingSubaccount(
-        {
-          pathParams: overlayDefined(overrides.pathParams, args),
-          body,
-          query: overlayDefined(
-            overrides.query,
-            curatedQuery as Record<string, unknown> | undefined
-          ),
-          output: outputFlags(options),
-        },
-        actingSubaccountId
-      ) as unknown as OperationRequestInput<OperationId>
+      requestInput as unknown as OperationRequestInput<OperationId>
     );
   });
 }

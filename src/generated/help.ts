@@ -9893,6 +9893,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "BCTRL-Runtime-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.",
+        },
       ],
       body: {
         schema: "JsonObject",
@@ -9968,6 +9975,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "BCTRL-Runtime-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.",
         },
         {
           name: "Idempotency-Key",

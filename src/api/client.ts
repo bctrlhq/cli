@@ -21,6 +21,7 @@ export type RequestOptions = {
   query?: Record<string, string | number | boolean | undefined>;
   idempotencyKey?: string;
   actingSubaccountId?: string;
+  runtimeId?: string;
 };
 
 export type JsonRequestOptions = RequestOptions & {
@@ -196,6 +197,7 @@ function requestHeaders(
     authorization: `Bearer ${token}`,
     'user-agent': 'BCTRL CLI',
     ...(options?.actingSubaccountId ? { 'BCTRL-Subaccount-Id': options.actingSubaccountId } : {}),
+    ...(options?.runtimeId ? { 'BCTRL-Runtime-Id': options.runtimeId } : {}),
   };
 }
 

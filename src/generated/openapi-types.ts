@@ -12498,6 +12498,8 @@ export interface operations {
             header?: {
                 /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
                 "BCTRL-Subaccount-Id"?: string;
+                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
+                "BCTRL-Runtime-Id"?: string;
             };
             path: {
                 toolRef: string;
@@ -12666,6 +12668,8 @@ export interface operations {
             header?: {
                 /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
                 "BCTRL-Subaccount-Id"?: string;
+                /** @description Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly. */
+                "BCTRL-Runtime-Id"?: string;
                 /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
                 "Idempotency-Key"?: string;
             };

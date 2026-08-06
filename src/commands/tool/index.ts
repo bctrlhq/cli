@@ -60,6 +60,10 @@ export function createToolCommand(factory: Factory): Command {
       name: 'call',
       description: 'Call a tool and wait for its result',
       argNames: ['toolRef'],
+      configure: (cmd) =>
+        cmd.option('--runtime <id>', 'Runtime whose active Run should execute the Tool'),
+      runtimeId: (_args, options) =>
+        typeof options.runtime === 'string' ? options.runtime : undefined,
     })
   );
   command.addCommand(
@@ -68,6 +72,10 @@ export function createToolCommand(factory: Factory): Command {
       name: 'start',
       description: 'Start an asynchronous tool call',
       argNames: ['toolRef'],
+      configure: (cmd) =>
+        cmd.option('--runtime <id>', 'Runtime whose active Run should execute the Tool'),
+      runtimeId: (_args, options) =>
+        typeof options.runtime === 'string' ? options.runtime : undefined,
     })
   );
   command.addCommand(
