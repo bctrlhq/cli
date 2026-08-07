@@ -36,6 +36,16 @@ test('automation commands map to the canonical tools, conversations, and trace r
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(
+    [
+      'tools',
+      'start',
+      'code.execute',
+      '--body',
+      '{"source":"export default async () => ({ ok: true });"}',
+    ],
+    { from: 'user' }
+  );
+  await buildCommand(calls).parseAsync(
     ['conversations', 'message', 'conv_1', '--body', '{"text":"Complete checkout"}'],
     { from: 'user' }
   );
@@ -51,6 +61,7 @@ test('automation commands map to the canonical tools, conversations, and trace r
     [
       'post /tools/stagehand.act/call',
       'post /tools/captcha.solve/calls',
+      'post /tools/code.execute/calls',
       'post /conversations/conv_1/messages',
       'patch /conversations/conv_1',
       'get /runs/run_1/trace',
@@ -60,4 +71,5 @@ test('automation commands map to the canonical tools, conversations, and trace r
   assert.equal((calls[0]?.options as { runtimeId?: string } | undefined)?.runtimeId, 'rt_1');
   assert.equal((calls[0]?.options as { body?: Record<string, unknown> } | undefined)?.body?.runtimeId, undefined);
   assert.equal((calls[1]?.options as { runtimeId?: string } | undefined)?.runtimeId, 'rt_1');
+  assert.equal((calls[2]?.options as { runtimeId?: string } | undefined)?.runtimeId, undefined);
 });
