@@ -9182,7 +9182,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
         },
         {
@@ -9354,7 +9354,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
         },
         {
@@ -9660,7 +9660,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
         },
         {
@@ -10013,7 +10013,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
         },
         {
@@ -10157,7 +10157,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
           values: [
@@ -10184,6 +10184,7 @@ export const CLI_HELP_COMMANDS = {
             "vault.secrets.delete",
             "vault.secrets.value",
             "vault.totp.generate",
+            "code.execute",
           ],
         },
         {
@@ -10203,7 +10204,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "name",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
           values: [
             "stagehand.act",
@@ -10229,6 +10230,7 @@ export const CLI_HELP_COMMANDS = {
             "vault.secrets.delete",
             "vault.secrets.value",
             "vault.totp.generate",
+            "code.execute",
           ],
         },
         {
@@ -10442,7 +10444,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
           values: [
@@ -10469,6 +10471,7 @@ export const CLI_HELP_COMMANDS = {
             "vault.secrets.delete",
             "vault.secrets.value",
             "vault.totp.generate",
+            "code.execute",
           ],
         },
         {
@@ -10488,7 +10491,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "name",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
           values: [
             "stagehand.act",
@@ -10514,6 +10517,7 @@ export const CLI_HELP_COMMANDS = {
             "vault.secrets.delete",
             "vault.secrets.value",
             "vault.totp.generate",
+            "code.execute",
           ],
         },
         {
@@ -10767,7 +10771,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
           values: [
@@ -10794,6 +10798,7 @@ export const CLI_HELP_COMMANDS = {
             "vault.secrets.delete",
             "vault.secrets.value",
             "vault.totp.generate",
+            "code.execute",
           ],
         },
         {
@@ -10813,7 +10818,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "name",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
           required: true,
           values: [
             "stagehand.act",
@@ -10839,6 +10844,7 @@ export const CLI_HELP_COMMANDS = {
             "vault.secrets.delete",
             "vault.secrets.value",
             "vault.totp.generate",
+            "code.execute",
           ],
         },
         {

@@ -1801,17 +1801,17 @@ export interface components {
             currentRevisionId: null;
             description: string;
             /** @enum {string} */
-            id: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate";
+            id: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute";
             implementation: {
                 /** @enum {string} */
-                name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate";
+                name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute";
                 /** @constant */
                 type: "builtin";
             };
             inputSchema: components["schemas"]["JsonObject"];
             modes: ("sync" | "async")[];
             /** @enum {string} */
-            name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate";
+            name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute";
             outputSchema: components["schemas"]["JsonObject"];
             runtimeTypes: ("browser" | "desktop" | "spreadsheet")[];
             spaceId: null;
@@ -2026,7 +2026,7 @@ export interface components {
             conversationId: string;
             id: string;
             timestamp: components["schemas"]["Rfc3339Timestamp"];
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
             /**
              * ToolCallId
              * @description Unique toolCall identifier generated by BCTRL.
@@ -3826,7 +3826,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "queued";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -3850,7 +3850,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "running";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -3874,7 +3874,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "requires_input";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -3897,7 +3897,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "succeeded";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -3921,7 +3921,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "failed";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -3945,7 +3945,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "cancelled";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -3969,7 +3969,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "timed_out";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "runtime.files.list" | "runtime.files.stage" | "runtime.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "vault.secrets.list" | "vault.secrets.get" | "vault.secrets.set" | "vault.secrets.update" | "vault.secrets.delete" | "vault.secrets.value" | "vault.totp.generate" | "code.execute") | string;
             turnId: string | null;
         };
         ToolCallError: {
