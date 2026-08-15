@@ -116,15 +116,22 @@ function createAiCredentialWriteCommand(
     name,
     description: name === 'create' ? 'Create an AI credential' : 'Update an AI credential',
     argNames,
-    configure: (cmd) =>
-      cmd
+    configure: (cmd) => {
+      const configured = cmd
         .option('--name <name>', 'Credential name')
         .option('--provider <provider>', 'Provider key')
         .option('--api-key <key>', 'Provider API key')
         .option('--status <status>', 'Credential status')
         .option('--default-model <model>', 'Default model')
-        .option('--base-url <url>', 'Custom provider base URL')
-        .option('--subaccount-id <id>', 'Subaccount scope when using a parent/org key'),
+        .option('--base-url <url>', 'Custom provider base URL');
+      if (name === 'create') {
+        configured.option(
+          '--subaccount-id <id>',
+          'Use this Subaccount account context with an Organization key'
+        );
+      }
+      return configured;
+    },
     body: async (_args, options) => {
       return {
         name: options.name,

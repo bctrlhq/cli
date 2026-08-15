@@ -47,7 +47,10 @@ export function createBrowserExtensionCommand(factory: Factory): Command {
         .description('Upload a browser extension package')
         .argument('<path>')
         .option('--name <name>', 'Display name')
-        .option('--subaccount-id <id>', 'Create under a subaccount when using a parent/org key')
+        .option(
+          '--subaccount-id <id>',
+          'Create in this Subaccount account context with an Organization key'
+        )
     ).action(
       async (path: string, options: { name?: string; subaccountId?: string } & OutputFlags) => {
         const file = await readBlob(path);
@@ -72,7 +75,10 @@ export function createBrowserExtensionCommand(factory: Factory): Command {
         cmd
           .option('--url <url>', 'Extension URL')
           .option('--name <name>', 'Display name')
-          .option('--subaccount-id <id>', 'Create under a subaccount when using a parent/org key'),
+          .option(
+            '--subaccount-id <id>',
+            'Create in this Subaccount account context with an Organization key'
+          ),
       body: async (_args, options) => {
         return {
           url: options.url,

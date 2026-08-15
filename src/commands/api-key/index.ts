@@ -36,7 +36,7 @@ export function createApiKeyCommand(factory: Factory): Command {
       configure: (cmd) =>
         cmd
           .option('--name <name>', 'API key name')
-          .option('--subaccount-id <id>', 'Create a subaccount-scoped key')
+          .option('--subaccount-id <id>', 'Create a key confined to this Subaccount')
           .option('--expires-at <iso>', 'Expiration timestamp'),
       body: async (_args, options) => {
         return {
