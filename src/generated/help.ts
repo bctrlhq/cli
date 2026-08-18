@@ -9730,9 +9730,9 @@ export const CLI_HELP_COMMANDS = {
     type: "topic",
     topic: "tool-calls.result",
     aliases: ["tool-calls result"],
-    title: "Get a completed tool call result",
+    title: "Get a tool call result",
     summary:
-      "Retrieve a persisted result for an authorized completed tool call.",
+      "Retrieve the result for an authorized tool call; a pending call returns its current state so callers can poll again.",
     inputs: {
       path: [
         {

@@ -1076,8 +1076,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get a completed tool call result
-         * @description Retrieve a persisted result for an authorized completed tool call.
+         * Get a tool call result
+         * @description Retrieve the result for an authorized tool call; a pending call returns its current state so callers can poll again.
          */
         get: operations["tool-calls.result"];
         put?: never;
@@ -1792,7 +1792,7 @@ export interface components {
             headless?: boolean;
             idleTimeoutSeconds?: number;
             networkTraffic?: components["schemas"]["BrowserNetworkTrafficConfig"];
-            proxy?: components["schemas"]["RuntimeProxyInput"] | null;
+            proxy?: components["schemas"]["RuntimeProxyInput"];
             /** @enum {string} */
             stealth?: "normal" | "best" | "experimental";
             webRtcProxyOnly?: boolean;
@@ -3024,11 +3024,9 @@ export interface components {
         Rfc3339Timestamp: string;
         RunConnection: {
             /** Format: uri */
-            connectUrl: string;
+            cdpUrl: string;
             /** Format: date-time */
             expiresAt: string;
-            /** @enum {string} */
-            protocol: "cdp";
             recording: {
                 enabled: boolean;
             };
@@ -3039,9 +3037,9 @@ export interface components {
              */
             runId: string;
             /** Format: uri */
-            webdriverUrl?: string;
+            webDriverUrl?: string;
             /** Format: uri */
-            webmcpUrl?: string;
+            webMcpUrl?: string;
         };
         RunCounts: {
             events: number;
@@ -3758,40 +3756,24 @@ export interface components {
             name?: string;
         };
         SubaccountUsage: {
-            blockedReasons: ("monthlySpendLimit" | "activeRunLimit" | "spaceLimit")[];
             computedAt: components["schemas"]["Rfc3339Timestamp"];
             credits: {
-                breakdown: components["schemas"]["SubaccountUsageBreakdown"];
-                estimated: number;
                 limit: number | null;
-                remaining: number | null;
-                settled: number;
                 used: number;
             };
-            isBlocked: boolean;
             period: {
                 endsAt: components["schemas"]["Rfc3339Timestamp"];
                 startedAt: components["schemas"]["Rfc3339Timestamp"];
             };
             runs: {
                 active: number;
-                blocked: boolean;
                 limit: number | null;
             };
             spaces: {
-                blocked: boolean;
                 limit: number | null;
                 used: number;
             };
             subaccountId: components["schemas"]["SubaccountId"];
-        };
-        SubaccountUsageBreakdown: {
-            aiCredits: number;
-            browserCredits: number;
-            captchaCredits: number;
-            filesCredits: number;
-            notificationsCredits: number;
-            proxyCredits: number;
         };
         SubaccountUsageListResponse: {
             data: components["schemas"]["SubaccountUsage"][];
