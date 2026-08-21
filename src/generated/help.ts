@@ -85,6 +85,15 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
       ],
+      headers: [
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
       body: {
         schema: "AccountPatchRequest",
         schemaResource: "schemas://AccountPatchRequest",
@@ -177,6 +186,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -392,6 +408,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -731,6 +754,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
     },
     output: {
@@ -818,6 +848,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -1083,6 +1120,15 @@ export const CLI_HELP_COMMANDS = {
     summary:
       "Create an organization or subaccount API key. The secret is returned once in the response. To rotate a key, create its replacement first, cut traffic over, then revoke the old key — key prefixes identify which key made a request.",
     inputs: {
+      headers: [
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
       body: {
         schema: "ApiKeyCreateRequest",
         schemaResource: "schemas://ApiKeyCreateRequest",
@@ -1179,6 +1225,15 @@ export const CLI_HELP_COMMANDS = {
           name: "keyId",
           type: "string",
           required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -1446,6 +1501,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "BrowserExtensionCreateRequest",
@@ -1610,6 +1672,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -1939,6 +2008,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "BrowserExtensionUpdateRequest",
@@ -2098,6 +2174,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
     },
     output: {
@@ -2172,6 +2255,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -2808,6 +2898,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "ConversationUpdateRequest",
@@ -3018,6 +3115,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -3405,6 +3509,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "FileUpdateRequest",
@@ -3586,6 +3697,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -3894,6 +4012,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "NotificationRecipientCreateRequest",
@@ -4038,6 +4163,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -4213,6 +4345,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "NotificationRecipientUpdateRequest",
@@ -4346,6 +4485,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -4814,6 +4960,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -5669,6 +5822,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
     },
     output: {
@@ -5772,6 +5932,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -7108,6 +7275,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
     },
     output: {
@@ -7589,6 +7763,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
     },
     output: {
@@ -7677,6 +7858,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -7853,6 +8041,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "SpaceCreateRequest",
@@ -7989,6 +8184,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -8262,6 +8464,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "SpaceUpdateRequest",
@@ -8386,6 +8595,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Opaque identifier for a BCTRL subaccount.",
         },
       ],
+      headers: [
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
     },
     output: {
       fields: [
@@ -8449,6 +8667,15 @@ export const CLI_HELP_COMMANDS = {
     summary:
       "Create a subaccount for a tenant, customer, environment, or team. Optional limits can be provided inline.",
     inputs: {
+      headers: [
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
       body: {
         schema: "SubaccountCreateRequest",
         schemaResource: "schemas://SubaccountCreateRequest",
@@ -8841,6 +9068,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Opaque identifier for a BCTRL subaccount.",
         },
       ],
+      headers: [
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
       body: {
         schema: "SubaccountUpdateRequest",
         schemaResource: "schemas://SubaccountUpdateRequest",
@@ -9077,6 +9313,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -9547,6 +9790,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "JsonValue",
@@ -9820,6 +10070,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "JsonObject",
@@ -10082,6 +10339,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "ToolCreateRequest",
@@ -10337,6 +10601,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -10706,6 +10977,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "ToolUpdateRequest",
@@ -10947,6 +11225,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "ToolsetCreateRequest",
@@ -11088,6 +11373,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -11373,6 +11665,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "ToolsetUpdateRequest",
@@ -11589,6 +11888,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "ViewCreateRequest",
@@ -11767,6 +12073,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -12045,6 +12358,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
       body: {
         schema: "WebhookCreateRequest",
@@ -12193,6 +12513,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -12369,6 +12696,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -12717,6 +13051,13 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
     },
     output: {
@@ -12795,6 +13136,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
     },
@@ -12941,6 +13289,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {

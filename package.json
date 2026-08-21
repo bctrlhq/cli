@@ -1,6 +1,6 @@
 {
   "name": "@bctrl/cli",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "BCTRL command-line interface",
   "type": "module",
   "repository": {
