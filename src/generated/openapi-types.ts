@@ -1554,7 +1554,6 @@ export interface components {
         };
         AiModel: {
             displayName: string;
-            engines: ("stagehand" | "browserUse")[];
             id: string;
             managed: boolean;
             /** @enum {string} */
@@ -1824,8 +1823,6 @@ export interface components {
         ByteCount: number;
         Conversation: {
             activeTurnId: string | null;
-            /** @enum {string} */
-            agent: "stagehand" | "browser-use";
             createdAt: components["schemas"]["Rfc3339Timestamp"];
             /**
              * ConversationId
@@ -1858,8 +1855,6 @@ export interface components {
             turnId: string | null;
         };
         ConversationCreateRequest: {
-            /** @enum {string} */
-            agent: "stagehand" | "browser-use";
             model?: string;
             /**
              * RuntimeId
@@ -1875,8 +1870,6 @@ export interface components {
         };
         ConversationDetail: {
             activeTurnId: string | null;
-            /** @enum {string} */
-            agent: "stagehand" | "browser-use";
             createdAt: components["schemas"]["Rfc3339Timestamp"];
             /**
              * ConversationId
@@ -2273,8 +2266,6 @@ export interface components {
             nextCursor: string | null;
         };
         ConversationMessageCreateRequest: {
-            /** @enum {string} */
-            agent?: "stagehand" | "browser-use";
             fileIds?: string[];
             model?: string;
             /**
@@ -2286,8 +2277,6 @@ export interface components {
             variables?: components["schemas"]["ConversationVariables"];
         };
         ConversationUpdateRequest: {
-            /** @enum {string} */
-            agent?: "stagehand" | "browser-use";
             model?: string;
             title?: string | null;
             toolsetId?: string | null;
@@ -2342,12 +2331,57 @@ export interface components {
             spaceId: string;
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
+        EmbeddedView: {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponents"];
+            control: boolean;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
+            id: string;
+            presentation: components["schemas"]["EmbeddedViewPresentationOutput"];
+            scope: components["schemas"]["ViewScope"];
+        };
+        EmbeddedViewBootstrap: {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponents"];
+            control: boolean;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
+            id: string;
+            presentation: components["schemas"]["EmbeddedViewPresentationOutput"];
+            scope: components["schemas"]["ViewScope"];
+            spaceName: string;
+        };
+        EmbeddedViewCreateResponse: {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponents"];
+            control: boolean;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
+            id: string;
+            presentation: components["schemas"]["EmbeddedViewPresentationOutput"];
+            scope: components["schemas"]["ViewScope"];
+            /** @description Short-lived bearer token returned once when a view is created. */
+            token: string;
+            /** Format: uri */
+            url: string;
+        };
+        EmbeddedViewPresentation: {
+            allowedOrigins: string[];
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            mode: "embedded";
+        };
+        EmbeddedViewPresentationOutput: {
+            allowedOrigins: unknown[];
+            /** @constant */
+            mode: "embedded";
+        };
         EnvironmentAiMount: {
             credentialIds?: string[];
-            defaults?: {
-                browserUse?: string | components["schemas"]["AiStoredModelSelection"];
-                stagehand?: string | components["schemas"]["AiStoredModelSelection"];
-            };
+            default?: string | components["schemas"]["AiStoredModelSelection"];
         };
         EnvironmentMounts: {
             ai?: components["schemas"]["EnvironmentAiMount"];
@@ -2614,6 +2648,48 @@ export interface components {
              */
             type: "topic";
         };
+        HostedView: {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponents"];
+            control: boolean;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
+            id: string;
+            presentation: components["schemas"]["HostedViewPresentation"];
+            scope: components["schemas"]["ViewScope"];
+        };
+        HostedViewBootstrap: {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponents"];
+            control: boolean;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
+            id: string;
+            presentation: components["schemas"]["HostedViewPresentation"];
+            scope: components["schemas"]["ViewScope"];
+            spaceName: string;
+        };
+        HostedViewCreateResponse: {
+            branding: components["schemas"]["ResolvedBranding"];
+            components: components["schemas"]["ViewComponents"];
+            control: boolean;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: components["schemas"]["Rfc3339Timestamp"];
+            id: string;
+            presentation: components["schemas"]["HostedViewPresentation"];
+            scope: components["schemas"]["ViewScope"];
+            /** @description Short-lived bearer token returned once when a view is created. */
+            token: string;
+            /** Format: uri */
+            url: string;
+        };
+        HostedViewPresentation: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            mode: "hosted";
+        };
         JsonObject: {
             [key: string]: components["schemas"]["JsonValue"];
         };
@@ -2656,8 +2732,6 @@ export interface components {
             termDays: number;
         };
         Message: {
-            /** @description Agent selected for this message's turn, or null when the message has no turn. */
-            agent: ("stagehand" | "browser-use") | null;
             /**
              * ConversationId
              * @description Unique conversation identifier generated by BCTRL.
@@ -3037,7 +3111,7 @@ export interface components {
              */
             runId: string;
             /** Format: uri */
-            webDriverUrl?: string;
+            webDriverUrl: string;
             /** Format: uri */
             webMcpUrl?: string;
         };
@@ -3683,10 +3757,7 @@ export interface components {
         SpaceEnvironmentPatch: {
             ai?: {
                 credentialIds?: string[] | null;
-                defaults?: {
-                    browserUse?: (string | components["schemas"]["AiStoredModelSelection"]) | null;
-                    stagehand?: (string | components["schemas"]["AiStoredModelSelection"]) | null;
-                } | null;
+                default?: (string | components["schemas"]["AiStoredModelSelection"]) | null;
             } | null;
             storage?: components["schemas"]["EnvironmentStorageMount"] | null;
             vault?: {
@@ -4159,156 +4230,64 @@ export interface components {
             data: components["schemas"]["TraceSpan"][];
             nextCursor: string | null;
         };
-        View: {
-            branding: components["schemas"]["ResolvedBranding"];
-            components: components["schemas"]["ViewComponentsOutput"];
-            createdAt: components["schemas"]["Rfc3339Timestamp"];
-            expiresAt: components["schemas"]["Rfc3339Timestamp"];
-            id: string;
-            presentation: {
-                /** @constant */
-                mode: "hosted";
-            };
-            scope: components["schemas"]["ViewScope"];
-        } | {
-            branding: components["schemas"]["ResolvedBranding"];
-            components: components["schemas"]["ViewComponentsOutput"];
-            createdAt: components["schemas"]["Rfc3339Timestamp"];
-            expiresAt: components["schemas"]["Rfc3339Timestamp"];
-            id: string;
-            presentation: {
-                allowedOrigins: unknown[];
-                /** @constant */
-                mode: "embedded";
-            };
-            scope: components["schemas"]["ViewScope"];
-        };
-        ViewBootstrap: {
-            branding: components["schemas"]["ResolvedBranding"];
-            components: components["schemas"]["ViewComponentsOutput"];
-            createdAt: components["schemas"]["Rfc3339Timestamp"];
-            expiresAt: components["schemas"]["Rfc3339Timestamp"];
-            id: string;
-            presentation: {
-                /** @constant */
-                mode: "hosted";
-            };
-            scope: components["schemas"]["ViewScope"];
-            spaceName: string;
-        } | {
-            branding: components["schemas"]["ResolvedBranding"];
-            components: components["schemas"]["ViewComponentsOutput"];
-            createdAt: components["schemas"]["Rfc3339Timestamp"];
-            expiresAt: components["schemas"]["Rfc3339Timestamp"];
-            id: string;
-            presentation: {
-                allowedOrigins: unknown[];
-                /** @constant */
-                mode: "embedded";
-            };
-            scope: components["schemas"]["ViewScope"];
-            spaceName: string;
-        };
+        View: components["schemas"]["HostedView"] | components["schemas"]["EmbeddedView"];
+        ViewBootstrap: components["schemas"]["HostedViewBootstrap"] | components["schemas"]["EmbeddedViewBootstrap"];
         ViewComponents: {
-            events?: Record<string, never>;
-            inputs?: {
-                /** @default false */
-                respond: boolean;
-            };
-            live?: {
-                /**
-                 * @default none
-                 * @enum {string}
-                 */
-                control: "none" | "input";
-            };
-            recordings?: Record<string, never>;
-            trace?: Record<string, never>;
+            bell: boolean;
+            events: boolean;
+            recordings: boolean;
+            trace: boolean;
         };
-        ViewComponentsOutput: {
-            events?: Record<string, never>;
-            inputs?: {
-                /** @default false */
-                respond: boolean;
-            };
-            live?: {
-                /**
-                 * @default none
-                 * @enum {string}
-                 */
-                control: "none" | "input";
-            };
-            recordings?: Record<string, never>;
-            trace?: Record<string, never>;
+        ViewComponentsInput: {
+            /**
+             * @description Show the in-View notification and action center.
+             * @default true
+             */
+            bell: boolean;
+            /**
+             * @description Include runtime event history.
+             * @default false
+             */
+            events: boolean;
+            /**
+             * @description Include runtime recordings.
+             * @default true
+             */
+            recordings: boolean;
+            /**
+             * @description Include runtime traces.
+             * @default true
+             */
+            trace: boolean;
         };
         ViewCreateRequest: {
-            components?: components["schemas"]["ViewComponents"];
-            expiresInSeconds?: number;
+            /** @description Optional content and notification surfaces for the View. */
+            components?: components["schemas"]["ViewComponentsInput"];
+            /**
+             * @description Allow live browser interaction and actions from the notification center.
+             * @default true
+             */
+            control: boolean;
+            /**
+             * @description View lifetime in seconds. Defaults to 8 hours; maximum 30 days.
+             * @default 28800
+             */
+            expiresInSeconds: number;
+            /** @description Hosted presentation by default; use embedded with explicit allowed origins. */
             presentation?: components["schemas"]["ViewPresentation"];
             scope: components["schemas"]["ViewScopeInput"];
         };
-        ViewCreateResponse: {
-            branding: components["schemas"]["ResolvedBranding"];
-            components: components["schemas"]["ViewComponentsOutput"];
-            createdAt: components["schemas"]["Rfc3339Timestamp"];
-            expiresAt: components["schemas"]["Rfc3339Timestamp"];
-            id: string;
-            presentation: {
-                /** @constant */
-                mode: "hosted";
-            };
-            scope: components["schemas"]["ViewScope"];
-            /** @description Short-lived bearer token returned once when a view is created. */
-            token: string;
-            /** Format: uri */
-            url: string;
-        } | {
-            branding: components["schemas"]["ResolvedBranding"];
-            components: components["schemas"]["ViewComponentsOutput"];
-            createdAt: components["schemas"]["Rfc3339Timestamp"];
-            expiresAt: components["schemas"]["Rfc3339Timestamp"];
-            id: string;
-            presentation: {
-                allowedOrigins: unknown[];
-                /** @constant */
-                mode: "embedded";
-            };
-            scope: components["schemas"]["ViewScope"];
-            /** @description Short-lived bearer token returned once when a view is created. */
-            token: string;
-            /** Format: uri */
-            url: string;
-        };
+        ViewCreateResponse: components["schemas"]["HostedViewCreateResponse"] | components["schemas"]["EmbeddedViewCreateResponse"];
         ViewDeleteResponse: {
             /** @constant */
             deleted: true;
             /** @description Public view resource id. It is safe to expose in URLs and logs. */
             id: string;
         };
-        ViewPresentation: {
-            /** @constant */
-            mode: "hosted";
-        } | {
-            allowedOrigins: string[];
-            /** @constant */
-            mode: "embedded";
-        };
-        ViewScope: {
-            runtimeIds?: string[];
-            /**
-             * SpaceId
-             * @description Unique space identifier generated by BCTRL.
-             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
-             */
-            spaceId: string;
-        } | {
-            /**
-             * RuntimeId
-             * @description Unique runtime identifier generated by BCTRL.
-             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
-             */
-            runtimeId: string;
-        } | {
+        ViewPresentation: components["schemas"]["HostedViewPresentation"] | components["schemas"]["EmbeddedViewPresentation"];
+        ViewScope: components["schemas"]["ViewScopeSpace"] | components["schemas"]["ViewScopeRuntime"] | components["schemas"]["ViewScopeRun"];
+        ViewScopeInput: components["schemas"]["ViewScopeSpaceInput"] | components["schemas"]["ViewScopeRuntimeInput"] | components["schemas"]["ViewScopeRunInput"];
+        ViewScopeRun: {
             /**
              * RunId
              * @description Unique run identifier generated by BCTRL.
@@ -4316,25 +4295,44 @@ export interface components {
              */
             runId: string;
         };
-        ViewScopeInput: {
+        ViewScopeRunInput: {
+            /**
+             * RunId
+             * @description Unique run identifier generated by BCTRL.
+             */
+            runId: string;
+        };
+        ViewScopeRuntime: {
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             * @example rt_AAAAAAAAAAAAAAAAAAAAAA
+             */
+            runtimeId: string;
+        };
+        ViewScopeRuntimeInput: {
+            /**
+             * RuntimeId
+             * @description Unique runtime identifier generated by BCTRL.
+             */
+            runtimeId: string;
+        };
+        ViewScopeSpace: {
+            runtimeIds?: string[];
+            /**
+             * SpaceId
+             * @description Unique space identifier generated by BCTRL.
+             * @example sp_AAAAAAAAAAAAAAAAAAAAAA
+             */
+            spaceId: string;
+        };
+        ViewScopeSpaceInput: {
             runtimeIds?: string[];
             /**
              * SpaceId
              * @description Unique space identifier generated by BCTRL.
              */
             spaceId: string;
-        } | {
-            /**
-             * RuntimeId
-             * @description Unique runtime identifier generated by BCTRL.
-             */
-            runtimeId: string;
-        } | {
-            /**
-             * RunId
-             * @description Unique run identifier generated by BCTRL.
-             */
-            runId: string;
         };
         ViewSession: {
             durationSeconds?: number;
@@ -5290,7 +5288,6 @@ export interface operations {
                 provider?: "openai" | "anthropic" | "google" | "azure" | "groq" | "deepseek" | "mistral" | "cerebras" | "openrouter" | "xai" | "perplexity" | "togetherai" | "minimax" | "tencent" | "xiaomi" | "z-ai" | "mistralai" | "x-ai" | "moonshotai" | "meta-llama" | "vercel-ai-gateway";
                 status?: "recommended" | "supported" | "experimental";
                 managed?: boolean;
-                engine?: "stagehand" | "browserUse";
             };
             header?: never;
             path?: never;
@@ -5905,7 +5902,8 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
-                extensionId: string;
+                /** @description Unique browser extension identifier generated by BCTRL. */
+                extensionId: components["schemas"]["ExtensionId"];
             };
             cookie?: never;
         };
@@ -5987,7 +5985,8 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
-                extensionId: string;
+                /** @description Unique browser extension identifier generated by BCTRL. */
+                extensionId: components["schemas"]["ExtensionId"];
             };
             cookie?: never;
         };
@@ -6103,7 +6102,8 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
-                extensionId: string;
+                /** @description Unique browser extension identifier generated by BCTRL. */
+                extensionId: components["schemas"]["ExtensionId"];
             };
             cookie?: never;
         };
@@ -6431,6 +6431,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique conversation identifier generated by BCTRL. */
                 conversationId: string;
             };
             cookie?: never;
@@ -6513,6 +6514,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique conversation identifier generated by BCTRL. */
                 conversationId: string;
             };
             cookie?: never;
@@ -6649,6 +6651,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique conversation identifier generated by BCTRL. */
                 conversationId: string;
             };
             cookie?: never;
@@ -6767,6 +6770,7 @@ export interface operations {
                 "Idempotency-Key"?: string;
             };
             path: {
+                /** @description Unique conversation identifier generated by BCTRL. */
                 conversationId: string;
             };
             cookie?: never;
@@ -6939,6 +6943,7 @@ export interface operations {
                 "Last-Event-ID"?: string;
             };
             path: {
+                /** @description Unique conversation identifier generated by BCTRL. */
                 conversationId: string;
             };
             cookie?: never;
@@ -6951,7 +6956,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/event-stream": unknown;
+                    "text/event-stream": components["schemas"]["ConversationEvent"];
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -7262,6 +7267,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique file identifier generated by BCTRL. */
                 fileId: string;
             };
             cookie?: never;
@@ -7344,6 +7350,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique file identifier generated by BCTRL. */
                 fileId: string;
             };
             cookie?: never;
@@ -7444,6 +7451,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique file identifier generated by BCTRL. */
                 fileId: string;
             };
             cookie?: never;
@@ -7564,6 +7572,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique file identifier generated by BCTRL. */
                 fileId: string;
             };
             cookie?: never;
@@ -7901,6 +7910,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique notificationRecipient identifier generated by BCTRL. */
                 recipientId: string;
             };
             cookie?: never;
@@ -8001,6 +8011,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique notificationRecipient identifier generated by BCTRL. */
                 recipientId: string;
             };
             cookie?: never;
@@ -9211,6 +9222,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique run identifier generated by BCTRL. */
                 runId: string;
             };
             cookie?: never;
@@ -9302,6 +9314,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique run identifier generated by BCTRL. */
                 runId: string;
             };
             cookie?: never;
@@ -9405,6 +9418,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique run identifier generated by BCTRL. */
                 runId: string;
             };
             cookie?: never;
@@ -9492,6 +9506,7 @@ export interface operations {
                 "Last-Event-ID"?: string;
             };
             path: {
+                /** @description Unique run identifier generated by BCTRL. */
                 runId: string;
             };
             cookie?: never;
@@ -9504,7 +9519,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/event-stream": unknown;
+                    "text/event-stream": components["schemas"]["RunStreamEvent"];
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -9592,6 +9607,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique run identifier generated by BCTRL. */
                 runId: string;
             };
             cookie?: never;
@@ -9920,6 +9936,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique runtime identifier generated by BCTRL. */
                 runtimeId: string;
             };
             cookie?: never;
@@ -10002,6 +10019,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique runtime identifier generated by BCTRL. */
                 runtimeId: string;
             };
             cookie?: never;
@@ -10118,6 +10136,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique runtime identifier generated by BCTRL. */
                 runtimeId: string;
             };
             cookie?: never;
@@ -10224,6 +10243,7 @@ export interface operations {
                 "Idempotency-Key"?: string;
             };
             path: {
+                /** @description Unique runtime identifier generated by BCTRL. */
                 runtimeId: string;
             };
             cookie?: never;
@@ -10392,6 +10412,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique runtime identifier generated by BCTRL. */
                 runtimeId: string;
             };
             cookie?: never;
@@ -10725,7 +10746,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
-                spaceId: string;
+                spaceId: string | "default";
             };
             cookie?: never;
         };
@@ -10807,7 +10828,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
-                spaceId: string;
+                spaceId: string | "default";
             };
             cookie?: never;
         };
@@ -10923,7 +10944,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
-                spaceId: string;
+                spaceId: string | "default";
             };
             cookie?: never;
         };
@@ -11244,7 +11265,8 @@ export interface operations {
             };
             header?: never;
             path: {
-                subaccountId: string;
+                /** @description Opaque identifier for a BCTRL subaccount. */
+                subaccountId: components["schemas"]["SubaccountId"];
             };
             cookie?: never;
         };
@@ -11323,7 +11345,8 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                subaccountId: string;
+                /** @description Opaque identifier for a BCTRL subaccount. */
+                subaccountId: components["schemas"]["SubaccountId"];
             };
             cookie?: never;
         };
@@ -11456,7 +11479,8 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                subaccountId: string;
+                /** @description Opaque identifier for a BCTRL subaccount. */
+                subaccountId: components["schemas"]["SubaccountId"];
             };
             cookie?: never;
         };
@@ -11694,6 +11718,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique toolCall identifier generated by BCTRL. */
                 toolCallId: string;
             };
             cookie?: never;
@@ -11776,6 +11801,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique toolCall identifier generated by BCTRL. */
                 toolCallId: string;
             };
             cookie?: never;
@@ -11892,6 +11918,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique toolCall identifier generated by BCTRL. */
                 toolCallId: string;
             };
             cookie?: never;
@@ -12030,6 +12057,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique toolCall identifier generated by BCTRL. */
                 toolCallId: string;
             };
             cookie?: never;
@@ -13155,6 +13183,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique toolset identifier generated by BCTRL. */
                 toolsetId: string;
             };
             cookie?: never;
@@ -13237,6 +13266,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique toolset identifier generated by BCTRL. */
                 toolsetId: string;
             };
             cookie?: never;
@@ -13337,6 +13367,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique toolset identifier generated by BCTRL. */
                 toolsetId: string;
             };
             cookie?: never;
@@ -13751,6 +13782,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Public view resource id. It is safe to expose in URLs and logs. */
                 viewId: string;
             };
             cookie?: never;
@@ -13833,6 +13865,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Public view resource id. It is safe to expose in URLs and logs. */
                 viewId: string;
             };
             cookie?: never;
@@ -14102,6 +14135,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique webhook identifier generated by BCTRL. */
                 webhookId: string;
             };
             cookie?: never;
@@ -14184,6 +14218,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique webhook identifier generated by BCTRL. */
                 webhookId: string;
             };
             cookie?: never;
@@ -14284,6 +14319,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique webhook identifier generated by BCTRL. */
                 webhookId: string;
             };
             cookie?: never;
@@ -14407,6 +14443,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique webhook identifier generated by BCTRL. */
                 webhookId: string;
             };
             cookie?: never;
@@ -14489,7 +14526,9 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique webhook identifier generated by BCTRL. */
                 webhookId: string;
+                /** @description Unique webhookDelivery identifier generated by BCTRL. */
                 deliveryId: string;
             };
             cookie?: never;
@@ -14590,6 +14629,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique webhook identifier generated by BCTRL. */
                 webhookId: string;
             };
             cookie?: never;
@@ -14690,6 +14730,7 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
+                /** @description Unique webhook identifier generated by BCTRL. */
                 webhookId: string;
             };
             cookie?: never;

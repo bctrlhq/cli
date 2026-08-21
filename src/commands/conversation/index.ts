@@ -34,7 +34,7 @@ export function createConversationCommand(factory: Factory): Command {
     createOperationJsonBodyCommand(factory, {
       operationId: 'conversations.update',
       name: 'patch',
-      description: 'Update the default agent, model, toolset, or title',
+      description: 'Update the model, toolset, or title',
       argNames: ['conversationId'],
     })
   );

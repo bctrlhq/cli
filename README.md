@@ -20,7 +20,7 @@ Use persistent conversations for long-running agents:
 
 ```bash
 bctrl conversations create \
-  --body '{"agent":"browser-use","runtimeId":"rt_..."}'
+  --body '{"runtimeId":"rt_..."}'
 bctrl conversations message conv_... --body '{"text":"Complete checkout"}'
 bctrl conversations stream conv_...
 ```

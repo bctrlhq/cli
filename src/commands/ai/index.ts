@@ -30,15 +30,13 @@ function createAiModelsCommand(factory: Factory): Command {
         cmd
           .option('--provider <provider>', 'Filter by provider')
           .option('--status <status>', 'Filter by support status')
-          .option('--managed <value>', 'Filter by managed availability')
-          .option('--engine <engine>', 'Filter by engine: stagehand or browserUse'),
+          .option('--managed <value>', 'Filter by managed availability'),
       query: (options) =>
         ({
           provider: typeof options.provider === 'string' ? options.provider : undefined,
           status: typeof options.status === 'string' ? options.status : undefined,
           managed:
             typeof options.managed === 'string' ? parseBooleanFlag(options.managed) : undefined,
-          engine: typeof options.engine === 'string' ? options.engine : undefined,
         }) as CliOperationQuery<'ai.models.list'>,
     })
   );

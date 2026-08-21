@@ -50,7 +50,7 @@ test('automation commands map to the canonical tools, conversations, and trace r
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(
-    ['conversations', 'patch', 'conv_1', '--body', '{"agent":"stagehand"}'],
+    ['conversations', 'patch', 'conv_1', '--body', '{}'],
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(['runs', 'trace', 'run_1'], { from: 'user' });
