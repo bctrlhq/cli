@@ -31,6 +31,9 @@ Every automation path contributes to one Run:
 bctrl runs trace run_...
 bctrl runs events run_...
 bctrl runs stream run_...
+bctrl runs files list run_... --role input
+bctrl runs files upload run_... ./invoice.pdf --path invoices/invoice.pdf
+bctrl runs files collect run_... downloads/report.pdf
 ```
 
 All JSON-body commands accept inline JSON, `@file.json`, or `-` for stdin through

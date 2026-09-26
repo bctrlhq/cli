@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import type { Factory } from '../../factory.js';
+import type { CliOperationJsonBody } from '../../openapi.js';
 import {
   createOperationDeleteCommand,
   createOperationJsonBodyCommand,
@@ -51,6 +52,18 @@ export function createRuntimeCommand(factory: Factory): Command {
       name: 'start',
       description: 'Start a runtime',
       argNames: ['runtimeId'],
+      configure: (cmd) =>
+        cmd
+          .option('--recording', 'Record the run')
+          .option('--no-recording', 'Do not record the run')
+          .option('--file <fileId...>', 'Space files to put into the run this start opens'),
+      body: async (_args, options) =>
+        ({
+          ...(typeof options.recording === 'boolean' ? { recording: options.recording } : {}),
+          ...(Array.isArray(options.file)
+            ? { files: (options.file as string[]).map((fileId) => ({ fileId })) }
+            : {}),
+        }) as CliOperationJsonBody<'runtimes.start'>,
     })
   );
   command.addCommand(

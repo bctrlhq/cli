@@ -1,9 +1,18 @@
+import { randomUUID } from 'node:crypto';
 import { Command } from 'commander';
 import type { Factory } from '../../factory.js';
+import type { CliOperationJsonBody, CliOperationQuery } from '../../openapi.js';
+import { readBlob } from '../shared/io.js';
+import { parsePositiveInteger } from '../shared/options.js';
+import { addOutputFlags, outputData, type OutputFlags } from '../shared/output.js';
 import {
+  createOperationDeleteCommand,
+  createOperationJsonBodyCommand,
   createOperationListCommand,
   createOperationViewCommand,
+  requestOperationAndPrint,
   streamOperationText,
+  uploadOperationFile,
 } from '../shared/operation.js';
 
 export function createRunCommand(factory: Factory): Command {
@@ -39,6 +48,118 @@ export function createRunCommand(factory: Factory): Command {
     })
   );
   command.addCommand(createRunStreamCommand(factory));
+  command.addCommand(createRunFilesCommand(factory));
+  return command;
+}
+
+/**
+ * A Run's files (plan 040): inputs are Space Files bound to the Run, in its
+ * browser at runtimePath once binding.state is ready; outputs are Files the
+ * Run produced.
+ */
+function createRunFilesCommand(factory: Factory): Command {
+  const command = new Command('files').description("List and manage a run's input and output files");
+  command.addCommand(
+    createOperationListCommand(factory, {
+      operationId: 'runs.files.list',
+      description: 'List run files',
+      argNames: ['runId'],
+      configure: (cmd) =>
+        cmd
+          .option('--role <role>', 'input or output')
+          .option('-L, --limit <number>', 'Maximum number of results to return', parsePositiveInteger)
+          .option('--cursor <cursor>', 'Pagination cursor'),
+      query: (options) =>
+        ({
+          role: typeof options.role === 'string' ? options.role : undefined,
+          limit: typeof options.limit === 'number' ? options.limit : undefined,
+          cursor: typeof options.cursor === 'string' ? options.cursor : undefined,
+        }) as CliOperationQuery<'runs.files.list'>,
+    })
+  );
+  command.addCommand(
+    addOutputFlags(
+      new Command('get').description('Get one run file').argument('<runId>').argument('<fileId>')
+    ).action(async (runId: string, fileId: string, options: OutputFlags) => {
+      await requestOperationAndPrint(factory, 'runs.files.get', {
+        pathParams: { runId, fileId },
+        output: options,
+      });
+    })
+  );
+  command.addCommand(
+    createOperationJsonBodyCommand(factory, {
+      operationId: 'runs.files.add',
+      name: 'add',
+      description: 'Put an existing Space file into the run',
+      argNames: ['runId', 'fileId'],
+      body: async (args) => ({ fileId: args.fileId }) as CliOperationJsonBody<'runs.files.add'>,
+    })
+  );
+  command.addCommand(
+    addOutputFlags(
+      new Command('upload')
+        .description('Upload a file into the Space and put it into the run')
+        .argument('<runId>')
+        .argument('<path>')
+        .option('--path <spacePath>', 'Space path; defaults to uploads/<name>')
+        .option('--name <name>', 'Display name')
+        .option('--idempotency-key <key>', 'Retry key; defaults to a new one')
+    ).action(
+      async (
+        runId: string,
+        path: string,
+        options: { path?: string; name?: string; idempotencyKey?: string } & OutputFlags
+      ) => {
+        const file = await readBlob(path);
+        const result = await uploadOperationFile(factory, 'runs.files.upload', {
+          pathParams: { runId },
+          file: file.blob,
+          fileName: options.name ?? file.fileName,
+          fields: {
+            ...(options.path ? { path: options.path } : {}),
+            ...(options.name ? { name: options.name } : {}),
+          },
+          idempotencyKey: options.idempotencyKey ?? randomUUID(),
+        });
+        await outputData(factory.io, result, options);
+      }
+    )
+  );
+  command.addCommand(
+    createOperationJsonBodyCommand(factory, {
+      operationId: 'runs.files.retry',
+      name: 'retry',
+      description: "Copy a failed input into the run's browser again",
+      argNames: ['runId', 'fileId'],
+    })
+  );
+  command.addCommand(
+    createOperationDeleteCommand(factory, {
+      operationId: 'runs.files.remove',
+      name: 'remove',
+      description: "Remove an input from the run's browser (the Space file is kept)",
+      argNames: ['runId', 'fileId'],
+    })
+  );
+  command.addCommand(
+    createOperationJsonBodyCommand(factory, {
+      operationId: 'runs.files.collect',
+      name: 'collect',
+      description: "Save a file from the run's workspace as an output file",
+      argNames: ['runId', 'runtimePath'],
+      configure: (cmd) =>
+        cmd
+          .option('--path <spacePath>', 'Space path for the new file')
+          .option('--name <name>', 'File name'),
+      body: async (args, options) =>
+        ({
+          runtimePath: args.runtimePath,
+          ...(typeof options.path === 'string' ? { path: options.path } : {}),
+          ...(typeof options.name === 'string' ? { name: options.name } : {}),
+        }) as CliOperationJsonBody<'runs.files.collect'>,
+    })
+  );
   return command;
 }
 

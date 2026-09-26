@@ -163,9 +163,11 @@ async function uploadFile<T>(
     form.set(key, value);
   }
 
+  const headers = requestHeaders(config.activeToken.token, options, 'application/json');
+  if (options.idempotencyKey) headers['idempotency-key'] = options.idempotencyKey;
   const response = await fetch(buildUrl(config.apiBaseUrl, path, options.query), {
     method: 'POST',
-    headers: requestHeaders(config.activeToken.token, options, 'application/json'),
+    headers,
     body: form,
   });
 

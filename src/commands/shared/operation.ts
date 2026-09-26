@@ -24,6 +24,7 @@ type UploadFileInput<OperationId extends CliOperationId> = OperationPathInput<Op
     file: Blob;
     fileName: string;
     fields?: Record<string, string>;
+    idempotencyKey?: string;
     actingSubaccountId?: string;
   };
 
@@ -300,6 +301,7 @@ export async function uploadOperationFile<OperationId extends CliOperationId>(
       fileName: input.fileName,
       ...('query' in input && input.query !== undefined ? { query: input.query } : {}),
       ...(input.fields ? { fields: input.fields } : {}),
+      ...(input.idempotencyKey ? { idempotencyKey: input.idempotencyKey } : {}),
       ...(input.actingSubaccountId ? { actingSubaccountId: input.actingSubaccountId } : {}),
     }
   );
