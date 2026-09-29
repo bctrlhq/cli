@@ -3475,9 +3475,10 @@ export interface components {
             details?: {
                 [key: string]: unknown;
             };
-            error: string;
             /** @description Optional next action for recoverable errors, e.g. "retry after 2s". */
             hint?: string;
+            /** @description Human-readable description of the error. */
+            message: string;
             /**
              * @description Stable public error category for programmatic branching.
              * @enum {string}
