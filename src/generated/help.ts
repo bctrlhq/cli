@@ -11868,6 +11868,995 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "secrets.delete": {
+    type: "topic",
+    topic: "secrets.delete",
+    aliases: ["secrets delete"],
+    title: "Delete a secret",
+    summary:
+      "Delete a Secret and all its versions. Supports `If-Match`. The audit trail is kept.",
+    inputs: {
+      path: [
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "If-Match",
+          type: "string",
+          required: false,
+          description:
+            'Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.',
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "deleted",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Secrets",
+        url: "https://platform.bctrl.ai/sdk/secrets",
+        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
+        description:
+          "Store credentials and values by path, version every change, and reveal values only to people.",
+      },
+    ],
+    api: {
+      method: "DELETE",
+      path: "/v1/secrets/{path}",
+      operationId: "secrets.delete",
+      responseFields: ["deleted", "id"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic secrets.delete",
+      usage: "bctrl help --topic secrets.delete",
+    },
+    mcp: {
+      toolName: "bctrl_secrets_delete",
+      operationResource: "operations://secrets.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic secrets.delete",
+      },
+    ],
+  },
+  "secrets.get": {
+    type: "topic",
+    topic: "secrets.get",
+    aliases: ["secrets get"],
+    title: "Get a secret",
+    summary:
+      "Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.",
+    inputs: {
+      path: [
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "hasNotes",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasPassword",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasTotp",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasValue",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "label",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "origins",
+          type: "string[]",
+          required: true,
+          description:
+            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+          description:
+            "The owning subaccount, or null for an organization-wide secret.",
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: true,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+          description: "Not secret; readable.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+          description: "Current version; the ETag of the secret.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Secrets",
+        url: "https://platform.bctrl.ai/sdk/secrets",
+        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
+        description:
+          "Store credentials and values by path, version every change, and reveal values only to people.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/secrets/{path}",
+      operationId: "secrets.get",
+      responseFields: [
+        "createdAt",
+        "hasNotes",
+        "hasPassword",
+        "hasTotp",
+        "hasValue",
+        "id",
+        "label",
+        "lastUsedAt",
+        "origins",
+        "subaccountId",
+        "type",
+        "updatedAt",
+        "username",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic secrets.get",
+      usage: "bctrl help --topic secrets.get",
+    },
+    mcp: {
+      toolName: "bctrl_secrets_get",
+      operationResource: "operations://secrets.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic secrets.get",
+      },
+    ],
+  },
+  "secrets.list": {
+    type: "topic",
+    topic: "secrets.list",
+    aliases: ["secrets list"],
+    title: "List secrets",
+    summary:
+      "List Secrets by path. `prefix` narrows to paths starting with it; `delimiter=/` groups deeper paths into `folders`, like S3. Secret values are never listed.",
+    inputs: {
+      query: [
+        {
+          name: "prefix",
+          type: "string",
+          required: false,
+          description: "Only paths starting with this prefix.",
+        },
+        {
+          name: "delimiter",
+          type: "/",
+          required: false,
+          description:
+            "Group paths below the next `/` after the prefix into `folders`.",
+          values: ["/"],
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: false,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "folders",
+          type: "string[]",
+          required: true,
+          description:
+            "With `delimiter`: common prefixes, each ending in `/`. They count toward `limit`.",
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Secrets",
+        url: "https://platform.bctrl.ai/sdk/secrets",
+        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
+        description:
+          "Store credentials and values by path, version every change, and reveal values only to people.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/secrets",
+      operationId: "secrets.list",
+      responseFields: ["data", "folders", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic secrets.list",
+      usage: "bctrl help --topic secrets.list",
+    },
+    mcp: {
+      toolName: "bctrl_secrets_list",
+      operationResource: "operations://secrets.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic secrets.list",
+      },
+    ],
+  },
+  "secrets.put": {
+    type: "topic",
+    topic: "secrets.put",
+    aliases: ["secrets put"],
+    title: "Create or replace a secret",
+    summary:
+      "Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.",
+    inputs: {
+      path: [
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "If-Match",
+          type: "string",
+          required: false,
+          description:
+            'Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.',
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SecretPutRequest",
+        schemaResource: "schemas://SecretPutRequest",
+        fields: [
+          {
+            name: "type",
+            type: "login | value",
+            required: false,
+            description:
+              "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+            values: ["login", "value"],
+          },
+          {
+            name: "label",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "username",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "origins",
+            type: "string[]",
+            required: false,
+            description:
+              "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+          },
+          {
+            name: "password",
+            type: "string",
+            required: false,
+            description: "Password of a `login`. Write-only.",
+          },
+          {
+            name: "totp",
+            type: "string",
+            required: false,
+            description: "TOTP seed (base32) of a `login`. Write-only.",
+          },
+          {
+            name: "value",
+            type: "string",
+            required: false,
+            description: "The value of a `value` secret. Write-only.",
+          },
+          {
+            name: "notes",
+            type: "string",
+            required: false,
+            description: "Free-form notes. Write-only.",
+          },
+          {
+            name: "fromVersion",
+            type: "integer",
+            required: false,
+            description:
+              "Rollback: make the values of this earlier version the new version. Send it alone.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "hasNotes",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasPassword",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasTotp",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasValue",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "label",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "origins",
+          type: "string[]",
+          required: true,
+          description:
+            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+          description:
+            "The owning subaccount, or null for an organization-wide secret.",
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: true,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+          description: "Not secret; readable.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+          description: "Current version; the ETag of the secret.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Secrets",
+        url: "https://platform.bctrl.ai/sdk/secrets",
+        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
+        description:
+          "Store credentials and values by path, version every change, and reveal values only to people.",
+      },
+    ],
+    api: {
+      method: "PUT",
+      path: "/v1/secrets/{path}",
+      operationId: "secrets.put",
+      requestFields: [
+        "type",
+        "label",
+        "username",
+        "origins",
+        "password",
+        "totp",
+        "value",
+        "notes",
+        "fromVersion",
+      ],
+      responseFields: [
+        "createdAt",
+        "hasNotes",
+        "hasPassword",
+        "hasTotp",
+        "hasValue",
+        "id",
+        "label",
+        "lastUsedAt",
+        "origins",
+        "subaccountId",
+        "type",
+        "updatedAt",
+        "username",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.put",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic secrets.put",
+      usage: "bctrl help --topic secrets.put",
+    },
+    mcp: {
+      toolName: "bctrl_secrets_put",
+      operationResource: "operations://secrets.put",
+      schemaResources: ["schemas://SecretPutRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic secrets.put",
+      },
+    ],
+  },
+  "secrets.reveal": {
+    type: "topic",
+    topic: "secrets.reveal",
+    aliases: ["secrets reveal"],
+    title: "Reveal secret values",
+    summary:
+      "Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+      body: {
+        schema: "SecretRevealRequest",
+        schemaResource: "schemas://SecretRevealRequest",
+        fields: [
+          {
+            name: "path",
+            type: "string",
+            required: true,
+            description:
+              "Secret path, for example `prod/github/bot`. May contain `/`.",
+          },
+          {
+            name: "version",
+            type: "integer",
+            required: false,
+            description: "Defaults to the current version.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "notes",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "password",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "totp",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "value",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Secrets",
+        url: "https://platform.bctrl.ai/sdk/secrets",
+        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
+        description:
+          "Store credentials and values by path, version every change, and reveal values only to people.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/secrets:reveal",
+      operationId: "secrets.reveal",
+      requestFields: ["path", "version"],
+      responseFields: [
+        "id",
+        "notes",
+        "password",
+        "totp",
+        "username",
+        "value",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.reveal",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic secrets.reveal",
+      usage: "bctrl help --topic secrets.reveal",
+    },
+    mcp: {
+      toolName: "bctrl_secrets_reveal",
+      operationResource: "operations://secrets.reveal",
+      schemaResources: ["schemas://SecretRevealRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic secrets.reveal",
+      },
+    ],
+  },
+  "secrets.update": {
+    type: "topic",
+    topic: "secrets.update",
+    aliases: ["secrets update"],
+    title: "Update a secret",
+    summary:
+      "Change some fields of a Secret; `null` clears one. Creates a new version. Supports `If-Match`.",
+    inputs: {
+      path: [
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "If-Match",
+          type: "string",
+          required: false,
+          description:
+            'Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.',
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SecretPatchRequest",
+        schemaResource: "schemas://SecretPatchRequest",
+        fields: [
+          {
+            name: "label",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "username",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "origins",
+            type: "string[]",
+            required: false,
+            description:
+              "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+          },
+          {
+            name: "password",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "totp",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "value",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "notes",
+            type: "string | null",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "hasNotes",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasPassword",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasTotp",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasValue",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "label",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "origins",
+          type: "string[]",
+          required: true,
+          description:
+            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+          description:
+            "The owning subaccount, or null for an organization-wide secret.",
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: true,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+          description: "Not secret; readable.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+          description: "Current version; the ETag of the secret.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Secrets",
+        url: "https://platform.bctrl.ai/sdk/secrets",
+        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
+        description:
+          "Store credentials and values by path, version every change, and reveal values only to people.",
+      },
+    ],
+    api: {
+      method: "PATCH",
+      path: "/v1/secrets/{path}",
+      operationId: "secrets.update",
+      requestFields: [
+        "label",
+        "username",
+        "origins",
+        "password",
+        "totp",
+        "value",
+        "notes",
+      ],
+      responseFields: [
+        "createdAt",
+        "hasNotes",
+        "hasPassword",
+        "hasTotp",
+        "hasValue",
+        "id",
+        "label",
+        "lastUsedAt",
+        "origins",
+        "subaccountId",
+        "type",
+        "updatedAt",
+        "username",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic secrets.update",
+      usage: "bctrl help --topic secrets.update",
+    },
+    mcp: {
+      toolName: "bctrl_secrets_update",
+      operationResource: "operations://secrets.update",
+      schemaResources: ["schemas://SecretPatchRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic secrets.update",
+      },
+    ],
+  },
   "spaces.create": {
     type: "topic",
     topic: "spaces.create",

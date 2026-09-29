@@ -1288,6 +1288,78 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/secrets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List secrets
+         * @description List Secrets by path. `prefix` narrows to paths starting with it; `delimiter=/` groups deeper paths into `folders`, like S3. Secret values are never listed.
+         */
+        get: operations["secrets.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/secrets:reveal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reveal secret values
+         * @description Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.
+         */
+        post: operations["secrets.reveal"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/secrets/{path}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a secret
+         * @description Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.
+         */
+        get: operations["secrets.get"];
+        /**
+         * Create or replace a secret
+         * @description Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.
+         */
+        put: operations["secrets.put"];
+        post?: never;
+        /**
+         * Delete a secret
+         * @description Delete a Secret and all its versions. Supports `If-Match`. The audit trail is kept.
+         */
+        delete: operations["secrets.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a secret
+         * @description Change some fields of a Secret; `null` clears one. Creates a new version. Supports `If-Match`.
+         */
+        patch: operations["secrets.update"];
+        trace?: never;
+    };
     "/v1/spaces": {
         parameters: {
             query?: never;
@@ -4785,6 +4857,90 @@ export interface components {
             filesBytes: number;
             proxyBytes: number | null;
             runtimeSeconds: number | null;
+        };
+        Secret: {
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            hasNotes: boolean;
+            hasPassword: boolean;
+            hasTotp: boolean;
+            hasValue: boolean;
+            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            id: string;
+            label: string | null;
+            lastUsedAt: components["schemas"]["Rfc3339Timestamp"] | null;
+            /** @description Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain. */
+            origins: string[];
+            /** @description The owning subaccount, or null for an organization-wide secret. */
+            subaccountId: components["schemas"]["SubaccountId"] | null;
+            /**
+             * @description `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+             * @enum {string}
+             */
+            type: "login" | "value";
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
+            /** @description Not secret; readable. */
+            username: string | null;
+            /** @description Current version; the ETag of the secret. */
+            version: number;
+        };
+        SecretDeleteResponse: {
+            /** @constant */
+            deleted: true;
+            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            id: string;
+        };
+        SecretList: {
+            data: components["schemas"]["Secret"][];
+            /** @description With `delimiter`: common prefixes, each ending in `/`. They count toward `limit`. */
+            folders: string[];
+            nextCursor: string | null;
+        };
+        SecretPatchRequest: {
+            label?: string | null;
+            notes?: string | null;
+            /** @description Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain. */
+            origins?: string[];
+            password?: string | null;
+            totp?: string | null;
+            username?: string | null;
+            value?: string | null;
+        };
+        SecretPutRequest: {
+            /** @description Rollback: make the values of this earlier version the new version. Send it alone. */
+            fromVersion?: number;
+            label?: string | null;
+            /** @description Free-form notes. Write-only. */
+            notes?: string;
+            /** @description Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain. */
+            origins?: string[];
+            /** @description Password of a `login`. Write-only. */
+            password?: string;
+            /** @description TOTP seed (base32) of a `login`. Write-only. */
+            totp?: string;
+            /**
+             * @description `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+             * @enum {string}
+             */
+            type?: "login" | "value";
+            username?: string | null;
+            /** @description The value of a `value` secret. Write-only. */
+            value?: string;
+        };
+        SecretRevealRequest: {
+            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            path: string;
+            /** @description Defaults to the current version. */
+            version?: number;
+        };
+        SecretRevealResponse: {
+            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            id: string;
+            notes?: string;
+            password?: string;
+            totp?: string;
+            username: string | null;
+            value?: string;
+            version: number;
         };
         /**
          * Sha256Digest
@@ -14852,6 +15008,716 @@ export interface operations {
                      *       "code": "runtime.host_unavailable",
                      *       "error": "An upstream dependency was unavailable. Retry later.",
                      *       "reasonClass": "upstream"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "secrets.list": {
+        parameters: {
+            query?: {
+                /** @description Only paths starting with this prefix. */
+                prefix?: string;
+                /** @description Group paths below the next `/` after the prefix into `folders`. */
+                delimiter?: "/";
+                type?: "login" | "value";
+                cursor?: string;
+                limit?: number;
+            };
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SecretList"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "request.invalid",
+                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "reasonClass": "invalid_input"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "secrets.reveal": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SecretRevealRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SecretRevealResponse"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "request.invalid",
+                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "reasonClass": "invalid_input"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `secrets.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "secrets.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "secrets.get": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+                path: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Secret"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `secrets.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "secrets.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "secrets.put": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+                /** @description Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise. */
+                "If-Match"?: string;
+                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+                path: string;
+            };
+            cookie?: never;
+        };
+        /** @description Create or replace a secret. Every write is a new version; fields left out are cleared. */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SecretPutRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Secret"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "request.invalid",
+                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "reasonClass": "invalid_input"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `secrets.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "secrets.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The request conflicts with the current resource state. Example code: `secrets.conflict`. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "secrets.conflict",
+                     *       "error": "The request conflicts with the current resource state.",
+                     *       "reasonClass": "conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The If-Match version is not the current version of the resource. */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "secrets.version_mismatch",
+                     *       "error": "The If-Match version is not the current version of the resource.",
+                     *       "reasonClass": "conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "secrets.delete": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+                /** @description Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise. */
+                "If-Match"?: string;
+                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+                path: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SecretDeleteResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `secrets.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "secrets.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The If-Match version is not the current version of the resource. */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "secrets.version_mismatch",
+                     *       "error": "The If-Match version is not the current version of the resource.",
+                     *       "reasonClass": "conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "secrets.update": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+                /** @description Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise. */
+                "If-Match"?: string;
+                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+                path: string;
+            };
+            cookie?: never;
+        };
+        /** @description Change some fields; `null` clears one. Creates a new version. */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SecretPatchRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Secret"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "request.invalid",
+                     *       "error": "The request was invalid. See `code` and `details`.",
+                     *       "reasonClass": "invalid_input"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.required",
+                     *       "error": "Authentication required: the API key is missing or invalid.",
+                     *       "reasonClass": "unauthorized"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "auth.forbidden",
+                     *       "error": "Forbidden: the API key cannot access this resource.",
+                     *       "reasonClass": "capability_denied"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The requested resource was not found. Example code: `secrets.not_found`. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "secrets.not_found",
+                     *       "error": "The requested resource was not found.",
+                     *       "reasonClass": "not_found"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description The If-Match version is not the current version of the resource. */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "secrets.version_mismatch",
+                     *       "error": "The If-Match version is not the current version of the resource.",
+                     *       "reasonClass": "conflict"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "code": "rate_limited",
+                     *       "error": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *       "reasonClass": "rate_limited"
                      *     }
                      */
                     "application/json": components["schemas"]["ErrorResponse"];
