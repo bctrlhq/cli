@@ -3489,11 +3489,15 @@ export interface components {
         };
         EnvironmentMounts: {
             ai?: components["schemas"]["EnvironmentAiMount"];
+            /** @description Every run in the Space uses this egress host policy. Deny wins; a non-empty allow list refuses other hosts. Unset means open internet. */
+            network?: components["schemas"]["SpaceNetworkPolicy"];
             secrets?: components["schemas"]["SpaceSecretsMount"];
             storage?: components["schemas"]["EnvironmentStorageMount"];
         };
         EnvironmentMountsOutput: {
             ai?: components["schemas"]["EnvironmentAiMount"];
+            /** @description Every run in the Space uses this egress host policy. Deny wins; a non-empty allow list refuses other hosts. Unset means open internet. */
+            network?: components["schemas"]["SpaceNetworkPolicy"];
             secrets?: components["schemas"]["SpaceSecretsMount"];
             storage?: components["schemas"]["EnvironmentStorageMountOutput"];
         };
@@ -4982,12 +4986,17 @@ export interface components {
                 credentialIds?: string[] | null;
                 default?: (string | components["schemas"]["AiStoredModelSelection"]) | null;
             } | null;
+            network?: components["schemas"]["SpaceNetworkPolicy"] | null;
             secrets?: components["schemas"]["SpaceSecretsMount"] | null;
             storage?: components["schemas"]["EnvironmentStorageMount"] | null;
         };
         SpaceListResponse: {
             data: components["schemas"]["Space"][];
             nextCursor: string | null;
+        };
+        SpaceNetworkPolicy: {
+            allow?: string[];
+            deny?: string[];
         };
         SpaceSecretsMount: {
             allow?: string[];
