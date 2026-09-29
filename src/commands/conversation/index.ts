@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import type { Factory } from '../../factory.js';
+import { parseWaitSeconds } from '../shared/options.js';
 import {
   createOperationJsonBodyCommand,
   createOperationListCommand,
@@ -67,5 +68,17 @@ export function createConversationCommand(factory: Factory): Command {
         for await (const chunk of stream) factory.io.writeOut(chunk);
       })
   );
+  const turns = new Command('turns').description('Inspect and cancel agent turns');
+  turns.addCommand(createOperationViewCommand(factory, {
+    operationId: 'conversations.turns.get', name: 'get', description: 'Get an agent turn',
+    argNames: ['conversationId', 'turnId'],
+    configure: (cmd) => cmd.option('--wait <seconds>', 'Wait up to 60 seconds for the turn', parseWaitSeconds),
+    query: (_id, options) => ({ wait: options.wait as number | undefined }),
+  }));
+  turns.addCommand(createOperationJsonBodyCommand(factory, {
+    operationId: 'conversations.turns.cancel', name: 'cancel', description: 'Cancel an agent turn',
+    argNames: ['conversationId', 'turnId'],
+  }));
+  command.addCommand(turns);
   return command;
 }

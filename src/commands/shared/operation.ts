@@ -393,20 +393,24 @@ export function createOperationViewCommand<OperationId extends CliOperationId>(
     name?: string;
     description: string;
     argName?: string;
+    argNames?: string[];
     configure?: (command: Command) => Command;
     query?: (id: string, options: Record<string, unknown>) => CliOperationQuery<OperationId>;
     actingSubaccountId?: (id: string, options: Record<string, unknown>) => string | undefined;
   }
 ): Command {
-  const argName = config.argName ?? 'id';
-  let command = new Command(config.name ?? 'view')
-    .description(config.description)
-    .argument(`<${argName}>`);
+  const argNames = config.argNames ?? [config.argName ?? 'id'];
+  let command = new Command(config.name ?? 'view').description(config.description);
+  for (const argName of argNames) command = command.argument(`<${argName}>`);
   command = addCliOperationHelp(command, config.operationId);
   command = config.configure ? config.configure(command) : command;
   command = addRequestOverrideFlags(command);
   command = addOutputFlags(command);
-  return command.action(async (id: string, options: Record<string, unknown>) => {
+  return command.action(async (...actionArgs: unknown[]) => {
+    const options = getActionOptions(actionArgs);
+    const id = String(actionArgs[0]);
+    const args: Record<string, string> = { id };
+    for (let i = 0; i < argNames.length; i += 1) args[argNames[i]!] = String(actionArgs[i]);
     const overrides = await resolveRequestOverrides(config.operationId, options);
     const curatedQuery = config.query ? config.query(id, options) : undefined;
     const actingSubaccountId = config.actingSubaccountId?.(id, options);
@@ -415,7 +419,7 @@ export function createOperationViewCommand<OperationId extends CliOperationId>(
       config.operationId,
       withActingSubaccount(
         {
-          pathParams: overlayDefined(overrides.pathParams, { [argName]: id, id }),
+          pathParams: overlayDefined(overrides.pathParams, args),
           query: overlayDefined(
             overrides.query,
             curatedQuery as Record<string, unknown> | undefined

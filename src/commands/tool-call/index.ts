@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import type { Factory } from '../../factory.js';
+import { parseWaitSeconds } from '../shared/options.js';
 import type { CliOperationQuery } from '../../openapi.js';
 import {
   createOperationJsonBodyCommand,
@@ -52,6 +53,8 @@ export function createToolCallCommand(factory: Factory): Command {
       name: 'result',
       description: 'Wait for and return a tool call result',
       argName: 'toolCallId',
+      configure: (cmd) => cmd.option('--wait <seconds>', 'Wait up to 60 seconds for a result', parseWaitSeconds),
+      query: (_id, options) => ({ wait: options.wait as number | undefined }),
     })
   );
   command.addCommand(

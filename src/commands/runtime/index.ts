@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import type { Factory } from '../../factory.js';
+import { parseWaitSeconds } from '../shared/options.js';
 import type { CliOperationJsonBody } from '../../openapi.js';
 import {
   createOperationDeleteCommand,
@@ -29,6 +30,8 @@ export function createRuntimeCommand(factory: Factory): Command {
       name: 'get',
       description: 'Get a runtime',
       argName: 'runtimeId',
+      configure: (cmd) => cmd.option('--wait <seconds>', 'Wait up to 60 seconds for the start', parseWaitSeconds),
+      query: (_id, options) => ({ wait: options.wait as number | undefined }),
     })
   );
   command.addCommand(
@@ -54,9 +57,11 @@ export function createRuntimeCommand(factory: Factory): Command {
       argNames: ['runtimeId'],
       configure: (cmd) =>
         cmd
+          .option('--wait <seconds>', 'Wait up to 60 seconds; 0 returns a start handle', parseWaitSeconds)
           .option('--recording', 'Record the run')
           .option('--no-recording', 'Do not record the run')
           .option('--file <fileId...>', 'Space files to put into the run this start opens'),
+      query: (_args, options) => ({ wait: options.wait as number | undefined }),
       body: async (_args, options) =>
         ({
           ...(typeof options.recording === 'boolean' ? { recording: options.recording } : {}),
