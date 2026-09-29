@@ -229,6 +229,8 @@ export const CLI_HELP_COMMANDS = {
             name: "apiKey",
             type: "string",
             required: false,
+            description:
+              "The provider API key, or a secret reference such as `secret:ai/openai#value`.",
           },
           {
             name: "status",
@@ -256,6 +258,13 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "apiKeyReference",
+          type: "string | null",
+          required: true,
+          description:
+            "The `secret:` reference the key is read from, or null when a literal key is stored.",
+        },
         {
           name: "baseUrl",
           type: "string",
@@ -352,6 +361,7 @@ export const CLI_HELP_COMMANDS = {
         "test",
       ],
       responseFields: [
+        "apiKeyReference",
         "baseUrl",
         "createdAt",
         "defaultModel",
@@ -498,6 +508,13 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "apiKeyReference",
+          type: "string | null",
+          required: true,
+          description:
+            "The `secret:` reference the key is read from, or null when a literal key is stored.",
+        },
+        {
           name: "baseUrl",
           type: "string",
           required: false,
@@ -584,6 +601,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/ai/credentials/{credentialId}",
       operationId: "ai.credentials.get",
       responseFields: [
+        "apiKeyReference",
         "baseUrl",
         "createdAt",
         "defaultModel",
@@ -893,6 +911,13 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "apiKeyReference",
+          type: "string | null",
+          required: true,
+          description:
+            "The `secret:` reference the key is read from, or null when a literal key is stored.",
+        },
+        {
           name: "baseUrl",
           type: "string",
           required: false,
@@ -980,6 +1005,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "ai.credentials.update",
       requestFields: ["name", "apiKey", "status", "defaultModel", "baseUrl"],
       responseFields: [
+        "apiKeyReference",
         "baseUrl",
         "createdAt",
         "defaultModel",
@@ -7411,6 +7437,8 @@ export const CLI_HELP_COMMANDS = {
             name: "password",
             type: "string",
             required: false,
+            description:
+              "The proxy password, or a secret reference such as `secret:proxies/office#password`.",
           },
           {
             name: "udpMode",
@@ -7535,6 +7563,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+        },
+        {
+          name: "passwordReference",
+          type: "string | null",
+          required: false,
+          description:
+            "The `secret:` reference the password is read from, or null when a literal is stored.",
         },
         {
           name: "port",
@@ -7736,6 +7771,7 @@ export const CLI_HELP_COMMANDS = {
         "host",
         "id",
         "name",
+        "passwordReference",
         "port",
         "protocol",
         "subaccountId",
@@ -8030,6 +8066,13 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "passwordReference",
+          type: "string | null",
+          required: false,
+          description:
+            "The `secret:` reference the password is read from, or null when a literal is stored.",
+        },
+        {
           name: "port",
           type: "integer",
           required: false,
@@ -8203,6 +8246,7 @@ export const CLI_HELP_COMMANDS = {
         "host",
         "id",
         "name",
+        "passwordReference",
         "port",
         "protocol",
         "subaccountId",
@@ -8949,6 +8993,13 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "passwordReference",
+          type: "string | null",
+          required: false,
+          description:
+            "The `secret:` reference the password is read from, or null when a literal is stored.",
+        },
+        {
           name: "port",
           type: "integer",
           required: false,
@@ -9146,6 +9197,7 @@ export const CLI_HELP_COMMANDS = {
         "host",
         "id",
         "name",
+        "passwordReference",
         "port",
         "protocol",
         "subaccountId",
