@@ -14290,7 +14290,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
         },
         {
@@ -14463,7 +14463,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
         },
         {
@@ -14777,7 +14777,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
         },
         {
@@ -15142,7 +15142,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
         },
         {
@@ -15293,7 +15293,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
           values: [
@@ -15319,6 +15319,7 @@ export const CLI_HELP_COMMANDS = {
             "files.read_text",
             "secrets.list",
             "secrets.fill",
+            "secrets.request",
             "code.execute",
           ],
         },
@@ -15339,7 +15340,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "name",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
           values: [
             "stagehand.act",
@@ -15364,6 +15365,7 @@ export const CLI_HELP_COMMANDS = {
             "files.read_text",
             "secrets.list",
             "secrets.fill",
+            "secrets.request",
             "code.execute",
           ],
         },
@@ -15589,7 +15591,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
           values: [
@@ -15615,6 +15617,7 @@ export const CLI_HELP_COMMANDS = {
             "files.read_text",
             "secrets.list",
             "secrets.fill",
+            "secrets.request",
             "code.execute",
           ],
         },
@@ -15635,7 +15638,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "name",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
           values: [
             "stagehand.act",
@@ -15660,6 +15663,7 @@ export const CLI_HELP_COMMANDS = {
             "files.read_text",
             "secrets.list",
             "secrets.fill",
+            "secrets.request",
             "code.execute",
           ],
         },
@@ -15923,7 +15927,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
           values: [
@@ -15949,6 +15953,7 @@ export const CLI_HELP_COMMANDS = {
             "files.read_text",
             "secrets.list",
             "secrets.fill",
+            "secrets.request",
             "code.execute",
           ],
         },
@@ -15969,7 +15974,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "name",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | string",
           required: true,
           values: [
             "stagehand.act",
@@ -15994,6 +15999,7 @@ export const CLI_HELP_COMMANDS = {
             "files.read_text",
             "secrets.list",
             "secrets.fill",
+            "secrets.request",
             "code.execute",
           ],
         },
@@ -16132,7 +16138,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "tools",
-            type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | string[]",
+            type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | string[]",
             required: false,
           },
         ],
@@ -16170,7 +16176,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tools",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | string[]",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | string[]",
           required: true,
         },
         {
@@ -16373,7 +16379,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tools",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | string[]",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | string[]",
           required: true,
         },
         {
@@ -16567,7 +16573,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "tools",
-            type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | string[]",
+            type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | string[]",
             required: false,
           },
         ],
@@ -16605,7 +16611,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "tools",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | string[]",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | string[]",
           required: true,
         },
         {
