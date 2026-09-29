@@ -371,7 +371,7 @@ test('API requests clear stale stored credentials when the server rejects them',
     const config = await loadConfig(env);
     const originalFetch = globalThis.fetch;
     globalThis.fetch = (async () =>
-      new Response(JSON.stringify({ error: 'Authentication required', code: 'auth.invalid' }), {
+      new Response(JSON.stringify({ message: 'Authentication required', code: 'auth.invalid' }), {
         status: 401,
         statusText: 'Unauthorized',
         headers: { 'content-type': 'application/json' },

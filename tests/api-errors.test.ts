@@ -25,7 +25,7 @@ test('apiErrorFromResponse preserves structured v1 error context', async () => {
 
 test('apiErrorFromResponse suggests login for auth failures', async () => {
   const error = await apiErrorFromResponse(
-    new Response(JSON.stringify({ error: 'Authentication required', code: 'auth.required' }), {
+    new Response(JSON.stringify({ message: 'Authentication required', code: 'auth.required' }), {
       status: 401,
       statusText: 'Unauthorized',
       headers: { 'content-type': 'application/json' },

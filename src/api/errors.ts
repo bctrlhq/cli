@@ -1,7 +1,6 @@
 import { CliError, type ApiErrorInfo } from '../runtime/errors.js';
 
 type StructuredErrorBody = {
-  error?: unknown;
   message?: unknown;
   code?: unknown;
   requestId?: unknown;
@@ -11,7 +10,7 @@ type StructuredErrorBody = {
 export async function apiErrorFromResponse(response: Response, context = 'BCTRL API request'): Promise<CliError> {
   const bodyText = await response.text();
   const parsed = parseErrorBody(bodyText);
-  const message = parsed.message ?? parsed.error;
+  const message = parsed.message;
   const humanMessage =
     typeof message === 'string' && message.trim()
       ? message.trim()
@@ -43,9 +42,9 @@ function parseErrorBody(bodyText: string): StructuredErrorBody {
   if (!bodyText) return {};
   try {
     const parsed = JSON.parse(bodyText) as unknown;
-    return isRecord(parsed) ? parsed : { error: bodyText };
+    return isRecord(parsed) ? parsed : { message: bodyText };
   } catch {
-    return { error: bodyText };
+    return { message: bodyText };
   }
 }
 
