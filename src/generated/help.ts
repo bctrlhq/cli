@@ -10384,9 +10384,9 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runtimeType",
-          type: "browser | desktop | spreadsheet",
+          type: "browser | desktop",
           required: true,
-          values: ["browser", "desktop", "spreadsheet"],
+          values: ["browser", "desktop"],
         },
         {
           name: "spaceId",
@@ -10803,9 +10803,9 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "type",
-            type: "browser",
+            type: "browser | desktop",
             required: false,
-            values: ["browser"],
+            values: ["browser", "desktop"],
           },
           {
             name: "name",
@@ -10874,6 +10874,11 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "control",
+          type: "object",
+          required: true,
+        },
+        {
           name: "createdAt",
           type: "datetime",
           required: true,
@@ -10925,9 +10930,9 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "type",
-          type: "browser",
+          type: "browser | desktop",
           required: true,
-          values: ["browser"],
+          values: ["browser", "desktop"],
         },
         {
           name: "updatedAt",
@@ -10938,6 +10943,14 @@ export const CLI_HELP_COMMANDS = {
       ],
     },
     docs: [
+      {
+        title: "Control",
+        url: "https://platform.bctrl.ai/sdk/control",
+        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
+        description:
+          "Hand the browser to a person and get it back, with the agent paused in between.",
+      },
       {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
@@ -10967,6 +10980,7 @@ export const CLI_HELP_COMMANDS = {
         "benchmarkProvenance",
         "config",
         "connection",
+        "control",
         "createdAt",
         "id",
         "lastActivityAt",
@@ -11053,6 +11067,14 @@ export const CLI_HELP_COMMANDS = {
       ],
     },
     docs: [
+      {
+        title: "Control",
+        url: "https://platform.bctrl.ai/sdk/control",
+        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
+        description:
+          "Hand the browser to a person and get it back, with the agent paused in between.",
+      },
       {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
@@ -11146,6 +11168,11 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "control",
+          type: "object",
+          required: true,
+        },
+        {
           name: "createdAt",
           type: "datetime",
           required: true,
@@ -11204,9 +11231,9 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "type",
-          type: "browser",
+          type: "browser | desktop",
           required: true,
-          values: ["browser"],
+          values: ["browser", "desktop"],
         },
         {
           name: "updatedAt",
@@ -11217,6 +11244,14 @@ export const CLI_HELP_COMMANDS = {
       ],
     },
     docs: [
+      {
+        title: "Control",
+        url: "https://platform.bctrl.ai/sdk/control",
+        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
+        description:
+          "Hand the browser to a person and get it back, with the agent paused in between.",
+      },
       {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
@@ -11234,6 +11269,7 @@ export const CLI_HELP_COMMANDS = {
         "archivedAt",
         "config",
         "connection",
+        "control",
         "createdAt",
         "id",
         "lastActivityAt",
@@ -11341,6 +11377,14 @@ export const CLI_HELP_COMMANDS = {
       ],
     },
     docs: [
+      {
+        title: "Control",
+        url: "https://platform.bctrl.ai/sdk/control",
+        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
+        description:
+          "Hand the browser to a person and get it back, with the agent paused in between.",
+      },
       {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
@@ -11465,6 +11509,14 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
+        title: "Control",
+        url: "https://platform.bctrl.ai/sdk/control",
+        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
+        description:
+          "Hand the browser to a person and get it back, with the agent paused in between.",
+      },
+      {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
@@ -11568,6 +11620,14 @@ export const CLI_HELP_COMMANDS = {
       ],
     },
     docs: [
+      {
+        title: "Control",
+        url: "https://platform.bctrl.ai/sdk/control",
+        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
+        description:
+          "Hand the browser to a person and get it back, with the agent paused in between.",
+      },
       {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
@@ -11677,6 +11737,11 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "control",
+          type: "object",
+          required: true,
+        },
+        {
           name: "createdAt",
           type: "datetime",
           required: true,
@@ -11728,9 +11793,9 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "type",
-          type: "browser",
+          type: "browser | desktop",
           required: true,
-          values: ["browser"],
+          values: ["browser", "desktop"],
         },
         {
           name: "updatedAt",
@@ -11741,6 +11806,14 @@ export const CLI_HELP_COMMANDS = {
       ],
     },
     docs: [
+      {
+        title: "Control",
+        url: "https://platform.bctrl.ai/sdk/control",
+        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
+        description:
+          "Hand the browser to a person and get it back, with the agent paused in between.",
+      },
       {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
@@ -11758,6 +11831,7 @@ export const CLI_HELP_COMMANDS = {
         "activeRunId",
         "archivedAt",
         "config",
+        "control",
         "createdAt",
         "id",
         "lastActivityAt",
@@ -14137,7 +14211,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "runtimeTypes",
-            type: "browser | desktop | spreadsheet[]",
+            type: "browser | desktop[]",
             required: false,
           },
           {
@@ -14269,7 +14343,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runtimeTypes",
-          type: "browser | desktop | spreadsheet[]",
+          type: "browser | desktop[]",
           required: true,
         },
         {
@@ -14575,7 +14649,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runtimeTypes",
-          type: "browser | desktop | spreadsheet[]",
+          type: "browser | desktop[]",
           required: true,
         },
         {
@@ -14787,7 +14861,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "runtimeTypes",
-            type: "browser | desktop | spreadsheet[]",
+            type: "browser | desktop[]",
             required: false,
           },
           {
@@ -14919,7 +14993,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runtimeTypes",
-          type: "browser | desktop | spreadsheet[]",
+          type: "browser | desktop[]",
           required: true,
         },
         {
@@ -16195,7 +16269,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+            type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed[]",
             required: true,
           },
         ],
@@ -16216,7 +16290,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed[]",
           required: true,
         },
         {
@@ -16679,7 +16753,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed[]",
           required: true,
         },
         {
@@ -17127,7 +17201,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+            type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed[]",
             required: false,
           },
           {
@@ -17153,7 +17227,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed[]",
           required: true,
         },
         {
