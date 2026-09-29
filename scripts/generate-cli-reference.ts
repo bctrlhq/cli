@@ -107,6 +107,13 @@ const groups: ReferenceGroup[] = [
     commands: ['proxy'],
   },
   {
+    slug: 'secrets',
+    title: 'Secret Commands',
+    navTitle: 'Secrets',
+    description: 'Store, list, import and reveal Secrets, and run a command with Secrets in its environment.',
+    commands: ['secrets', 'run'],
+  },
+  {
     slug: 'extensions',
     title: 'Extension Commands',
     navTitle: 'Extensions',

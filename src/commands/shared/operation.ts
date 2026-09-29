@@ -62,6 +62,8 @@ export type OperationRequestInput<OperationId extends CliOperationId> =
       idempotencyKey?: string;
       actingSubaccountId?: string;
       runtimeId?: string;
+      /** Extra request headers, for example `If-Match`. */
+      headers?: Record<string, string>;
       output?: OutputFlags;
     };
 
@@ -242,12 +244,14 @@ export function operationPath<OperationId extends CliOperationId>(
   operationId: OperationId,
   pathParams?: CliOperationPathParams<OperationId>
 ): string {
-  const route = CLI_OPENAPI_ROUTES[operationId];
+  const route: { path: string; wildcard?: string } = CLI_OPENAPI_ROUTES[operationId];
   return route.path.replace(/\{([^}]+)\}/g, (_match, key: string) => {
     const value = (pathParams as Record<string, string | number | boolean> | undefined)?.[key];
     if (value === undefined) {
       throw new Error(`Missing path parameter "${key}" for ${operationId}`);
     }
+    // A wildcard parameter (a Secret path) keeps its slashes; each segment is encoded.
+    if (key === route.wildcard) return String(value).split('/').map(encodeURIComponent).join('/');
     return encodeURIComponent(String(value));
   });
 }
@@ -275,6 +279,7 @@ export async function requestOperation<OperationId extends CliOperationId>(
     ...(input.idempotencyKey ? { idempotencyKey: input.idempotencyKey } : {}),
     ...(input.actingSubaccountId ? { actingSubaccountId: input.actingSubaccountId } : {}),
     ...(input.runtimeId ? { runtimeId: input.runtimeId } : {}),
+    ...(input.headers ? { headers: input.headers } : {}),
   };
   const options = Object.keys(requestOptions).length > 0 ? requestOptions : undefined;
   const result =
@@ -284,7 +289,9 @@ export async function requestOperation<OperationId extends CliOperationId>(
         ? await client.post(path, options)
         : route.method === 'patch'
           ? await client.patch(path, options)
-          : await client.delete(path, options);
+          : route.method === 'put'
+            ? await client.put(path, options)
+            : await client.delete(path, options);
   return result;
 }
 

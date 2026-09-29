@@ -22,6 +22,8 @@ export type RequestOptions = {
   idempotencyKey?: string;
   actingSubaccountId?: string;
   runtimeId?: string;
+  /** Extra headers, for example `If-Match`. */
+  headers?: Record<string, string>;
 };
 
 export type JsonRequestOptions = RequestOptions & {
@@ -200,6 +202,7 @@ function requestHeaders(
     'user-agent': 'BCTRL CLI',
     ...(options?.actingSubaccountId ? { 'BCTRL-Subaccount-Id': options.actingSubaccountId } : {}),
     ...(options?.runtimeId ? { 'BCTRL-Runtime-Id': options.runtimeId } : {}),
+    ...options?.headers,
   };
 }
 
