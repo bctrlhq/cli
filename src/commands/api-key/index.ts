@@ -16,7 +16,7 @@ export function createApiKeyCommand(factory: Factory): Command {
       configure: (cmd) =>
         cmd
           .option('--subaccount-id <id>', 'Filter by subaccount id')
-          .option('--type <type>', 'Filter by API key type: organization or subaccount')
+          .option('--type <type>', 'Filter by API key type: organization, subaccount or agent')
           .option('-L, --limit <number>', 'Maximum number of results to return')
           .option('--cursor <cursor>', 'Pagination cursor'),
       query: (options) =>
@@ -36,11 +36,15 @@ export function createApiKeyCommand(factory: Factory): Command {
       configure: (cmd) =>
         cmd
           .option('--name <name>', 'API key name')
+          .option('--type <type>', 'API key type: organization, subaccount or agent')
+          .option('--agent-name <name>', 'Name of the agent using this key')
           .option('--subaccount-id <id>', 'Create a key confined to this Subaccount')
           .option('--expires-at <iso>', 'Expiration timestamp'),
       body: async (_args, options) => {
         return {
           name: options.name,
+          type: options.type,
+          ...(options.agentName ? { agent: { name: options.agentName } } : {}),
           subaccountId: options.subaccountId,
           expiresAt: options.expiresAt,
         } as CliOperationJsonBody<'api-keys.create'>;

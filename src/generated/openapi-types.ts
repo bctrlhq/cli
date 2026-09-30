@@ -2187,8 +2187,40 @@ export interface components {
             name: string | null;
             scopes: "*"[];
             subaccountId: components["schemas"]["SubaccountId"] | null;
-            /** @enum {string} */
-            type: "organization" | "subaccount";
+            /** @constant */
+            type: "organization";
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
+            usageCount: components["schemas"]["NonNegativeCount"];
+        } | {
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: string | null;
+            id: string;
+            keyPrefix: string;
+            lastUsedAt: components["schemas"]["Rfc3339Timestamp"] | null;
+            name: string | null;
+            scopes: "*"[];
+            subaccountId: components["schemas"]["SubaccountId"] | null;
+            /** @constant */
+            type: "subaccount";
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
+            usageCount: components["schemas"]["NonNegativeCount"];
+        } | {
+            actsFor: {
+                userId: string;
+            };
+            agent: {
+                name: components["schemas"]["ResourceName"];
+            };
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            expiresAt: string | null;
+            id: string;
+            keyPrefix: string;
+            lastUsedAt: components["schemas"]["Rfc3339Timestamp"] | null;
+            name: string | null;
+            scopes: "*"[];
+            subaccountId: components["schemas"]["SubaccountId"] | null;
+            /** @constant */
+            type: "agent";
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
             usageCount: components["schemas"]["NonNegativeCount"];
         };
@@ -2197,6 +2229,18 @@ export interface components {
             name?: components["schemas"]["ResourceName"];
             scopes?: "*"[];
             subaccountId?: components["schemas"]["SubaccountId"];
+            /** @enum {string} */
+            type?: "organization" | "subaccount";
+        } | {
+            agent: {
+                name: components["schemas"]["ResourceName"];
+            };
+            expiresAt?: string | null;
+            name?: components["schemas"]["ResourceName"];
+            scopes?: "*"[];
+            subaccountId?: components["schemas"]["SubaccountId"];
+            /** @constant */
+            type: "agent";
         };
         ApiKeyCreateResponse: {
             data: components["schemas"]["ApiKey"];
@@ -6786,7 +6830,7 @@ export interface operations {
                 cursor?: string;
                 limit?: number;
                 subaccountId?: components["schemas"]["SubaccountId"];
-                type?: "organization" | "subaccount";
+                type?: "organization" | "subaccount" | "agent";
             };
             header?: never;
             path?: never;
