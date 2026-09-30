@@ -4966,6 +4966,9 @@ export interface components {
             /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
             id: string;
         };
+        SecretEnvironmentMounts: {
+            [key: string]: string;
+        };
         SecretList: {
             data: components["schemas"]["Secret"][];
             /** @description With `delimiter`: common prefixes, each ending in `/`. They count toward `limit`. */
@@ -5076,6 +5079,8 @@ export interface components {
         SpaceSecretsMount: {
             allow?: string[];
             deny?: string[];
+            /** @description Environment variables for code.execute mapped to explicit-field Secret references. Values resolve at execution start, stay in the sandbox environment, and follow the Space Secret allow/deny policy. */
+            env?: components["schemas"]["SecretEnvironmentMounts"];
         };
         SpaceUpdateRequest: {
             environment?: components["schemas"]["SpaceEnvironmentPatch"];

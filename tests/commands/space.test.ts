@@ -141,7 +141,7 @@ test('space patch accepts the environment in the resource body', async () => {
       'patch',
       'sp_test',
       '--body',
-      '{"environment":{"storage":{"namespace":"team-files"}}}',
+      '{"environment":{"storage":{"namespace":"team-files"},"secrets":{"allow":["prod"],"env":{"TOKEN":"secret:prod/api#value@3"}}}}',
     ],
     { from: 'user' }
   );
@@ -156,6 +156,7 @@ test('space patch accepts the environment in the resource body', async () => {
             storage: {
               namespace: 'team-files',
             },
+            secrets: { allow: ['prod'], env: { TOKEN: 'secret:prod/api#value@3' } },
           },
         },
       },
