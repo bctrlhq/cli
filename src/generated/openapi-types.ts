@@ -2538,17 +2538,17 @@ export interface components {
             currentRevisionId: null;
             description: string;
             /** @enum {string} */
-            id: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute";
+            id: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use";
             implementation: {
                 /** @enum {string} */
-                name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute";
+                name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use";
                 /** @constant */
                 type: "builtin";
             };
             inputSchema: components["schemas"]["JsonObject"];
             modes: ("sync" | "async")[];
             /** @enum {string} */
-            name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute";
+            name: "stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use";
             outputSchema: components["schemas"]["JsonObject"];
             runtimeTypes: ("browser" | "desktop")[];
             spaceId: null;
@@ -2773,7 +2773,7 @@ export interface components {
             conversationId: string;
             id: string;
             timestamp: components["schemas"]["Rfc3339Timestamp"];
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             /**
              * ToolCallId
              * @description Unique toolCall identifier generated by BCTRL.
@@ -5185,7 +5185,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "queued";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -5209,7 +5209,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "running";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -5233,7 +5233,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "requires_input";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -5256,7 +5256,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "succeeded";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -5280,7 +5280,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "failed";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -5304,7 +5304,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "cancelled";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         } | {
             /** @enum {string} */
@@ -5328,7 +5328,7 @@ export interface components {
             startedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /** @constant */
             status: "timed_out";
-            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute") | string;
+            tool: ("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "code.execute" | "computer.use") | string;
             turnId: string | null;
         };
         ToolCallError: {
@@ -5455,14 +5455,14 @@ export interface components {
              * @example sp_AAAAAAAAAAAAAAAAAAAAAA
              */
             spaceId: string;
-            tools: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request") | string)[];
+            tools: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "computer.use") | string)[];
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         ToolsetCreateRequest: {
             description?: string | null;
             name: string;
             spaceId?: string | "default";
-            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request") | string)[];
+            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "computer.use") | string)[];
         };
         ToolsetDeleteResponse: {
             /** @constant */
@@ -5481,7 +5481,7 @@ export interface components {
         ToolsetUpdateRequest: {
             description?: string | null;
             name?: string;
-            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request") | string)[];
+            tools?: (("stagehand.act" | "stagehand.observe" | "stagehand.extract" | "captcha.solve" | "captcha.status" | "captcha.wait" | "human.request" | "browser.pages.list" | "browser.pages.open" | "browser.pages.get" | "browser.pages.activate" | "browser.pages.close" | "browser.setInputFiles" | "runtime.files.list" | "run.files.list" | "run.files.add" | "run.files.collect" | "run.files.export" | "files.list" | "files.read_text" | "secrets.list" | "secrets.fill" | "secrets.request" | "computer.use") | string)[];
         };
         ToolUpdateRequest: {
             /**
