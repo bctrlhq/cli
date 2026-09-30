@@ -5,6 +5,7 @@ type StructuredErrorBody = {
   code?: unknown;
   requestId?: unknown;
   details?: unknown;
+  hint?: unknown;
 };
 
 export async function apiErrorFromResponse(response: Response, context = 'BCTRL API request'): Promise<CliError> {
@@ -20,6 +21,7 @@ export async function apiErrorFromResponse(response: Response, context = 'BCTRL 
     status: response.status,
     code: typeof parsed.code === 'string' ? parsed.code : undefined,
     requestId: typeof parsed.requestId === 'string' ? parsed.requestId : undefined,
+    hint: typeof parsed.hint === 'string' && parsed.hint.trim() ? parsed.hint.trim() : undefined,
     details: isRecord(parsed.details) ? parsed.details : undefined,
   };
 
@@ -61,6 +63,10 @@ function formatApiErrorMessage(
   }
   if (apiError.requestId) {
     lines.push(`Request ID: ${apiError.requestId}`);
+  }
+
+  if (apiError.hint) {
+    lines.push(`Hint: ${apiError.hint}`);
   }
 
   const suggestion = suggestionForApiError(apiError);

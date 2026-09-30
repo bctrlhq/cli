@@ -3,6 +3,7 @@ export type ApiErrorInfo = {
   code?: string;
   requestId?: string;
   details?: Record<string, unknown>;
+  hint?: string;
 };
 
 export class CliError extends Error {

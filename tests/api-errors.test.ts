@@ -6,7 +6,7 @@ test('apiErrorFromResponse preserves structured v1 error context', async () => {
   const error = await apiErrorFromResponse(
     new Response(
       JSON.stringify({
-        error: 'Runtime not found',
+        message: 'Runtime not found',
         code: 'runtime.not_found',
         requestId: 'req_test',
         details: { spaceId: 'sp_test' },
@@ -33,4 +33,26 @@ test('apiErrorFromResponse suggests login for auth failures', async () => {
   );
 
   assert.match(error.message, /Try:\n  bctrl auth login/);
+});
+
+
+test('API errors retain and display the server hint for catalog codes without a local command mapping', async () => {
+  const error = await apiErrorFromResponse(new Response(JSON.stringify({
+    message: 'An input response is required', code: 'tool.input_required',
+    hint: 'Read the input request and submit a response.', requestId: 'req-hint',
+  }), { status: 409 }));
+  assert.equal(error.apiError?.hint, 'Read the input request and submit a response.');
+  assert.match(error.message, /Hint: Read the input request and submit a response\./);
+  assert.match(error.message, /Code: tool\.input_required/);
+});
+
+test('empty or malformed hints do not replace local command suggestions', async () => {
+  for (const hint of ['   ', { unsafe: true }]) {
+    const error = await apiErrorFromResponse(new Response(JSON.stringify({
+      message: 'Not found', code: 'space.not_found', hint,
+    }), { status: 404 }));
+    assert.equal(error.apiError?.hint, undefined);
+    assert.match(error.message, /bctrl space list/);
+    assert.equal(error.message.includes('Hint:'), false);
+  }
 });
