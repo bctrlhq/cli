@@ -5,12 +5,12 @@ import { apiErrorFromResponse } from '../src/api/errors.js';
 test('apiErrorFromResponse preserves structured v1 error context', async () => {
   const error = await apiErrorFromResponse(
     new Response(
-      JSON.stringify({
+      JSON.stringify({ error: {
         message: 'Runtime not found',
         code: 'runtime.not_found',
         requestId: 'req_test',
         details: { spaceId: 'sp_test' },
-      }),
+      } }),
       { status: 404, statusText: 'Not Found', headers: { 'content-type': 'application/json' } }
     )
   );
@@ -25,7 +25,7 @@ test('apiErrorFromResponse preserves structured v1 error context', async () => {
 
 test('apiErrorFromResponse suggests login for auth failures', async () => {
   const error = await apiErrorFromResponse(
-    new Response(JSON.stringify({ message: 'Authentication required', code: 'auth.required' }), {
+    new Response(JSON.stringify({ error: { message: 'Authentication required', code: 'auth.required' } }), {
       status: 401,
       statusText: 'Unauthorized',
       headers: { 'content-type': 'application/json' },
@@ -37,10 +37,10 @@ test('apiErrorFromResponse suggests login for auth failures', async () => {
 
 
 test('API errors retain and display the server hint for catalog codes without a local command mapping', async () => {
-  const error = await apiErrorFromResponse(new Response(JSON.stringify({
+  const error = await apiErrorFromResponse(new Response(JSON.stringify({ error: {
     message: 'An input response is required', code: 'tool.input_required',
     hint: 'Read the input request and submit a response.', requestId: 'req-hint',
-  }), { status: 409 }));
+  } }), { status: 409 }));
   assert.equal(error.apiError?.hint, 'Read the input request and submit a response.');
   assert.match(error.message, /Hint: Read the input request and submit a response\./);
   assert.match(error.message, /Code: tool\.input_required/);
@@ -48,9 +48,9 @@ test('API errors retain and display the server hint for catalog codes without a 
 
 test('empty or malformed hints do not replace local command suggestions', async () => {
   for (const hint of ['   ', { unsafe: true }]) {
-    const error = await apiErrorFromResponse(new Response(JSON.stringify({
+    const error = await apiErrorFromResponse(new Response(JSON.stringify({ error: {
       message: 'Not found', code: 'space.not_found', hint,
-    }), { status: 404 }));
+    } }), { status: 404 }));
     assert.equal(error.apiError?.hint, undefined);
     assert.match(error.message, /bctrl space list/);
     assert.equal(error.message.includes('Hint:'), false);

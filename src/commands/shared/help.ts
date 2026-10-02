@@ -9,7 +9,7 @@ export type CommandHelpField = {
   type: string;
   required?: boolean;
   description?: string;
-  values?: string[];
+  values?: readonly string[];
 };
 
 export type CommandHelpFlag = {
@@ -27,18 +27,18 @@ export type CommandHelpDocLink = {
 
 export type CommandHelpSpec = {
   purpose: string;
-  docs?: CommandHelpDocLink[];
-  flags?: CommandHelpFlag[];
+  docs?: readonly CommandHelpDocLink[];
+  flags?: readonly CommandHelpFlag[];
   inputs?: {
-    path?: CommandHelpField[];
-    query?: CommandHelpField[];
-    headers?: CommandHelpField[];
+    path?: readonly CommandHelpField[];
+    query?: readonly CommandHelpField[];
+    headers?: readonly CommandHelpField[];
     body?: {
       schema?: string;
-      fields?: CommandHelpField[];
+      fields?: readonly CommandHelpField[];
       discriminator?: {
         property: string;
-        variants: Array<{
+        variants: ReadonlyArray<{
           value: string;
           schema?: string;
           summary?: string;
@@ -46,7 +46,7 @@ export type CommandHelpSpec = {
       };
     };
   };
-  output?: CommandHelpField[];
+  output?: readonly CommandHelpField[];
   examples?: string[];
   next?: string[];
 };
@@ -158,7 +158,7 @@ function cloneInputs(inputs: CommandHelpSpec["inputs"]): CommandHelpSpec["inputs
   };
 }
 
-function renderDocs(docs: CommandHelpDocLink[]): string {
+function renderDocs(docs: readonly CommandHelpDocLink[]): string {
   return renderList(
     "Docs",
     docs.map((doc) => doc.markdownUrl ?? doc.url),
@@ -169,7 +169,7 @@ function renderPurpose(purpose: string): string {
   return `Purpose:\n  ${purpose}`;
 }
 
-function renderFlags(flags: CommandHelpFlag[]): string {
+function renderFlags(flags: readonly CommandHelpFlag[]): string {
   const rows = flags.map((flag) => {
     const left = [flag.name, flag.value].filter(Boolean).join(" ");
     const suffix = flag.mapsTo ? ` Maps to ${flag.mapsTo}.` : "";
@@ -205,7 +205,7 @@ function renderDiscriminator(discriminator: NonNullable<NonNullable<NonNullable<
   return renderRows(`Body variants (${discriminator.property})`, rows);
 }
 
-function renderFields(title: string, fields: CommandHelpField[]): string {
+function renderFields(title: string, fields: readonly CommandHelpField[]): string {
   const rows = fields.map((field) => ({
     left: field.name,
     right: [

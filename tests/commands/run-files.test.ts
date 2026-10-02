@@ -28,7 +28,7 @@ test('runs files commands use the Run file routes', async () => {
     await cli(['runs', 'files', 'upload', 'run_1', local, '--path', 'invoices/a.pdf', '--idempotency-key', 'k1']);
     await cli(['runs', 'files', 'retry', 'run_1', 'file_1']);
     await cli(['runs', 'files', 'remove', 'run_1', 'file_1', '--yes']);
-    await cli(['runs', 'files', 'collect', 'run_1', 'downloads/r.pdf', '--name', 'r.pdf']);
+    await cli(['runs', 'files', 'collect', 'run_1', 'downloads/r.pdf', '--filename', 'r.pdf']);
     await cli(['runtime', 'start', 'rt_1', '--file', 'file_1', 'file_2']);
   } finally {
     await rm(dir, { recursive: true, force: true });
@@ -52,6 +52,6 @@ test('runs files commands use the Run file routes', async () => {
   assert.deepEqual(options[2]?.body, { fileId: 'file_1' });
   assert.equal(options[3]?.idempotencyKey, 'k1');
   assert.deepEqual(options[3]?.fields, { path: 'invoices/a.pdf' });
-  assert.deepEqual(options[6]?.body, { runtimePath: 'downloads/r.pdf', name: 'r.pdf' });
+  assert.deepEqual(options[6]?.body, { runtimePath: 'downloads/r.pdf', filename: 'r.pdf' });
   assert.deepEqual(options[7]?.body, { files: [{ fileId: 'file_1' }, { fileId: 'file_2' }] });
 });

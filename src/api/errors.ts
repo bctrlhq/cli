@@ -6,6 +6,7 @@ type StructuredErrorBody = {
   requestId?: unknown;
   details?: unknown;
   hint?: unknown;
+  reasonClass?: unknown;
 };
 
 export async function apiErrorFromResponse(response: Response, context = 'BCTRL API request'): Promise<CliError> {
@@ -19,8 +20,9 @@ export async function apiErrorFromResponse(response: Response, context = 'BCTRL 
 
   const apiError: ApiErrorInfo = {
     status: response.status,
+    reasonClass: typeof parsed.reasonClass === 'string' ? parsed.reasonClass : undefined,
     code: typeof parsed.code === 'string' ? parsed.code : undefined,
-    requestId: typeof parsed.requestId === 'string' ? parsed.requestId : undefined,
+    requestId: typeof parsed.requestId === 'string' ? parsed.requestId : response.headers.get('BCTRL-Request-Id') ?? undefined,
     hint: typeof parsed.hint === 'string' && parsed.hint.trim() ? parsed.hint.trim() : undefined,
     details: isRecord(parsed.details) ? parsed.details : undefined,
   };
@@ -44,7 +46,7 @@ function parseErrorBody(bodyText: string): StructuredErrorBody {
   if (!bodyText) return {};
   try {
     const parsed = JSON.parse(bodyText) as unknown;
-    return isRecord(parsed) ? parsed : { message: bodyText };
+    return isRecord(parsed) && isRecord(parsed.error) ? parsed.error : { message: bodyText };
   } catch {
     return { message: bodyText };
   }

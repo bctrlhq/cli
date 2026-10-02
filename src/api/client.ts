@@ -200,6 +200,7 @@ function requestHeaders(
     ...(accept ? { accept } : {}),
     authorization: `Bearer ${token}`,
     'user-agent': 'BCTRL CLI',
+    'BCTRL-Version': '2026-10-01',
     ...(options?.actingSubaccountId ? { 'BCTRL-Subaccount-Id': options.actingSubaccountId } : {}),
     ...(options?.runtimeId ? { 'BCTRL-Runtime-Id': options.runtimeId } : {}),
     ...options?.headers,

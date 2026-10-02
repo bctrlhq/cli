@@ -4,6 +4,7 @@ export type ApiErrorInfo = {
   requestId?: string;
   details?: Record<string, unknown>;
   hint?: string;
+  reasonClass?: string;
 };
 
 export class CliError extends Error {

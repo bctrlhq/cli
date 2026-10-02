@@ -7,12 +7,37 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["account get"],
     title: "Get organization settings",
     summary: "Get organization settings and their fully resolved values.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
+    },
     output: {
       fields: [
         {
           name: "branding",
           type: "object",
           required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
@@ -23,6 +48,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "account",
+          required: true,
+          values: ["account"],
         },
         {
           name: "updatedAt",
@@ -46,7 +77,14 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/account",
       operationId: "account.get",
-      responseFields: ["branding", "id", "name", "updatedAt"],
+      responseFields: [
+        "branding",
+        "createdAt",
+        "id",
+        "name",
+        "object",
+        "updatedAt",
+      ],
     },
     sdk: [
       {
@@ -87,6 +125,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "Idempotency-Key",
           type: "string",
           required: false,
@@ -114,6 +167,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
           name: "id",
           type: "string",
           required: true,
@@ -122,6 +181,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "account",
+          required: true,
+          values: ["account"],
         },
         {
           name: "updatedAt",
@@ -146,7 +211,14 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/account",
       operationId: "account.update",
       requestFields: ["branding"],
-      responseFields: ["branding", "id", "name", "updatedAt"],
+      responseFields: [
+        "branding",
+        "createdAt",
+        "id",
+        "name",
+        "object",
+        "updatedAt",
+      ],
     },
     sdk: [
       {
@@ -181,6 +253,21 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -203,6 +290,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "provider",
@@ -297,6 +385,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "ai_credential",
+          required: true,
+          values: ["ai_credential"],
+        },
+        {
           name: "provider",
           type: "openai | anthropic | google | azure | groq | deepseek | mistral | cerebras | openrouter | xai | perplexity | togetherai | vercel-ai-gateway | custom",
           required: true,
@@ -368,6 +462,7 @@ export const CLI_HELP_COMMANDS = {
         "hasApiKey",
         "id",
         "name",
+        "object",
         "provider",
         "status",
         "subaccountId",
@@ -409,9 +504,26 @@ export const CLI_HELP_COMMANDS = {
           name: "credentialId",
           type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -441,6 +553,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "object",
+          type: "ai_credential",
+          required: true,
+          values: ["ai_credential"],
+        },
       ],
     },
     docs: [
@@ -457,7 +575,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/ai/credentials/{credentialId}",
       operationId: "ai.credentials.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -493,9 +611,26 @@ export const CLI_HELP_COMMANDS = {
           name: "credentialId",
           type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -544,6 +679,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "ai_credential",
+          required: true,
+          values: ["ai_credential"],
         },
         {
           name: "provider",
@@ -608,6 +749,7 @@ export const CLI_HELP_COMMANDS = {
         "hasApiKey",
         "id",
         "name",
+        "object",
         "provider",
         "status",
         "subaccountId",
@@ -683,12 +825,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -703,6 +867,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -726,7 +895,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/ai/credentials",
       operationId: "ai.credentials.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -762,9 +931,26 @@ export const CLI_HELP_COMMANDS = {
           name: "credentialId",
           type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -800,6 +986,12 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "object",
+          type: "test.result",
+          required: true,
+          values: ["test.result"],
+        },
+        {
           name: "ok",
           type: "boolean",
           required: true,
@@ -820,7 +1012,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/ai/credentials/{credentialId}/test",
       operationId: "ai.credentials.test",
-      responseFields: ["checkedAt", "error", "latencySeconds", "ok"],
+      responseFields: ["checkedAt", "error", "latencySeconds", "object", "ok"],
     },
     sdk: [
       {
@@ -857,9 +1049,26 @@ export const CLI_HELP_COMMANDS = {
           name: "credentialId",
           type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -883,6 +1092,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "apiKey",
@@ -949,6 +1159,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "ai_credential",
+          required: true,
+          values: ["ai_credential"],
+        },
+        {
           name: "provider",
           type: "openai | anthropic | google | azure | groq | deepseek | mistral | cerebras | openrouter | xai | perplexity | togetherai | vercel-ai-gateway | custom",
           required: true,
@@ -1012,6 +1228,7 @@ export const CLI_HELP_COMMANDS = {
         "hasApiKey",
         "id",
         "name",
+        "object",
         "provider",
         "status",
         "subaccountId",
@@ -1089,6 +1306,40 @@ export const CLI_HELP_COMMANDS = {
           type: "boolean",
           required: false,
         },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
       ],
     },
     output: {
@@ -1096,6 +1347,16 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
           required: true,
         },
       ],
@@ -1114,7 +1375,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/ai/models",
       operationId: "ai.models.list",
-      responseFields: ["data"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -1147,6 +1408,21 @@ export const CLI_HELP_COMMANDS = {
       "Create an organization or subaccount API key. The secret is returned once in the response. To rotate a key, create its replacement first, cut traffic over, then revoke the old key — key prefixes identify which key made a request.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "Idempotency-Key",
           type: "string",
@@ -1273,6 +1549,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "Idempotency-Key",
           type: "string",
           required: false,
@@ -1294,6 +1585,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "object",
+          type: "api_key",
+          required: true,
+          values: ["api_key"],
+        },
       ],
     },
     docs: [
@@ -1310,7 +1607,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/api-keys/{keyId}",
       operationId: "api-keys.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -1348,6 +1645,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -1365,12 +1669,34 @@ export const CLI_HELP_COMMANDS = {
           values: ["organization", "subaccount", "agent"],
         },
       ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
     },
     output: {
       fields: [
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -1394,7 +1720,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/api-keys",
       operationId: "api-keys.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -1428,6 +1754,21 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -1457,6 +1798,12 @@ export const CLI_HELP_COMMANDS = {
           name: "keyId",
           type: "string | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "identity",
+          required: true,
+          values: ["identity"],
         },
         {
           name: "organizationId",
@@ -1501,6 +1848,7 @@ export const CLI_HELP_COMMANDS = {
         "effectiveScope",
         "email",
         "keyId",
+        "object",
         "organizationId",
         "plan",
         "scope",
@@ -1538,6 +1886,21 @@ export const CLI_HELP_COMMANDS = {
       "Create a browser extension from an uploaded package or Chrome Web Store URL.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -1626,6 +1989,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "extension",
+          required: true,
+          values: ["extension"],
+        },
+        {
           name: "permissions",
           type: "string[]",
           required: true,
@@ -1697,6 +2066,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "manifestVersion",
         "name",
+        "object",
         "permissions",
         "profileCount",
         "sizeBytes",
@@ -1744,10 +2114,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique browser extension identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -1779,6 +2164,12 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Unique browser extension identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "extension",
+          required: true,
+          values: ["extension"],
+        },
       ],
     },
     docs: [
@@ -1795,7 +2186,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/browser/extensions/{extensionId}",
       operationId: "browser.extensions.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -1833,10 +2224,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique browser extension identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -1900,6 +2306,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "extension",
+          required: true,
+          values: ["extension"],
         },
         {
           name: "permissions",
@@ -1972,6 +2384,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "manifestVersion",
         "name",
+        "object",
         "permissions",
         "profileCount",
         "sizeBytes",
@@ -2019,6 +2432,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -2043,6 +2463,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -2056,6 +2491,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -2079,7 +2519,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/browser/extensions",
       operationId: "browser.extensions.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -2117,10 +2557,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique browser extension identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -2205,6 +2660,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "extension",
+          required: true,
+          values: ["extension"],
+        },
+        {
           name: "permissions",
           type: "string[]",
           required: true,
@@ -2276,6 +2737,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "manifestVersion",
         "name",
+        "object",
         "permissions",
         "profileCount",
         "sizeBytes",
@@ -2326,6 +2788,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -2356,6 +2833,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique conversation identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "conversation.cancel_result",
+          required: true,
+          values: ["conversation.cancel_result"],
+        },
+        {
           name: "turnId",
           type: "string | null",
           required: true,
@@ -2375,7 +2858,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/conversations/{conversationId}/cancel",
       operationId: "conversations.cancel",
-      responseFields: ["cancelled", "conversationId", "turnId"],
+      responseFields: ["cancelled", "conversationId", "object", "turnId"],
     },
     sdk: [
       {
@@ -2407,6 +2890,21 @@ export const CLI_HELP_COMMANDS = {
     summary: "Create an agent conversation bound to an active runtime.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -2483,6 +2981,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "conversation",
+          required: true,
+          values: ["conversation"],
+        },
+        {
           name: "runtimeId",
           type: "string",
           required: true,
@@ -2538,6 +3042,7 @@ export const CLI_HELP_COMMANDS = {
         "environmentId",
         "id",
         "model",
+        "object",
         "runtimeId",
         "spaceId",
         "status",
@@ -2598,6 +3103,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -2646,6 +3166,12 @@ export const CLI_HELP_COMMANDS = {
           name: "nextMessageCursor",
           type: "string | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "conversation",
+          required: true,
+          values: ["conversation"],
         },
         {
           name: "runtimeId",
@@ -2709,6 +3235,7 @@ export const CLI_HELP_COMMANDS = {
         "messages",
         "model",
         "nextMessageCursor",
+        "object",
         "runtimeId",
         "spaceId",
         "status",
@@ -2773,12 +3300,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -2793,6 +3342,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -2815,7 +3369,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/conversations",
       operationId: "conversations.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -2855,6 +3409,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -2912,6 +3481,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique message identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "agent_turn",
+          required: true,
+          values: ["agent_turn"],
+        },
+        {
           name: "runId",
           type: "string",
           required: true,
@@ -2958,6 +3533,7 @@ export const CLI_HELP_COMMANDS = {
       requestFields: ["text", "variables", "model", "pageId", "fileIds"],
       responseFields: [
         "messageId",
+        "object",
         "runId",
         "spanId",
         "status",
@@ -2997,6 +3573,21 @@ export const CLI_HELP_COMMANDS = {
       "Create a conversation and queue its first agent turn in one call, starting the runtime when needed.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -3084,6 +3675,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique message identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "conversation.start_result",
+          required: true,
+          values: ["conversation.start_result"],
+        },
+        {
           name: "status",
           type: "queued",
           required: true,
@@ -3129,6 +3726,7 @@ export const CLI_HELP_COMMANDS = {
       responseFields: [
         "conversationId",
         "messageId",
+        "object",
         "status",
         "streamCursor",
         "turnId",
@@ -3180,6 +3778,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -3255,6 +3868,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -3311,6 +3939,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "task",
+          required: true,
+          values: ["task"],
+        },
+        {
           name: "requestMessageId",
           type: "string",
           required: true,
@@ -3352,6 +3986,12 @@ export const CLI_HELP_COMMANDS = {
             "timed_out",
           ],
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -3375,12 +4015,14 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "model",
+        "object",
         "requestMessageId",
         "responseMessageId",
         "runId",
         "spanId",
         "startedAt",
         "status",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -3435,6 +4077,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -3484,6 +4141,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "task",
+          required: true,
+          values: ["task"],
+        },
+        {
           name: "requestMessageId",
           type: "string",
           required: true,
@@ -3525,6 +4188,12 @@ export const CLI_HELP_COMMANDS = {
             "timed_out",
           ],
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -3548,12 +4217,14 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "model",
+        "object",
         "requestMessageId",
         "responseMessageId",
         "runId",
         "spanId",
         "startedAt",
         "status",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -3594,6 +4265,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -3663,6 +4349,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "conversation",
+          required: true,
+          values: ["conversation"],
+        },
+        {
           name: "runtimeId",
           type: "string",
           required: true,
@@ -3718,6 +4410,7 @@ export const CLI_HELP_COMMANDS = {
         "environmentId",
         "id",
         "model",
+        "object",
         "runtimeId",
         "spaceId",
         "status",
@@ -3762,10 +4455,26 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -3842,6 +4551,12 @@ export const CLI_HELP_COMMANDS = {
             "Unique environmentConnection identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "ssh_session",
+          required: true,
+          values: ["ssh_session"],
+        },
+        {
           name: "protocol",
           type: "terminal",
           required: true,
@@ -3873,6 +4588,12 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
           name: "url",
           type: "string",
           required: true,
@@ -3890,11 +4611,13 @@ export const CLI_HELP_COMMANDS = {
         "environmentId",
         "expiresAt",
         "id",
+        "object",
         "protocol",
         "revokedAt",
         "subprotocol",
         "ticket",
         "ticketExpiresAt",
+        "updatedAt",
         "url",
       ],
     },
@@ -3940,6 +4663,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -3983,6 +4721,12 @@ export const CLI_HELP_COMMANDS = {
             "Unique environmentConnection identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "ssh_session",
+          required: true,
+          values: ["ssh_session"],
+        },
+        {
           name: "protocol",
           type: "terminal",
           required: true,
@@ -3992,6 +4736,12 @@ export const CLI_HELP_COMMANDS = {
           name: "revokedAt",
           type: "datetime | null",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -4004,8 +4754,10 @@ export const CLI_HELP_COMMANDS = {
         "environmentId",
         "expiresAt",
         "id",
+        "object",
         "protocol",
         "revokedAt",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -4048,6 +4800,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -4084,6 +4851,12 @@ export const CLI_HELP_COMMANDS = {
             "Unique environmentConnection identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "ssh_session",
+          required: true,
+          values: ["ssh_session"],
+        },
+        {
           name: "protocol",
           type: "terminal",
           required: true,
@@ -4093,6 +4866,12 @@ export const CLI_HELP_COMMANDS = {
           name: "revokedAt",
           type: "datetime | null",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -4105,8 +4884,10 @@ export const CLI_HELP_COMMANDS = {
         "environmentId",
         "expiresAt",
         "id",
+        "object",
         "protocol",
         "revokedAt",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -4141,6 +4922,21 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -4161,8 +4957,10 @@ export const CLI_HELP_COMMANDS = {
         fields: [
           {
             name: "spaceId",
-            type: "string | default",
+            type: "string",
             required: false,
+            description:
+              "Opaque resource ID or unique resource name in the selected Space or tenant.",
           },
           {
             name: "image",
@@ -4175,6 +4973,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
         ],
       },
@@ -4221,6 +5020,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
           name: "runtimeId",
           type: "string | null",
           required: true,
@@ -4265,6 +5070,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "image",
         "name",
+        "object",
         "runtimeId",
         "spaceId",
         "status",
@@ -4307,10 +5113,26 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4341,13 +5163,19 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique environment identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
       ],
     },
     api: {
       method: "DELETE",
       path: "/v1/environments/{environmentId}",
       operationId: "environments.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -4387,6 +5215,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4441,6 +5284,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique environmentExec identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "process",
+          required: true,
+          values: ["process"],
+        },
+        {
           name: "startedAt",
           type: "datetime | null",
           required: true,
@@ -4480,6 +5329,12 @@ export const CLI_HELP_COMMANDS = {
           type: "boolean",
           required: true,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     api: {
@@ -4493,12 +5348,14 @@ export const CLI_HELP_COMMANDS = {
         "exitCode",
         "finishedAt",
         "id",
+        "object",
         "startedAt",
         "status",
         "stderr",
         "stderrTruncated",
         "stdout",
         "stdoutTruncated",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -4536,10 +5393,26 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4600,10 +5473,22 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique environmentExec identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "process",
+          required: true,
+          values: ["process"],
+        },
+        {
           name: "status",
           type: "queued",
           required: true,
           values: ["queued"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -4612,7 +5497,14 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/environments/{environmentId}/execs",
       operationId: "environments.execs.create",
       requestFields: ["command", "cwd", "timeoutSeconds"],
-      responseFields: ["createdAt", "environmentId", "id", "status"],
+      responseFields: [
+        "createdAt",
+        "environmentId",
+        "id",
+        "object",
+        "status",
+        "updatedAt",
+      ],
     },
     sdk: [
       {
@@ -4654,6 +5546,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4701,6 +5608,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique environmentExec identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "process",
+          required: true,
+          values: ["process"],
+        },
+        {
           name: "startedAt",
           type: "datetime | null",
           required: true,
@@ -4740,6 +5653,12 @@ export const CLI_HELP_COMMANDS = {
           type: "boolean",
           required: true,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     api: {
@@ -4753,12 +5672,14 @@ export const CLI_HELP_COMMANDS = {
         "exitCode",
         "finishedAt",
         "id",
+        "object",
         "startedAt",
         "status",
         "stderr",
         "stderrTruncated",
         "stdout",
         "stdoutTruncated",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -4806,6 +5727,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4862,10 +5798,26 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4928,6 +5880,11 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
@@ -4939,10 +5896,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "name",
-          type: "string",
+          name: "object",
+          type: "file",
           required: true,
-          description: "Customer-facing resource name. 1–200 characters.",
+          values: ["file"],
         },
         {
           name: "path",
@@ -4984,6 +5941,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     api: {
@@ -4997,9 +5960,10 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "downloadUrl",
         "expiresAt",
+        "filename",
         "id",
         "metadata",
-        "name",
+        "object",
         "path",
         "runId",
         "runtimeId",
@@ -5007,6 +5971,7 @@ export const CLI_HELP_COMMANDS = {
         "source",
         "spaceId",
         "type",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -5044,7 +6009,8 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       query: [
@@ -5055,6 +6021,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5072,6 +6053,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "files.result",
+          required: true,
+          values: ["files.result"],
+        },
+        {
           name: "path",
           type: "string",
           required: true,
@@ -5087,7 +6074,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/environments/{environmentId}/files",
       operationId: "environments.files.list",
-      responseFields: ["data", "path", "truncated"],
+      responseFields: ["data", "object", "path", "truncated"],
     },
     sdk: [
       {
@@ -5123,10 +6110,26 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5168,6 +6171,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "object",
+          type: "files.stage_result",
+          required: true,
+          values: ["files.stage_result"],
+        },
+        {
           name: "path",
           type: "string",
           required: true,
@@ -5189,7 +6198,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/environments/{environmentId}/files/stage",
       operationId: "environments.files.stage",
       requestFields: ["fileId", "path", "overwrite"],
-      responseFields: ["path", "sha256", "sizeBytes"],
+      responseFields: ["object", "path", "sha256", "sizeBytes"],
     },
     sdk: [
       {
@@ -5227,10 +6236,26 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5282,6 +6307,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
           name: "runtimeId",
           type: "string | null",
           required: true,
@@ -5325,6 +6356,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "image",
         "name",
+        "object",
         "runtimeId",
         "spaceId",
         "status",
@@ -5374,12 +6406,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5397,6 +6451,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "nextCursor",
           type: "string | null",
           required: true,
@@ -5407,7 +6466,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/environments",
       operationId: "environments.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -5443,10 +6502,26 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5517,6 +6592,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
           name: "runtimeId",
           type: "string | null",
           required: true,
@@ -5561,6 +6642,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "image",
         "name",
+        "object",
         "runtimeId",
         "spaceId",
         "status",
@@ -5603,10 +6685,26 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5665,6 +6763,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
           name: "runtimeId",
           type: "string | null",
           required: true,
@@ -5708,6 +6812,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "image",
         "name",
+        "object",
         "runtimeId",
         "spaceId",
         "status",
@@ -5749,10 +6854,26 @@ export const CLI_HELP_COMMANDS = {
           name: "environmentId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5824,6 +6945,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
           name: "runtimeId",
           type: "string | null",
           required: true,
@@ -5868,6 +6995,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "image",
         "name",
+        "object",
         "runtimeId",
         "spaceId",
         "status",
@@ -5921,6 +7049,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5984,6 +7127,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -6013,6 +7171,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique file identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "file",
+          required: true,
+          values: ["file"],
+        },
       ],
     },
     docs: [
@@ -6029,7 +7193,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/files/{fileId}",
       operationId: "files.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -6078,6 +7242,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -6116,6 +7295,11 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
@@ -6127,10 +7311,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "name",
-          type: "string",
+          name: "object",
+          type: "file",
           required: true,
-          description: "Customer-facing resource name. 1–200 characters.",
+          values: ["file"],
         },
         {
           name: "path",
@@ -6172,6 +7356,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -6194,9 +7384,10 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "downloadUrl",
         "expiresAt",
+        "filename",
         "id",
         "metadata",
-        "name",
+        "object",
         "path",
         "runId",
         "runtimeId",
@@ -6204,6 +7395,7 @@ export const CLI_HELP_COMMANDS = {
         "source",
         "spaceId",
         "type",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -6302,12 +7494,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -6330,6 +7544,11 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "nextCursor",
           type: "string | null",
           required: true,
@@ -6350,7 +7569,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/files",
       operationId: "files.list",
-      responseFields: ["data", "folders", "nextCursor"],
+      responseFields: ["data", "folders", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -6391,6 +7610,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -6410,10 +7644,9 @@ export const CLI_HELP_COMMANDS = {
         schemaResource: "schemas://FileUpdateRequest",
         fields: [
           {
-            name: "name",
+            name: "filename",
             type: "string",
             required: false,
-            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "metadata",
@@ -6453,6 +7686,11 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
@@ -6464,10 +7702,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "name",
-          type: "string",
+          name: "object",
+          type: "file",
           required: true,
-          description: "Customer-facing resource name. 1–200 characters.",
+          values: ["file"],
         },
         {
           name: "path",
@@ -6509,6 +7747,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -6525,16 +7769,17 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/files/{fileId}",
       operationId: "files.update",
-      requestFields: ["name", "metadata"],
+      requestFields: ["filename", "metadata"],
       responseFields: [
         "canDelete",
         "contentType",
         "createdAt",
         "downloadUrl",
         "expiresAt",
+        "filename",
         "id",
         "metadata",
-        "name",
+        "object",
         "path",
         "runId",
         "runtimeId",
@@ -6542,6 +7787,7 @@ export const CLI_HELP_COMMANDS = {
         "source",
         "spaceId",
         "type",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -6586,6 +7832,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -6631,6 +7892,11 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
@@ -6642,10 +7908,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "name",
-          type: "string",
+          name: "object",
+          type: "file",
           required: true,
-          description: "Customer-facing resource name. 1–200 characters.",
+          values: ["file"],
         },
         {
           name: "path",
@@ -6687,6 +7953,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -6709,9 +7981,10 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "downloadUrl",
         "expiresAt",
+        "filename",
         "id",
         "metadata",
-        "name",
+        "object",
         "path",
         "runId",
         "runtimeId",
@@ -6719,6 +7992,7 @@ export const CLI_HELP_COMMANDS = {
         "source",
         "spaceId",
         "type",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -6762,6 +8036,23 @@ export const CLI_HELP_COMMANDS = {
           type: "api | sdk | cli | mcp",
           required: false,
           values: ["api", "sdk", "cli", "mcp"],
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
       ],
     },
@@ -6906,6 +8197,21 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -6939,6 +8245,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
         ],
       },
@@ -6966,6 +8273,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "notification_recipient",
+          required: true,
+          values: ["notification_recipient"],
         },
         {
           name: "subaccountId",
@@ -7010,6 +8323,7 @@ export const CLI_HELP_COMMANDS = {
         "enabled",
         "id",
         "name",
+        "object",
         "subaccountId",
         "type",
         "updatedAt",
@@ -7053,10 +8367,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique notificationRecipient identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -7088,6 +8417,12 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Unique notificationRecipient identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "notification_recipient",
+          required: true,
+          values: ["notification_recipient"],
+        },
       ],
     },
     docs: [
@@ -7104,7 +8439,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/notification-recipients/{recipientId}",
       operationId: "notification-recipients.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -7143,6 +8478,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -7161,6 +8503,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -7174,6 +8531,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -7197,7 +8559,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/notification-recipients",
       operationId: "notification-recipients.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -7234,10 +8596,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique notificationRecipient identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -7300,6 +8677,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "notification_recipient",
+          required: true,
+          values: ["notification_recipient"],
+        },
+        {
           name: "subaccountId",
           type: "string | null",
           required: true,
@@ -7342,6 +8725,7 @@ export const CLI_HELP_COMMANDS = {
         "enabled",
         "id",
         "name",
+        "object",
         "subaccountId",
         "type",
         "updatedAt",
@@ -7380,6 +8764,21 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -7410,6 +8809,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "url",
@@ -7588,6 +8988,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "proxy",
+          required: true,
+          values: ["proxy"],
         },
         {
           name: "passwordReference",
@@ -7796,6 +9203,7 @@ export const CLI_HELP_COMMANDS = {
         "host",
         "id",
         "name",
+        "object",
         "passwordReference",
         "port",
         "protocol",
@@ -7859,11 +9267,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "proxyId",
-          type: "uuid",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -7893,6 +9318,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "object",
+          type: "proxy",
+          required: true,
+          values: ["proxy"],
+        },
       ],
     },
     docs: [
@@ -7909,7 +9340,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/proxies/{proxyId}",
       operationId: "proxies.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -7948,6 +9379,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -7980,12 +9418,34 @@ export const CLI_HELP_COMMANDS = {
           values: ["pool1", "pool2"],
         },
       ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
     },
     output: {
       fields: [
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -8009,7 +9469,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies/geo",
       operationId: "proxies.geo.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -8043,11 +9503,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "proxyId",
-          type: "uuid",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -8089,6 +9566,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "proxy",
+          required: true,
+          values: ["proxy"],
         },
         {
           name: "passwordReference",
@@ -8271,6 +9755,7 @@ export const CLI_HELP_COMMANDS = {
         "host",
         "id",
         "name",
+        "object",
         "passwordReference",
         "port",
         "protocol",
@@ -8337,12 +9822,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -8357,6 +9864,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -8380,7 +9892,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies",
       operationId: "proxies.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -8419,6 +9931,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -8451,12 +9970,34 @@ export const CLI_HELP_COMMANDS = {
           values: ["pool1", "pool2"],
         },
       ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
     },
     output: {
       fields: [
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -8480,7 +10021,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies/locations",
       operationId: "proxies.locations.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -8517,6 +10058,23 @@ export const CLI_HELP_COMMANDS = {
           name: "poolId",
           type: "string",
           required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
       ],
     },
@@ -8562,6 +10120,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "proxy_pool",
+          required: true,
+          values: ["proxy_pool"],
+        },
+        {
           name: "priceCredits",
           type: "integer",
           required: true,
@@ -8594,6 +10158,7 @@ export const CLI_HELP_COMMANDS = {
         "country",
         "id",
         "label",
+        "object",
         "priceCredits",
         "termDays",
       ],
@@ -8635,6 +10200,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -8664,12 +10236,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
       ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
     },
     output: {
       fields: [
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -8693,7 +10287,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies/pools",
       operationId: "proxies.pools.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -8728,11 +10322,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "proxyId",
-          type: "uuid",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -8777,6 +10388,12 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "object",
+          type: "test.result",
+          required: true,
+          values: ["test.result"],
+        },
+        {
           name: "ok",
           type: "boolean",
           required: true,
@@ -8803,6 +10420,7 @@ export const CLI_HELP_COMMANDS = {
         "exitIp",
         "httpStatus",
         "latencySeconds",
+        "object",
         "ok",
       ],
     },
@@ -8839,11 +10457,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "proxyId",
-          type: "uuid",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -8867,6 +10502,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "url",
@@ -9016,6 +10652,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "proxy",
+          required: true,
+          values: ["proxy"],
         },
         {
           name: "passwordReference",
@@ -9222,6 +10865,7 @@ export const CLI_HELP_COMMANDS = {
         "host",
         "id",
         "name",
+        "object",
         "passwordReference",
         "port",
         "protocol",
@@ -9323,12 +10967,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9343,6 +11009,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -9365,7 +11036,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runs/{runId}/events",
       operationId: "runs.events.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -9406,6 +11077,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9454,9 +11140,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique file identifier generated by BCTRL.",
         },
         {
-          name: "name",
+          name: "filename",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
         },
         {
           name: "role",
@@ -9483,6 +11175,12 @@ export const CLI_HELP_COMMANDS = {
           name: "spacePath",
           type: "string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -9512,12 +11210,14 @@ export const CLI_HELP_COMMANDS = {
         "binding",
         "createdAt",
         "fileId",
-        "name",
+        "filename",
+        "object",
         "role",
         "runtimePath",
         "size",
         "sourcePath",
         "spacePath",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -9560,6 +11260,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -9589,7 +11304,7 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
-            name: "name",
+            name: "filename",
             type: "string",
             required: false,
           },
@@ -9616,9 +11331,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique file identifier generated by BCTRL.",
         },
         {
-          name: "name",
+          name: "filename",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
         },
         {
           name: "role",
@@ -9646,6 +11367,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -9669,17 +11396,19 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runs/{runId}/files/collect",
       operationId: "runs.files.collect",
-      requestFields: ["runtimePath", "path", "name"],
+      requestFields: ["runtimePath", "path", "filename"],
       responseFields: [
         "binding",
         "createdAt",
         "fileId",
-        "name",
+        "filename",
+        "object",
         "role",
         "runtimePath",
         "size",
         "sourcePath",
         "spacePath",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -9728,6 +11457,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -9756,9 +11500,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique file identifier generated by BCTRL.",
         },
         {
-          name: "name",
+          name: "filename",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
         },
         {
           name: "role",
@@ -9785,6 +11535,12 @@ export const CLI_HELP_COMMANDS = {
           name: "spacePath",
           type: "string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -9813,12 +11569,14 @@ export const CLI_HELP_COMMANDS = {
         "binding",
         "createdAt",
         "fileId",
-        "name",
+        "filename",
+        "object",
         "role",
         "runtimePath",
         "size",
         "sourcePath",
         "spacePath",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -9866,6 +11624,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -9878,6 +11643,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9892,6 +11672,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -9922,7 +11707,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runs/{runId}/files",
       operationId: "runs.files.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -9969,6 +11754,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -10004,9 +11804,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique file identifier generated by BCTRL.",
         },
         {
-          name: "name",
+          name: "filename",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
         },
         {
           name: "role",
@@ -10033,6 +11839,12 @@ export const CLI_HELP_COMMANDS = {
           name: "spacePath",
           type: "string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -10061,12 +11873,14 @@ export const CLI_HELP_COMMANDS = {
         "binding",
         "createdAt",
         "fileId",
-        "name",
+        "filename",
+        "object",
         "role",
         "runtimePath",
         "size",
         "sourcePath",
         "spacePath",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -10114,6 +11928,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -10149,9 +11978,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique file identifier generated by BCTRL.",
         },
         {
-          name: "name",
+          name: "filename",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
         },
         {
           name: "role",
@@ -10178,6 +12013,12 @@ export const CLI_HELP_COMMANDS = {
           name: "spacePath",
           type: "string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -10206,12 +12047,14 @@ export const CLI_HELP_COMMANDS = {
         "binding",
         "createdAt",
         "fileId",
-        "name",
+        "filename",
+        "object",
         "role",
         "runtimePath",
         "size",
         "sourcePath",
         "spacePath",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -10242,7 +12085,7 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["runs files upload"],
     title: "Upload a file into a Run",
     summary:
-      "Upload one durable Space File (at path, default uploads/<name>) and bind it to this Run. The Run's cell keeps a copy at the returned runtimePath; binding.state reports when it is ready.",
+      "Upload one durable Space File (at path, default uploads/<filename>) and bind it to this Run. The Run's cell keeps a copy at the returned runtimePath; binding.state reports when it is ready.",
     inputs: {
       path: [
         {
@@ -10253,6 +12096,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10289,9 +12147,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique file identifier generated by BCTRL.",
         },
         {
-          name: "name",
+          name: "filename",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
         },
         {
           name: "role",
@@ -10318,6 +12182,12 @@ export const CLI_HELP_COMMANDS = {
           name: "spacePath",
           type: "string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -10346,12 +12216,14 @@ export const CLI_HELP_COMMANDS = {
         "binding",
         "createdAt",
         "fileId",
-        "name",
+        "filename",
+        "object",
         "role",
         "runtimePath",
         "size",
         "sourcePath",
         "spacePath",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -10401,6 +12273,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -10449,6 +12336,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique run identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "run",
+          required: true,
+          values: ["run"],
+        },
+        {
           name: "recording",
           type: "object",
           required: true,
@@ -10484,6 +12377,12 @@ export const CLI_HELP_COMMANDS = {
           values: ["active", "stopped", "failed"],
         },
         {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
           name: "usage",
           type: "object",
           required: false,
@@ -10511,12 +12410,14 @@ export const CLI_HELP_COMMANDS = {
         "failure",
         "finishedAt",
         "id",
+        "object",
         "recording",
         "runtimeId",
         "runtimeType",
         "spaceId",
         "startedAt",
         "status",
+        "updatedAt",
         "usage",
       ],
     },
@@ -10576,12 +12477,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10596,6 +12519,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -10618,7 +12546,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runs",
       operationId: "runs.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -10670,6 +12598,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10779,12 +12722,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10799,6 +12764,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -10821,7 +12791,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runs/{runId}/trace",
       operationId: "runs.trace.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -10854,6 +12824,21 @@ export const CLI_HELP_COMMANDS = {
       "Create a browser runtime. Ephemeral runtimes (profile omitted or false) are single-session: by default they start in the same call and the response includes a `connection` with the run-scoped connect endpoint; pass start:false to defer startup (for example, to mint a share view first), then POST /start. They archive when their run finishes and never restart. Profile-backed runtimes (profile true) retain browser identity, remain reusable, and are created stopped by default; pass start:true for one-call create-and-start. Omit spaceId to use the caller's default space.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10888,6 +12873,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "profile",
@@ -10989,6 +12975,12 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "object",
+          type: "runtime",
+          required: true,
+          values: ["runtime"],
+        },
+        {
           name: "profile",
           type: "boolean",
           required: true,
@@ -11020,14 +13012,6 @@ export const CLI_HELP_COMMANDS = {
       ],
     },
     docs: [
-      {
-        title: "Control",
-        url: "https://platform.bctrl.ai/sdk/control",
-        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
-        description:
-          "Hand the browser to a person and get it back, with the agent paused in between.",
-      },
       {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
@@ -11064,6 +13048,7 @@ export const CLI_HELP_COMMANDS = {
         "metadata",
         "name",
         "needsInput",
+        "object",
         "profile",
         "spaceId",
         "status",
@@ -11107,10 +13092,26 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -11141,17 +13142,15 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique runtime identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "runtime",
+          required: true,
+          values: ["runtime"],
+        },
       ],
     },
     docs: [
-      {
-        title: "Control",
-        url: "https://platform.bctrl.ai/sdk/control",
-        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
-        description:
-          "Hand the browser to a person and get it back, with the agent paused in between.",
-      },
       {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
@@ -11164,7 +13163,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/runtimes/{runtimeId}",
       operationId: "runtimes.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -11200,7 +13199,8 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       query: [
@@ -11217,6 +13217,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -11295,6 +13310,12 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "object",
+          type: "runtime",
+          required: true,
+          values: ["runtime"],
+        },
+        {
           name: "profile",
           type: "boolean",
           required: true,
@@ -11327,14 +13348,6 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Control",
-        url: "https://platform.bctrl.ai/sdk/control",
-        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
-        description:
-          "Hand the browser to a person and get it back, with the agent paused in between.",
-      },
-      {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
@@ -11359,6 +13372,7 @@ export const CLI_HELP_COMMANDS = {
         "metadata",
         "name",
         "needsInput",
+        "object",
         "profile",
         "spaceId",
         "status",
@@ -11429,12 +13443,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -11452,6 +13488,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "nextCursor",
           type: "string | null",
           required: true,
@@ -11459,14 +13500,6 @@ export const CLI_HELP_COMMANDS = {
       ],
     },
     docs: [
-      {
-        title: "Control",
-        url: "https://platform.bctrl.ai/sdk/control",
-        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
-        description:
-          "Hand the browser to a person and get it back, with the agent paused in between.",
-      },
       {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
@@ -11479,7 +13512,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runtimes",
       operationId: "runtimes.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -11516,7 +13549,8 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       query: [
@@ -11527,6 +13561,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -11572,6 +13621,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "runtime",
+          required: true,
+          values: ["runtime"],
+        },
+        {
           name: "runId",
           type: "string",
           required: true,
@@ -11598,14 +13653,6 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Control",
-        url: "https://platform.bctrl.ai/sdk/control",
-        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
-        description:
-          "Hand the browser to a person and get it back, with the agent paused in between.",
-      },
-      {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
@@ -11621,6 +13668,7 @@ export const CLI_HELP_COMMANDS = {
       responseFields: [
         "benchmarkProvenance",
         "connection",
+        "object",
         "runId",
         "runtimeId",
         "started",
@@ -11662,10 +13710,26 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -11684,6 +13748,12 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "object",
+          type: "runtime",
+          required: true,
+          values: ["runtime"],
+        },
         {
           name: "runId",
           type: "string | null",
@@ -11710,14 +13780,6 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Control",
-        url: "https://platform.bctrl.ai/sdk/control",
-        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
-        description:
-          "Hand the browser to a person and get it back, with the agent paused in between.",
-      },
-      {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
@@ -11729,7 +13791,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/runtimes/{runtimeId}/stop",
       operationId: "runtimes.stop",
-      responseFields: ["runId", "runtimeId", "status", "stopped"],
+      responseFields: ["object", "runId", "runtimeId", "status", "stopped"],
     },
     sdk: [
       {
@@ -11766,10 +13828,26 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -11793,6 +13871,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "idleTimeoutSeconds",
@@ -11864,6 +13943,12 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "object",
+          type: "runtime",
+          required: true,
+          values: ["runtime"],
+        },
+        {
           name: "profile",
           type: "boolean",
           required: true,
@@ -11896,14 +13981,6 @@ export const CLI_HELP_COMMANDS = {
     },
     docs: [
       {
-        title: "Control",
-        url: "https://platform.bctrl.ai/sdk/control",
-        markdownUrl: "https://platform.bctrl.ai/sdk/control.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/control.md",
-        description:
-          "Hand the browser to a person and get it back, with the agent paused in between.",
-      },
-      {
         title: "Runtimes",
         url: "https://platform.bctrl.ai/sdk/runtimes",
         markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
@@ -11927,6 +14004,7 @@ export const CLI_HELP_COMMANDS = {
         "metadata",
         "name",
         "needsInput",
+        "object",
         "profile",
         "spaceId",
         "status",
@@ -11976,6 +14054,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -12013,23 +14106,19 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Secret path, for example `prod/github/bot`. May contain `/`.",
         },
+        {
+          name: "object",
+          type: "secret",
+          required: true,
+          values: ["secret"],
+        },
       ],
     },
-    docs: [
-      {
-        title: "Secrets",
-        url: "https://platform.bctrl.ai/sdk/secrets",
-        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
-        description:
-          "Store credentials and values by path, version every change, and reveal values only to people.",
-      },
-    ],
     api: {
       method: "DELETE",
       path: "/v1/secrets/{path}",
       operationId: "secrets.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -12071,6 +14160,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -12126,6 +14230,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "secret",
+          required: true,
+          values: ["secret"],
+        },
+        {
           name: "origins",
           type: "string[]",
           required: true,
@@ -12167,16 +14277,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Secrets",
-        url: "https://platform.bctrl.ai/sdk/secrets",
-        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
-        description:
-          "Store credentials and values by path, version every change, and reveal values only to people.",
-      },
-    ],
     api: {
       method: "GET",
       path: "/v1/secrets/{path}",
@@ -12190,6 +14290,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "label",
         "lastUsedAt",
+        "object",
         "origins",
         "subaccountId",
         "type",
@@ -12257,12 +14358,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -12287,27 +14410,22 @@ export const CLI_HELP_COMMANDS = {
             "With `delimiter`: common prefixes, each ending in `/`. They count toward `limit`.",
         },
         {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "nextCursor",
           type: "string | null",
           required: true,
         },
       ],
     },
-    docs: [
-      {
-        title: "Secrets",
-        url: "https://platform.bctrl.ai/sdk/secrets",
-        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
-        description:
-          "Store credentials and values by path, version every change, and reveal values only to people.",
-      },
-    ],
     api: {
       method: "GET",
       path: "/v1/secrets",
       operationId: "secrets.list",
-      responseFields: ["data", "folders", "nextCursor"],
+      responseFields: ["data", "folders", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -12349,6 +14467,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -12480,6 +14613,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "secret",
+          required: true,
+          values: ["secret"],
+        },
+        {
           name: "origins",
           type: "string[]",
           required: true,
@@ -12521,16 +14660,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Secrets",
-        url: "https://platform.bctrl.ai/sdk/secrets",
-        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
-        description:
-          "Store credentials and values by path, version every change, and reveal values only to people.",
-      },
-    ],
     api: {
       method: "PUT",
       path: "/v1/secrets/{path}",
@@ -12555,6 +14684,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "label",
         "lastUsedAt",
+        "object",
         "origins",
         "subaccountId",
         "type",
@@ -12596,11 +14726,33 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -12638,6 +14790,12 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "object",
+          type: "secret.reveal_result",
+          required: true,
+          values: ["secret.reveal_result"],
+        },
+        {
           name: "password",
           type: "string",
           required: false,
@@ -12664,16 +14822,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Secrets",
-        url: "https://platform.bctrl.ai/sdk/secrets",
-        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
-        description:
-          "Store credentials and values by path, version every change, and reveal values only to people.",
-      },
-    ],
     api: {
       method: "POST",
       path: "/v1/secrets:reveal",
@@ -12682,6 +14830,7 @@ export const CLI_HELP_COMMANDS = {
       responseFields: [
         "id",
         "notes",
+        "object",
         "password",
         "totp",
         "username",
@@ -12730,6 +14879,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -12842,6 +15006,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "secret",
+          required: true,
+          values: ["secret"],
+        },
+        {
           name: "origins",
           type: "string[]",
           required: true,
@@ -12883,16 +15053,6 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Secrets",
-        url: "https://platform.bctrl.ai/sdk/secrets",
-        markdownUrl: "https://platform.bctrl.ai/sdk/secrets.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/secrets.md",
-        description:
-          "Store credentials and values by path, version every change, and reveal values only to people.",
-      },
-    ],
     api: {
       method: "PATCH",
       path: "/v1/secrets/{path}",
@@ -12915,6 +15075,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "label",
         "lastUsedAt",
+        "object",
         "origins",
         "subaccountId",
         "type",
@@ -12956,6 +15117,21 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -12978,6 +15154,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "region",
@@ -13021,6 +15198,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "space",
+          required: true,
+          values: ["space"],
         },
         {
           name: "region",
@@ -13057,6 +15241,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "isDefault",
         "name",
+        "object",
         "region",
         "updatedAt",
       ],
@@ -13094,11 +15279,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "spaceId",
-          type: "string | default",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -13129,6 +15331,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique space identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "space",
+          required: true,
+          values: ["space"],
+        },
       ],
     },
     docs: [
@@ -13145,7 +15353,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/spaces/{spaceId}",
       operationId: "spaces.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -13179,11 +15387,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "spaceId",
-          type: "string | default",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -13221,6 +15446,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "space",
+          required: true,
+          values: ["space"],
         },
         {
           name: "region",
@@ -13256,6 +15488,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "isDefault",
         "name",
+        "object",
         "region",
         "updatedAt",
       ],
@@ -13296,12 +15529,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -13316,6 +15571,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -13339,7 +15599,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/spaces",
       operationId: "spaces.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -13373,11 +15633,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "spaceId",
-          type: "string | default",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -13401,6 +15678,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "environment",
@@ -13438,6 +15716,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "space",
+          required: true,
+          values: ["space"],
         },
         {
           name: "region",
@@ -13474,6 +15759,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "isDefault",
         "name",
+        "object",
         "region",
         "updatedAt",
       ],
@@ -13513,10 +15799,24 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: true,
-          description: "Opaque identifier for a BCTRL subaccount.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "Idempotency-Key",
           type: "string",
@@ -13540,6 +15840,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Opaque identifier for a BCTRL subaccount.",
         },
+        {
+          name: "object",
+          type: "subaccount",
+          required: true,
+          values: ["subaccount"],
+        },
       ],
     },
     docs: [
@@ -13556,7 +15862,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/subaccounts/{subaccountId}/archive",
       operationId: "subaccounts.archive",
-      responseFields: ["archived", "id"],
+      responseFields: ["archived", "id", "object"],
     },
     sdk: [
       {
@@ -13590,6 +15896,21 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "Idempotency-Key",
           type: "string",
           required: false,
@@ -13605,6 +15926,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: true,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "externalId",
@@ -13669,6 +15991,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "subaccount",
+          required: true,
+          values: ["subaccount"],
+        },
+        {
           name: "status",
           type: "active | archived",
           required: true,
@@ -13710,6 +16038,7 @@ export const CLI_HELP_COMMANDS = {
         "limits",
         "metadata",
         "name",
+        "object",
         "status",
         "updatedAt",
         "usage",
@@ -13751,7 +16080,6 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: true,
-          description: "Opaque identifier for a BCTRL subaccount.",
         },
       ],
       query: [
@@ -13761,6 +16089,23 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Include optional subaccount expansions. Repeat the query parameter for multiple values.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
       ],
     },
@@ -13809,6 +16154,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "subaccount",
+          required: true,
+          values: ["subaccount"],
+        },
+        {
           name: "status",
           type: "active | archived",
           required: true,
@@ -13849,6 +16200,7 @@ export const CLI_HELP_COMMANDS = {
         "limits",
         "metadata",
         "name",
+        "object",
         "status",
         "updatedAt",
         "usage",
@@ -13891,6 +16243,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -13920,12 +16279,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
       ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
     },
     output: {
       fields: [
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -13949,7 +16330,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/subaccounts",
       operationId: "subaccounts.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -13986,10 +16367,24 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: true,
-          description: "Opaque identifier for a BCTRL subaccount.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "Idempotency-Key",
           type: "string",
@@ -14006,6 +16401,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "externalId",
@@ -14070,6 +16466,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "subaccount",
+          required: true,
+          values: ["subaccount"],
+        },
+        {
           name: "status",
           type: "active | archived",
           required: true,
@@ -14111,6 +16513,7 @@ export const CLI_HELP_COMMANDS = {
         "limits",
         "metadata",
         "name",
+        "object",
         "status",
         "updatedAt",
         "usage",
@@ -14154,9 +16557,33 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
       ],
     },
@@ -14165,6 +16592,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -14188,7 +16620,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/subaccounts/usage",
       operationId: "subaccounts.usage.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -14228,6 +16660,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -14281,6 +16728,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "tool_call",
+          required: true,
+          values: ["tool_call"],
+        },
+        {
           name: "parentId",
           type: "string | null",
           required: true,
@@ -14335,6 +16788,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string | null",
           required: true,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -14358,6 +16817,7 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "inputRequest",
+        "object",
         "parentId",
         "resultAvailable",
         "runId",
@@ -14367,6 +16827,7 @@ export const CLI_HELP_COMMANDS = {
         "status",
         "tool",
         "turnId",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -14408,6 +16869,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -14454,6 +16930,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "tool_call",
+          required: true,
+          values: ["tool_call"],
+        },
+        {
           name: "parentId",
           type: "string | null",
           required: true,
@@ -14508,6 +16990,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string | null",
           required: true,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -14531,6 +17019,7 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "inputRequest",
+        "object",
         "parentId",
         "resultAvailable",
         "runId",
@@ -14540,6 +17029,7 @@ export const CLI_HELP_COMMANDS = {
         "status",
         "tool",
         "turnId",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -14614,6 +17104,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -14628,6 +17125,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -14641,6 +17153,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -14664,7 +17181,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/tool-calls",
       operationId: "tool-calls.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -14704,6 +17221,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -14768,6 +17300,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "tool_call",
+          required: true,
+          values: ["tool_call"],
+        },
+        {
           name: "parentId",
           type: "string | null",
           required: true,
@@ -14822,6 +17360,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string | null",
           required: true,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -14846,6 +17390,7 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "inputRequest",
+        "object",
         "parentId",
         "resultAvailable",
         "runId",
@@ -14855,6 +17400,7 @@ export const CLI_HELP_COMMANDS = {
         "status",
         "tool",
         "turnId",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -14904,6 +17450,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -14973,10 +17534,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Built-in Tool name or generated custom Tool identifier.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -14990,6 +17566,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
         },
       ],
       body: {
@@ -15058,10 +17641,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Built-in Tool name or generated custom Tool identifier.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15126,6 +17724,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "tool_call",
+          required: true,
+          values: ["tool_call"],
+        },
+        {
           name: "parentId",
           type: "string | null",
           required: true,
@@ -15180,6 +17784,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string | null",
           required: true,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -15203,6 +17813,7 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "inputRequest",
+        "object",
         "parentId",
         "resultAvailable",
         "runId",
@@ -15212,6 +17823,7 @@ export const CLI_HELP_COMMANDS = {
         "status",
         "tool",
         "turnId",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -15246,6 +17858,21 @@ export const CLI_HELP_COMMANDS = {
       "Create an organization custom callable tool. Agents can use these tools through space toolsets during hosted work.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15311,6 +17938,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
           name: "currentRevisionId",
           type: "null | string",
           required: true,
@@ -15402,6 +18035,12 @@ export const CLI_HELP_COMMANDS = {
           ],
         },
         {
+          name: "object",
+          type: "tool",
+          required: true,
+          values: ["tool"],
+        },
+        {
           name: "outputSchema",
           type: "object",
           required: true,
@@ -15418,15 +18057,9 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique space identifier generated by BCTRL.",
         },
         {
-          name: "createdAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
           name: "updatedAt",
           type: "datetime",
-          required: false,
+          required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
@@ -15456,6 +18089,7 @@ export const CLI_HELP_COMMANDS = {
         "implementation",
       ],
       responseFields: [
+        "createdAt",
         "currentRevisionId",
         "description",
         "id",
@@ -15463,10 +18097,10 @@ export const CLI_HELP_COMMANDS = {
         "inputSchema",
         "modes",
         "name",
+        "object",
         "outputSchema",
         "runtimeTypes",
         "spaceId",
-        "createdAt",
         "updatedAt",
       ],
     },
@@ -15507,10 +18141,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Built-in Tool name or generated custom Tool identifier.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15541,6 +18190,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "tool",
+          required: true,
+          values: ["tool"],
+        },
       ],
     },
     docs: [
@@ -15557,7 +18212,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/tools/{toolRef}",
       operationId: "tools.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -15595,10 +18250,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Built-in Tool name or generated custom Tool identifier.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15610,6 +18280,12 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
         {
           name: "currentRevisionId",
           type: "null | string",
@@ -15702,6 +18378,12 @@ export const CLI_HELP_COMMANDS = {
           ],
         },
         {
+          name: "object",
+          type: "tool",
+          required: true,
+          values: ["tool"],
+        },
+        {
           name: "outputSchema",
           type: "object",
           required: true,
@@ -15718,15 +18400,9 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique space identifier generated by BCTRL.",
         },
         {
-          name: "createdAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
           name: "updatedAt",
           type: "datetime",
-          required: false,
+          required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
@@ -15746,6 +18422,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/tools/{toolRef}",
       operationId: "tools.get",
       responseFields: [
+        "createdAt",
         "currentRevisionId",
         "description",
         "id",
@@ -15753,10 +18430,10 @@ export const CLI_HELP_COMMANDS = {
         "inputSchema",
         "modes",
         "name",
+        "object",
         "outputSchema",
         "runtimeTypes",
         "spaceId",
-        "createdAt",
         "updatedAt",
       ],
     },
@@ -15803,12 +18480,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15823,6 +18522,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -15846,7 +18550,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/tools",
       operationId: "tools.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -15884,10 +18588,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Built-in Tool name or generated custom Tool identifier.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15949,6 +18668,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
           name: "currentRevisionId",
           type: "null | string",
           required: true,
@@ -16040,6 +18765,12 @@ export const CLI_HELP_COMMANDS = {
           ],
         },
         {
+          name: "object",
+          type: "tool",
+          required: true,
+          values: ["tool"],
+        },
+        {
           name: "outputSchema",
           type: "object",
           required: true,
@@ -16056,15 +18787,9 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique space identifier generated by BCTRL.",
         },
         {
-          name: "createdAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
           name: "updatedAt",
           type: "datetime",
-          required: false,
+          required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
@@ -16093,6 +18818,7 @@ export const CLI_HELP_COMMANDS = {
         "implementation",
       ],
       responseFields: [
+        "createdAt",
         "currentRevisionId",
         "description",
         "id",
@@ -16100,10 +18826,10 @@ export const CLI_HELP_COMMANDS = {
         "inputSchema",
         "modes",
         "name",
+        "object",
         "outputSchema",
         "runtimeTypes",
         "spaceId",
-        "createdAt",
         "updatedAt",
       ],
     },
@@ -16139,6 +18865,21 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -16166,6 +18907,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: true,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "description",
@@ -16203,6 +18945,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "toolset",
+          required: true,
+          values: ["toolset"],
         },
         {
           name: "spaceId",
@@ -16243,6 +18992,7 @@ export const CLI_HELP_COMMANDS = {
         "description",
         "id",
         "name",
+        "object",
         "spaceId",
         "tools",
         "updatedAt",
@@ -16283,10 +19033,26 @@ export const CLI_HELP_COMMANDS = {
           name: "toolsetId",
           type: "string",
           required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -16317,6 +19083,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique toolset identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "toolset",
+          required: true,
+          values: ["toolset"],
+        },
       ],
     },
     docs: [
@@ -16333,7 +19105,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/toolsets/{toolsetId}",
       operationId: "toolsets.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -16370,10 +19142,26 @@ export const CLI_HELP_COMMANDS = {
           name: "toolsetId",
           type: "string",
           required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -16406,6 +19194,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "toolset",
+          required: true,
+          values: ["toolset"],
         },
         {
           name: "spaceId",
@@ -16445,6 +19240,7 @@ export const CLI_HELP_COMMANDS = {
         "description",
         "id",
         "name",
+        "object",
         "spaceId",
         "tools",
         "updatedAt",
@@ -16494,12 +19290,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -16514,6 +19332,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -16537,7 +19360,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/toolsets",
       operationId: "toolsets.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -16574,10 +19397,26 @@ export const CLI_HELP_COMMANDS = {
           name: "toolsetId",
           type: "string",
           required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -16601,6 +19440,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "description",
@@ -16638,6 +19478,13 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "toolset",
+          required: true,
+          values: ["toolset"],
         },
         {
           name: "spaceId",
@@ -16678,6 +19525,7 @@ export const CLI_HELP_COMMANDS = {
         "description",
         "id",
         "name",
+        "object",
         "spaceId",
         "tools",
         "updatedAt",
@@ -16712,6 +19560,25 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["usage get"],
     title: "Get organization usage",
     summary: "Get current organization credit usage and balance.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
+    },
     output: {
       fields: [
         {
@@ -16741,6 +19608,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "account.usage",
+          required: true,
+          values: ["account.usage"],
+        },
+        {
           name: "organizationId",
           type: "string",
           required: true,
@@ -16767,6 +19640,7 @@ export const CLI_HELP_COMMANDS = {
         "credits",
         "cycle",
         "isBlocked",
+        "object",
         "organizationId",
       ],
     },
@@ -16801,6 +19675,21 @@ export const CLI_HELP_COMMANDS = {
       "Mint a scoped, component-gated hosted page or origin-restricted iframe composition. The response contains the bearer token once; keep it private.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -16903,6 +19792,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "view",
+          required: true,
+          values: ["view"],
+        },
+        {
           name: "presentation",
           type: "object",
           required: true,
@@ -16918,6 +19813,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description:
             "Short-lived bearer token returned once when a view is created.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "url",
@@ -16955,9 +19856,11 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "expiresAt",
         "id",
+        "object",
         "presentation",
         "scope",
         "token",
+        "updatedAt",
         "url",
       ],
     },
@@ -17002,6 +19905,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -17032,6 +19950,12 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Public view resource id. It is safe to expose in URLs and logs.",
         },
+        {
+          name: "object",
+          type: "view",
+          required: true,
+          values: ["view"],
+        },
       ],
     },
     docs: [
@@ -17047,7 +19971,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/views/{viewId}",
       operationId: "views.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -17089,6 +20013,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -17138,6 +20077,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "view",
+          required: true,
+          values: ["view"],
+        },
+        {
           name: "presentation",
           type: "object",
           required: true,
@@ -17151,6 +20096,12 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceName",
           type: "string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -17175,9 +20126,11 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "expiresAt",
         "id",
+        "object",
         "presentation",
         "scope",
         "spaceName",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -17216,12 +20169,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -17236,6 +20211,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -17258,7 +20238,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/views",
       operationId: "views.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -17292,6 +20272,21 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -17314,6 +20309,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "url",
@@ -17356,6 +20352,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
         },
         {
           name: "secret",
@@ -17401,6 +20403,7 @@ export const CLI_HELP_COMMANDS = {
         "events",
         "id",
         "name",
+        "object",
         "secret",
         "subaccountId",
         "updatedAt",
@@ -17443,10 +20446,26 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -17477,6 +20496,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique webhook identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
+        },
       ],
     },
     docs: [
@@ -17493,7 +20518,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/webhooks/{webhookId}",
       operationId: "webhooks.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -17530,7 +20555,8 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       query: [
@@ -17540,12 +20566,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -17560,6 +20608,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -17583,7 +20636,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/webhooks/{webhookId}/deliveries",
       operationId: "webhooks.deliveries.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -17620,7 +20673,8 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
         {
           name: "deliveryId",
@@ -17630,6 +20684,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -17685,6 +20754,12 @@ export const CLI_HELP_COMMANDS = {
           name: "nextAttemptAt",
           type: "datetime | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "webhook_delivery",
+          required: true,
+          values: ["webhook_delivery"],
         },
         {
           name: "responseStatus",
@@ -17737,6 +20812,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "lastError",
         "nextAttemptAt",
+        "object",
         "responseStatus",
         "sentAt",
         "status",
@@ -17778,10 +20854,26 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -17821,6 +20913,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
+        },
+        {
           name: "subaccountId",
           type: "string | null",
           required: true,
@@ -17858,6 +20956,7 @@ export const CLI_HELP_COMMANDS = {
         "events",
         "id",
         "name",
+        "object",
         "subaccountId",
         "updatedAt",
         "url",
@@ -17900,12 +20999,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -17920,6 +21041,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -17943,7 +21069,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/webhooks",
       operationId: "webhooks.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -17980,10 +21106,26 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -18009,6 +21151,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique webhook identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
+        },
+        {
           name: "secret",
           type: "string",
           required: true,
@@ -18029,7 +21177,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/webhooks/{webhookId}/rotate-secret",
       operationId: "webhooks.rotate-secret",
-      responseFields: ["id", "secret"],
+      responseFields: ["id", "object", "secret"],
     },
     sdk: [
       {
@@ -18066,10 +21214,26 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -18127,6 +21291,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "webhook_delivery",
+          required: true,
+          values: ["webhook_delivery"],
+        },
+        {
           name: "responseStatus",
           type: "integer | null",
           required: true,
@@ -18177,6 +21347,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "lastError",
         "nextAttemptAt",
+        "object",
         "responseStatus",
         "sentAt",
         "status",
@@ -18219,10 +21390,26 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -18295,6 +21482,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
+        },
+        {
           name: "subaccountId",
           type: "string | null",
           required: true,
@@ -18333,6 +21526,7 @@ export const CLI_HELP_COMMANDS = {
         "events",
         "id",
         "name",
+        "object",
         "subaccountId",
         "updatedAt",
         "url",

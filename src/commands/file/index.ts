@@ -67,12 +67,12 @@ export function createFileCommand(factory: Factory): Command {
         .argument('<path>')
         .option('--space <id>', 'Space id; omitted uses caller default space')
         .option('--path <storagePath>', 'Storage path')
-        .option('--name <name>', 'Display name')
+        .option('--filename <filename>', 'Display name')
         .option('--metadata <json>', 'Metadata as inline JSON')
     ).action(
       async (
         path: string,
-        options: { space?: string; path?: string; name?: string; metadata?: string } & OutputFlags
+        options: { space?: string; path?: string; filename?: string; metadata?: string } & OutputFlags
       ) => {
         const file = await readBlob(path);
         const metadata =
@@ -81,11 +81,11 @@ export function createFileCommand(factory: Factory): Command {
             : undefined;
         const result = await uploadOperationFile(factory, 'files.upload', {
           file: file.blob,
-          fileName: options.name ?? file.fileName,
+          fileName: options.filename ?? file.fileName,
           query: { spaceId: options.space },
           fields: {
             ...(options.path ? { path: options.path } : {}),
-            ...(options.name ? { name: options.name } : {}),
+            ...(options.filename ? { filename: options.filename } : {}),
             ...(metadata ? { metadata } : {}),
           },
         });
@@ -113,11 +113,11 @@ export function createFileCommand(factory: Factory): Command {
       argNames: ['fileId'],
       configure: (cmd) =>
         cmd
-          .option('--name <name>', 'Display name')
+          .option('--filename <filename>', 'Display name')
           .option('--metadata-file <path>', 'Metadata JSON file'),
       body: async (_args, options) => {
         return {
-          name: options.name,
+          filename: options.filename,
           metadata:
             typeof options.metadataFile === 'string'
               ? await readJsonFile(options.metadataFile, '--metadata-file')

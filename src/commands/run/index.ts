@@ -103,22 +103,22 @@ function createRunFilesCommand(factory: Factory): Command {
         .argument('<runId>')
         .argument('<path>')
         .option('--path <spacePath>', 'Space path; defaults to uploads/<name>')
-        .option('--name <name>', 'Display name')
+        .option('--filename <filename>', 'Display name')
         .option('--idempotency-key <key>', 'Retry key; defaults to a new one')
     ).action(
       async (
         runId: string,
         path: string,
-        options: { path?: string; name?: string; idempotencyKey?: string } & OutputFlags
+        options: { path?: string; filename?: string; idempotencyKey?: string } & OutputFlags
       ) => {
         const file = await readBlob(path);
         const result = await uploadOperationFile(factory, 'runs.files.upload', {
           pathParams: { runId },
           file: file.blob,
-          fileName: options.name ?? file.fileName,
+          fileName: options.filename ?? file.fileName,
           fields: {
             ...(options.path ? { path: options.path } : {}),
-            ...(options.name ? { name: options.name } : {}),
+            ...(options.filename ? { filename: options.filename } : {}),
           },
           idempotencyKey: options.idempotencyKey ?? randomUUID(),
         });
@@ -151,12 +151,12 @@ function createRunFilesCommand(factory: Factory): Command {
       configure: (cmd) =>
         cmd
           .option('--path <spacePath>', 'Space path for the new file')
-          .option('--name <name>', 'File name'),
+          .option('--filename <filename>', 'File name'),
       body: async (args, options) =>
         ({
           runtimePath: args.runtimePath,
           ...(typeof options.path === 'string' ? { path: options.path } : {}),
-          ...(typeof options.name === 'string' ? { name: options.name } : {}),
+          ...(typeof options.filename === 'string' ? { filename: options.filename } : {}),
         }) as CliOperationJsonBody<'runs.files.collect'>,
     })
   );
