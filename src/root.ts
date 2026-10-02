@@ -8,6 +8,7 @@ import { createBrowserExtensionCommand } from './commands/browser-extension/inde
 import { createConversationCommand } from './commands/conversation/index.js';
 import { createFileCommand } from './commands/file/index.js';
 import { createHelpCommand } from './commands/help/index.js';
+import { createLocationsCommand } from './commands/locations/index.js';
 import { createNotificationRecipientCommand } from './commands/notification-recipient/index.js';
 import { createProxyCommand } from './commands/proxy/index.js';
 import { createRunCommand } from './commands/run/index.js';
@@ -43,6 +44,7 @@ export function createRootCommand(factory: Factory): Command {
   command.addCommand(createConversationCommand(factory));
   command.addCommand(createFileCommand(factory));
   command.addCommand(createHelpCommand(factory));
+  command.addCommand(createLocationsCommand(factory));
   command.addCommand(createNotificationRecipientCommand(factory));
   command.addCommand(createRunCommand(factory));
   command.addCommand(createRuntimeCommand(factory));

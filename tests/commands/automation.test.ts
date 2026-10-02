@@ -98,3 +98,16 @@ test('async commands send bounded waits in the query and print 202 handles', asy
   }
   assert.equal(calls.length, count);
 });
+
+test('locations list sends pagination and catalog ordering to the discovery route', async () => {
+  const calls: ApiCall[] = [];
+  await buildCommand(calls).parseAsync(
+    ['locations', 'list', '--limit', '1', '--cursor', 'next', '--params', '{"order":"asc"}'],
+    { from: 'user' }
+  );
+  assert.equal(calls[0]?.method, 'get');
+  assert.equal(calls[0]?.path, '/locations');
+  assert.deepEqual(calls[0]?.options, {
+    query: { order: 'asc', limit: 1, cursor: 'next' },
+  });
+});

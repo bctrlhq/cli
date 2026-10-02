@@ -53,6 +53,7 @@ export const CLI_OPENAPI_ROUTES = {
   "files.update": { method: "patch", path: "/files/{fileId}" },
   "files.upload": { method: "post", path: "/files" },
   "help": { method: "get", path: "/help" },
+  "locations.list": { method: "get", path: "/locations" },
   "notification-recipients.create": { method: "post", path: "/notification-recipients" },
   "notification-recipients.delete": { method: "delete", path: "/notification-recipients/{recipientId}" },
   "notification-recipients.list": { method: "get", path: "/notification-recipients" },

@@ -8187,6 +8187,98 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "locations.list": {
+    type: "topic",
+    topic: "locations.list",
+    aliases: ["locations list"],
+    title: "List available compute locations",
+    summary:
+      "List deployed compute locations and current admission availability. Runtime location auto resolves to an allowed live location; homeRegions identifies compatible data homes. Catalog entries are ordered by their immutable ID.",
+    inputs: {
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/locations",
+      operationId: "locations.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "locations.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic locations.list",
+      usage: "bctrl help --topic locations.list",
+    },
+    mcp: {
+      toolName: "bctrl_locations_list",
+      operationResource: "operations://locations.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic locations.list",
+      },
+    ],
+  },
   "notification-recipients.create": {
     type: "topic",
     topic: "notification-recipients.create",
@@ -12901,6 +12993,13 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
+            name: "location",
+            type: "auto | us-east",
+            required: false,
+            description:
+              "Compute location, or auto to choose the allowed live location (currently us-east).",
+          },
+          {
             name: "recording",
             type: "boolean",
             required: false,
@@ -12958,6 +13057,13 @@ export const CLI_HELP_COMMANDS = {
           type: "datetime",
           required: false,
           description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
         },
         {
           name: "metadata",
@@ -13033,6 +13139,7 @@ export const CLI_HELP_COMMANDS = {
         "metadata",
         "start",
         "files",
+        "location",
         "recording",
       ],
       responseFields: [
@@ -13045,6 +13152,7 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "id",
         "lastActivityAt",
+        "location",
         "metadata",
         "name",
         "needsInput",
@@ -13295,6 +13403,13 @@ export const CLI_HELP_COMMANDS = {
             "Most recent run of this runtime (the active one when a run is open). Null when the runtime has never run.",
         },
         {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
           name: "metadata",
           type: "object | null",
           required: false,
@@ -13369,6 +13484,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "lastActivityAt",
         "latestRun",
+        "location",
         "metadata",
         "name",
         "needsInput",
@@ -13883,6 +13999,13 @@ export const CLI_HELP_COMMANDS = {
             type: "object",
             required: false,
           },
+          {
+            name: "location",
+            type: "auto | us-east",
+            required: false,
+            description:
+              "Compute location, or auto to choose the allowed live location (currently us-east).",
+          },
         ],
       },
     },
@@ -13926,6 +14049,13 @@ export const CLI_HELP_COMMANDS = {
           type: "datetime",
           required: false,
           description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
         },
         {
           name: "metadata",
@@ -13992,7 +14122,7 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/runtimes/{runtimeId}",
       operationId: "runtimes.update",
-      requestFields: ["name", "idleTimeoutSeconds", "config"],
+      requestFields: ["name", "idleTimeoutSeconds", "config", "location"],
       responseFields: [
         "activeRunId",
         "archivedAt",
@@ -14001,6 +14131,7 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "id",
         "lastActivityAt",
+        "location",
         "metadata",
         "name",
         "needsInput",
