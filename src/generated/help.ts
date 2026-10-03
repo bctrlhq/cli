@@ -11,11 +11,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -126,11 +126,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -254,11 +254,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -511,11 +511,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -618,11 +618,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -840,11 +840,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -938,11 +938,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -1056,11 +1056,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -1327,11 +1327,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -1410,11 +1410,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -1550,11 +1550,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -1672,11 +1672,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -1755,11 +1755,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -1888,11 +1888,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -1939,6 +1939,12 @@ export const CLI_HELP_COMMANDS = {
           name: "admissionPolicyVersion",
           type: "integer",
           required: false,
+        },
+        {
+          name: "browserCount",
+          type: "integer",
+          required: true,
+          description: "Non-negative whole-number count.",
         },
         {
           name: "chromeExtensionId",
@@ -2000,12 +2006,6 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "profileCount",
-          type: "integer",
-          required: true,
-          description: "Non-negative whole-number count.",
-        },
-        {
           name: "sizeBytes",
           type: "integer",
           required: false,
@@ -2058,6 +2058,7 @@ export const CLI_HELP_COMMANDS = {
       requestFields: ["name", "url"],
       responseFields: [
         "admissionPolicyVersion",
+        "browserCount",
         "chromeExtensionId",
         "contentHash",
         "createdAt",
@@ -2068,7 +2069,6 @@ export const CLI_HELP_COMMANDS = {
         "name",
         "object",
         "permissions",
-        "profileCount",
         "sizeBytes",
         "sourceUrl",
         "subaccountId",
@@ -2120,11 +2120,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -2230,11 +2230,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -2258,6 +2258,12 @@ export const CLI_HELP_COMMANDS = {
           name: "admissionPolicyVersion",
           type: "integer",
           required: false,
+        },
+        {
+          name: "browserCount",
+          type: "integer",
+          required: true,
+          description: "Non-negative whole-number count.",
         },
         {
           name: "chromeExtensionId",
@@ -2319,12 +2325,6 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "profileCount",
-          type: "integer",
-          required: true,
-          description: "Non-negative whole-number count.",
-        },
-        {
           name: "sizeBytes",
           type: "integer",
           required: false,
@@ -2376,6 +2376,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "browser.extensions.get",
       responseFields: [
         "admissionPolicyVersion",
+        "browserCount",
         "chromeExtensionId",
         "contentHash",
         "createdAt",
@@ -2386,7 +2387,6 @@ export const CLI_HELP_COMMANDS = {
         "name",
         "object",
         "permissions",
-        "profileCount",
         "sizeBytes",
         "sourceUrl",
         "subaccountId",
@@ -2464,11 +2464,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -2563,11 +2563,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -2610,6 +2610,12 @@ export const CLI_HELP_COMMANDS = {
           name: "admissionPolicyVersion",
           type: "integer",
           required: false,
+        },
+        {
+          name: "browserCount",
+          type: "integer",
+          required: true,
+          description: "Non-negative whole-number count.",
         },
         {
           name: "chromeExtensionId",
@@ -2671,12 +2677,6 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "profileCount",
-          type: "integer",
-          required: true,
-          description: "Non-negative whole-number count.",
-        },
-        {
           name: "sizeBytes",
           type: "integer",
           required: false,
@@ -2729,6 +2729,7 @@ export const CLI_HELP_COMMANDS = {
       requestFields: ["name"],
       responseFields: [
         "admissionPolicyVersion",
+        "browserCount",
         "chromeExtensionId",
         "contentHash",
         "createdAt",
@@ -2739,7 +2740,6 @@ export const CLI_HELP_COMMANDS = {
         "name",
         "object",
         "permissions",
-        "profileCount",
         "sizeBytes",
         "sourceUrl",
         "subaccountId",
@@ -2771,6 +2771,2263 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "browsers.connections.revoke": {
+    type: "topic",
+    topic: "browsers.connections.revoke",
+    aliases: ["browsers connections revoke"],
+    title: "Revoke current Run URLs and issue new connections",
+    summary:
+      "Invalidate every existing connection URL for the current Run and issue connections in a new credential generation. Refresh the browser before reconnecting.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersConnectionsRevokeRequest",
+        schemaResource: "schemas://BrowsersConnectionsRevokeRequest",
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/connections/revoke",
+      operationId: "browsers.connections.revoke",
+      responseFields: [
+        "autoUpgrade",
+        "captcha",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.connections.revoke",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browsers.connections.revoke",
+      usage: "bctrl help --topic browsers.connections.revoke",
+    },
+    mcp: {
+      toolName: "bctrl_browsers_connections_revoke",
+      operationResource: "operations://browsers.connections.revoke",
+      schemaResources: ["schemas://BrowsersConnectionsRevokeRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browsers.connections.revoke",
+      },
+    ],
+  },
+  "browsers.create": {
+    type: "topic",
+    topic: "browsers.create",
+    aliases: ["browsers create"],
+    title: "Create and start a browser",
+    summary:
+      "Create a reusable browser and durably request its first Run. Use wait to wait up to 60 seconds for startup; currentRun is null until a Run is admitted and connections appear after the browser starts.",
+    inputs: {
+      query: [
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowserCreateRequest",
+        schemaResource: "schemas://BrowserCreateRequest",
+        fields: [
+          {
+            name: "spaceId",
+            type: "string | default",
+            required: false,
+          },
+          {
+            name: "name",
+            type: "string",
+            required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
+          },
+          {
+            name: "location",
+            type: "auto | us-east",
+            required: false,
+            description:
+              "Compute location, or auto to choose the allowed live location (currently us-east).",
+          },
+          {
+            name: "expireAfterIdleDays",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "stealth",
+            type: "normal | best | experimental",
+            required: false,
+            values: ["normal", "best", "experimental"],
+          },
+          {
+            name: "gpu",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "viewport",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "headless",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "recording",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "timeoutSeconds",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "standbyAfterSeconds",
+            type: "0",
+            required: false,
+            description: "Standby is currently disabled; use 0.",
+            values: ["0"],
+          },
+          {
+            name: "autoUpgrade",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "webRtcProxyOnly",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "forceOpenShadowRoots",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "networkTraffic",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "captcha",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "proxy",
+            type: "string | object | object",
+            required: false,
+          },
+          {
+            name: "extensions",
+            type: "string[]",
+            required: false,
+          },
+          {
+            name: "metadata",
+            type: "object",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers",
+      operationId: "browsers.create",
+      requestFields: [
+        "spaceId",
+        "name",
+        "location",
+        "expireAfterIdleDays",
+        "stealth",
+        "gpu",
+        "viewport",
+        "headless",
+        "recording",
+        "timeoutSeconds",
+        "standbyAfterSeconds",
+        "autoUpgrade",
+        "webRtcProxyOnly",
+        "forceOpenShadowRoots",
+        "networkTraffic",
+        "captcha",
+        "proxy",
+        "extensions",
+        "metadata",
+      ],
+      responseFields: [
+        "autoUpgrade",
+        "captcha",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browsers.create",
+      usage: "bctrl help --topic browsers.create",
+    },
+    mcp: {
+      toolName: "bctrl_browsers_create",
+      operationResource: "operations://browsers.create",
+      schemaResources: ["schemas://BrowserCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browsers.create",
+      },
+    ],
+  },
+  "browsers.delete": {
+    type: "topic",
+    topic: "browsers.delete",
+    aliases: ["browsers delete"],
+    title: "Delete a browser and its saved state",
+    summary:
+      "Delete the browser configuration and saved state, cancelling queued starts and stopping its current Run. Retained Run records remain readable.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "deleted",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/browsers/{browserId}",
+      operationId: "browsers.delete",
+      responseFields: ["deleted", "id"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browsers.delete",
+      usage: "bctrl help --topic browsers.delete",
+    },
+    mcp: {
+      toolName: "bctrl_browsers_delete",
+      operationResource: "operations://browsers.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browsers.delete",
+      },
+    ],
+  },
+  "browsers.get": {
+    type: "topic",
+    topic: "browsers.get",
+    aliases: ["browsers get"],
+    title: "Get a browser and its current Run",
+    summary:
+      "Read a browser and its current Run. Use wait to wait for an accepted start or stop. Saved state remains private to the browser and is restored on its next Run.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}",
+      operationId: "browsers.get",
+      responseFields: [
+        "autoUpgrade",
+        "captcha",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browsers.get",
+      usage: "bctrl help --topic browsers.get",
+    },
+    mcp: {
+      toolName: "bctrl_browsers_get",
+      operationResource: "operations://browsers.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browsers.get",
+      },
+    ],
+  },
+  "browsers.list": {
+    type: "topic",
+    topic: "browsers.list",
+    aliases: ["browsers list"],
+    title: "List browsers",
+    summary:
+      "List browser resources visible in the selected Space. A browser is running while it has a current Run and idle otherwise. Responses include the current Run and its connections when available.",
+    inputs: {
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "q",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: false,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: false,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "status",
+          type: "idle | running | idle | running[]",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers",
+      operationId: "browsers.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browsers.list",
+      usage: "bctrl help --topic browsers.list",
+    },
+    mcp: {
+      toolName: "bctrl_browsers_list",
+      operationResource: "operations://browsers.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browsers.list",
+      },
+    ],
+  },
+  "browsers.runs.list": {
+    type: "topic",
+    topic: "browsers.runs.list",
+    aliases: ["browsers runs list"],
+    title: "List a browser’s Runs",
+    summary:
+      "List the retained Runs belonging to this browser, including ended and failed Runs, using cursor pagination.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "status",
+          type: "starting | active | standby | stopping | ended | failed | starting | active | standby | stopping | ended | failed[]",
+          required: false,
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "include",
+          type: "usage",
+          required: false,
+          values: ["usage"],
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}/runs",
+      operationId: "browsers.runs.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.runs.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browsers.runs.list",
+      usage: "bctrl help --topic browsers.runs.list",
+    },
+    mcp: {
+      toolName: "bctrl_browsers_runs_list",
+      operationResource: "operations://browsers.runs.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browsers.runs.list",
+      },
+    ],
+  },
+  "browsers.start": {
+    type: "topic",
+    topic: "browsers.start",
+    aliases: ["browsers start"],
+    title: "Start a browser with its saved state",
+    summary:
+      "Durably request a new Run of this browser, restoring its saved state. If a previous Run is stopping or saving, startup waits for it. An existing current Run is returned without starting another browser.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersStartRequest",
+        schemaResource: "schemas://BrowsersStartRequest",
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/start",
+      operationId: "browsers.start",
+      responseFields: [
+        "autoUpgrade",
+        "captcha",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.start",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browsers.start",
+      usage: "bctrl help --topic browsers.start",
+    },
+    mcp: {
+      toolName: "bctrl_browsers_start",
+      operationResource: "operations://browsers.start",
+      schemaResources: ["schemas://BrowsersStartRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browsers.start",
+      },
+    ],
+  },
+  "browsers.stop": {
+    type: "topic",
+    topic: "browsers.stop",
+    aliases: ["browsers stop"],
+    title: "Stop a browser and save state in the background",
+    summary:
+      "Request the current Run to stop. State saving continues in the background after the browser exits. Set discardState to erase saved state and skip saving this Run. Use wait to wait for the requested stop.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersStopRequest",
+        schemaResource: "schemas://BrowsersStopRequest",
+        fields: [
+          {
+            name: "discardState",
+            type: "boolean",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/stop",
+      operationId: "browsers.stop",
+      requestFields: ["discardState"],
+      responseFields: [
+        "autoUpgrade",
+        "captcha",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.stop",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browsers.stop",
+      usage: "bctrl help --topic browsers.stop",
+    },
+    mcp: {
+      toolName: "bctrl_browsers_stop",
+      operationResource: "operations://browsers.stop",
+      schemaResources: ["schemas://BrowsersStopRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browsers.stop",
+      },
+    ],
+  },
+  "browsers.update": {
+    type: "topic",
+    topic: "browsers.update",
+    aliases: ["browsers update"],
+    title: "Update browser configuration for its next Run",
+    summary:
+      "Update configuration used by the next Run. Changing stealth or viewport requires an idle browser without saved state or a queued start; stop with discardState first.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersUpdateRequest",
+        schemaResource: "schemas://BrowsersUpdateRequest",
+        fields: [
+          {
+            name: "name",
+            type: "string",
+            required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
+          },
+          {
+            name: "location",
+            type: "auto | us-east",
+            required: false,
+            description:
+              "Compute location, or auto to choose the allowed live location (currently us-east).",
+          },
+          {
+            name: "expireAfterIdleDays",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "stealth",
+            type: "normal | best | experimental",
+            required: false,
+            values: ["normal", "best", "experimental"],
+          },
+          {
+            name: "gpu",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "viewport",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "headless",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "recording",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "timeoutSeconds",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "standbyAfterSeconds",
+            type: "0",
+            required: false,
+            description: "Standby is currently disabled; use 0.",
+            values: ["0"],
+          },
+          {
+            name: "autoUpgrade",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "webRtcProxyOnly",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "forceOpenShadowRoots",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "networkTraffic",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "captcha",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "proxy",
+            type: "string | object | object",
+            required: false,
+          },
+          {
+            name: "extensions",
+            type: "string[]",
+            required: false,
+          },
+          {
+            name: "metadata",
+            type: "object",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "PATCH",
+      path: "/v1/browsers/{browserId}",
+      operationId: "browsers.update",
+      requestFields: [
+        "name",
+        "location",
+        "expireAfterIdleDays",
+        "stealth",
+        "gpu",
+        "viewport",
+        "headless",
+        "recording",
+        "timeoutSeconds",
+        "standbyAfterSeconds",
+        "autoUpgrade",
+        "webRtcProxyOnly",
+        "forceOpenShadowRoots",
+        "networkTraffic",
+        "captcha",
+        "proxy",
+        "extensions",
+        "metadata",
+      ],
+      responseFields: [
+        "autoUpgrade",
+        "captcha",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic browsers.update",
+      usage: "bctrl help --topic browsers.update",
+    },
+    mcp: {
+      toolName: "bctrl_browsers_update",
+      operationResource: "operations://browsers.update",
+      schemaResources: ["schemas://BrowsersUpdateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic browsers.update",
+      },
+    ],
+  },
   "conversations.cancel": {
     type: "topic",
     topic: "conversations.cancel",
@@ -2789,11 +5046,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -2892,11 +5149,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -2928,7 +5185,7 @@ export const CLI_HELP_COMMANDS = {
             name: "runtimeId",
             type: "string",
             required: true,
-            description: "Unique runtime identifier generated by BCTRL.",
+            description: "Unique browser identifier generated by BCTRL.",
           },
           {
             name: "model",
@@ -2990,7 +5247,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "spaceId",
@@ -3104,11 +5361,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -3177,7 +5434,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "spaceId",
@@ -3286,7 +5543,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "status",
@@ -3315,11 +5572,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -3411,11 +5668,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -3575,11 +5832,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -3611,7 +5868,7 @@ export const CLI_HELP_COMMANDS = {
             name: "runtimeId",
             type: "string",
             required: true,
-            description: "Unique runtime identifier generated by BCTRL.",
+            description: "Unique browser identifier generated by BCTRL.",
           },
           {
             name: "text",
@@ -3780,11 +6037,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -3869,11 +6126,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -4078,11 +6335,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -4267,11 +6524,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -4358,7 +6615,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "spaceId",
@@ -4462,11 +6719,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -4664,11 +6921,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -4801,11 +7058,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -4923,11 +7180,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -5120,11 +7377,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -5217,11 +7474,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -5400,11 +7657,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -5548,11 +7805,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -5729,11 +7986,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -5805,11 +8062,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -5916,7 +8173,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
@@ -6023,11 +8280,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -6117,11 +8374,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -6243,11 +8500,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -6421,11 +8678,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -6509,11 +8766,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -6545,7 +8802,7 @@ export const CLI_HELP_COMMANDS = {
             name: "runtimeId",
             type: "string",
             required: true,
-            description: "Unique runtime identifier generated by BCTRL.",
+            description: "Unique browser identifier generated by BCTRL.",
           },
         ],
       },
@@ -6692,11 +8949,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -6861,11 +9118,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -7051,11 +9308,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -7128,11 +9385,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -7243,11 +9500,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -7331,7 +9588,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
@@ -7467,7 +9724,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "type",
@@ -7509,11 +9766,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -7611,11 +9868,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -7722,7 +9979,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
@@ -7833,11 +10090,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -7928,7 +10185,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
@@ -8041,11 +10298,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -8217,11 +10474,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -8290,11 +10547,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -8465,11 +10722,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -8596,11 +10853,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -8694,11 +10951,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -8857,11 +11114,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -9368,11 +11625,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -9513,11 +11770,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -9604,11 +11861,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -9929,11 +12186,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -10065,11 +12322,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -10155,11 +12412,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -10331,11 +12588,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -10423,11 +12680,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -10558,11 +12815,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -11011,6 +13268,107 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "runs.delete": {
+    type: "topic",
+    topic: "runs.delete",
+    aliases: ["runs delete"],
+    title: "Purge artifacts of an ended Run",
+    summary:
+      "Purge the artifacts of an ended Run while retaining its lifecycle and usage record. Active Runs must be stopped and their native execution retired before purging.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "deleted",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "DELETE",
+      path: "/v1/runs/{runId}",
+      operationId: "runs.delete",
+      responseFields: ["deleted", "id"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl help --topic runs.delete",
+      usage: "bctrl help --topic runs.delete",
+    },
+    mcp: {
+      toolName: "bctrl_runs_delete",
+      operationResource: "operations://runs.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl help --topic runs.delete",
+      },
+    ],
+  },
   "runs.events.list": {
     type: "topic",
     topic: "runs.events.list",
@@ -11074,11 +13432,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -11171,11 +13529,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -11353,11 +13711,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -11550,11 +13908,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -11737,11 +14095,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -11847,11 +14205,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -12021,11 +14379,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -12190,11 +14548,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -12358,19 +14716,24 @@ export const CLI_HELP_COMMANDS = {
       query: [
         {
           name: "include",
-          type: "connection",
+          type: "usage",
           required: false,
-          values: ["connection"],
+          values: ["usage"],
+        },
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
         },
       ],
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -12391,12 +14754,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "connection",
-          type: "object",
-          required: false,
+          name: "connections",
+          type: "object | null",
+          required: true,
         },
         {
-          name: "counts",
+          name: "control",
           type: "object",
           required: true,
         },
@@ -12407,18 +14770,13 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
-          name: "durationSeconds",
-          type: "number | null",
-          required: true,
-        },
-        {
-          name: "failure",
-          type: "object | null",
-          required: true,
-        },
-        {
-          name: "finishedAt",
+          name: "endedAt",
           type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "endReason",
+          type: "string | null",
           required: true,
         },
         {
@@ -12426,6 +14784,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description: "Unique run identifier generated by BCTRL.",
+        },
+        {
+          name: "location",
+          type: "us-east",
+          required: true,
+          values: ["us-east"],
         },
         {
           name: "object",
@@ -12439,16 +14803,16 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "runtimeId",
+          name: "resourceId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
-          name: "runtimeType",
-          type: "browser | desktop",
+          name: "resourceType",
+          type: "browser",
           required: true,
-          values: ["browser", "desktop"],
+          values: ["browser"],
         },
         {
           name: "spaceId",
@@ -12458,15 +14822,21 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "startedAt",
-          type: "datetime",
+          type: "datetime | null",
           required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "status",
-          type: "active | stopped | failed",
+          type: "starting | active | standby | stopping | ended | failed",
           required: true,
-          values: ["active", "stopped", "failed"],
+          values: [
+            "starting",
+            "active",
+            "standby",
+            "stopping",
+            "ended",
+            "failed",
+          ],
         },
         {
           name: "updatedAt",
@@ -12495,17 +14865,17 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/runs/{runId}",
       operationId: "runs.get",
       responseFields: [
-        "connection",
-        "counts",
+        "connections",
+        "control",
         "createdAt",
-        "durationSeconds",
-        "failure",
-        "finishedAt",
+        "endedAt",
+        "endReason",
         "id",
+        "location",
         "object",
         "recording",
-        "runtimeId",
-        "runtimeType",
+        "resourceId",
+        "resourceType",
         "spaceId",
         "startedAt",
         "status",
@@ -12545,25 +14915,6 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       query: [
         {
-          name: "status",
-          type: "active | stopped | failed[]",
-          required: false,
-          description:
-            "Filter by one or more run statuses. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: false,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "runtimeId",
-          type: "string",
-          required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
           name: "cursor",
           type: "string",
           required: false,
@@ -12580,15 +14931,59 @@ export const CLI_HELP_COMMANDS = {
           type: "integer",
           required: false,
         },
+        {
+          name: "status",
+          type: "starting | active | standby | stopping | ended | failed[]",
+          required: false,
+          description:
+            "Filter by one or more run statuses. Repeat the query parameter for multiple values.",
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: false,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "resourceId",
+          type: "string",
+          required: false,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "resourceType",
+          type: "browser",
+          required: false,
+          values: ["browser"],
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "include",
+          type: "usage",
+          required: false,
+          values: ["usage"],
+        },
       ],
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -12692,11 +15087,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -12829,11 +15224,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -12907,1265 +15302,6 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
-  "runtimes.create": {
-    type: "topic",
-    topic: "runtimes.create",
-    aliases: ["runtimes create"],
-    title: "Create a runtime or session",
-    summary:
-      "Create a browser runtime. Ephemeral runtimes (profile omitted or false) are single-session: by default they start in the same call and the response includes a `connection` with the run-scoped connect endpoint; pass start:false to defer startup (for example, to mint a share view first), then POST /start. They archive when their run finishes and never restart. Profile-backed runtimes (profile true) retain browser identity, remain reusable, and are created stopped by default; pass start:true for one-call create-and-start. Omit spaceId to use the caller's default space.",
-    inputs: {
-      headers: [
-        {
-          name: "BCTRL-Version",
-          type: "2026-10-01",
-          required: false,
-          description:
-            "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
-        },
-        {
-          name: "BCTRL-Space",
-          type: "string",
-          required: false,
-          description:
-            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
-        },
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "RuntimeCreateRequest",
-        schemaResource: "schemas://RuntimeCreateRequest",
-        fields: [
-          {
-            name: "spaceId",
-            type: "string | default",
-            required: false,
-          },
-          {
-            name: "type",
-            type: "browser | desktop",
-            required: false,
-            values: ["browser", "desktop"],
-          },
-          {
-            name: "name",
-            type: "string",
-            required: false,
-            description: "Customer-facing resource name. 1–200 characters.",
-          },
-          {
-            name: "profile",
-            type: "boolean",
-            required: false,
-          },
-          {
-            name: "config",
-            type: "object",
-            required: false,
-          },
-          {
-            name: "metadata",
-            type: "object",
-            required: false,
-          },
-          {
-            name: "start",
-            type: "boolean",
-            required: false,
-          },
-          {
-            name: "files",
-            type: "object[]",
-            required: false,
-          },
-          {
-            name: "location",
-            type: "auto | us-east",
-            required: false,
-            description:
-              "Compute location, or auto to choose the allowed live location (currently us-east).",
-          },
-          {
-            name: "recording",
-            type: "boolean",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "activeRunId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "archivedAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "benchmarkProvenance",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "config",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "connection",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "control",
-          type: "object",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "lastActivityAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "location",
-          type: "auto | us-east",
-          required: true,
-          description:
-            "Compute location, or auto to choose the allowed live location (currently us-east).",
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "needsInput",
-          type: "boolean",
-          required: false,
-        },
-        {
-          name: "object",
-          type: "runtime",
-          required: true,
-          values: ["runtime"],
-        },
-        {
-          name: "profile",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "active | stopped | failed",
-          required: true,
-          values: ["active", "stopped", "failed"],
-        },
-        {
-          name: "type",
-          type: "browser | desktop",
-          required: true,
-          values: ["browser", "desktop"],
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes",
-      operationId: "runtimes.create",
-      requestFields: [
-        "spaceId",
-        "type",
-        "name",
-        "profile",
-        "config",
-        "metadata",
-        "start",
-        "files",
-        "location",
-        "recording",
-      ],
-      responseFields: [
-        "activeRunId",
-        "archivedAt",
-        "benchmarkProvenance",
-        "config",
-        "connection",
-        "control",
-        "createdAt",
-        "id",
-        "lastActivityAt",
-        "location",
-        "metadata",
-        "name",
-        "needsInput",
-        "object",
-        "profile",
-        "spaceId",
-        "status",
-        "type",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.create",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.create",
-      usage: "bctrl help --topic runtimes.create",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_create",
-      operationResource: "operations://runtimes.create",
-      schemaResources: ["schemas://RuntimeCreateRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.create",
-      },
-    ],
-  },
-  "runtimes.delete": {
-    type: "topic",
-    topic: "runtimes.delete",
-    aliases: ["runtimes delete"],
-    title: "Delete a runtime",
-    summary:
-      "Delete a stopped runtime and its browser state. Active runtimes must be stopped first.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description:
-            "Opaque resource ID or unique resource name in the selected Space or tenant.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Version",
-          type: "2026-10-01",
-          required: false,
-          description:
-            "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
-        },
-        {
-          name: "BCTRL-Space",
-          type: "string",
-          required: false,
-          description:
-            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
-        },
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "deleted",
-          type: "true",
-          required: true,
-          values: ["true"],
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "object",
-          type: "runtime",
-          required: true,
-          values: ["runtime"],
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
-    api: {
-      method: "DELETE",
-      path: "/v1/runtimes/{runtimeId}",
-      operationId: "runtimes.delete",
-      responseFields: ["deleted", "id", "object"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.delete",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.delete",
-      usage: "bctrl help --topic runtimes.delete",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_delete",
-      operationResource: "operations://runtimes.delete",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.delete",
-      },
-    ],
-  },
-  "runtimes.get": {
-    type: "topic",
-    topic: "runtimes.get",
-    aliases: ["runtimes get"],
-    title: "Get a runtime",
-    summary: "Get one runtime using the simplified runtime detail resource.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description:
-            "Opaque resource ID or unique resource name in the selected Space or tenant.",
-        },
-      ],
-      query: [
-        {
-          name: "include",
-          type: "connection",
-          required: false,
-          values: ["connection"],
-        },
-        {
-          name: "wait",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Version",
-          type: "2026-10-01",
-          required: false,
-          description:
-            "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
-        },
-        {
-          name: "BCTRL-Space",
-          type: "string",
-          required: false,
-          description:
-            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
-        },
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "activeRunId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "archivedAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "config",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "connection",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "control",
-          type: "object",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "lastActivityAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "latestRun",
-          type: "object | null",
-          required: false,
-          description:
-            "Most recent run of this runtime (the active one when a run is open). Null when the runtime has never run.",
-        },
-        {
-          name: "location",
-          type: "auto | us-east",
-          required: true,
-          description:
-            "Compute location, or auto to choose the allowed live location (currently us-east).",
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "needsInput",
-          type: "boolean",
-          required: false,
-        },
-        {
-          name: "object",
-          type: "runtime",
-          required: true,
-          values: ["runtime"],
-        },
-        {
-          name: "profile",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "active | stopped | failed",
-          required: true,
-          values: ["active", "stopped", "failed"],
-        },
-        {
-          name: "type",
-          type: "browser | desktop",
-          required: true,
-          values: ["browser", "desktop"],
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runtimes/{runtimeId}",
-      operationId: "runtimes.get",
-      responseFields: [
-        "activeRunId",
-        "archivedAt",
-        "config",
-        "connection",
-        "control",
-        "createdAt",
-        "id",
-        "lastActivityAt",
-        "latestRun",
-        "location",
-        "metadata",
-        "name",
-        "needsInput",
-        "object",
-        "profile",
-        "spaceId",
-        "status",
-        "type",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.get",
-      usage: "bctrl help --topic runtimes.get",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_get",
-      operationResource: "operations://runtimes.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.get",
-      },
-    ],
-  },
-  "runtimes.list": {
-    type: "topic",
-    topic: "runtimes.list",
-    aliases: ["runtimes list"],
-    title: "List runtimes",
-    summary:
-      "List runtimes using compact runtime summaries. Omit spaceId to list runtimes across all spaces visible to the caller; pass spaceId to narrow to one space.",
-    inputs: {
-      query: [
-        {
-          name: "spaceId",
-          type: "string",
-          required: false,
-          description:
-            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
-        },
-        {
-          name: "q",
-          type: "string",
-          required: false,
-          description: "Case-insensitive search across runtime name and id.",
-        },
-        {
-          name: "status",
-          type: "active | stopped | failed[]",
-          required: false,
-          description:
-            "Filter by one or more runtime statuses. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "include",
-          type: "archived",
-          required: false,
-          values: ["archived"],
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "order",
-          type: "asc | desc",
-          required: false,
-          description: "Order by createdAt and ID. Defaults to desc.",
-          values: ["asc", "desc"],
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Version",
-          type: "2026-10-01",
-          required: false,
-          description:
-            "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
-        },
-        {
-          name: "BCTRL-Space",
-          type: "string",
-          required: false,
-          description:
-            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
-        },
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
-          type: "object[]",
-          required: true,
-        },
-        {
-          name: "hasMore",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "nextCursor",
-          type: "string | null",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/runtimes",
-      operationId: "runtimes.list",
-      responseFields: ["data", "hasMore", "nextCursor"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.list",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.list",
-      usage: "bctrl help --topic runtimes.list",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_list",
-      operationResource: "operations://runtimes.list",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.list",
-      },
-    ],
-  },
-  "runtimes.start": {
-    type: "topic",
-    topic: "runtimes.start",
-    aliases: ["runtimes start"],
-    title: "Start a runtime",
-    summary:
-      "Start a profile-backed runtime and open its active run. Ephemeral runtimes cannot be restarted after their session ends — create a new runtime instead.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description:
-            "Opaque resource ID or unique resource name in the selected Space or tenant.",
-        },
-      ],
-      query: [
-        {
-          name: "wait",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Version",
-          type: "2026-10-01",
-          required: false,
-          description:
-            "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
-        },
-        {
-          name: "BCTRL-Space",
-          type: "string",
-          required: false,
-          description:
-            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
-        },
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "RuntimeStartRequest",
-        schemaResource: "schemas://RuntimeStartRequest",
-        fields: [
-          {
-            name: "files",
-            type: "object[]",
-            required: false,
-          },
-          {
-            name: "recording",
-            type: "boolean",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "benchmarkProvenance",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "connection",
-          type: "object",
-          required: true,
-        },
-        {
-          name: "object",
-          type: "runtime",
-          required: true,
-          values: ["runtime"],
-        },
-        {
-          name: "runId",
-          type: "string",
-          required: true,
-          description: "Unique run identifier generated by BCTRL.",
-        },
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "started",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "active | stopped | failed",
-          required: true,
-          values: ["active", "stopped", "failed"],
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/start",
-      operationId: "runtimes.start",
-      requestFields: ["files", "recording"],
-      responseFields: [
-        "benchmarkProvenance",
-        "connection",
-        "object",
-        "runId",
-        "runtimeId",
-        "started",
-        "status",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.start",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.start",
-      usage: "bctrl help --topic runtimes.start",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_start",
-      operationResource: "operations://runtimes.start",
-      schemaResources: ["schemas://RuntimeStartRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.start",
-      },
-    ],
-  },
-  "runtimes.stop": {
-    type: "topic",
-    topic: "runtimes.stop",
-    aliases: ["runtimes stop"],
-    title: "Stop a runtime",
-    summary: "Stop one runtime and return a flat teardown acknowledgement.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description:
-            "Opaque resource ID or unique resource name in the selected Space or tenant.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Version",
-          type: "2026-10-01",
-          required: false,
-          description:
-            "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
-        },
-        {
-          name: "BCTRL-Space",
-          type: "string",
-          required: false,
-          description:
-            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
-        },
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "object",
-          type: "runtime",
-          required: true,
-          values: ["runtime"],
-        },
-        {
-          name: "runId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "active | stopped | failed",
-          required: true,
-          values: ["active", "stopped", "failed"],
-        },
-        {
-          name: "stopped",
-          type: "boolean",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/stop",
-      operationId: "runtimes.stop",
-      responseFields: ["object", "runId", "runtimeId", "status", "stopped"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.stop",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.stop",
-      usage: "bctrl help --topic runtimes.stop",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_stop",
-      operationResource: "operations://runtimes.stop",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.stop",
-      },
-    ],
-  },
-  "runtimes.update": {
-    type: "topic",
-    topic: "runtimes.update",
-    aliases: ["runtimes update"],
-    title: "Update a runtime",
-    summary:
-      "Update a runtime: name and idleTimeoutSeconds any time, launch config only while the runtime is stopped.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description:
-            "Opaque resource ID or unique resource name in the selected Space or tenant.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Version",
-          type: "2026-10-01",
-          required: false,
-          description:
-            "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
-        },
-        {
-          name: "BCTRL-Space",
-          type: "string",
-          required: false,
-          description:
-            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
-        },
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "RuntimeUpdateRequest",
-        schemaResource: "schemas://RuntimeUpdateRequest",
-        fields: [
-          {
-            name: "name",
-            type: "string",
-            required: false,
-            description: "Customer-facing resource name. 1–200 characters.",
-          },
-          {
-            name: "idleTimeoutSeconds",
-            type: "integer",
-            required: false,
-          },
-          {
-            name: "config",
-            type: "object",
-            required: false,
-          },
-          {
-            name: "location",
-            type: "auto | us-east",
-            required: false,
-            description:
-              "Compute location, or auto to choose the allowed live location (currently us-east).",
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "activeRunId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "archivedAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "config",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "control",
-          type: "object",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "lastActivityAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "location",
-          type: "auto | us-east",
-          required: true,
-          description:
-            "Compute location, or auto to choose the allowed live location (currently us-east).",
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "needsInput",
-          type: "boolean",
-          required: false,
-        },
-        {
-          name: "object",
-          type: "runtime",
-          required: true,
-          values: ["runtime"],
-        },
-        {
-          name: "profile",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "active | stopped | failed",
-          required: true,
-          values: ["active", "stopped", "failed"],
-        },
-        {
-          name: "type",
-          type: "browser | desktop",
-          required: true,
-          values: ["browser", "desktop"],
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
-    api: {
-      method: "PATCH",
-      path: "/v1/runtimes/{runtimeId}",
-      operationId: "runtimes.update",
-      requestFields: ["name", "idleTimeoutSeconds", "config", "location"],
-      responseFields: [
-        "activeRunId",
-        "archivedAt",
-        "config",
-        "control",
-        "createdAt",
-        "id",
-        "lastActivityAt",
-        "location",
-        "metadata",
-        "name",
-        "needsInput",
-        "object",
-        "profile",
-        "spaceId",
-        "status",
-        "type",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.update",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.update",
-      usage: "bctrl help --topic runtimes.update",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_update",
-      operationResource: "operations://runtimes.update",
-      schemaResources: ["schemas://RuntimeUpdateRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.update",
-      },
-    ],
-  },
   "secrets.delete": {
     type: "topic",
     topic: "secrets.delete",
@@ -14186,11 +15322,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -14293,11 +15429,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -14504,11 +15640,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -14600,11 +15736,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -14858,11 +15994,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -15012,11 +16148,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -15249,11 +16385,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -15298,6 +16434,11 @@ export const CLI_HELP_COMMANDS = {
             type: "object",
             required: false,
           },
+          {
+            name: "expireAfterIdleDays",
+            type: "integer",
+            required: false,
+          },
         ],
       },
     },
@@ -15312,6 +16453,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "environment",
           type: "object",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
           required: true,
         },
         {
@@ -15365,10 +16511,11 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/spaces",
       operationId: "spaces.create",
-      requestFields: ["name", "region", "environment"],
+      requestFields: ["name", "region", "environment", "expireAfterIdleDays"],
       responseFields: [
         "createdAt",
         "environment",
+        "expireAfterIdleDays",
         "id",
         "isDefault",
         "name",
@@ -15419,11 +16566,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -15527,11 +16674,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -15560,6 +16707,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "environment",
           type: "object",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
           required: true,
         },
         {
@@ -15616,6 +16768,7 @@ export const CLI_HELP_COMMANDS = {
       responseFields: [
         "createdAt",
         "environment",
+        "expireAfterIdleDays",
         "id",
         "isDefault",
         "name",
@@ -15675,11 +16828,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -15773,11 +16926,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -15816,6 +16969,11 @@ export const CLI_HELP_COMMANDS = {
             type: "object",
             required: false,
           },
+          {
+            name: "expireAfterIdleDays",
+            type: "integer",
+            required: false,
+          },
         ],
       },
     },
@@ -15830,6 +16988,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "environment",
           type: "object",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
           required: true,
         },
         {
@@ -15883,10 +17046,11 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/spaces/{spaceId}",
       operationId: "spaces.update",
-      requestFields: ["name", "environment"],
+      requestFields: ["name", "environment", "expireAfterIdleDays"],
       responseFields: [
         "createdAt",
         "environment",
+        "expireAfterIdleDays",
         "id",
         "isDefault",
         "name",
@@ -15935,11 +17099,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -16028,11 +17192,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -16225,11 +17389,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -16413,11 +17577,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -16503,11 +17667,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -16703,11 +17867,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -16793,11 +17957,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -17002,11 +18166,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -17197,7 +18361,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "runId",
@@ -17257,11 +18421,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -17354,11 +18518,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -17583,11 +18747,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -17671,11 +18835,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -17778,11 +18942,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -17991,11 +19155,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -18278,11 +19442,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -18387,11 +19551,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -18626,11 +19790,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -18725,11 +19889,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -18997,11 +20161,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -19171,11 +20335,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -19280,11 +20444,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -19436,11 +20600,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -19535,11 +20699,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -19695,11 +20859,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -19808,11 +20972,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -20037,11 +21201,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -20146,11 +21310,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -20315,11 +21479,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -20404,11 +21568,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -20584,11 +21748,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -20712,11 +21876,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -20817,11 +21981,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -20992,11 +22156,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -21145,11 +22309,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -21244,11 +22408,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -21352,11 +22516,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",
@@ -21528,11 +22692,11 @@ export const CLI_HELP_COMMANDS = {
       headers: [
         {
           name: "BCTRL-Version",
-          type: "2026-10-01",
+          type: "2026-10-01 | 2026-10-03",
           required: false,
           description:
             "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01"],
+          values: ["2026-10-01", "2026-10-03"],
         },
         {
           name: "BCTRL-Space",

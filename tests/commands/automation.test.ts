@@ -80,21 +80,21 @@ test('automation commands map to the canonical tools, conversations, and trace r
 
 test('async commands send bounded waits in the query and print 202 handles', async () => {
   const calls: ApiCall[] = [];
-  await buildCommand(calls).parseAsync(['runtime', 'start', 'rt_1', '--wait', '0', '--no-recording'], { from: 'user' });
-  await buildCommand(calls).parseAsync(['runtime', 'get', 'rt_1', '--wait', '60'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'start', 'br_1'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'get', 'br_1', '--wait', '60'], { from: 'user' });
   await buildCommand(calls).parseAsync(['tool-calls', 'result', 'call_1', '--wait', '1'], { from: 'user' });
   await buildCommand(calls).parseAsync(['conversations', 'turns', 'get', 'conv_1', 'turn_1', '--wait', '60'], { from: 'user' });
   await buildCommand(calls).parseAsync(['conversations', 'turns', 'cancel', 'conv_1', 'turn_1'], { from: 'user' });
   assert.deepEqual(calls.map(({ method, path }) => `${method} ${path}`), [
-    'post /runtimes/rt_1/start', 'get /runtimes/rt_1', 'get /tool-calls/call_1/result',
+    'post /browsers/br_1/start', 'get /browsers/br_1', 'get /tool-calls/call_1/result',
     'get /conversations/conv_1/turns/turn_1', 'post /conversations/conv_1/turns/turn_1/cancel',
   ]);
   const options = calls.map((call) => call.options as { query?: { wait?: number }; body?: unknown });
-  assert.deepEqual(options.slice(0, 4).map((option) => option.query?.wait), [0, 60, 1, 60]);
-  assert.deepEqual(options[0]?.body, { recording: false });
+  assert.deepEqual(options.slice(0, 4).map((option) => option.query?.wait), [undefined, 60, 1, 60]);
+  assert.deepEqual(options[0]?.body, {});
   const count = calls.length;
   for (const wait of ['-1', '61', '0.5', 'abc']) {
-    await assert.rejects(buildCommand(calls).parseAsync(['runtime', 'start', 'rt_1', '--wait', wait], { from: 'user' }));
+    await assert.rejects(buildCommand(calls).parseAsync(['browser', 'get', 'br_1', '--wait', wait], { from: 'user' }));
   }
   assert.equal(calls.length, count);
 });
@@ -110,4 +110,33 @@ test('locations list sends pagination and catalog ordering to the discovery rout
   assert.deepEqual(calls[0]?.options, {
     query: { order: 'asc', limit: 1, cursor: 'next' },
   });
+});
+
+test('browser commands expose the resource lifecycle, state discard and scoped Run history', async () => {
+  const calls: ApiCall[] = [];
+  await buildCommand(calls).parseAsync(['browser', 'list'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'create', '--body', '{"headless":true}', '--idempotency-key', 'create-1'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'get', 'name / encoded'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'patch', 'br_1', '--body', '{"recording":false}'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'start', 'br_1'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'stop', 'br_1', '--discard-state', '--idempotency-key', 'stop-1'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'runs', 'br_1', '--params', '{"status":"ended","include":"usage"}'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'revoke-connections', 'br_1', '--idempotency-key', 'revoke-1'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browser', 'delete', 'br_1', '--yes'], { from: 'user' });
+  assert.deepEqual(calls.map(({ method, path }) => `${method} ${path}`), [
+    'get /browsers', 'post /browsers', 'get /browsers/name%20%2F%20encoded',
+    'patch /browsers/br_1', 'post /browsers/br_1/start', 'post /browsers/br_1/stop',
+    'get /browsers/br_1/runs', 'post /browsers/br_1/connections/revoke', 'delete /browsers/br_1',
+  ]);
+  const options = calls.map((call) => call.options as { body?: unknown; idempotencyKey?: string; query?: unknown });
+  assert.deepEqual(options[1]?.body, { headless: true });
+  assert.equal(options[1]?.idempotencyKey, 'create-1');
+  assert.deepEqual(options[3]?.body, { recording: false });
+  assert.deepEqual(options[4]?.body, {});
+  assert.deepEqual(options[5]?.body, { discardState: true });
+  assert.equal(options[5]?.idempotencyKey, 'stop-1');
+  assert.deepEqual(options[6]?.query, { status: 'ended', include: 'usage' });
+  assert.equal(options[7]?.idempotencyKey, 'revoke-1');
+  const root = buildCommand([]);
+  assert.equal(root.commands.some((command) => command.name() === 'runtime'), false);
 });

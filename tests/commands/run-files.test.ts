@@ -29,7 +29,6 @@ test('runs files commands use the Run file routes', async () => {
     await cli(['runs', 'files', 'retry', 'run_1', 'file_1']);
     await cli(['runs', 'files', 'remove', 'run_1', 'file_1', '--yes']);
     await cli(['runs', 'files', 'collect', 'run_1', 'downloads/r.pdf', '--filename', 'r.pdf']);
-    await cli(['runtime', 'start', 'rt_1', '--file', 'file_1', 'file_2']);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
@@ -44,7 +43,6 @@ test('runs files commands use the Run file routes', async () => {
       'post /runs/run_1/files/file_1/retry',
       'delete /runs/run_1/files/file_1',
       'post /runs/run_1/files/collect',
-      'post /runtimes/rt_1/start',
     ]
   );
   const options = calls.map((call) => call.options as Record<string, unknown> | undefined);
@@ -53,5 +51,4 @@ test('runs files commands use the Run file routes', async () => {
   assert.equal(options[3]?.idempotencyKey, 'k1');
   assert.deepEqual(options[3]?.fields, { path: 'invoices/a.pdf' });
   assert.deepEqual(options[6]?.body, { runtimePath: 'downloads/r.pdf', filename: 'r.pdf' });
-  assert.deepEqual(options[7]?.body, { files: [{ fileId: 'file_1' }, { fileId: 'file_2' }] });
 });

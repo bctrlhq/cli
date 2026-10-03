@@ -518,6 +518,10 @@ export function createOperationJsonBodyCommand<OperationId extends CliOperationI
   for (const arg of argNames) command = command.argument(`<${arg}>`);
   command = config.configure ? config.configure(command) : command;
   command = addRequestOverrideFlags(command, { body: true });
+  if (CLI_OPENAPI_ROUTES[config.operationId].method === 'post' &&
+      !command.options.some((option) => option.long === '--idempotency-key')) {
+    command.option('--idempotency-key <key>', 'Replay this accepted request with the same key');
+  }
   command = addOutputFlags(command);
   return command.action(async (...actionArgs: unknown[]) => {
     const options = getActionOptions(actionArgs);
@@ -535,6 +539,7 @@ export function createOperationJsonBodyCommand<OperationId extends CliOperationI
       {
         pathParams: overlayDefined(overrides.pathParams, args),
         body,
+        ...(typeof options.idempotencyKey === 'string' ? { idempotencyKey: options.idempotencyKey } : {}),
         query: overlayDefined(
           overrides.query,
           curatedQuery as Record<string, unknown> | undefined
