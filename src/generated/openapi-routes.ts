@@ -2,6 +2,8 @@
 
 export const CLI_OPENAPI_ROUTES = {
   "account.get": { method: "get", path: "/account" },
+  "account.spendingCap.get": { method: "get", path: "/account/spending-cap" },
+  "account.spendingCap.update": { method: "patch", path: "/account/spending-cap" },
   "account.update": { method: "patch", path: "/account" },
   "ai.credentials.create": { method: "post", path: "/ai/credentials" },
   "ai.credentials.delete": { method: "delete", path: "/ai/credentials/{credentialId}" },
@@ -104,6 +106,8 @@ export const CLI_OPENAPI_ROUTES = {
   "spaces.delete": { method: "delete", path: "/spaces/{spaceId}" },
   "spaces.get": { method: "get", path: "/spaces/{spaceId}" },
   "spaces.list": { method: "get", path: "/spaces" },
+  "spaces.spendingCap.get": { method: "get", path: "/spaces/{spaceId}/spending-cap" },
+  "spaces.spendingCap.update": { method: "patch", path: "/spaces/{spaceId}/spending-cap" },
   "spaces.update": { method: "patch", path: "/spaces/{spaceId}" },
   "subaccounts.archive": { method: "post", path: "/subaccounts/{subaccountId}/archive" },
   "subaccounts.create": { method: "post", path: "/subaccounts" },

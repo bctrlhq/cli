@@ -56,6 +56,160 @@
     }
   },
   {
+    "operationId": "account.spendingCap.get",
+    "method": "GET",
+    "path": "/v1/account/spending-cap",
+    "description": "Read the current UTC calendar-month limit and accrued usage in USD cents. Warning occurs once per month at 80%; at 100%, new billable starts are refused and running work is stopped within at most one minute of additional usage.",
+    "stability": "stable",
+    "cli": {
+      "command": "account spendingCap get",
+      "positionalArgs": []
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "account_spendingCap_get",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "account.spendingCap.update",
+    "method": "PATCH",
+    "path": "/v1/account/spending-cap",
+    "description": "People may set a whole-cent USD limit; null disables it and zero refuses new billable starts. Raising the limit permits starts once it exceeds current usage. The UTC calendar month resets usage; raising or disabling a cap does not reset its warning marker.",
+    "stability": "stable",
+    "cli": {
+      "command": "account spendingCap update",
+      "positionalArgs": []
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "account_spendingCap_update",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/SpendingCapPatchRequest"
+        }
+      },
+      "required": [
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "SpendingCapPatchRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "amount": {
+              "anyOf": [
+                {
+                  "description": "Monthly limit in USD cents. Null disables the cap; zero refuses new starts.",
+                  "maximum": 100000000000,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "currency": {
+              "const": "USD",
+              "type": "string"
+            }
+          },
+          "required": [
+            "amount",
+            "currency"
+          ],
+          "type": "object"
+        }
+      }
+    }
+  },
+  {
     "operationId": "account.update",
     "method": "PATCH",
     "path": "/v1/account",
@@ -13883,6 +14037,189 @@
     }
   },
   {
+    "operationId": "spaces.spendingCap.get",
+    "method": "GET",
+    "path": "/v1/spaces/{spaceId}/spending-cap",
+    "description": "Read this Space’s UTC calendar-month limit and accrued usage in USD cents. Both the organization and Space limits apply. Warning occurs once per month at 80%; at 100%, running work is stopped within at most one minute of additional usage.",
+    "stability": "stable",
+    "cli": {
+      "command": "spaces spendingCap get",
+      "positionalArgs": [
+        "spaceId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "spaces_spendingCap_get",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "spaceId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "spaceId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "spaceId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "spaces.spendingCap.update",
+    "method": "PATCH",
+    "path": "/v1/spaces/{spaceId}/spending-cap",
+    "description": "People may set this Space’s whole-cent USD limit; null disables it and zero refuses new billable starts here. Other Spaces are unaffected. Raising it allows starts when both this limit and the organization limit exceed current usage.",
+    "stability": "stable",
+    "cli": {
+      "command": "spaces spendingCap update",
+      "positionalArgs": [
+        "spaceId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "spaces_spendingCap_update",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "spaceId"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "spaceId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/SpendingCapPatchRequest"
+        }
+      },
+      "required": [
+        "spaceId",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "SpendingCapPatchRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "amount": {
+              "anyOf": [
+                {
+                  "description": "Monthly limit in USD cents. Null disables the cap; zero refuses new starts.",
+                  "maximum": 100000000000,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "currency": {
+              "const": "USD",
+              "type": "string"
+            }
+          },
+          "required": [
+            "amount",
+            "currency"
+          ],
+          "type": "object"
+        }
+      }
+    }
+  },
+  {
     "operationId": "spaces.update",
     "method": "PATCH",
     "path": "/v1/spaces/{spaceId}",
@@ -18175,11 +18512,14 @@
                   "recording.ready",
                   "runtime.control.changed",
                   "runtime.started",
-                  "runtime.start_failed"
+                  "runtime.start_failed",
+                  "spending_cap.warning",
+                  "spending_cap.stop_requested",
+                  "spending_cap.stopped"
                 ],
                 "type": "string"
               },
-              "maxItems": 16,
+              "maxItems": 19,
               "minItems": 1,
               "type": "array"
             },
@@ -18891,11 +19231,14 @@
                   "recording.ready",
                   "runtime.control.changed",
                   "runtime.started",
-                  "runtime.start_failed"
+                  "runtime.start_failed",
+                  "spending_cap.warning",
+                  "spending_cap.stop_requested",
+                  "spending_cap.stopped"
                 ],
                 "type": "string"
               },
-              "maxItems": 16,
+              "maxItems": 19,
               "minItems": 1,
               "type": "array"
             },

@@ -61,3 +61,17 @@ test('stream operation selects the authenticated stream transport', async () => 
     headers: { 'Last-Event-ID': 'evt_opaque' },
   } }]);
 });
+
+test('generated cap commands retain named Spaces and explicit zero or null USD limits', async () => {
+  const calls: ApiCall[] = [];
+  await command(calls).parseAsync(['account', 'spendingCap', 'get'], { from: 'user' });
+  await command(calls).parseAsync(['account', 'spendingCap', 'update', '--body', '{"amount":0,"currency":"USD"}'], { from: 'user' });
+  await command(calls).parseAsync(['spaces', 'spendingCap', 'get', 'team checkout'], { from: 'user' });
+  await command(calls).parseAsync(['spaces', 'spendingCap', 'update', 'team checkout', '--body', '{"amount":null,"currency":"USD"}'], { from: 'user' });
+  assert.deepEqual(calls, [
+    { method: 'get', path: '/account/spending-cap', options: {} },
+    { method: 'patch', path: '/account/spending-cap', options: { body: { amount: 0, currency: 'USD' } } },
+    { method: 'get', path: '/spaces/team%20checkout/spending-cap', options: {} },
+    { method: 'patch', path: '/spaces/team%20checkout/spending-cap', options: { body: { amount: null, currency: 'USD' } } },
+  ]);
+});

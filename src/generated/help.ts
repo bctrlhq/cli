@@ -108,6 +108,288 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "account.spendingCap.get": {
+    type: "topic",
+    topic: "account.spendingCap.get",
+    aliases: ["account spendingCap get"],
+    title: "Get the organization monthly spending cap",
+    summary:
+      "Read the current UTC calendar-month limit and accrued usage in USD cents. Warning occurs once per month at 80%; at 100%, new billable starts are refused and running work is stopped within at most one minute of additional usage.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "amount",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "currency",
+          type: "USD",
+          required: true,
+          values: ["USD"],
+        },
+        {
+          name: "object",
+          type: "spending_cap",
+          required: true,
+          values: ["spending_cap"],
+        },
+        {
+          name: "period",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "scope",
+          type: "organization | space",
+          required: true,
+          values: ["organization", "space"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "disabled | ok | warning | reached",
+          required: true,
+          values: ["disabled", "ok", "warning", "reached"],
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnAtPercent",
+          type: "80",
+          required: true,
+          values: ["80"],
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Account and organization",
+        url: "https://platform.bctrl.ai/sdk/account",
+        markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
+        description:
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/account/spending-cap",
+      operationId: "account.spendingCap.get",
+      responseFields: [
+        "amount",
+        "currency",
+        "object",
+        "period",
+        "scope",
+        "spaceId",
+        "status",
+        "usage",
+        "warnAtPercent",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "account.spendingCap.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl account spendingCap get",
+      usage: "bctrl account spendingCap get",
+    },
+    mcp: {
+      toolName: "account_spendingCap_get",
+      operationResource: "operations://account.spendingCap.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl account spendingCap get --help",
+      },
+    ],
+  },
+  "account.spendingCap.update": {
+    type: "topic",
+    topic: "account.spendingCap.update",
+    aliases: ["account spendingCap update"],
+    title: "Set or disable the organization monthly spending cap",
+    summary:
+      "People may set a whole-cent USD limit; null disables it and zero refuses new billable starts. Raising the limit permits starts once it exceeds current usage. The UTC calendar month resets usage; raising or disabling a cap does not reset its warning marker.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SpendingCapPatchRequest",
+        schemaResource: "schemas://SpendingCapPatchRequest",
+        fields: [
+          {
+            name: "amount",
+            type: "integer | null",
+            required: true,
+          },
+          {
+            name: "currency",
+            type: "USD",
+            required: true,
+            values: ["USD"],
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "amount",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "currency",
+          type: "USD",
+          required: true,
+          values: ["USD"],
+        },
+        {
+          name: "object",
+          type: "spending_cap",
+          required: true,
+          values: ["spending_cap"],
+        },
+        {
+          name: "period",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "scope",
+          type: "organization | space",
+          required: true,
+          values: ["organization", "space"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "disabled | ok | warning | reached",
+          required: true,
+          values: ["disabled", "ok", "warning", "reached"],
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnAtPercent",
+          type: "80",
+          required: true,
+          values: ["80"],
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Account and organization",
+        url: "https://platform.bctrl.ai/sdk/account",
+        markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
+        description:
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
+      },
+    ],
+    api: {
+      method: "PATCH",
+      path: "/v1/account/spending-cap",
+      operationId: "account.spendingCap.update",
+      requestFields: ["amount", "currency"],
+      responseFields: [
+        "amount",
+        "currency",
+        "object",
+        "period",
+        "scope",
+        "spaceId",
+        "status",
+        "usage",
+        "warnAtPercent",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "account.spendingCap.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl account spendingCap update",
+      usage: "bctrl account spendingCap update",
+    },
+    mcp: {
+      toolName: "account_spendingCap_update",
+      operationResource: "operations://account.spendingCap.update",
+      schemaResources: ["schemas://SpendingCapPatchRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl account spendingCap update --help",
+      },
+    ],
+  },
   "account.update": {
     type: "topic",
     topic: "account.update",
@@ -17589,6 +17871,320 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "spaces.spendingCap.get": {
+    type: "topic",
+    topic: "spaces.spendingCap.get",
+    aliases: ["spaces spendingCap get"],
+    title: "Get a Space monthly spending cap",
+    summary:
+      "Read this Space’s UTC calendar-month limit and accrued usage in USD cents. Both the organization and Space limits apply. Warning occurs once per month at 80%; at 100%, running work is stopped within at most one minute of additional usage.",
+    inputs: {
+      path: [
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "amount",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "currency",
+          type: "USD",
+          required: true,
+          values: ["USD"],
+        },
+        {
+          name: "object",
+          type: "spending_cap",
+          required: true,
+          values: ["spending_cap"],
+        },
+        {
+          name: "period",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "scope",
+          type: "organization | space",
+          required: true,
+          values: ["organization", "space"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "disabled | ok | warning | reached",
+          required: true,
+          values: ["disabled", "ok", "warning", "reached"],
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnAtPercent",
+          type: "80",
+          required: true,
+          values: ["80"],
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Spaces",
+        url: "https://platform.bctrl.ai/sdk/spaces",
+        markdownUrl: "https://platform.bctrl.ai/sdk/spaces.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/spaces.md",
+        description:
+          "The boundary that scopes which storage, secrets, and AI credentials a runtime can use.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/spaces/{spaceId}/spending-cap",
+      operationId: "spaces.spendingCap.get",
+      responseFields: [
+        "amount",
+        "currency",
+        "object",
+        "period",
+        "scope",
+        "spaceId",
+        "status",
+        "usage",
+        "warnAtPercent",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "spaces.spendingCap.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl spaces spendingCap get",
+      usage: "bctrl spaces spendingCap get <spaceId>",
+    },
+    mcp: {
+      toolName: "spaces_spendingCap_get",
+      operationResource: "operations://spaces.spendingCap.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl spaces spendingCap get --help",
+      },
+    ],
+  },
+  "spaces.spendingCap.update": {
+    type: "topic",
+    topic: "spaces.spendingCap.update",
+    aliases: ["spaces spendingCap update"],
+    title: "Set or disable a Space monthly spending cap",
+    summary:
+      "People may set this Space’s whole-cent USD limit; null disables it and zero refuses new billable starts here. Other Spaces are unaffected. Raising it allows starts when both this limit and the organization limit exceed current usage.",
+    inputs: {
+      path: [
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SpendingCapPatchRequest",
+        schemaResource: "schemas://SpendingCapPatchRequest",
+        fields: [
+          {
+            name: "amount",
+            type: "integer | null",
+            required: true,
+          },
+          {
+            name: "currency",
+            type: "USD",
+            required: true,
+            values: ["USD"],
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "amount",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "currency",
+          type: "USD",
+          required: true,
+          values: ["USD"],
+        },
+        {
+          name: "object",
+          type: "spending_cap",
+          required: true,
+          values: ["spending_cap"],
+        },
+        {
+          name: "period",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "scope",
+          type: "organization | space",
+          required: true,
+          values: ["organization", "space"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "disabled | ok | warning | reached",
+          required: true,
+          values: ["disabled", "ok", "warning", "reached"],
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnAtPercent",
+          type: "80",
+          required: true,
+          values: ["80"],
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Spaces",
+        url: "https://platform.bctrl.ai/sdk/spaces",
+        markdownUrl: "https://platform.bctrl.ai/sdk/spaces.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/spaces.md",
+        description:
+          "The boundary that scopes which storage, secrets, and AI credentials a runtime can use.",
+      },
+    ],
+    api: {
+      method: "PATCH",
+      path: "/v1/spaces/{spaceId}/spending-cap",
+      operationId: "spaces.spendingCap.update",
+      requestFields: ["amount", "currency"],
+      responseFields: [
+        "amount",
+        "currency",
+        "object",
+        "period",
+        "scope",
+        "spaceId",
+        "status",
+        "usage",
+        "warnAtPercent",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "spaces.spendingCap.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl spaces spendingCap update",
+      usage: "bctrl spaces spendingCap update <spaceId>",
+    },
+    mcp: {
+      toolName: "spaces_spendingCap_update",
+      operationResource: "operations://spaces.spendingCap.update",
+      schemaResources: ["schemas://SpendingCapPatchRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl spaces spendingCap update --help",
+      },
+    ],
+  },
   "spaces.update": {
     type: "topic",
     topic: "spaces.update",
@@ -22295,7 +22891,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed[]",
+            type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
             required: true,
           },
         ],
@@ -22316,7 +22912,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed[]",
+          type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
           required: true,
         },
         {
@@ -22875,7 +23471,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed[]",
+          type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
           required: true,
         },
         {
@@ -23418,7 +24014,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed[]",
+            type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
             required: false,
           },
           {
@@ -23444,7 +24040,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed[]",
+          type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
           required: true,
         },
         {
