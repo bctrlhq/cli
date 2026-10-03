@@ -14,6 +14,15 @@ function command(calls: ApiCall[], response: unknown = { status: 'unknown' }) {
   return root;
 }
 
+test('generated Computer click forwards named Browser, body and replay key once', async () => {
+  const calls: ApiCall[] = [];
+  await command(calls, { object: 'computer.result', status: 'unknown', eventId: 'evt_lost_click', data: null })
+    .parseAsync(['browsers', 'computer', 'click', 'checkout / europe', '--body', '{"coordinate":[12,34]}',
+      '--idempotency-key', 'click-once'], { from: 'user' });
+  assert.deepEqual(calls, [{ method: 'post', path: '/browsers/checkout%20%2F%20europe/computer/click',
+    options: { body: { coordinate: [12, 34] }, headers: { 'Idempotency-Key': 'click-once' } } }]);
+});
+
 test('generated commands preserve named selectors, explicit JSON, headers and unknown outcomes', async () => {
   const calls: ApiCall[] = [];
   await command(calls).parseAsync(['browsers', 'create', '--body', '{"name":"checkout","location":"auto"}',
