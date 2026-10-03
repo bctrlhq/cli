@@ -7,6 +7,7 @@ import { CliError } from '../runtime/errors.js';
 import { addOutputFlags, outputData, type OutputFlags } from './shared/output.js';
 import { readBlob, readJsonFile, writeBinary } from './shared/io.js';
 import { withoutSchemaDefaults } from './shared/schema.js';
+import { openBrowserLiveView } from './browser-open.js';
 
 type Schema = Record<string, any>;
 type Descriptor = (typeof descriptors)[number];
@@ -22,6 +23,19 @@ function resolveSchema(schema: Schema, root: Schema): Schema {
 
 function kebab(value: string): string {
   return value.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+function schemaFields(schema: Schema, root: Schema): Record<string, Schema> {
+  const resolved = resolveSchema(schema, root);
+  const fields: Record<string, Schema> = { ...resolved.properties };
+  for (const branch of resolved.anyOf ?? resolved.oneOf ?? []) {
+    for (const [name, field] of Object.entries(schemaFields(branch, root))) {
+      const previous = fields[name];
+      fields[name] = previous && JSON.stringify(previous) !== JSON.stringify(field)
+        ? { anyOf: [previous, field] } : field;
+    }
+  }
+  return fields;
 }
 
 async function jsonArgument(value: string): Promise<unknown> {
@@ -43,7 +57,7 @@ function addFieldFlags(command: Command, descriptor: Descriptor): FieldFlag[] {
   for (const group of ['query', 'headers', 'body', 'fields']) {
     const groupSchema = root.properties[group];
     if (!groupSchema) continue;
-    for (const [name, unresolved] of Object.entries(resolveSchema(groupSchema, root).properties ?? {})) {
+    for (const [name, unresolved] of Object.entries(schemaFields(groupSchema, root))) {
       const schema = resolveSchema(unresolved as Schema, root);
       const variants = schema.anyOf ?? schema.oneOf;
       const flagSchema = Array.isArray(variants) && variants.every((variant) => resolveSchema(variant, root).type === 'string')
@@ -81,7 +95,9 @@ export function registerGeneratedCommands(root: Command, factory: Factory): void
     const binary = !descriptor.stream && descriptor.responseContentTypes.length > 0
       && !descriptor.responseContentTypes.some((type) => type === 'application/json');
     if (binary) command.option('--output <path>', 'Write downloaded bytes (- for stdout)', '-');
+    if (descriptor.operationId === 'browsers.create') command.option('--open', 'Open the browser live view when ready');
     addOutputFlags(command);
+    if (descriptor.method === 'DELETE') command.requiredOption('--yes', 'Confirm deletion');
     const flags = addFieldFlags(command, descriptor);
     const validator = z.fromJSONSchema(withoutSchemaDefaults(schema) as Parameters<typeof z.fromJSONSchema>[0]);
     command.action(async (...args: unknown[]) => {
@@ -105,6 +121,7 @@ export function registerGeneratedCommands(root: Command, factory: Factory): void
         upload = await readBlob(options.file);
         input.fileBase64 = Buffer.from(await upload.blob.arrayBuffer()).toString('base64');
       }
+      if (!upload && schema.required?.includes('body') && input.body === undefined) input.body = {};
       const valid = validator.safeParse(input);
       if (!valid.success) throw new CliError(`Invalid request: ${valid.error.message}`);
       const path = descriptor.path.replace(/^\/v1(?=\/|$)/, '')
@@ -125,7 +142,9 @@ export function registerGeneratedCommands(root: Command, factory: Factory): void
         await writeBinary(String(options.output), await client.download(path, request));
       } else {
         const method = descriptor.method.toLowerCase() as 'get' | 'post' | 'patch' | 'put' | 'delete';
-        await outputData(factory.io, await client[method](path, request), options as OutputFlags);
+        const response = await client[method](path, request);
+        await outputData(factory.io, response, options as OutputFlags);
+        if (options.open) await openBrowserLiveView(factory, response);
       }
     });
   }
