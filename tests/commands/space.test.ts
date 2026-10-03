@@ -25,9 +25,9 @@ test('space list sends documented OpenAPI query parameters', async () => {
 
   await command.parseAsync(
     [
-      'space',
+      'spaces',
       'list',
-      '--subaccount',
+      '--bctrl-subaccount-id',
       'sub_test',
       '--limit',
       '5',
@@ -46,7 +46,7 @@ test('space list sends documented OpenAPI query parameters', async () => {
           limit: 5,
           cursor: 'next',
         },
-        actingSubaccountId: 'sub_test',
+        headers: { 'BCTRL-Subaccount-Id': 'sub_test' },
       },
     },
   ]);
@@ -56,13 +56,13 @@ test('space get uses the OpenAPI operation route', async () => {
   const calls: ApiCall[] = [];
   const { command } = buildCommand(calls);
 
-  await command.parseAsync(['space', 'get', 'sp_test'], { from: 'user' });
+  await command.parseAsync(['spaces', 'get', 'sp_test'], { from: 'user' });
 
   assert.deepEqual(calls, [
     {
       method: 'get',
       path: '/spaces/sp_test',
-      options: undefined,
+      options: {},
     },
   ]);
 });
@@ -72,7 +72,7 @@ test('space create maps flags to the OpenAPI request body', async () => {
   const { command } = buildCommand(calls, { id: 'sp_test' });
 
   await command.parseAsync(
-    ['space', 'create', '--name', 'Checkout', '--subaccount-id', 'sub_test'],
+    ['spaces', 'create', '--name', 'Checkout', '--bctrl-subaccount-id', 'sub_test'],
     { from: 'user' }
   );
 
@@ -84,7 +84,7 @@ test('space create maps flags to the OpenAPI request body', async () => {
         body: {
           name: 'Checkout',
         },
-        actingSubaccountId: 'sub_test',
+        headers: { 'BCTRL-Subaccount-Id': 'sub_test' },
       },
     },
   ]);
@@ -95,7 +95,7 @@ test('space patch maps flags to the OpenAPI request body', async () => {
   const { command } = buildCommand(calls, { id: 'sp_test' });
 
   await command.parseAsync(
-    ['space', 'patch', 'sp_test', '--name', 'Checkout'],
+    ['spaces', 'update', 'sp_test', '--name', 'Checkout'],
     {
       from: 'user',
     }
@@ -118,7 +118,7 @@ test('space delete keeps the confirmation guard and uses the OpenAPI route', asy
   const calls: ApiCall[] = [];
   const { command } = buildCommand(calls);
 
-  await command.parseAsync(['space', 'delete', 'sp_test', '--yes'], {
+  await command.parseAsync(['spaces', 'delete', 'sp_test', '--yes'], {
     from: 'user',
   });
 
@@ -126,7 +126,7 @@ test('space delete keeps the confirmation guard and uses the OpenAPI route', asy
     {
       method: 'delete',
       path: '/spaces/sp_test',
-      options: undefined,
+      options: {},
     },
   ]);
 });
@@ -137,8 +137,8 @@ test('space patch accepts the environment in the resource body', async () => {
 
   await command.parseAsync(
     [
-      'space',
-      'patch',
+      'spaces',
+      'update',
       'sp_test',
       '--body',
       '{"environment":{"storage":{"namespace":"team-files"},"secrets":{"allow":["prod"],"env":{"TOKEN":"secret:prod/api#value@3"}}}}',

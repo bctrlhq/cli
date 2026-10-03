@@ -1,171 +1,37 @@
 import { spawn as nodeSpawn, type SpawnOptions } from 'node:child_process';
 import type { Readable } from 'node:stream';
-import { Command, Option } from 'commander';
+import { Command } from 'commander';
 import type { Factory } from '../../factory.js';
 import type { CliOperationJsonBody, CliOperationQuery } from '../../openapi.js';
 import { CliError } from '../../runtime/errors.js';
 import { readText } from '../shared/io.js';
 import { addOutputFlags, type OutputFlags } from '../shared/output.js';
-import {
-  addPaginationFlags,
-  buildOperationInput,
-  optionString,
-  outputFlags,
-  requestOperation,
-  requestOperationAndPrint,
-} from '../shared/operation.js';
+import { optionString, outputFlags, requestOperation } from '../shared/operation.js';
 
-/**
- * `bctrl secrets` (plan 039 §3, plan 043 A2.13). Values are never taken from
- * argv, where `ps` would show them: `put` reads the value from stdin, and
- * `import` reads a .env file.
- */
-export function createSecretsCommand(factory: Factory): Command {
-  const command = new Command('secrets').description('Store Secrets that agents use by reference');
-
-  command.addCommand(
-    addOutputFlags(
-      addPaginationFlags(
-        new Command('ls')
-          .description('List Secrets and / folders under a prefix (metadata only)')
-          .argument('[prefix]', 'Path prefix, for example prod/github/')
-          .option('--type <type>', 'login or value')
-          .option('--recursive', 'List every Secret under the prefix instead of one folder level')
-          .option('--subaccount-id <id>', 'Act as this subaccount')
-      )
-    ).action(async (prefix: string | undefined, options: Record<string, unknown>) => {
-      await requestOperationAndPrint(
-        factory,
-        'secrets.list',
-        await buildOperationInput('secrets.list', options, {
-          query: {
-            ...(prefix ? { prefix } : {}),
-            ...(options.recursive ? {} : { delimiter: '/' }),
-            ...(optionString(options, 'type') ? { type: optionString(options, 'type') } : {}),
-            ...(options.limit !== undefined ? { limit: options.limit } : {}),
-            ...(options.cursor !== undefined ? { cursor: options.cursor } : {}),
-          } as CliOperationQuery<'secrets.list'>,
-          actingSubaccountId: optionString(options, 'subaccountId'),
-          output: outputFlags(options),
-        })
-      );
-    })
-  );
-
-  command.addCommand(
-    addOutputFlags(
-      new Command('get')
-        .description('Get one Secret (metadata only)')
-        .argument('<path>')
-        .option('--subaccount-id <id>', 'Act as this subaccount')
-    ).action(async (path: string, options: Record<string, unknown>) => {
-      await requestOperationAndPrint(factory, 'secrets.get', {
-        pathParams: { path },
-        actingSubaccountId: optionString(options, 'subaccountId'),
-        output: outputFlags(options),
-      });
-    })
-  );
-
-  command.addCommand(
-    addOutputFlags(
-      new Command('put')
-        .description('Store a Secret; its value (the password, for a login) is read from stdin')
-        .argument('<path>')
-        .addOption(new Option('--type <type>', 'login or value').choices(['login', 'value']).default('value'))
-        .option('--label <label>')
-        .option('--username <username>', 'Login username (not secret)')
-        .option('--origin <origin...>', 'Origins a login may be filled into, for example https://github.com')
-        .option('--if-match <version>', 'Write only if the current version is this one')
-        .option('--subaccount-id <id>', 'Act as this subaccount')
-    ).action(async (path: string, options: Record<string, unknown>) => {
-      const secret = trimNewline(await readStream(factory.io.in));
-      if (!secret) throw new CliError('Pipe the value on stdin, for example: printf %s "$TOKEN" | bctrl secrets put api/key');
-      const type = options.type as 'login' | 'value';
-      const body =
-        type === 'login'
-          ? {
-              type,
-              password: secret,
-              ...(optionString(options, 'username') ? { username: optionString(options, 'username') } : {}),
-              ...(Array.isArray(options.origin) ? { origins: options.origin as string[] } : {}),
-              ...(optionString(options, 'label') ? { label: optionString(options, 'label') } : {}),
-            }
-          : { type, value: secret, ...(optionString(options, 'label') ? { label: optionString(options, 'label') } : {}) };
-      await requestOperationAndPrint(factory, 'secrets.put', {
-        pathParams: { path },
-        body: body as CliOperationJsonBody<'secrets.put'>,
-        ...ifMatch(options),
-        actingSubaccountId: optionString(options, 'subaccountId'),
-        output: outputFlags(options),
-      });
-    })
-  );
-
-  command.addCommand(
-    addOutputFlags(
-      new Command('rm')
-        .description('Delete a Secret and all its versions')
-        .argument('<path>')
-        .option('--if-match <version>', 'Delete only if the current version is this one')
-        .option('--subaccount-id <id>', 'Act as this subaccount')
-    ).action(async (path: string, options: Record<string, unknown>) => {
-      await requestOperationAndPrint(factory, 'secrets.delete', {
-        pathParams: { path },
-        ...ifMatch(options),
-        actingSubaccountId: optionString(options, 'subaccountId'),
-        output: outputFlags(options),
-      });
-    })
-  );
-
-  command.addCommand(
-    addOutputFlags(
-      new Command('reveal')
-        .description("Print a Secret's values (audited)")
-        .argument('<path>')
-        .option('--version <version>', 'An earlier version')
-        .option('--subaccount-id <id>', 'Act as this subaccount')
-    ).action(async (path: string, options: Record<string, unknown>) => {
-      await requestOperationAndPrint(factory, 'secrets.reveal', {
-        body: {
-          path,
-          ...(optionString(options, 'version') ? { version: Number(optionString(options, 'version')) } : {}),
-        } as CliOperationJsonBody<'secrets.reveal'>,
-        actingSubaccountId: optionString(options, 'subaccountId'),
-        output: outputFlags(options),
-      });
-    })
-  );
-
-  command.addCommand(
-    addOutputFlags(
-      new Command('import')
-        .description('Store each KEY=VALUE of a .env file as the value Secret <prefix>/KEY')
-        .argument('<file>', '.env file, or - for stdin')
-        .requiredOption('--prefix <prefix>', 'Path prefix, for example prod/app')
-        .option('--subaccount-id <id>', 'Act as this subaccount')
-    ).action(async (file: string, options: Record<string, unknown> & OutputFlags) => {
+/** Composed local workflows layered onto the annotation-generated API commands. */
+export function registerSecretConveniences(root: Command, factory: Factory): void {
+  const secrets = root.commands.find((command) => command.name() === 'secrets');
+  if (!secrets) throw new Error('Generated secrets commands are missing');
+  secrets.addCommand(addOutputFlags(new Command('import')
+    .description('Create a value Secret for each KEY=VALUE in a .env file')
+    .argument('<file>', '.env file, or - for stdin')
+    .requiredOption('--prefix <prefix>', 'Secret path prefix')
+    .option('--subaccount-id <id>', 'Act as this subaccount'))
+    .action(async (file: string, options: Record<string, unknown> & OutputFlags) => {
       const prefix = String(options.prefix).replace(/\/+$/, '');
       const entries = parseDotenv(file === '-' ? await readStream(factory.io.in) : await readText(file));
-      if (entries.length === 0) throw new CliError(`No KEY=VALUE lines in ${file}`);
-      const stored: { path: string; version: number }[] = [];
+      if (!entries.length) throw new CliError('No KEY=VALUE lines in the input');
+      const stored: { id: string; path: string; version: number }[] = [];
       for (const [key, value] of entries) {
-        const saved = (await requestOperation(factory, 'secrets.put', {
-          pathParams: { path: `${prefix}/${key}` },
-          body: { type: 'value', value } as CliOperationJsonBody<'secrets.put'>,
+        stored.push(await requestOperation(factory, 'secrets.create', {
+          body: { path: prefix + '/' + key, type: 'value', value } as CliOperationJsonBody<'secrets.create'>,
           actingSubaccountId: optionString(options, 'subaccountId'),
-        })) as { id: string; version: number };
-        stored.push({ path: saved.id, version: saved.version });
+        }) as { id: string; path: string; version: number });
       }
-      factory.io.writeErr(`Imported ${stored.length} secrets under ${prefix}/\n`);
-      if (outputFlags(options).json !== undefined) {
-        factory.io.writeOut(`${JSON.stringify(stored)}\n`);
-      }
-    })
-  );
-
-  return command;
+      factory.io.writeErr('Imported ' + stored.length + ' secrets under ' + prefix + '/\n');
+      if (outputFlags(options).json !== undefined) factory.io.writeOut(JSON.stringify(stored) + '\n');
+    }));
+  root.addCommand(createSecretsRunCommand(factory));
 }
 
 export type ChildSpawner = (
@@ -219,13 +85,14 @@ async function revealEnvironment(
     const page = (await requestOperation(factory, 'secrets.list', {
       query: { prefix: `${prefix}/`, limit: 200, ...(cursor ? { cursor } : {}) } as CliOperationQuery<'secrets.list'>,
       actingSubaccountId,
-    })) as { data: { id: string; type: 'login' | 'value' }[]; nextCursor: string | null };
+    })) as { data: { id: string; path: string; type: 'login' | 'value' }[]; nextCursor: string | null };
     for (const secret of page.data) {
       const revealed = (await requestOperation(factory, 'secrets.reveal', {
-        body: { path: secret.id } as CliOperationJsonBody<'secrets.reveal'>,
+        pathParams: { secret: secret.id },
+        body: {} as CliOperationJsonBody<'secrets.reveal'>,
         actingSubaccountId,
       })) as { username: string | null; password?: string; value?: string };
-      const name = envName(secret.id.slice(prefix.length + 1));
+      const name = envName(secret.path.slice(prefix.length + 1));
       if (secret.type === 'value') {
         if (revealed.value !== undefined) env[name] = revealed.value;
       } else {

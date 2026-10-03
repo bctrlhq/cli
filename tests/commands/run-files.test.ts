@@ -22,13 +22,13 @@ test('runs files commands use the Run file routes', async () => {
     const local = path.join(dir, 'invoice.pdf');
     await writeFile(local, 'pdf');
 
-    await cli(['runs', 'files', 'list', 'run_1', '--role', 'input']);
-    await cli(['runs', 'files', 'get', 'run_1', 'file_1']);
-    await cli(['runs', 'files', 'add', 'run_1', 'file_1']);
-    await cli(['runs', 'files', 'upload', 'run_1', local, '--path', 'invoices/a.pdf', '--idempotency-key', 'k1']);
-    await cli(['runs', 'files', 'retry', 'run_1', 'file_1']);
-    await cli(['runs', 'files', 'remove', 'run_1', 'file_1', '--yes']);
-    await cli(['runs', 'files', 'collect', 'run_1', 'downloads/r.pdf', '--filename', 'r.pdf']);
+    await cli(['runs', 'files', 'list', 'run_u1234567890123456789012', '--role', 'input']);
+    await cli(['runs', 'files', 'get', 'run_u1234567890123456789012', 'file_u1234567890123456789012']);
+    await cli(['runs', 'files', 'add', 'run_u1234567890123456789012', '--file-id', 'file_u1234567890123456789012']);
+    await cli(['runs', 'files', 'upload', 'run_u1234567890123456789012', '--file', local, '--path', 'invoices/a.pdf', '--idempotency-key', 'k1']);
+    await cli(['runs', 'files', 'retry', 'run_u1234567890123456789012', 'file_u1234567890123456789012']);
+    await cli(['runs', 'files', 'remove', 'run_u1234567890123456789012', 'file_u1234567890123456789012', '--yes']);
+    await cli(['runs', 'files', 'collect', 'run_u1234567890123456789012', '--runtime-path', 'downloads/r.pdf', '--filename', 'r.pdf']);
   } finally {
     await rm(dir, { recursive: true, force: true });
   }
@@ -36,19 +36,19 @@ test('runs files commands use the Run file routes', async () => {
   assert.deepEqual(
     calls.map((call) => `${call.method} ${call.path}`),
     [
-      'get /runs/run_1/files',
-      'get /runs/run_1/files/file_1',
-      'post /runs/run_1/files',
-      'uploadFile /runs/run_1/files/upload',
-      'post /runs/run_1/files/file_1/retry',
-      'delete /runs/run_1/files/file_1',
-      'post /runs/run_1/files/collect',
+      'get /runs/run_u1234567890123456789012/files',
+      'get /runs/run_u1234567890123456789012/files/file_u1234567890123456789012',
+      'post /runs/run_u1234567890123456789012/files',
+      'uploadFile /runs/run_u1234567890123456789012/files/upload',
+      'post /runs/run_u1234567890123456789012/files/file_u1234567890123456789012/retry',
+      'delete /runs/run_u1234567890123456789012/files/file_u1234567890123456789012',
+      'post /runs/run_u1234567890123456789012/files/collect',
     ]
   );
   const options = calls.map((call) => call.options as Record<string, unknown> | undefined);
   assert.equal((options[0]?.query as Record<string, unknown>).role, 'input');
-  assert.deepEqual(options[2]?.body, { fileId: 'file_1' });
-  assert.equal(options[3]?.idempotencyKey, 'k1');
+  assert.deepEqual(options[2]?.body, { fileId: 'file_u1234567890123456789012' });
+  assert.equal((options[3]?.headers as Record<string, string>)['Idempotency-Key'], 'k1');
   assert.deepEqual(options[3]?.fields, { path: 'invoices/a.pdf' });
   assert.deepEqual(options[6]?.body, { runtimePath: 'downloads/r.pdf', filename: 'r.pdf' });
 });

@@ -14,7 +14,7 @@ test('file list maps --space to v1 spaceId query', async () => {
     })
   );
 
-  await command.parseAsync(['file', 'list', '--space', 'sp_test', '--prefix', 'runs/', '--limit', '10'], {
+  await command.parseAsync(['files', 'list', '--space-id', 'sp_test', '--prefix', 'runs/', '--limit', '10'], {
     from: 'user',
   });
 
@@ -25,16 +25,8 @@ test('file list maps --space to v1 spaceId query', async () => {
       options: {
         query: {
           spaceId: 'sp_test',
-          runId: undefined,
-          runtimeId: undefined,
-          type: undefined,
-          source: undefined,
           prefix: 'runs/',
-          include: undefined,
-          createdAfter: undefined,
-          q: undefined,
           limit: 10,
-          cursor: undefined,
         },
       },
     },

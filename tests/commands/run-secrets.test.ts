@@ -14,8 +14,8 @@ function secretsClient(calls: ApiCall[]): BctrlApiClient {
       calls.push({ method: 'get', path, options });
       return {
         data: [
-          { id: 'prod/app/db/url', type: 'value' },
-          { id: 'prod/app/github', type: 'login' },
+          { id: 'sec_u1234567890123456789012', path: 'prod/app/db/url', type: 'value' },
+          { id: 'sec_u1234567890123456789013', path: 'prod/app/github', type: 'login' },
         ],
         folders: [],
         nextCursor: null,
@@ -23,11 +23,11 @@ function secretsClient(calls: ApiCall[]): BctrlApiClient {
     },
     post: async <T>(path: string, options?: unknown) => {
       calls.push({ method: 'post', path, options });
-      const secretPath = (options as { body: { path: string } }).body.path;
+      const secretId = path.split('/')[2];
       return (
-        secretPath === 'prod/app/db/url'
-          ? { id: secretPath, version: 1, username: null, value: 'postgres://secret' }
-          : { id: secretPath, version: 4, username: 'bot', password: 'hunter2' }
+        secretId === 'sec_u1234567890123456789012'
+          ? { id: secretId, version: 1, username: null, value: 'postgres://secret' }
+          : { id: secretId, version: 4, username: 'bot', password: 'hunter2' }
       ) as T;
     },
   };
@@ -61,8 +61,8 @@ test('run reveals the prefix and hands the values to the child environment only'
     options: { query: { prefix: 'prod/app/', limit: 200 } },
   });
   assert.deepEqual(
-    calls.slice(1).map((call) => (call.options as { body: { path: string } }).body.path),
-    ['prod/app/db/url', 'prod/app/github']
+    calls.slice(1).map((call) => call.path),
+    ['/secrets/sec_u1234567890123456789012/reveal', '/secrets/sec_u1234567890123456789013/reveal']
   );
   assert.equal(spawned.length, 1);
   assert.equal(spawned[0]!.command, 'node');

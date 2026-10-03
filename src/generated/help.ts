@@ -94,17 +94,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic account.get",
-      usage: "bctrl help --topic account.get",
+      command: "bctrl account get",
+      usage: "bctrl account get",
     },
     mcp: {
-      toolName: "bctrl_account_get",
+      toolName: "account_get",
       operationResource: "operations://account.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic account.get",
+        command: "bctrl account get --help",
       },
     ],
   },
@@ -228,18 +228,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic account.update",
-      usage: "bctrl help --topic account.update",
+      command: "bctrl account update",
+      usage: "bctrl account update",
     },
     mcp: {
-      toolName: "bctrl_account_update",
+      toolName: "account_update",
       operationResource: "operations://account.update",
       schemaResources: ["schemas://AccountPatchRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic account.update",
+        command: "bctrl account update --help",
       },
     ],
   },
@@ -477,18 +477,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.create",
-      usage: "bctrl help --topic ai.credentials.create",
+      command: "bctrl ai credentials create",
+      usage: "bctrl ai credentials create",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_create",
+      toolName: "ai_credentials_create",
       operationResource: "operations://ai.credentials.create",
       schemaResources: ["schemas://AiCredentialCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.create",
+        command: "bctrl ai credentials create --help",
       },
     ],
   },
@@ -585,17 +585,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.delete",
-      usage: "bctrl help --topic ai.credentials.delete",
+      command: "bctrl ai credentials delete",
+      usage: "bctrl ai credentials delete <credentialId>",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_delete",
+      toolName: "ai_credentials_delete",
       operationResource: "operations://ai.credentials.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.delete",
+        command: "bctrl ai credentials delete --help",
       },
     ],
   },
@@ -764,17 +764,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.get",
-      usage: "bctrl help --topic ai.credentials.get",
+      command: "bctrl ai credentials get",
+      usage: "bctrl ai credentials get <credentialId>",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_get",
+      toolName: "ai_credentials_get",
       operationResource: "operations://ai.credentials.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.get",
+        command: "bctrl ai credentials get --help",
       },
     ],
   },
@@ -905,17 +905,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.list",
-      usage: "bctrl help --topic ai.credentials.list",
+      command: "bctrl ai credentials list",
+      usage: "bctrl ai credentials list",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_list",
+      toolName: "ai_credentials_list",
       operationResource: "operations://ai.credentials.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.list",
+        command: "bctrl ai credentials list --help",
       },
     ],
   },
@@ -1022,17 +1022,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.test",
-      usage: "bctrl help --topic ai.credentials.test",
+      command: "bctrl ai credentials test",
+      usage: "bctrl ai credentials test <credentialId>",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_test",
+      toolName: "ai_credentials_test",
       operationResource: "operations://ai.credentials.test",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.test",
+        command: "bctrl ai credentials test --help",
       },
     ],
   },
@@ -1243,18 +1243,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.update",
-      usage: "bctrl help --topic ai.credentials.update",
+      command: "bctrl ai credentials update",
+      usage: "bctrl ai credentials update <credentialId>",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_update",
+      toolName: "ai_credentials_update",
       operationResource: "operations://ai.credentials.update",
       schemaResources: ["schemas://AiCredentialUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.update",
+        command: "bctrl ai credentials update --help",
       },
     ],
   },
@@ -1385,17 +1385,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.models.list",
-      usage: "bctrl help --topic ai.models.list",
+      command: "bctrl ai models list",
+      usage: "bctrl ai models list",
     },
     mcp: {
-      toolName: "bctrl_ai_models_list",
+      toolName: "ai_models_list",
       operationResource: "operations://ai.models.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.models.list",
+        command: "bctrl ai models list --help",
       },
     ],
   },
@@ -1517,18 +1517,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic api-keys.create",
-      usage: "bctrl help --topic api-keys.create",
+      command: "bctrl api-keys create",
+      usage: "bctrl api-keys create",
     },
     mcp: {
-      toolName: "bctrl_api_keys_create",
+      toolName: "api-keys_create",
       operationResource: "operations://api-keys.create",
       schemaResources: ["schemas://ApiKeyCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic api-keys.create",
+        command: "bctrl api-keys create --help",
       },
     ],
   },
@@ -1617,17 +1617,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic api-keys.delete",
-      usage: "bctrl help --topic api-keys.delete",
+      command: "bctrl api-keys delete",
+      usage: "bctrl api-keys delete <keyId>",
     },
     mcp: {
-      toolName: "bctrl_api_keys_delete",
+      toolName: "api-keys_delete",
       operationResource: "operations://api-keys.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic api-keys.delete",
+        command: "bctrl api-keys delete --help",
       },
     ],
   },
@@ -1730,17 +1730,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic api-keys.list",
-      usage: "bctrl help --topic api-keys.list",
+      command: "bctrl api-keys list",
+      usage: "bctrl api-keys list",
     },
     mcp: {
-      toolName: "bctrl_api_keys_list",
+      toolName: "api-keys_list",
       operationResource: "operations://api-keys.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic api-keys.list",
+        command: "bctrl api-keys list --help",
       },
     ],
   },
@@ -1863,17 +1863,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic auth.whoami",
-      usage: "bctrl help --topic auth.whoami",
+      command: "bctrl auth whoami",
+      usage: "bctrl auth whoami",
     },
     mcp: {
-      toolName: "bctrl_auth_whoami",
+      toolName: "auth_whoami",
       operationResource: "operations://auth.whoami",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic auth.whoami",
+        command: "bctrl auth whoami --help",
       },
     ],
   },
@@ -2085,18 +2085,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.create",
-      usage: "bctrl help --topic browser.extensions.create",
+      command: "bctrl browser extensions create",
+      usage: "bctrl browser extensions create",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_create",
+      toolName: "browser_extensions_create",
       operationResource: "operations://browser.extensions.create",
       schemaResources: ["schemas://BrowserExtensionCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.create",
+        command: "bctrl browser extensions create --help",
       },
     ],
   },
@@ -2196,17 +2196,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.delete",
-      usage: "bctrl help --topic browser.extensions.delete",
+      command: "bctrl browser extensions delete",
+      usage: "bctrl browser extensions delete <extensionId>",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_delete",
+      toolName: "browser_extensions_delete",
       operationResource: "operations://browser.extensions.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.delete",
+        command: "bctrl browser extensions delete --help",
       },
     ],
   },
@@ -2403,17 +2403,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.get",
-      usage: "bctrl help --topic browser.extensions.get",
+      command: "bctrl browser extensions get",
+      usage: "bctrl browser extensions get <extensionId>",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_get",
+      toolName: "browser_extensions_get",
       operationResource: "operations://browser.extensions.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.get",
+        command: "bctrl browser extensions get --help",
       },
     ],
   },
@@ -2529,17 +2529,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.list",
-      usage: "bctrl help --topic browser.extensions.list",
+      command: "bctrl browser extensions list",
+      usage: "bctrl browser extensions list",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_list",
+      toolName: "browser_extensions_list",
       operationResource: "operations://browser.extensions.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.list",
+        command: "bctrl browser extensions list --help",
       },
     ],
   },
@@ -2756,18 +2756,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.update",
-      usage: "bctrl help --topic browser.extensions.update",
+      command: "bctrl browser extensions update",
+      usage: "bctrl browser extensions update <extensionId>",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_update",
+      toolName: "browser_extensions_update",
       operationResource: "operations://browser.extensions.update",
       schemaResources: ["schemas://BrowserExtensionUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.update",
+        command: "bctrl browser extensions update --help",
       },
     ],
   },
@@ -3031,18 +3031,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browsers.connections.revoke",
-      usage: "bctrl help --topic browsers.connections.revoke",
+      command: "bctrl browsers connections revoke",
+      usage: "bctrl browsers connections revoke <browserId>",
     },
     mcp: {
-      toolName: "bctrl_browsers_connections_revoke",
+      toolName: "browsers_connections_revoke",
       operationResource: "operations://browsers.connections.revoke",
       schemaResources: ["schemas://BrowsersConnectionsRevokeRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browsers.connections.revoke",
+        command: "bctrl browsers connections revoke --help",
       },
     ],
   },
@@ -3421,18 +3421,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browsers.create",
-      usage: "bctrl help --topic browsers.create",
+      command: "bctrl browsers create",
+      usage: "bctrl browsers create",
     },
     mcp: {
-      toolName: "bctrl_browsers_create",
+      toolName: "browsers_create",
       operationResource: "operations://browsers.create",
       schemaResources: ["schemas://BrowserCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browsers.create",
+        command: "bctrl browsers create --help",
       },
     ],
   },
@@ -3522,17 +3522,145 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browsers.delete",
-      usage: "bctrl help --topic browsers.delete",
+      command: "bctrl browsers delete",
+      usage: "bctrl browsers delete <browserId>",
     },
     mcp: {
-      toolName: "bctrl_browsers_delete",
+      toolName: "browsers_delete",
       operationResource: "operations://browsers.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browsers.delete",
+        command: "bctrl browsers delete --help",
+      },
+    ],
+  },
+  "browsers.events.stream": {
+    type: "topic",
+    topic: "browsers.events.stream",
+    aliases: ["browsers events stream"],
+    title: "Stream events from the browser’s current Run",
+    summary:
+      "Stream immutable Events from the browser’s current Run, selected when the connection opens. The stream stays on that Run across browser restarts. Resume using an Event ID from the selected Run.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "category",
+          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha[]",
+          required: false,
+        },
+        {
+          name: "type",
+          type: "string | string[]",
+          required: false,
+        },
+        {
+          name: "actor",
+          type: "string",
+          required: false,
+          description: "Actor ID.",
+        },
+        {
+          name: "actorType",
+          type: "api_key | agent | human | platform",
+          required: false,
+          values: ["api_key", "agent", "human", "platform"],
+        },
+        {
+          name: "channel",
+          type: "api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform | api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform[]",
+          required: false,
+        },
+        {
+          name: "outcome",
+          type: "ok | denied | failed | unknown | ok | denied | failed | unknown[]",
+          required: false,
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "after",
+          type: "string",
+          required: false,
+          description: "Resume after this Event ID from the same Run.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Last-Event-ID",
+          type: "string",
+          required: false,
+          description:
+            "Optional last delivered event identifier used to resume an SSE stream.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}/events/stream",
+      operationId: "browsers.events.stream",
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.events.stream",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers events stream",
+      usage: "bctrl browsers events stream <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_events_stream",
+      operationResource: "operations://browsers.events.stream",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers events stream --help",
       },
     ],
   },
@@ -3790,17 +3918,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browsers.get",
-      usage: "bctrl help --topic browsers.get",
+      command: "bctrl browsers get",
+      usage: "bctrl browsers get <browserId>",
     },
     mcp: {
-      toolName: "bctrl_browsers_get",
+      toolName: "browsers_get",
       operationResource: "operations://browsers.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browsers.get",
+        command: "bctrl browsers get --help",
       },
     ],
   },
@@ -3917,17 +4045,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browsers.list",
-      usage: "bctrl help --topic browsers.list",
+      command: "bctrl browsers list",
+      usage: "bctrl browsers list",
     },
     mcp: {
-      toolName: "bctrl_browsers_list",
+      toolName: "browsers_list",
       operationResource: "operations://browsers.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browsers.list",
+        command: "bctrl browsers list --help",
       },
     ],
   },
@@ -4053,17 +4181,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browsers.runs.list",
-      usage: "bctrl help --topic browsers.runs.list",
+      command: "bctrl browsers runs list",
+      usage: "bctrl browsers runs list <browserId>",
     },
     mcp: {
-      toolName: "bctrl_browsers_runs_list",
+      toolName: "browsers_runs_list",
       operationResource: "operations://browsers.runs.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browsers.runs.list",
+        command: "bctrl browsers runs list --help",
       },
     ],
   },
@@ -4332,18 +4460,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browsers.start",
-      usage: "bctrl help --topic browsers.start",
+      command: "bctrl browsers start",
+      usage: "bctrl browsers start <browserId>",
     },
     mcp: {
-      toolName: "bctrl_browsers_start",
+      toolName: "browsers_start",
       operationResource: "operations://browsers.start",
       schemaResources: ["schemas://BrowsersStartRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browsers.start",
+        command: "bctrl browsers start --help",
       },
     ],
   },
@@ -4620,18 +4748,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browsers.stop",
-      usage: "bctrl help --topic browsers.stop",
+      command: "bctrl browsers stop",
+      usage: "bctrl browsers stop <browserId>",
     },
     mcp: {
-      toolName: "bctrl_browsers_stop",
+      toolName: "browsers_stop",
       operationResource: "operations://browsers.stop",
       schemaResources: ["schemas://BrowsersStopRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browsers.stop",
+        command: "bctrl browsers stop --help",
       },
     ],
   },
@@ -5013,18 +5141,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browsers.update",
-      usage: "bctrl help --topic browsers.update",
+      command: "bctrl browsers update",
+      usage: "bctrl browsers update <browserId>",
     },
     mcp: {
-      toolName: "bctrl_browsers_update",
+      toolName: "browsers_update",
       operationResource: "operations://browsers.update",
       schemaResources: ["schemas://BrowsersUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browsers.update",
+        command: "bctrl browsers update --help",
       },
     ],
   },
@@ -5125,17 +5253,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.cancel",
-      usage: "bctrl help --topic conversations.cancel",
+      command: "bctrl conversations cancel",
+      usage: "bctrl conversations cancel <conversationId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_cancel",
+      toolName: "conversations_cancel",
       operationResource: "operations://conversations.cancel",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.cancel",
+        command: "bctrl conversations cancel --help",
       },
     ],
   },
@@ -5316,18 +5444,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.create",
-      usage: "bctrl help --topic conversations.create",
+      command: "bctrl conversations create",
+      usage: "bctrl conversations create",
     },
     mcp: {
-      toolName: "bctrl_conversations_create",
+      toolName: "conversations_create",
       operationResource: "operations://conversations.create",
       schemaResources: ["schemas://ConversationCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.create",
+        command: "bctrl conversations create --help",
       },
     ],
   },
@@ -5510,17 +5638,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.get",
-      usage: "bctrl help --topic conversations.get",
+      command: "bctrl conversations get",
+      usage: "bctrl conversations get <conversationId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_get",
+      toolName: "conversations_get",
       operationResource: "operations://conversations.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.get",
+        command: "bctrl conversations get --help",
       },
     ],
   },
@@ -5636,17 +5764,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.list",
-      usage: "bctrl help --topic conversations.list",
+      command: "bctrl conversations list",
+      usage: "bctrl conversations list",
     },
     mcp: {
-      toolName: "bctrl_conversations_list",
+      toolName: "conversations_list",
       operationResource: "operations://conversations.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.list",
+        command: "bctrl conversations list --help",
       },
     ],
   },
@@ -5806,18 +5934,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.messages.create",
-      usage: "bctrl help --topic conversations.messages.create",
+      command: "bctrl conversations messages create",
+      usage: "bctrl conversations messages create <conversationId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_messages_create",
+      toolName: "conversations_messages_create",
       operationResource: "operations://conversations.messages.create",
       schemaResources: ["schemas://ConversationMessageCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.messages.create",
+        command: "bctrl conversations messages create --help",
       },
     ],
   },
@@ -5997,18 +6125,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.start",
-      usage: "bctrl help --topic conversations.start",
+      command: "bctrl conversations start",
+      usage: "bctrl conversations start",
     },
     mcp: {
-      toolName: "bctrl_conversations_start",
+      toolName: "conversations_start",
       operationResource: "operations://conversations.start",
       schemaResources: ["schemas://ConversationStartRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.start",
+        command: "bctrl conversations start --help",
       },
     ],
   },
@@ -6088,17 +6216,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.stream",
-      usage: "bctrl help --topic conversations.stream",
+      command: "bctrl conversations stream",
+      usage: "bctrl conversations stream <conversationId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_stream",
+      toolName: "conversations_stream",
       operationResource: "operations://conversations.stream",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.stream",
+        command: "bctrl conversations stream --help",
       },
     ],
   },
@@ -6290,17 +6418,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.turns.cancel",
-      usage: "bctrl help --topic conversations.turns.cancel",
+      command: "bctrl conversations turns cancel",
+      usage: "bctrl conversations turns cancel <conversationId> <turnId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_turns_cancel",
+      toolName: "conversations_turns_cancel",
       operationResource: "operations://conversations.turns.cancel",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.turns.cancel",
+        command: "bctrl conversations turns cancel --help",
       },
     ],
   },
@@ -6492,17 +6620,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.turns.get",
-      usage: "bctrl help --topic conversations.turns.get",
+      command: "bctrl conversations turns get",
+      usage: "bctrl conversations turns get <conversationId> <turnId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_turns_get",
+      toolName: "conversations_turns_get",
       operationResource: "operations://conversations.turns.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.turns.get",
+        command: "bctrl conversations turns get --help",
       },
     ],
   },
@@ -6684,18 +6812,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.update",
-      usage: "bctrl help --topic conversations.update",
+      command: "bctrl conversations update",
+      usage: "bctrl conversations update <conversationId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_update",
+      toolName: "conversations_update",
       operationResource: "operations://conversations.update",
       schemaResources: ["schemas://ConversationUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.update",
+        command: "bctrl conversations update --help",
       },
     ],
   },
@@ -6886,18 +7014,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.connections.create",
-      usage: "bctrl help --topic environments.connections.create",
+      command: "bctrl environments connections create",
+      usage: "bctrl environments connections create <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_connections_create",
+      toolName: "environments_connections_create",
       operationResource: "operations://environments.connections.create",
       schemaResources: ["schemas://EnvironmentConnectionCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.connections.create",
+        command: "bctrl environments connections create --help",
       },
     ],
   },
@@ -7025,17 +7153,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.connections.delete",
-      usage: "bctrl help --topic environments.connections.delete",
+      command: "bctrl environments connections delete",
+      usage: "bctrl environments connections delete <connectionId>",
     },
     mcp: {
-      toolName: "bctrl_environments_connections_delete",
+      toolName: "environments_connections_delete",
       operationResource: "operations://environments.connections.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.connections.delete",
+        command: "bctrl environments connections delete --help",
       },
     ],
   },
@@ -7155,17 +7283,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.connections.get",
-      usage: "bctrl help --topic environments.connections.get",
+      command: "bctrl environments connections get",
+      usage: "bctrl environments connections get <connectionId>",
     },
     mcp: {
-      toolName: "bctrl_environments_connections_get",
+      toolName: "environments_connections_get",
       operationResource: "operations://environments.connections.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.connections.get",
+        command: "bctrl environments connections get --help",
       },
     ],
   },
@@ -7342,18 +7470,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.create",
-      usage: "bctrl help --topic environments.create",
+      command: "bctrl environments create",
+      usage: "bctrl environments create",
     },
     mcp: {
-      toolName: "bctrl_environments_create",
+      toolName: "environments_create",
       operationResource: "operations://environments.create",
       schemaResources: ["schemas://EnvironmentCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.create",
+        command: "bctrl environments create --help",
       },
     ],
   },
@@ -7442,17 +7570,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.delete",
-      usage: "bctrl help --topic environments.delete",
+      command: "bctrl environments delete",
+      usage: "bctrl environments delete <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_delete",
+      toolName: "environments_delete",
       operationResource: "operations://environments.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.delete",
+        command: "bctrl environments delete --help",
       },
     ],
   },
@@ -7623,17 +7751,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.execs.cancel",
-      usage: "bctrl help --topic environments.execs.cancel",
+      command: "bctrl environments execs cancel",
+      usage: "bctrl environments execs cancel <execId>",
     },
     mcp: {
-      toolName: "bctrl_environments_execs_cancel",
+      toolName: "environments_execs_cancel",
       operationResource: "operations://environments.execs.cancel",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.execs.cancel",
+        command: "bctrl environments execs cancel --help",
       },
     ],
   },
@@ -7771,18 +7899,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.execs.create",
-      usage: "bctrl help --topic environments.execs.create",
+      command: "bctrl environments execs create",
+      usage: "bctrl environments execs create <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_execs_create",
+      toolName: "environments_execs_create",
       operationResource: "operations://environments.execs.create",
       schemaResources: ["schemas://EnvironmentExecCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.execs.create",
+        command: "bctrl environments execs create --help",
       },
     ],
   },
@@ -7947,17 +8075,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.execs.get",
-      usage: "bctrl help --topic environments.execs.get",
+      command: "bctrl environments execs get",
+      usage: "bctrl environments execs get <execId>",
     },
     mcp: {
-      toolName: "bctrl_environments_execs_get",
+      toolName: "environments_execs_get",
       operationResource: "operations://environments.execs.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.execs.get",
+        command: "bctrl environments execs get --help",
       },
     ],
   },
@@ -8028,17 +8156,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.execs.stream",
-      usage: "bctrl help --topic environments.execs.stream",
+      command: "bctrl environments execs stream",
+      usage: "bctrl environments execs stream <execId>",
     },
     mcp: {
-      toolName: "bctrl_environments_execs_stream",
+      toolName: "environments_execs_stream",
       operationResource: "operations://environments.execs.stream",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.execs.stream",
+        command: "bctrl environments execs stream --help",
       },
     ],
   },
@@ -8239,18 +8367,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.files.collect",
-      usage: "bctrl help --topic environments.files.collect",
+      command: "bctrl environments files collect",
+      usage: "bctrl environments files collect <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_files_collect",
+      toolName: "environments_files_collect",
       operationResource: "operations://environments.files.collect",
       schemaResources: ["schemas://EnvironmentFileCollectRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.files.collect",
+        command: "bctrl environments files collect --help",
       },
     ],
   },
@@ -8341,17 +8469,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.files.list",
-      usage: "bctrl help --topic environments.files.list",
+      command: "bctrl environments files list",
+      usage: "bctrl environments files list <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_files_list",
+      toolName: "environments_files_list",
       operationResource: "operations://environments.files.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.files.list",
+        command: "bctrl environments files list --help",
       },
     ],
   },
@@ -8465,18 +8593,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.files.stage",
-      usage: "bctrl help --topic environments.files.stage",
+      command: "bctrl environments files stage",
+      usage: "bctrl environments files stage <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_files_stage",
+      toolName: "environments_files_stage",
       operationResource: "operations://environments.files.stage",
       schemaResources: ["schemas://EnvironmentFileStageRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.files.stage",
+        command: "bctrl environments files stage --help",
       },
     ],
   },
@@ -8628,17 +8756,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.get",
-      usage: "bctrl help --topic environments.get",
+      command: "bctrl environments get",
+      usage: "bctrl environments get <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_get",
+      toolName: "environments_get",
       operationResource: "operations://environments.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.get",
+        command: "bctrl environments get --help",
       },
     ],
   },
@@ -8733,17 +8861,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.list",
-      usage: "bctrl help --topic environments.list",
+      command: "bctrl environments list",
+      usage: "bctrl environments list",
     },
     mcp: {
-      toolName: "bctrl_environments_list",
+      toolName: "environments_list",
       operationResource: "operations://environments.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.list",
+        command: "bctrl environments list --help",
       },
     ],
   },
@@ -8914,18 +9042,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.runtime.attach",
-      usage: "bctrl help --topic environments.runtime.attach",
+      command: "bctrl environments runtime attach",
+      usage: "bctrl environments runtime attach <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_runtime_attach",
+      toolName: "environments_runtime_attach",
       operationResource: "operations://environments.runtime.attach",
       schemaResources: ["schemas://EnvironmentRuntimeAttachRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.runtime.attach",
+        command: "bctrl environments runtime attach --help",
       },
     ],
   },
@@ -9084,17 +9212,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.start",
-      usage: "bctrl help --topic environments.start",
+      command: "bctrl environments start",
+      usage: "bctrl environments start <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_start",
+      toolName: "environments_start",
       operationResource: "operations://environments.start",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.start",
+        command: "bctrl environments start --help",
       },
     ],
   },
@@ -9267,18 +9395,173 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.stop",
-      usage: "bctrl help --topic environments.stop",
+      command: "bctrl environments stop",
+      usage: "bctrl environments stop <environmentId>",
     },
     mcp: {
-      toolName: "bctrl_environments_stop",
+      toolName: "environments_stop",
       operationResource: "operations://environments.stop",
       schemaResources: ["schemas://EnvironmentStopRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.stop",
+        command: "bctrl environments stop --help",
+      },
+    ],
+  },
+  "events.list": {
+    type: "topic",
+    topic: "events.list",
+    aliases: ["events list"],
+    title: "List organization events",
+    summary:
+      "List immutable Events visible in the organization, subaccount and selected Space. Filter by Run, browser, event metadata or occurrence time.",
+    inputs: {
+      query: [
+        {
+          name: "category",
+          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha[]",
+          required: false,
+        },
+        {
+          name: "type",
+          type: "string | string[]",
+          required: false,
+        },
+        {
+          name: "actor",
+          type: "string",
+          required: false,
+          description: "Actor ID.",
+        },
+        {
+          name: "actorType",
+          type: "api_key | agent | human | platform",
+          required: false,
+          values: ["api_key", "agent", "human", "platform"],
+        },
+        {
+          name: "channel",
+          type: "api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform | api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform[]",
+          required: false,
+        },
+        {
+          name: "outcome",
+          type: "ok | denied | failed | unknown | ok | denied | failed | unknown[]",
+          required: false,
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "runId",
+          type: "string",
+          required: false,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+        {
+          name: "runtimeId",
+          type: "string",
+          required: false,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/events",
+      operationId: "events.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "events.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl events list",
+      usage: "bctrl events list",
+    },
+    mcp: {
+      toolName: "events_list",
+      operationResource: "operations://events.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl events list --help",
       },
     ],
   },
@@ -9353,17 +9636,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.content",
-      usage: "bctrl help --topic files.content",
+      command: "bctrl files content",
+      usage: "bctrl files content <fileId>",
     },
     mcp: {
-      toolName: "bctrl_files_content",
+      toolName: "files_content",
       operationResource: "operations://files.content",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.content",
+        command: "bctrl files content --help",
       },
     ],
   },
@@ -9460,17 +9743,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.delete",
-      usage: "bctrl help --topic files.delete",
+      command: "bctrl files delete",
+      usage: "bctrl files delete <fileId>",
     },
     mcp: {
-      toolName: "bctrl_files_delete",
+      toolName: "files_delete",
       operationResource: "operations://files.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.delete",
+        command: "bctrl files delete --help",
       },
     ],
   },
@@ -9663,17 +9946,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.get",
-      usage: "bctrl help --topic files.get",
+      command: "bctrl files get",
+      usage: "bctrl files get <fileId>",
     },
     mcp: {
-      toolName: "bctrl_files_get",
+      toolName: "files_get",
       operationResource: "operations://files.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.get",
+        command: "bctrl files get --help",
       },
     ],
   },
@@ -9836,17 +10119,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.list",
-      usage: "bctrl help --topic files.list",
+      command: "bctrl files list",
+      usage: "bctrl files list",
     },
     mcp: {
-      toolName: "bctrl_files_list",
+      toolName: "files_list",
       operationResource: "operations://files.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.list",
+        command: "bctrl files list --help",
       },
     ],
   },
@@ -10055,18 +10338,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.update",
-      usage: "bctrl help --topic files.update",
+      command: "bctrl files update",
+      usage: "bctrl files update <fileId>",
     },
     mcp: {
-      toolName: "bctrl_files_update",
+      toolName: "files_update",
       operationResource: "operations://files.update",
       schemaResources: ["schemas://FileUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.update",
+        command: "bctrl files update --help",
       },
     ],
   },
@@ -10260,17 +10543,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.upload",
-      usage: "bctrl help --topic files.upload",
+      command: "bctrl files upload",
+      usage: "bctrl files upload",
     },
     mcp: {
-      toolName: "bctrl_files_upload",
+      toolName: "files_upload",
       operationResource: "operations://files.upload",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.upload",
+        command: "bctrl files upload --help",
       },
     ],
   },
@@ -10430,17 +10713,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic help",
-      usage: "bctrl help --topic help",
+      command: "bctrl help",
+      usage: "bctrl help",
     },
     mcp: {
-      toolName: "bctrl_help",
+      toolName: "help",
       operationResource: "operations://help",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic help",
+        command: "bctrl help --help",
       },
     ],
   },
@@ -10522,17 +10805,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic locations.list",
-      usage: "bctrl help --topic locations.list",
+      command: "bctrl locations list",
+      usage: "bctrl locations list",
     },
     mcp: {
-      toolName: "bctrl_locations_list",
+      toolName: "locations_list",
       operationResource: "operations://locations.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic locations.list",
+        command: "bctrl locations list --help",
       },
     ],
   },
@@ -10687,18 +10970,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic notification-recipients.create",
-      usage: "bctrl help --topic notification-recipients.create",
+      command: "bctrl notification-recipients create",
+      usage: "bctrl notification-recipients create",
     },
     mcp: {
-      toolName: "bctrl_notification_recipients_create",
+      toolName: "notification-recipients_create",
       operationResource: "operations://notification-recipients.create",
       schemaResources: ["schemas://NotificationRecipientCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic notification-recipients.create",
+        command: "bctrl notification-recipients create --help",
       },
     ],
   },
@@ -10798,17 +11081,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic notification-recipients.delete",
-      usage: "bctrl help --topic notification-recipients.delete",
+      command: "bctrl notification-recipients delete",
+      usage: "bctrl notification-recipients delete <recipientId>",
     },
     mcp: {
-      toolName: "bctrl_notification_recipients_delete",
+      toolName: "notification-recipients_delete",
       operationResource: "operations://notification-recipients.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic notification-recipients.delete",
+        command: "bctrl notification-recipients delete --help",
       },
     ],
   },
@@ -10918,17 +11201,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic notification-recipients.list",
-      usage: "bctrl help --topic notification-recipients.list",
+      command: "bctrl notification-recipients list",
+      usage: "bctrl notification-recipients list",
     },
     mcp: {
-      toolName: "bctrl_notification_recipients_list",
+      toolName: "notification-recipients_list",
       operationResource: "operations://notification-recipients.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic notification-recipients.list",
+        command: "bctrl notification-recipients list --help",
       },
     ],
   },
@@ -11089,18 +11372,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic notification-recipients.update",
-      usage: "bctrl help --topic notification-recipients.update",
+      command: "bctrl notification-recipients update",
+      usage: "bctrl notification-recipients update <recipientId>",
     },
     mcp: {
-      toolName: "bctrl_notification_recipients_update",
+      toolName: "notification-recipients_update",
       operationResource: "operations://notification-recipients.update",
       schemaResources: ["schemas://NotificationRecipientUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic notification-recipients.update",
+        command: "bctrl notification-recipients update --help",
       },
     ],
   },
@@ -11591,18 +11874,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.create",
-      usage: "bctrl help --topic proxies.create",
+      command: "bctrl proxies create",
+      usage: "bctrl proxies create",
     },
     mcp: {
-      toolName: "bctrl_proxies_create",
+      toolName: "proxies_create",
       operationResource: "operations://proxies.create",
       schemaResources: ["schemas://ProxyCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.create",
+        command: "bctrl proxies create --help",
       },
     ],
   },
@@ -11699,17 +11982,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.delete",
-      usage: "bctrl help --topic proxies.delete",
+      command: "bctrl proxies delete",
+      usage: "bctrl proxies delete <proxyId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_delete",
+      toolName: "proxies_delete",
       operationResource: "operations://proxies.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.delete",
+        command: "bctrl proxies delete --help",
       },
     ],
   },
@@ -11828,17 +12111,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.geo.list",
-      usage: "bctrl help --topic proxies.geo.list",
+      command: "bctrl proxies geo list",
+      usage: "bctrl proxies geo list",
     },
     mcp: {
-      toolName: "bctrl_proxies_geo_list",
+      toolName: "proxies_geo_list",
       operationResource: "operations://proxies.geo.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.geo.list",
+        command: "bctrl proxies geo list --help",
       },
     ],
   },
@@ -12143,17 +12426,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.get",
-      usage: "bctrl help --topic proxies.get",
+      command: "bctrl proxies get",
+      usage: "bctrl proxies get <proxyId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_get",
+      toolName: "proxies_get",
       operationResource: "operations://proxies.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.get",
+        command: "bctrl proxies get --help",
       },
     ],
   },
@@ -12251,17 +12534,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.list",
-      usage: "bctrl help --topic proxies.list",
+      command: "bctrl proxies list",
+      usage: "bctrl proxies list",
     },
     mcp: {
-      toolName: "bctrl_proxies_list",
+      toolName: "proxies_list",
       operationResource: "operations://proxies.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.list",
+        command: "bctrl proxies list --help",
       },
     ],
   },
@@ -12380,17 +12663,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.locations.list",
-      usage: "bctrl help --topic proxies.locations.list",
+      command: "bctrl proxies locations list",
+      usage: "bctrl proxies locations list",
     },
     mcp: {
-      toolName: "bctrl_proxies_locations_list",
+      toolName: "proxies_locations_list",
       operationResource: "operations://proxies.locations.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.locations.list",
+        command: "bctrl proxies locations list --help",
       },
     ],
   },
@@ -12520,17 +12803,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.pools.get",
-      usage: "bctrl help --topic proxies.pools.get",
+      command: "bctrl proxies pools get",
+      usage: "bctrl proxies pools get <poolId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_pools_get",
+      toolName: "proxies_pools_get",
       operationResource: "operations://proxies.pools.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.pools.get",
+        command: "bctrl proxies pools get --help",
       },
     ],
   },
@@ -12646,17 +12929,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.pools.list",
-      usage: "bctrl help --topic proxies.pools.list",
+      command: "bctrl proxies pools list",
+      usage: "bctrl proxies pools list",
     },
     mcp: {
-      toolName: "bctrl_proxies_pools_list",
+      toolName: "proxies_pools_list",
       operationResource: "operations://proxies.pools.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.pools.list",
+        command: "bctrl proxies pools list --help",
       },
     ],
   },
@@ -12781,17 +13064,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.test",
-      usage: "bctrl help --topic proxies.test",
+      command: "bctrl proxies test",
+      usage: "bctrl proxies test <proxyId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_test",
+      toolName: "proxies_test",
       operationResource: "operations://proxies.test",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.test",
+        command: "bctrl proxies test --help",
       },
     ],
   },
@@ -13253,18 +13536,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.update",
-      usage: "bctrl help --topic proxies.update",
+      command: "bctrl proxies update",
+      usage: "bctrl proxies update <proxyId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_update",
+      toolName: "proxies_update",
       operationResource: "operations://proxies.update",
       schemaResources: ["schemas://ProxyUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.update",
+        command: "bctrl proxies update --help",
       },
     ],
   },
@@ -13355,17 +13638,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.delete",
-      usage: "bctrl help --topic runs.delete",
+      command: "bctrl runs delete",
+      usage: "bctrl runs delete <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_delete",
+      toolName: "runs_delete",
       operationResource: "operations://runs.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.delete",
+        command: "bctrl runs delete --help",
       },
     ],
   },
@@ -13386,11 +13669,50 @@ export const CLI_HELP_COMMANDS = {
       ],
       query: [
         {
+          name: "category",
+          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha[]",
+          required: false,
+        },
+        {
           name: "type",
           type: "string[]",
           required: false,
           description:
             "Filter by one or more namespaced event types. Repeat the query parameter for multiple values.",
+        },
+        {
+          name: "actor",
+          type: "string",
+          required: false,
+          description: "Actor ID.",
+        },
+        {
+          name: "actorType",
+          type: "api_key | agent | human | platform",
+          required: false,
+          values: ["api_key", "agent", "human", "platform"],
+        },
+        {
+          name: "channel",
+          type: "api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform | api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform[]",
+          required: false,
+        },
+        {
+          name: "outcome",
+          type: "ok | denied | failed | unknown | ok | denied | failed | unknown[]",
+          required: false,
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "source",
@@ -13496,17 +13818,153 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.events.list",
-      usage: "bctrl help --topic runs.events.list",
+      command: "bctrl runs events list",
+      usage: "bctrl runs events list <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_events_list",
+      toolName: "runs_events_list",
       operationResource: "operations://runs.events.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.events.list",
+        command: "bctrl runs events list --help",
+      },
+    ],
+  },
+  "runs.events.stream": {
+    type: "topic",
+    topic: "runs.events.stream",
+    aliases: ["runs events stream"],
+    title: "Stream Run events with resumable Event IDs",
+    summary:
+      "Stream immutable Events from one Run. Resume after an Event ID using Last-Event-ID or after; ended Runs remain open for late finalization events.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "category",
+          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha[]",
+          required: false,
+        },
+        {
+          name: "type",
+          type: "string | string[]",
+          required: false,
+        },
+        {
+          name: "actor",
+          type: "string",
+          required: false,
+          description: "Actor ID.",
+        },
+        {
+          name: "actorType",
+          type: "api_key | agent | human | platform",
+          required: false,
+          values: ["api_key", "agent", "human", "platform"],
+        },
+        {
+          name: "channel",
+          type: "api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform | api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform[]",
+          required: false,
+        },
+        {
+          name: "outcome",
+          type: "ok | denied | failed | unknown | ok | denied | failed | unknown[]",
+          required: false,
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "after",
+          type: "string",
+          required: false,
+          description: "Resume after this Event ID from the same Run.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Last-Event-ID",
+          type: "string",
+          required: false,
+          description:
+            "Optional last delivered event identifier used to resume an SSE stream.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/runs/{runId}/events/stream",
+      operationId: "runs.events.stream",
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.events.stream",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl runs events stream",
+      usage: "bctrl runs events stream <runId>",
+    },
+    mcp: {
+      toolName: "runs_events_stream",
+      operationResource: "operations://runs.events.stream",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl runs events stream --help",
       },
     ],
   },
@@ -13678,18 +14136,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.files.add",
-      usage: "bctrl help --topic runs.files.add",
+      command: "bctrl runs files add",
+      usage: "bctrl runs files add <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_files_add",
+      toolName: "runs_files_add",
       operationResource: "operations://runs.files.add",
       schemaResources: ["schemas://RunFileAddRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.files.add",
+        command: "bctrl runs files add --help",
       },
     ],
   },
@@ -13869,18 +14327,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.files.collect",
-      usage: "bctrl help --topic runs.files.collect",
+      command: "bctrl runs files collect",
+      usage: "bctrl runs files collect <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_files_collect",
+      toolName: "runs_files_collect",
       operationResource: "operations://runs.files.collect",
       schemaResources: ["schemas://RunFileCollectRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.files.collect",
+        command: "bctrl runs files collect --help",
       },
     ],
   },
@@ -14037,17 +14495,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.files.get",
-      usage: "bctrl help --topic runs.files.get",
+      command: "bctrl runs files get",
+      usage: "bctrl runs files get <runId> <fileId>",
     },
     mcp: {
-      toolName: "bctrl_runs_files_get",
+      toolName: "runs_files_get",
       operationResource: "operations://runs.files.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.files.get",
+        command: "bctrl runs files get --help",
       },
     ],
   },
@@ -14167,17 +14625,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.files.list",
-      usage: "bctrl help --topic runs.files.list",
+      command: "bctrl runs files list",
+      usage: "bctrl runs files list <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_files_list",
+      toolName: "runs_files_list",
       operationResource: "operations://runs.files.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.files.list",
+        command: "bctrl runs files list --help",
       },
     ],
   },
@@ -14341,17 +14799,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.files.remove",
-      usage: "bctrl help --topic runs.files.remove",
+      command: "bctrl runs files remove",
+      usage: "bctrl runs files remove <runId> <fileId>",
     },
     mcp: {
-      toolName: "bctrl_runs_files_remove",
+      toolName: "runs_files_remove",
       operationResource: "operations://runs.files.remove",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.files.remove",
+        command: "bctrl runs files remove --help",
       },
     ],
   },
@@ -14515,17 +14973,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.files.retry",
-      usage: "bctrl help --topic runs.files.retry",
+      command: "bctrl runs files retry",
+      usage: "bctrl runs files retry <runId> <fileId>",
     },
     mcp: {
-      toolName: "bctrl_runs_files_retry",
+      toolName: "runs_files_retry",
       operationResource: "operations://runs.files.retry",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.files.retry",
+        command: "bctrl runs files retry --help",
       },
     ],
   },
@@ -14684,17 +15142,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.files.upload",
-      usage: "bctrl help --topic runs.files.upload",
+      command: "bctrl runs files upload",
+      usage: "bctrl runs files upload <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_files_upload",
+      toolName: "runs_files_upload",
       operationResource: "operations://runs.files.upload",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.files.upload",
+        command: "bctrl runs files upload --help",
       },
     ],
   },
@@ -14891,17 +15349,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.get",
-      usage: "bctrl help --topic runs.get",
+      command: "bctrl runs get",
+      usage: "bctrl runs get <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_get",
+      toolName: "runs_get",
       operationResource: "operations://runs.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.get",
+        command: "bctrl runs get --help",
       },
     ],
   },
@@ -15043,17 +15501,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.list",
-      usage: "bctrl help --topic runs.list",
+      command: "bctrl runs list",
+      usage: "bctrl runs list",
     },
     mcp: {
-      toolName: "bctrl_runs_list",
+      toolName: "runs_list",
       operationResource: "operations://runs.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.list",
+        command: "bctrl runs list --help",
       },
     ],
   },
@@ -15138,17 +15596,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.stream",
-      usage: "bctrl help --topic runs.stream",
+      command: "bctrl runs stream",
+      usage: "bctrl runs stream <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_stream",
+      toolName: "runs_stream",
       operationResource: "operations://runs.stream",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.stream",
+        command: "bctrl runs stream --help",
       },
     ],
   },
@@ -15288,17 +15746,275 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.trace.list",
-      usage: "bctrl help --topic runs.trace.list",
+      command: "bctrl runs trace list",
+      usage: "bctrl runs trace list <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_trace_list",
+      toolName: "runs_trace_list",
       operationResource: "operations://runs.trace.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.trace.list",
+        command: "bctrl runs trace list --help",
+      },
+    ],
+  },
+  "secrets.create": {
+    type: "topic",
+    topic: "secrets.create",
+    aliases: ["secrets create"],
+    title: "Create a secret",
+    summary:
+      "Create a Secret at a new path. The returned ID addresses it; paths remain reference keys.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SecretCreateRequest",
+        schemaResource: "schemas://SecretCreateRequest",
+        fields: [
+          {
+            name: "path",
+            type: "string",
+            required: true,
+            description:
+              "Secret path, for example `prod/github/bot`. May contain `/`.",
+          },
+          {
+            name: "type",
+            type: "login | value",
+            required: true,
+            description:
+              "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+            values: ["login", "value"],
+          },
+          {
+            name: "label",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "username",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "origins",
+            type: "string[]",
+            required: false,
+            description:
+              "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+          },
+          {
+            name: "password",
+            type: "string",
+            required: false,
+            description: "Password of a `login`. Write-only.",
+          },
+          {
+            name: "totp",
+            type: "string",
+            required: false,
+            description: "TOTP seed (base32) of a `login`. Write-only.",
+          },
+          {
+            name: "value",
+            type: "string",
+            required: false,
+            description: "The value of a `value` secret. Write-only.",
+          },
+          {
+            name: "notes",
+            type: "string",
+            required: false,
+            description: "Free-form notes. Write-only.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "hasNotes",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasPassword",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasTotp",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasValue",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+        {
+          name: "label",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "secret",
+          required: true,
+          values: ["secret"],
+        },
+        {
+          name: "origins",
+          type: "string[]",
+          required: true,
+          description:
+            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+          description:
+            "The owning subaccount, or null for an organization-wide secret.",
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: true,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+          description: "Not secret; readable.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+          description: "Current version; the ETag of the secret.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/secrets",
+      operationId: "secrets.create",
+      requestFields: [
+        "path",
+        "type",
+        "label",
+        "username",
+        "origins",
+        "password",
+        "totp",
+        "value",
+        "notes",
+      ],
+      responseFields: [
+        "createdAt",
+        "hasNotes",
+        "hasPassword",
+        "hasTotp",
+        "hasValue",
+        "id",
+        "label",
+        "lastUsedAt",
+        "object",
+        "origins",
+        "path",
+        "subaccountId",
+        "type",
+        "updatedAt",
+        "username",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl secrets create",
+      usage: "bctrl secrets create",
+    },
+    mcp: {
+      toolName: "secrets_create",
+      operationResource: "operations://secrets.create",
+      schemaResources: ["schemas://SecretCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl secrets create --help",
       },
     ],
   },
@@ -15312,11 +16028,10 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       path: [
         {
-          name: "path",
+          name: "secret",
           type: "string",
           required: true,
-          description:
-            "Secret path, for example `prod/github/bot`. May contain `/`.",
+          description: "Unique secret identifier generated by BCTRL.",
         },
       ],
       headers: [
@@ -15361,17 +16076,52 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
           name: "deleted",
           type: "true",
           required: true,
           values: ["true"],
         },
         {
+          name: "hasNotes",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasPassword",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasTotp",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasValue",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
-          description:
-            "Secret path, for example `prod/github/bot`. May contain `/`.",
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+        {
+          name: "label",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime | null",
+          required: true,
         },
         {
           name: "object",
@@ -15379,13 +16129,78 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           values: ["secret"],
         },
+        {
+          name: "origins",
+          type: "string[]",
+          required: true,
+          description:
+            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+          description:
+            "The owning subaccount, or null for an organization-wide secret.",
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: true,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+          description: "Not secret; readable.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+          description: "Current version; the ETag of the secret.",
+        },
       ],
     },
     api: {
       method: "DELETE",
-      path: "/v1/secrets/{path}",
+      path: "/v1/secrets/{secret}",
       operationId: "secrets.delete",
-      responseFields: ["deleted", "id", "object"],
+      responseFields: [
+        "createdAt",
+        "deleted",
+        "hasNotes",
+        "hasPassword",
+        "hasTotp",
+        "hasValue",
+        "id",
+        "label",
+        "lastUsedAt",
+        "object",
+        "origins",
+        "path",
+        "subaccountId",
+        "type",
+        "updatedAt",
+        "username",
+        "version",
+      ],
     },
     sdk: [
       {
@@ -15395,17 +16210,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic secrets.delete",
-      usage: "bctrl help --topic secrets.delete",
+      command: "bctrl secrets delete",
+      usage: "bctrl secrets delete <secret>",
     },
     mcp: {
-      toolName: "bctrl_secrets_delete",
+      toolName: "secrets_delete",
       operationResource: "operations://secrets.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic secrets.delete",
+        command: "bctrl secrets delete --help",
       },
     ],
   },
@@ -15415,15 +16230,14 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["secrets get"],
     title: "Get a secret",
     summary:
-      "Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.",
+      "Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets/{secret}/reveal` to read values.",
     inputs: {
       path: [
         {
-          name: "path",
+          name: "secret",
           type: "string",
           required: true,
-          description:
-            "Secret path, for example `prod/github/bot`. May contain `/`.",
+          description: "Unique secret identifier generated by BCTRL.",
         },
       ],
       headers: [
@@ -15483,8 +16297,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
-          description:
-            "Secret path, for example `prod/github/bot`. May contain `/`.",
+          description: "Unique secret identifier generated by BCTRL.",
         },
         {
           name: "label",
@@ -15508,6 +16321,13 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description:
             "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
         },
         {
           name: "subaccountId",
@@ -15546,7 +16366,7 @@ export const CLI_HELP_COMMANDS = {
     },
     api: {
       method: "GET",
-      path: "/v1/secrets/{path}",
+      path: "/v1/secrets/{secret}",
       operationId: "secrets.get",
       responseFields: [
         "createdAt",
@@ -15559,6 +16379,7 @@ export const CLI_HELP_COMMANDS = {
         "lastUsedAt",
         "object",
         "origins",
+        "path",
         "subaccountId",
         "type",
         "updatedAt",
@@ -15574,17 +16395,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic secrets.get",
-      usage: "bctrl help --topic secrets.get",
+      command: "bctrl secrets get",
+      usage: "bctrl secrets get <secret>",
     },
     mcp: {
-      toolName: "bctrl_secrets_get",
+      toolName: "secrets_get",
       operationResource: "operations://secrets.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic secrets.get",
+        command: "bctrl secrets get --help",
       },
     ],
   },
@@ -15702,284 +16523,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic secrets.list",
-      usage: "bctrl help --topic secrets.list",
+      command: "bctrl secrets list",
+      usage: "bctrl secrets list",
     },
     mcp: {
-      toolName: "bctrl_secrets_list",
+      toolName: "secrets_list",
       operationResource: "operations://secrets.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic secrets.list",
-      },
-    ],
-  },
-  "secrets.put": {
-    type: "topic",
-    topic: "secrets.put",
-    aliases: ["secrets put"],
-    title: "Create or replace a secret",
-    summary:
-      "Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.",
-    inputs: {
-      path: [
-        {
-          name: "path",
-          type: "string",
-          required: true,
-          description:
-            "Secret path, for example `prod/github/bot`. May contain `/`.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Version",
-          type: "2026-10-01 | 2026-10-03",
-          required: false,
-          description:
-            "Dated API version. Defaults to the release pinned when the API key was created.",
-          values: ["2026-10-01", "2026-10-03"],
-        },
-        {
-          name: "BCTRL-Space",
-          type: "string",
-          required: false,
-          description:
-            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
-        },
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "If-Match",
-          type: "string",
-          required: false,
-          description:
-            'Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.',
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "SecretPutRequest",
-        schemaResource: "schemas://SecretPutRequest",
-        fields: [
-          {
-            name: "type",
-            type: "login | value",
-            required: false,
-            description:
-              "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
-            values: ["login", "value"],
-          },
-          {
-            name: "label",
-            type: "string | null",
-            required: false,
-          },
-          {
-            name: "username",
-            type: "string | null",
-            required: false,
-          },
-          {
-            name: "origins",
-            type: "string[]",
-            required: false,
-            description:
-              "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
-          },
-          {
-            name: "password",
-            type: "string",
-            required: false,
-            description: "Password of a `login`. Write-only.",
-          },
-          {
-            name: "totp",
-            type: "string",
-            required: false,
-            description: "TOTP seed (base32) of a `login`. Write-only.",
-          },
-          {
-            name: "value",
-            type: "string",
-            required: false,
-            description: "The value of a `value` secret. Write-only.",
-          },
-          {
-            name: "notes",
-            type: "string",
-            required: false,
-            description: "Free-form notes. Write-only.",
-          },
-          {
-            name: "fromVersion",
-            type: "integer",
-            required: false,
-            description:
-              "Rollback: make the values of this earlier version the new version. Send it alone.",
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "hasNotes",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "hasPassword",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "hasTotp",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "hasValue",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description:
-            "Secret path, for example `prod/github/bot`. May contain `/`.",
-        },
-        {
-          name: "label",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "lastUsedAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "object",
-          type: "secret",
-          required: true,
-          values: ["secret"],
-        },
-        {
-          name: "origins",
-          type: "string[]",
-          required: true,
-          description:
-            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
-        },
-        {
-          name: "subaccountId",
-          type: "string | null",
-          required: true,
-          description:
-            "The owning subaccount, or null for an organization-wide secret.",
-        },
-        {
-          name: "type",
-          type: "login | value",
-          required: true,
-          description:
-            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
-          values: ["login", "value"],
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "username",
-          type: "string | null",
-          required: true,
-          description: "Not secret; readable.",
-        },
-        {
-          name: "version",
-          type: "integer",
-          required: true,
-          description: "Current version; the ETag of the secret.",
-        },
-      ],
-    },
-    api: {
-      method: "PUT",
-      path: "/v1/secrets/{path}",
-      operationId: "secrets.put",
-      requestFields: [
-        "type",
-        "label",
-        "username",
-        "origins",
-        "password",
-        "totp",
-        "value",
-        "notes",
-        "fromVersion",
-      ],
-      responseFields: [
-        "createdAt",
-        "hasNotes",
-        "hasPassword",
-        "hasTotp",
-        "hasValue",
-        "id",
-        "label",
-        "lastUsedAt",
-        "object",
-        "origins",
-        "subaccountId",
-        "type",
-        "updatedAt",
-        "username",
-        "version",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "secrets.put",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic secrets.put",
-      usage: "bctrl help --topic secrets.put",
-    },
-    mcp: {
-      toolName: "bctrl_secrets_put",
-      operationResource: "operations://secrets.put",
-      schemaResources: ["schemas://SecretPutRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic secrets.put",
+        command: "bctrl secrets list --help",
       },
     ],
   },
@@ -15991,6 +16545,14 @@ export const CLI_HELP_COMMANDS = {
     summary:
       "Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.",
     inputs: {
+      path: [
+        {
+          name: "secret",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+      ],
       headers: [
         {
           name: "BCTRL-Version",
@@ -16027,13 +16589,6 @@ export const CLI_HELP_COMMANDS = {
         schemaResource: "schemas://SecretRevealRequest",
         fields: [
           {
-            name: "path",
-            type: "string",
-            required: true,
-            description:
-              "Secret path, for example `prod/github/bot`. May contain `/`.",
-          },
-          {
             name: "version",
             type: "integer",
             required: false,
@@ -16048,8 +16603,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
-          description:
-            "Secret path, for example `prod/github/bot`. May contain `/`.",
+          description: "Unique secret identifier generated by BCTRL.",
         },
         {
           name: "notes",
@@ -16066,6 +16620,13 @@ export const CLI_HELP_COMMANDS = {
           name: "password",
           type: "string",
           required: false,
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
         },
         {
           name: "totp",
@@ -16091,14 +16652,15 @@ export const CLI_HELP_COMMANDS = {
     },
     api: {
       method: "POST",
-      path: "/v1/secrets:reveal",
+      path: "/v1/secrets/{secret}/reveal",
       operationId: "secrets.reveal",
-      requestFields: ["path", "version"],
+      requestFields: ["version"],
       responseFields: [
         "id",
         "notes",
         "object",
         "password",
+        "path",
         "totp",
         "username",
         "value",
@@ -16113,18 +16675,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic secrets.reveal",
-      usage: "bctrl help --topic secrets.reveal",
+      command: "bctrl secrets reveal",
+      usage: "bctrl secrets reveal <secret>",
     },
     mcp: {
-      toolName: "bctrl_secrets_reveal",
+      toolName: "secrets_reveal",
       operationResource: "operations://secrets.reveal",
       schemaResources: ["schemas://SecretRevealRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic secrets.reveal",
+        command: "bctrl secrets reveal --help",
       },
     ],
   },
@@ -16138,11 +16700,10 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       path: [
         {
-          name: "path",
+          name: "secret",
           type: "string",
           required: true,
-          description:
-            "Secret path, for example `prod/github/bot`. May contain `/`.",
+          description: "Unique secret identifier generated by BCTRL.",
         },
       ],
       headers: [
@@ -16224,6 +16785,12 @@ export const CLI_HELP_COMMANDS = {
             type: "string | null",
             required: false,
           },
+          {
+            name: "fromVersion",
+            type: "integer",
+            required: false,
+            description: "Restore values of this version; send alone.",
+          },
         ],
       },
     },
@@ -16259,8 +16826,7 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
-          description:
-            "Secret path, for example `prod/github/bot`. May contain `/`.",
+          description: "Unique secret identifier generated by BCTRL.",
         },
         {
           name: "label",
@@ -16284,6 +16850,13 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description:
             "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
         },
         {
           name: "subaccountId",
@@ -16322,7 +16895,7 @@ export const CLI_HELP_COMMANDS = {
     },
     api: {
       method: "PATCH",
-      path: "/v1/secrets/{path}",
+      path: "/v1/secrets/{secret}",
       operationId: "secrets.update",
       requestFields: [
         "label",
@@ -16332,6 +16905,7 @@ export const CLI_HELP_COMMANDS = {
         "totp",
         "value",
         "notes",
+        "fromVersion",
       ],
       responseFields: [
         "createdAt",
@@ -16344,6 +16918,7 @@ export const CLI_HELP_COMMANDS = {
         "lastUsedAt",
         "object",
         "origins",
+        "path",
         "subaccountId",
         "type",
         "updatedAt",
@@ -16359,18 +16934,125 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic secrets.update",
-      usage: "bctrl help --topic secrets.update",
+      command: "bctrl secrets update",
+      usage: "bctrl secrets update <secret>",
     },
     mcp: {
-      toolName: "bctrl_secrets_update",
+      toolName: "secrets_update",
       operationResource: "operations://secrets.update",
       schemaResources: ["schemas://SecretPatchRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic secrets.update",
+        command: "bctrl secrets update --help",
+      },
+    ],
+  },
+  "secrets.versions": {
+    type: "topic",
+    topic: "secrets.versions",
+    aliases: ["secrets versions"],
+    title: "List secret versions",
+    summary:
+      "List version metadata by secret ID. Values and ciphertext are never returned.",
+    inputs: {
+      path: [
+        {
+          name: "secret",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/secrets/{secret}/versions",
+      operationId: "secrets.versions",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.versions",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl secrets versions",
+      usage: "bctrl secrets versions <secret>",
+    },
+    mcp: {
+      toolName: "secrets_versions",
+      operationResource: "operations://secrets.versions",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl secrets versions --help",
       },
     ],
   },
@@ -16532,18 +17214,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic spaces.create",
-      usage: "bctrl help --topic spaces.create",
+      command: "bctrl spaces create",
+      usage: "bctrl spaces create",
     },
     mcp: {
-      toolName: "bctrl_spaces_create",
+      toolName: "spaces_create",
       operationResource: "operations://spaces.create",
       schemaResources: ["schemas://SpaceCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic spaces.create",
+        command: "bctrl spaces create --help",
       },
     ],
   },
@@ -16641,17 +17323,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic spaces.delete",
-      usage: "bctrl help --topic spaces.delete",
+      command: "bctrl spaces delete",
+      usage: "bctrl spaces delete <spaceId>",
     },
     mcp: {
-      toolName: "bctrl_spaces_delete",
+      toolName: "spaces_delete",
       operationResource: "operations://spaces.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic spaces.delete",
+        command: "bctrl spaces delete --help",
       },
     ],
   },
@@ -16785,17 +17467,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic spaces.get",
-      usage: "bctrl help --topic spaces.get",
+      command: "bctrl spaces get",
+      usage: "bctrl spaces get <spaceId>",
     },
     mcp: {
-      toolName: "bctrl_spaces_get",
+      toolName: "spaces_get",
       operationResource: "operations://spaces.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic spaces.get",
+        command: "bctrl spaces get --help",
       },
     ],
   },
@@ -16893,17 +17575,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic spaces.list",
-      usage: "bctrl help --topic spaces.list",
+      command: "bctrl spaces list",
+      usage: "bctrl spaces list",
     },
     mcp: {
-      toolName: "bctrl_spaces_list",
+      toolName: "spaces_list",
       operationResource: "operations://spaces.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic spaces.list",
+        command: "bctrl spaces list --help",
       },
     ],
   },
@@ -17067,18 +17749,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic spaces.update",
-      usage: "bctrl help --topic spaces.update",
+      command: "bctrl spaces update",
+      usage: "bctrl spaces update <spaceId>",
     },
     mcp: {
-      toolName: "bctrl_spaces_update",
+      toolName: "spaces_update",
       operationResource: "operations://spaces.update",
       schemaResources: ["schemas://SpaceUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic spaces.update",
+        command: "bctrl spaces update --help",
       },
     ],
   },
@@ -17167,17 +17849,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.archive",
-      usage: "bctrl help --topic subaccounts.archive",
+      command: "bctrl subaccounts archive",
+      usage: "bctrl subaccounts archive <subaccountId>",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_archive",
+      toolName: "subaccounts_archive",
       operationResource: "operations://subaccounts.archive",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.archive",
+        command: "bctrl subaccounts archive --help",
       },
     ],
   },
@@ -17347,18 +18029,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.create",
-      usage: "bctrl help --topic subaccounts.create",
+      command: "bctrl subaccounts create",
+      usage: "bctrl subaccounts create",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_create",
+      toolName: "subaccounts_create",
       operationResource: "operations://subaccounts.create",
       schemaResources: ["schemas://SubaccountCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.create",
+        command: "bctrl subaccounts create --help",
       },
     ],
   },
@@ -17509,17 +18191,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.get",
-      usage: "bctrl help --topic subaccounts.get",
+      command: "bctrl subaccounts get",
+      usage: "bctrl subaccounts get <subaccountId>",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_get",
+      toolName: "subaccounts_get",
       operationResource: "operations://subaccounts.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.get",
+        command: "bctrl subaccounts get --help",
       },
     ],
   },
@@ -17635,17 +18317,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.list",
-      usage: "bctrl help --topic subaccounts.list",
+      command: "bctrl subaccounts list",
+      usage: "bctrl subaccounts list",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_list",
+      toolName: "subaccounts_list",
       operationResource: "operations://subaccounts.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.list",
+        command: "bctrl subaccounts list --help",
       },
     ],
   },
@@ -17822,18 +18504,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.update",
-      usage: "bctrl help --topic subaccounts.update",
+      command: "bctrl subaccounts update",
+      usage: "bctrl subaccounts update <subaccountId>",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_update",
+      toolName: "subaccounts_update",
       operationResource: "operations://subaccounts.update",
       schemaResources: ["schemas://SubaccountUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.update",
+        command: "bctrl subaccounts update --help",
       },
     ],
   },
@@ -17925,17 +18607,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.usage.list",
-      usage: "bctrl help --topic subaccounts.usage.list",
+      command: "bctrl subaccounts usage list",
+      usage: "bctrl subaccounts usage list",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_usage_list",
+      toolName: "subaccounts_usage_list",
       operationResource: "operations://subaccounts.usage.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.usage.list",
+        command: "bctrl subaccounts usage list --help",
       },
     ],
   },
@@ -18133,17 +18815,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.cancel",
-      usage: "bctrl help --topic tool-calls.cancel",
+      command: "bctrl tool-calls cancel",
+      usage: "bctrl tool-calls cancel <toolCallId>",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_cancel",
+      toolName: "tool-calls_cancel",
       operationResource: "operations://tool-calls.cancel",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.cancel",
+        command: "bctrl tool-calls cancel --help",
       },
     ],
   },
@@ -18335,17 +19017,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.get",
-      usage: "bctrl help --topic tool-calls.get",
+      command: "bctrl tool-calls get",
+      usage: "bctrl tool-calls get <toolCallId>",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_get",
+      toolName: "tool-calls_get",
       operationResource: "operations://tool-calls.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.get",
+        command: "bctrl tool-calls get --help",
       },
     ],
   },
@@ -18486,17 +19168,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.list",
-      usage: "bctrl help --topic tool-calls.list",
+      command: "bctrl tool-calls list",
+      usage: "bctrl tool-calls list",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_list",
+      toolName: "tool-calls_list",
       operationResource: "operations://tool-calls.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.list",
+        command: "bctrl tool-calls list --help",
       },
     ],
   },
@@ -18706,18 +19388,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.respond",
-      usage: "bctrl help --topic tool-calls.respond",
+      command: "bctrl tool-calls respond",
+      usage: "bctrl tool-calls respond <toolCallId>",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_respond",
+      toolName: "tool-calls_respond",
       operationResource: "operations://tool-calls.respond",
       schemaResources: ["schemas://JsonValue"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.respond",
+        command: "bctrl tool-calls respond --help",
       },
     ],
   },
@@ -18802,17 +19484,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.result",
-      usage: "bctrl help --topic tool-calls.result",
+      command: "bctrl tool-calls result",
+      usage: "bctrl tool-calls result <toolCallId>",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_result",
+      toolName: "tool-calls_result",
       operationResource: "operations://tool-calls.result",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.result",
+        command: "bctrl tool-calls result --help",
       },
     ],
   },
@@ -18908,18 +19590,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.call",
-      usage: "bctrl help --topic tools.call",
+      command: "bctrl tools call",
+      usage: "bctrl tools call <toolRef>",
     },
     mcp: {
-      toolName: "bctrl_tools_call",
+      toolName: "tools_call",
       operationResource: "operations://tools.call",
       schemaResources: ["schemas://JsonObject"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.call",
+        command: "bctrl tools call --help",
       },
     ],
   },
@@ -19129,18 +19811,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.calls.create",
-      usage: "bctrl help --topic tools.calls.create",
+      command: "bctrl tools calls create",
+      usage: "bctrl tools calls create <toolRef>",
     },
     mcp: {
-      toolName: "bctrl_tools_calls_create",
+      toolName: "tools_calls_create",
       operationResource: "operations://tools.calls.create",
       schemaResources: ["schemas://JsonObject"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.calls.create",
+        command: "bctrl tools calls create --help",
       },
     ],
   },
@@ -19407,18 +20089,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.create",
-      usage: "bctrl help --topic tools.create",
+      command: "bctrl tools create",
+      usage: "bctrl tools create",
     },
     mcp: {
-      toolName: "bctrl_tools_create",
+      toolName: "tools_create",
       operationResource: "operations://tools.create",
       schemaResources: ["schemas://ToolCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.create",
+        command: "bctrl tools create --help",
       },
     ],
   },
@@ -19517,17 +20199,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.delete",
-      usage: "bctrl help --topic tools.delete",
+      command: "bctrl tools delete",
+      usage: "bctrl tools delete <toolRef>",
     },
     mcp: {
-      toolName: "bctrl_tools_delete",
+      toolName: "tools_delete",
       operationResource: "operations://tools.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.delete",
+        command: "bctrl tools delete --help",
       },
     ],
   },
@@ -19740,17 +20422,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.get",
-      usage: "bctrl help --topic tools.get",
+      command: "bctrl tools get",
+      usage: "bctrl tools get <toolRef>",
     },
     mcp: {
-      toolName: "bctrl_tools_get",
+      toolName: "tools_get",
       operationResource: "operations://tools.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.get",
+        command: "bctrl tools get --help",
       },
     ],
   },
@@ -19855,17 +20537,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.list",
-      usage: "bctrl help --topic tools.list",
+      command: "bctrl tools list",
+      usage: "bctrl tools list",
     },
     mcp: {
-      toolName: "bctrl_tools_list",
+      toolName: "tools_list",
       operationResource: "operations://tools.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.list",
+        command: "bctrl tools list --help",
       },
     ],
   },
@@ -20136,18 +20818,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.update",
-      usage: "bctrl help --topic tools.update",
+      command: "bctrl tools update",
+      usage: "bctrl tools update <toolRef>",
     },
     mcp: {
-      toolName: "bctrl_tools_update",
+      toolName: "tools_update",
       operationResource: "operations://tools.update",
       schemaResources: ["schemas://ToolUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.update",
+        command: "bctrl tools update --help",
       },
     ],
   },
@@ -20301,18 +20983,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic toolsets.create",
-      usage: "bctrl help --topic toolsets.create",
+      command: "bctrl toolsets create",
+      usage: "bctrl toolsets create",
     },
     mcp: {
-      toolName: "bctrl_toolsets_create",
+      toolName: "toolsets_create",
       operationResource: "operations://toolsets.create",
       schemaResources: ["schemas://ToolsetCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic toolsets.create",
+        command: "bctrl toolsets create --help",
       },
     ],
   },
@@ -20410,17 +21092,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic toolsets.delete",
-      usage: "bctrl help --topic toolsets.delete",
+      command: "bctrl toolsets delete",
+      usage: "bctrl toolsets delete <toolsetId>",
     },
     mcp: {
-      toolName: "bctrl_toolsets_delete",
+      toolName: "toolsets_delete",
       operationResource: "operations://toolsets.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic toolsets.delete",
+        command: "bctrl toolsets delete --help",
       },
     ],
   },
@@ -20549,17 +21231,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic toolsets.get",
-      usage: "bctrl help --topic toolsets.get",
+      command: "bctrl toolsets get",
+      usage: "bctrl toolsets get <toolsetId>",
     },
     mcp: {
-      toolName: "bctrl_toolsets_get",
+      toolName: "toolsets_get",
       operationResource: "operations://toolsets.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic toolsets.get",
+        command: "bctrl toolsets get --help",
       },
     ],
   },
@@ -20665,17 +21347,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic toolsets.list",
-      usage: "bctrl help --topic toolsets.list",
+      command: "bctrl toolsets list",
+      usage: "bctrl toolsets list",
     },
     mcp: {
-      toolName: "bctrl_toolsets_list",
+      toolName: "toolsets_list",
       operationResource: "operations://toolsets.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic toolsets.list",
+        command: "bctrl toolsets list --help",
       },
     ],
   },
@@ -20834,18 +21516,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic toolsets.update",
-      usage: "bctrl help --topic toolsets.update",
+      command: "bctrl toolsets update",
+      usage: "bctrl toolsets update <toolsetId>",
     },
     mcp: {
-      toolName: "bctrl_toolsets_update",
+      toolName: "toolsets_update",
       operationResource: "operations://toolsets.update",
       schemaResources: ["schemas://ToolsetUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic toolsets.update",
+        command: "bctrl toolsets update --help",
       },
     ],
   },
@@ -20947,17 +21629,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic usage.get",
-      usage: "bctrl help --topic usage.get",
+      command: "bctrl usage get",
+      usage: "bctrl usage get",
     },
     mcp: {
-      toolName: "bctrl_usage_get",
+      toolName: "usage_get",
       operationResource: "operations://usage.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic usage.get",
+        command: "bctrl usage get --help",
       },
     ],
   },
@@ -21167,18 +21849,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic views.create",
-      usage: "bctrl help --topic views.create",
+      command: "bctrl views create",
+      usage: "bctrl views create",
     },
     mcp: {
-      toolName: "bctrl_views_create",
+      toolName: "views_create",
       operationResource: "operations://views.create",
       schemaResources: ["schemas://ViewCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic views.create",
+        command: "bctrl views create --help",
       },
     ],
   },
@@ -21276,17 +21958,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic views.delete",
-      usage: "bctrl help --topic views.delete",
+      command: "bctrl views delete",
+      usage: "bctrl views delete <viewId>",
     },
     mcp: {
-      toolName: "bctrl_views_delete",
+      toolName: "views_delete",
       operationResource: "operations://views.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic views.delete",
+        command: "bctrl views delete --help",
       },
     ],
   },
@@ -21436,17 +22118,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic views.get",
-      usage: "bctrl help --topic views.get",
+      command: "bctrl views get",
+      usage: "bctrl views get <viewId>",
     },
     mcp: {
-      toolName: "bctrl_views_get",
+      toolName: "views_get",
       operationResource: "operations://views.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic views.get",
+        command: "bctrl views get --help",
       },
     ],
   },
@@ -21543,17 +22225,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic views.list",
-      usage: "bctrl help --topic views.list",
+      command: "bctrl views list",
+      usage: "bctrl views list",
     },
     mcp: {
-      toolName: "bctrl_views_list",
+      toolName: "views_list",
       operationResource: "operations://views.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic views.list",
+        command: "bctrl views list --help",
       },
     ],
   },
@@ -21713,18 +22395,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.create",
-      usage: "bctrl help --topic webhooks.create",
+      command: "bctrl webhooks create",
+      usage: "bctrl webhooks create",
     },
     mcp: {
-      toolName: "bctrl_webhooks_create",
+      toolName: "webhooks_create",
       operationResource: "operations://webhooks.create",
       schemaResources: ["schemas://WebhookCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.create",
+        command: "bctrl webhooks create --help",
       },
     ],
   },
@@ -21823,17 +22505,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.delete",
-      usage: "bctrl help --topic webhooks.delete",
+      command: "bctrl webhooks delete",
+      usage: "bctrl webhooks delete <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_delete",
+      toolName: "webhooks_delete",
       operationResource: "operations://webhooks.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.delete",
+        command: "bctrl webhooks delete --help",
       },
     ],
   },
@@ -21941,17 +22623,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.deliveries.list",
-      usage: "bctrl help --topic webhooks.deliveries.list",
+      command: "bctrl webhooks deliveries list",
+      usage: "bctrl webhooks deliveries list <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_deliveries_list",
+      toolName: "webhooks_deliveries_list",
       operationResource: "operations://webhooks.deliveries.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.deliveries.list",
+        command: "bctrl webhooks deliveries list --help",
       },
     ],
   },
@@ -22123,17 +22805,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.deliveries.redeliver",
-      usage: "bctrl help --topic webhooks.deliveries.redeliver",
+      command: "bctrl webhooks deliveries redeliver",
+      usage: "bctrl webhooks deliveries redeliver <webhookId> <deliveryId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_deliveries_redeliver",
+      toolName: "webhooks_deliveries_redeliver",
       operationResource: "operations://webhooks.deliveries.redeliver",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.deliveries.redeliver",
+        command: "bctrl webhooks deliveries redeliver --help",
       },
     ],
   },
@@ -22265,17 +22947,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.get",
-      usage: "bctrl help --topic webhooks.get",
+      command: "bctrl webhooks get",
+      usage: "bctrl webhooks get <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_get",
+      toolName: "webhooks_get",
       operationResource: "operations://webhooks.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.get",
+        command: "bctrl webhooks get --help",
       },
     ],
   },
@@ -22374,17 +23056,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.list",
-      usage: "bctrl help --topic webhooks.list",
+      command: "bctrl webhooks list",
+      usage: "bctrl webhooks list",
     },
     mcp: {
-      toolName: "bctrl_webhooks_list",
+      toolName: "webhooks_list",
       operationResource: "operations://webhooks.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.list",
+        command: "bctrl webhooks list --help",
       },
     ],
   },
@@ -22477,22 +23159,22 @@ export const CLI_HELP_COMMANDS = {
     sdk: [
       {
         language: "typescript",
-        method: "webhooks.rotateSecret",
+        method: "webhooks.rotate-secret",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.rotate-secret",
-      usage: "bctrl help --topic webhooks.rotate-secret",
+      command: "bctrl webhooks rotate-secret",
+      usage: "bctrl webhooks rotate-secret <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_rotate_secret",
+      toolName: "webhooks_rotate-secret",
       operationResource: "operations://webhooks.rotate-secret",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.rotate-secret",
+        command: "bctrl webhooks rotate-secret --help",
       },
     ],
   },
@@ -22658,17 +23340,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.test",
-      usage: "bctrl help --topic webhooks.test",
+      command: "bctrl webhooks test",
+      usage: "bctrl webhooks test <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_test",
+      toolName: "webhooks_test",
       operationResource: "operations://webhooks.test",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.test",
+        command: "bctrl webhooks test --help",
       },
     ],
   },
@@ -22835,18 +23517,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.update",
-      usage: "bctrl help --topic webhooks.update",
+      command: "bctrl webhooks update",
+      usage: "bctrl webhooks update <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_update",
+      toolName: "webhooks_update",
       operationResource: "operations://webhooks.update",
       schemaResources: ["schemas://WebhookUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.update",
+        command: "bctrl webhooks update --help",
       },
     ],
   },

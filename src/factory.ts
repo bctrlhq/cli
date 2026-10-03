@@ -5,6 +5,7 @@ import { CLI_VERSION } from './version.js';
 
 export type Factory = {
   version: string;
+  openUrl?: (url: string) => Promise<void>;
   io: IOStreams;
   config: () => Promise<BctrlConfig>;
   apiClient: () => Promise<BctrlApiClient>;

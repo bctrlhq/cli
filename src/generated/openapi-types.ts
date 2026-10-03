@@ -308,6 +308,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/browsers/{browserId}/events/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Stream events from the browser’s current Run
+         * @description Stream immutable Events from the browser’s current Run, selected when the connection opens. The stream stays on that Run across browser restarts. Resume using an Event ID from the selected Run.
+         */
+        get: operations["browsers.events.stream"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/browsers/{browserId}/runs": {
         parameters: {
             query?: never;
@@ -828,6 +848,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List organization events
+         * @description List immutable Events visible in the organization, subaccount and selected Space. Filter by Run, browser, event metadata or occurrence time.
+         */
+        get: operations["events.list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/files": {
         parameters: {
             query?: never;
@@ -1204,6 +1244,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/runs/{runId}/events/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Stream Run events with resumable Event IDs
+         * @description Stream immutable Events from one Run. Resume after an Event ID using Last-Event-ID or after; ended Runs remain open for late finalization events.
+         */
+        get: operations["runs.events.stream"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/runs/{runId}/files": {
         parameters: {
             query?: never;
@@ -1365,14 +1425,46 @@ export interface paths {
          */
         get: operations["secrets.list"];
         put?: never;
-        post?: never;
+        /**
+         * Create a secret
+         * @description Create a Secret at a new path. The returned ID addresses it; paths remain reference keys.
+         */
+        post: operations["secrets.create"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/secrets:reveal": {
+    "/v1/secrets/{secret}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a secret
+         * @description Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets/{secret}/reveal` to read values.
+         */
+        get: operations["secrets.get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete a secret
+         * @description Delete a Secret and all its versions. Supports `If-Match`. The audit trail is kept.
+         */
+        delete: operations["secrets.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a secret
+         * @description Change some fields of a Secret; `null` clears one. Creates a new version. Supports `If-Match`.
+         */
+        patch: operations["secrets.update"];
+        trace?: never;
+    };
+    "/v1/secrets/{secret}/reveal": {
         parameters: {
             query?: never;
             header?: never;
@@ -1392,7 +1484,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/secrets/{path}": {
+    "/v1/secrets/{secret}/versions": {
         parameters: {
             query?: never;
             header?: never;
@@ -1400,28 +1492,16 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Get a secret
-         * @description Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets:reveal` to read values.
+         * List secret versions
+         * @description List version metadata by secret ID. Values and ciphertext are never returned.
          */
-        get: operations["secrets.get"];
-        /**
-         * Create or replace a secret
-         * @description Create or replace a Secret. Every write is a new version, returned as `version` and the `ETag` header. Send `If-Match` to write only over a known version. Send `{fromVersion}` alone to roll back to an earlier version.
-         */
-        put: operations["secrets.put"];
+        get: operations["secrets.versions"];
+        put?: never;
         post?: never;
-        /**
-         * Delete a secret
-         * @description Delete a Secret and all its versions. Supports `If-Match`. The audit trail is kept.
-         */
-        delete: operations["secrets.delete"];
+        delete?: never;
         options?: never;
         head?: never;
-        /**
-         * Update a secret
-         * @description Change some fields of a Secret; `null` clears one. Creates a new version. Supports `If-Match`.
-         */
-        patch: operations["secrets.update"];
+        patch?: never;
         trace?: never;
     };
     "/v1/spaces": {
@@ -3906,6 +3986,54 @@ export interface components {
                 requestId: string;
             };
         };
+        Event: {
+            actor: {
+                id: string | null;
+                name: string | null;
+                /** @enum {string} */
+                type: "api_key" | "agent" | "human" | "platform";
+            };
+            /** @enum {string} */
+            category: "lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha";
+            /** @enum {string} */
+            channel: "api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform";
+            conversationId: string | null;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            data: components["schemas"]["JsonObject"];
+            /**
+             * RunEventId
+             * @description Unique runEvent identifier generated by BCTRL.
+             * @example evt_uAAAAAAAAAAAAAAAAAAAAAA
+             */
+            id: string;
+            /** @constant */
+            object: "event";
+            /** @enum {string} */
+            outcome: "ok" | "denied" | "failed" | "unknown";
+            pageId: string | null;
+            runId: string | null;
+            runtimeId: string | null;
+            seq: number;
+            /** @enum {string} */
+            source: "browser" | "network" | "runtime" | "agent" | "tool" | "system";
+            spaceId: string | null;
+            spanId: string | null;
+            target: {
+                id: string | null;
+                kind: string;
+            } | null;
+            taskId: string | null;
+            time: components["schemas"]["Rfc3339Timestamp"];
+            timestamp: components["schemas"]["Rfc3339Timestamp"];
+            type: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
+        };
+        EventsListResponse: {
+            data: components["schemas"]["Event"][];
+            /** @default false */
+            hasMore: boolean;
+            nextCursor: string | null;
+        };
         /**
          * ExtensionId
          * @description Unique browser extension identifier generated by BCTRL.
@@ -4755,6 +4883,18 @@ export interface components {
             webdriverUrl: string;
         };
         RunEvent: {
+            actor: {
+                id: string | null;
+                name: string | null;
+                /** @enum {string} */
+                type: "api_key" | "agent" | "human" | "platform";
+            };
+            /** @enum {string} */
+            category: "lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha";
+            /** @enum {string} */
+            channel: "api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform";
+            conversationId: string | null;
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             data: components["schemas"]["JsonObject"];
             /**
              * RunEventId
@@ -4762,11 +4902,10 @@ export interface components {
              * @example evt_uAAAAAAAAAAAAAAAAAAAAAA
              */
             id: string;
-            /**
-             * @default event
-             * @constant
-             */
+            /** @constant */
             object: "event";
+            /** @enum {string} */
+            outcome: "ok" | "denied" | "failed" | "unknown";
             pageId: string | null;
             /**
              * RunId
@@ -4774,11 +4913,21 @@ export interface components {
              * @example run_uAAAAAAAAAAAAAAAAAAAAAA
              */
             runId: string;
+            runtimeId: string | null;
+            seq: number;
             /** @enum {string} */
             source: "browser" | "network" | "runtime" | "agent" | "tool" | "system";
+            spaceId: string | null;
             spanId: string | null;
+            target: {
+                id: string | null;
+                kind: string;
+            } | null;
+            taskId: string | null;
+            time: components["schemas"]["Rfc3339Timestamp"];
             timestamp: components["schemas"]["Rfc3339Timestamp"];
-            type: components["schemas"]["RunEventType"];
+            type: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         RunEventListResponse: {
             data: components["schemas"]["RunEvent"][];
@@ -4786,8 +4935,6 @@ export interface components {
             hasMore: boolean;
             nextCursor: string | null;
         };
-        /** @enum {string} */
-        RunEventType: "runtime.lifecycle" | "runtime.control.changed" | "command.state" | "browser.page.opened" | "browser.page.closed" | "browser.page.crashed" | "browser.disconnected" | "browser.navigation" | "browser.navigation.completed" | "browser.download.started" | "browser.download.finished" | "browser.dialog.opened" | "browser.dialog.closed" | "browser.file_chooser.opened" | "network.http_error" | "network.failed" | "network.blocked" | "console.error" | "console.warning" | "javascript.exception" | "artifact.captured" | "artifact.persisted" | "artifact.persist_skipped" | "artifact.persist_failed" | "automation.call.started" | "automation.call.succeeded" | "automation.call.failed" | "connection.command.sent" | "connection.command.result" | "connection.command.error" | "connection.event.received" | "connection.traffic.truncated" | "connection.telemetry.truncated" | "tool.started" | "tool.completed" | "tool.failed" | "tool.requires_input" | "secrets.fill.completed" | "secrets.resolve.completed" | "human.requested" | "human.responded";
         RunFile: {
             binding: components["schemas"]["RunFileBinding"] | null;
             createdAt: components["schemas"]["Rfc3339Timestamp"];
@@ -4981,7 +5128,11 @@ export interface components {
             hasPassword: boolean;
             hasTotp: boolean;
             hasValue: boolean;
-            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            /**
+             * SecretId
+             * @description Unique secret identifier generated by BCTRL.
+             * @example sec_uAAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             label: string | null;
             lastUsedAt: components["schemas"]["Rfc3339Timestamp"] | null;
@@ -4992,6 +5143,8 @@ export interface components {
             object: "secret";
             /** @description Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain. */
             origins: string[];
+            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            path: string;
             /** @description The owning subaccount, or null for an organization-wide secret. */
             subaccountId: components["schemas"]["SubaccountId"] | null;
             /**
@@ -5005,16 +5158,64 @@ export interface components {
             /** @description Current version; the ETag of the secret. */
             version: number;
         };
+        SecretCreateRequest: {
+            label?: string | null;
+            /** @description Free-form notes. Write-only. */
+            notes?: string;
+            /** @description Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain. */
+            origins?: string[];
+            /** @description Password of a `login`. Write-only. */
+            password?: string;
+            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            path: string;
+            /** @description TOTP seed (base32) of a `login`. Write-only. */
+            totp?: string;
+            /**
+             * @description `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+             * @enum {string}
+             */
+            type: "login" | "value";
+            username?: string | null;
+            /** @description The value of a `value` secret. Write-only. */
+            value?: string;
+        };
         SecretDeleteResponse: {
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
             /** @constant */
             deleted: true;
-            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            hasNotes: boolean;
+            hasPassword: boolean;
+            hasTotp: boolean;
+            hasValue: boolean;
+            /**
+             * SecretId
+             * @description Unique secret identifier generated by BCTRL.
+             * @example sec_uAAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
+            label: string | null;
+            lastUsedAt: components["schemas"]["Rfc3339Timestamp"] | null;
             /**
              * @default secret
              * @constant
              */
             object: "secret";
+            /** @description Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain. */
+            origins: string[];
+            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            path: string;
+            /** @description The owning subaccount, or null for an organization-wide secret. */
+            subaccountId: components["schemas"]["SubaccountId"] | null;
+            /**
+             * @description `login`: username, password and TOTP seed for a site. `value`: one opaque value.
+             * @enum {string}
+             */
+            type: "login" | "value";
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
+            /** @description Not secret; readable. */
+            username: string | null;
+            /** @description Current version; the ETag of the secret. */
+            version: number;
         };
         SecretEnvironmentMounts: {
             [key: string]: string;
@@ -5028,6 +5229,8 @@ export interface components {
             nextCursor: string | null;
         };
         SecretPatchRequest: {
+            /** @description Restore values of this version; send alone. */
+            fromVersion?: number;
             label?: string | null;
             notes?: string | null;
             /** @description Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain. */
@@ -5037,35 +5240,16 @@ export interface components {
             username?: string | null;
             value?: string | null;
         };
-        SecretPutRequest: {
-            /** @description Rollback: make the values of this earlier version the new version. Send it alone. */
-            fromVersion?: number;
-            label?: string | null;
-            /** @description Free-form notes. Write-only. */
-            notes?: string;
-            /** @description Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain. */
-            origins?: string[];
-            /** @description Password of a `login`. Write-only. */
-            password?: string;
-            /** @description TOTP seed (base32) of a `login`. Write-only. */
-            totp?: string;
-            /**
-             * @description `login`: username, password and TOTP seed for a site. `value`: one opaque value.
-             * @enum {string}
-             */
-            type?: "login" | "value";
-            username?: string | null;
-            /** @description The value of a `value` secret. Write-only. */
-            value?: string;
-        };
         SecretRevealRequest: {
-            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
-            path: string;
             /** @description Defaults to the current version. */
             version?: number;
         };
         SecretRevealResponse: {
-            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            /**
+             * SecretId
+             * @description Unique secret identifier generated by BCTRL.
+             * @example sec_uAAAAAAAAAAAAAAAAAAAAAA
+             */
             id: string;
             notes?: string;
             /**
@@ -5074,10 +5258,36 @@ export interface components {
              */
             object: "secret.reveal_result";
             password?: string;
+            /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
+            path: string;
             totp?: string;
             username: string | null;
             value?: string;
             version: number;
+        };
+        SecretVersion: {
+            createdAt: components["schemas"]["Rfc3339Timestamp"];
+            createdBy: string;
+            hasNotes: boolean;
+            hasPassword: boolean;
+            hasTotp: boolean;
+            hasValue: boolean;
+            id: string;
+            /** @constant */
+            object: "secret.version";
+            /**
+             * SecretId
+             * @description Unique secret identifier generated by BCTRL.
+             * @example sec_uAAAAAAAAAAAAAAAAAAAAAA
+             */
+            secretId: string;
+            updatedAt: components["schemas"]["Rfc3339Timestamp"];
+            version: number;
+        };
+        SecretVersionList: {
+            data: components["schemas"]["SecretVersion"][];
+            hasMore: boolean;
+            nextCursor: string | null;
         };
         /**
          * Sha256Digest
@@ -10844,6 +11054,250 @@ export interface operations {
                      *     }
                      */
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "browsers.events.stream": {
+        parameters: {
+            query?: {
+                category?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha") | ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha")[];
+                type?: string | string[];
+                /** @description Actor ID. */
+                actor?: string;
+                actorType?: "api_key" | "agent" | "human" | "platform";
+                channel?: ("api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform") | ("api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform")[];
+                outcome?: ("ok" | "denied" | "failed" | "unknown") | ("ok" | "denied" | "failed" | "unknown")[];
+                from?: components["schemas"]["Rfc3339Timestamp"];
+                to?: components["schemas"]["Rfc3339Timestamp"];
+                /** @description Resume after this Event ID from the same Run. */
+                after?: string;
+            };
+            header?: {
+                /** @description Dated API version. Defaults to the release pinned when the API key was created. */
+                "BCTRL-Version"?: "2026-10-01" | "2026-10-03";
+                /** @description Select one authorized Space by its opaque ID or unique name. Omission uses the operation default. */
+                "BCTRL-Space"?: string;
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+                /** @description Optional last delivered event identifier used to resume an SSE stream. */
+                "Last-Event-ID"?: string;
+            };
+            path: {
+                browserId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Server-Sent Events from the selected Run with Event IDs and complete Event objects; heartbeats are comments. */
+            200: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["Event"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "request.invalid",
+                     *         "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *         "message": "The request was invalid. See `code` and `details`.",
+                     *         "reasonClass": "invalid_input",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.required",
+                     *         "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *         "message": "Authentication required: the API key is missing or invalid.",
+                     *         "reasonClass": "unauthorized",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.forbidden",
+                     *         "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *         "message": "Forbidden: the API key cannot access this resource.",
+                     *         "reasonClass": "capability_denied",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description The requested resource was not found. Example code: `browser.not_found`. */
+            404: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "browser.not_found",
+                     *         "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *         "message": "The requested resource was not found.",
+                     *         "reasonClass": "not_found",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "rate_limited",
+                     *         "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *         "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *         "reasonClass": "rate_limited",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
                 };
             };
             /** @description Unexpected error. */
@@ -17724,6 +18178,250 @@ export interface operations {
             };
         };
     };
+    "events.list": {
+        parameters: {
+            query?: {
+                category?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha") | ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha")[];
+                type?: string | string[];
+                /** @description Actor ID. */
+                actor?: string;
+                actorType?: "api_key" | "agent" | "human" | "platform";
+                channel?: ("api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform") | ("api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform")[];
+                outcome?: ("ok" | "denied" | "failed" | "unknown") | ("ok" | "denied" | "failed" | "unknown")[];
+                from?: components["schemas"]["Rfc3339Timestamp"];
+                to?: components["schemas"]["Rfc3339Timestamp"];
+                cursor?: string;
+                /** @description Order by createdAt and ID. Defaults to desc. */
+                order?: "asc" | "desc";
+                limit?: number;
+                runId?: string;
+                runtimeId?: string;
+            };
+            header?: {
+                /** @description Dated API version. Defaults to the release pinned when the API key was created. */
+                "BCTRL-Version"?: "2026-10-01" | "2026-10-03";
+                /** @description Select one authorized Space by its opaque ID or unique name. Omission uses the operation default. */
+                "BCTRL-Space"?: string;
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EventsListResponse"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "request.invalid",
+                     *         "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *         "message": "The request was invalid. See `code` and `details`.",
+                     *         "reasonClass": "invalid_input",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.required",
+                     *         "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *         "message": "Authentication required: the API key is missing or invalid.",
+                     *         "reasonClass": "unauthorized",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.forbidden",
+                     *         "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *         "message": "Forbidden: the API key cannot access this resource.",
+                     *         "reasonClass": "capability_denied",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description The requested resource was not found. Example code: `runtime.not_found`. */
+            404: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "runtime.not_found",
+                     *         "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *         "message": "The requested resource was not found.",
+                     *         "reasonClass": "not_found",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "rate_limited",
+                     *         "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *         "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *         "reasonClass": "rate_limited",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     "files.list": {
         parameters: {
             query?: {
@@ -22515,8 +23213,16 @@ export interface operations {
     "runs.events.list": {
         parameters: {
             query?: {
+                category?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha") | ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha")[];
                 /** @description Filter by one or more namespaced event types. Repeat the query parameter for multiple values. */
                 type?: string[];
+                /** @description Actor ID. */
+                actor?: string;
+                actorType?: "api_key" | "agent" | "human" | "platform";
+                channel?: ("api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform") | ("api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform")[];
+                outcome?: ("ok" | "denied" | "failed" | "unknown") | ("ok" | "denied" | "failed" | "unknown")[];
+                from?: components["schemas"]["Rfc3339Timestamp"];
+                to?: components["schemas"]["Rfc3339Timestamp"];
                 /** @description Filter by one or more event sources. Repeat the query parameter for multiple values. */
                 source?: ("browser" | "network" | "runtime" | "agent" | "tool" | "system")[];
                 spanId?: string;
@@ -22559,6 +23265,251 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RunEventListResponse"];
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.required",
+                     *         "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *         "message": "Authentication required: the API key is missing or invalid.",
+                     *         "reasonClass": "unauthorized",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.forbidden",
+                     *         "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *         "message": "Forbidden: the API key cannot access this resource.",
+                     *         "reasonClass": "capability_denied",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description The requested resource was not found. Example code: `run.not_found`. */
+            404: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "run.not_found",
+                     *         "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *         "message": "The requested resource was not found.",
+                     *         "reasonClass": "not_found",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "rate_limited",
+                     *         "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *         "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *         "reasonClass": "rate_limited",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "runs.events.stream": {
+        parameters: {
+            query?: {
+                category?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha") | ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha")[];
+                type?: string | string[];
+                /** @description Actor ID. */
+                actor?: string;
+                actorType?: "api_key" | "agent" | "human" | "platform";
+                channel?: ("api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform") | ("api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform")[];
+                outcome?: ("ok" | "denied" | "failed" | "unknown") | ("ok" | "denied" | "failed" | "unknown")[];
+                from?: components["schemas"]["Rfc3339Timestamp"];
+                to?: components["schemas"]["Rfc3339Timestamp"];
+                /** @description Resume after this Event ID from the same Run. */
+                after?: string;
+            };
+            header?: {
+                /** @description Dated API version. Defaults to the release pinned when the API key was created. */
+                "BCTRL-Version"?: "2026-10-01" | "2026-10-03";
+                /** @description Select one authorized Space by its opaque ID or unique name. Omission uses the operation default. */
+                "BCTRL-Space"?: string;
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+                /** @description Optional last delivered event identifier used to resume an SSE stream. */
+                "Last-Event-ID"?: string;
+            };
+            path: {
+                /** @description Unique run identifier generated by BCTRL. */
+                runId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Server-Sent Events with Event IDs and complete Event objects; heartbeats are comments. */
+            200: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": components["schemas"]["Event"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "request.invalid",
+                     *         "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *         "message": "The request was invalid. See `code` and `details`.",
+                     *         "reasonClass": "invalid_input",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
                 };
             };
             /** @description Authentication required: the API key is missing or invalid. */
@@ -25048,7 +25999,7 @@ export interface operations {
             };
         };
     };
-    "secrets.reveal": {
+    "secrets.create": {
         parameters: {
             query?: never;
             header?: {
@@ -25064,14 +26015,15 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
+        /** @description Create a secret at an unoccupied path. Values are write-only. */
         requestBody: {
             content: {
-                "application/json": components["schemas"]["SecretRevealRequest"];
+                "application/json": components["schemas"]["SecretCreateRequest"];
             };
         };
         responses: {
-            /** @description OK */
-            200: {
+            /** @description Created */
+            201: {
                 headers: {
                     /** @description Current request identifier, also echoed in errors. */
                     "BCTRL-Request-Id": string;
@@ -25086,7 +26038,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SecretRevealResponse"];
+                    "application/json": components["schemas"]["Secret"];
                 };
             };
             /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
@@ -25191,8 +26143,8 @@ export interface operations {
                     };
                 };
             };
-            /** @description The requested resource was not found. Example code: `secrets.not_found`. */
-            404: {
+            /** @description The request conflicts with the current resource state. Example code: `secrets.conflict`. */
+            409: {
                 headers: {
                     /** @description Current request identifier, also echoed in errors. */
                     "BCTRL-Request-Id": string;
@@ -25210,10 +26162,10 @@ export interface operations {
                     /**
                      * @example {
                      *       "error": {
-                     *         "code": "secrets.not_found",
-                     *         "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
-                     *         "message": "The requested resource was not found.",
-                     *         "reasonClass": "not_found",
+                     *         "code": "secrets.conflict",
+                     *         "hint": "Read the current resource state and the operation requirements before retrying; contact support with requestId if it persists.",
+                     *         "message": "The request conflicts with the current resource state.",
+                     *         "reasonClass": "conflict",
                      *         "requestId": "unavailable"
                      *       }
                      *     }
@@ -25294,8 +26246,8 @@ export interface operations {
                 "BCTRL-Subaccount-Id"?: string;
             };
             path: {
-                /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
-                path: string;
+                /** @description Unique secret identifier generated by BCTRL. */
+                secret: string;
             };
             cookie?: never;
         };
@@ -25443,314 +26395,6 @@ export interface operations {
             };
         };
     };
-    "secrets.put": {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Dated API version. Defaults to the release pinned when the API key was created. */
-                "BCTRL-Version"?: "2026-10-01" | "2026-10-03";
-                /** @description Select one authorized Space by its opaque ID or unique name. Omission uses the operation default. */
-                "BCTRL-Space"?: string;
-                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
-                "BCTRL-Subaccount-Id"?: string;
-                /** @description Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise. */
-                "If-Match"?: string;
-                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
-                "Idempotency-Key"?: string;
-            };
-            path: {
-                /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
-                path: string;
-            };
-            cookie?: never;
-        };
-        /** @description Create or replace a secret. Every write is a new version; fields left out are cleared. */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SecretPutRequest"];
-            };
-        };
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    /** @description Current request identifier, also echoed in errors. */
-                    "BCTRL-Request-Id": string;
-                    /** @description Negotiated dated API version. */
-                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
-                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
-                    "RateLimit-Limit": number;
-                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
-                    "RateLimit-Remaining": number;
-                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
-                    "RateLimit-Reset": number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Secret"];
-                };
-            };
-            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
-            400: {
-                headers: {
-                    /** @description Current request identifier, also echoed in errors. */
-                    "BCTRL-Request-Id": string;
-                    /** @description Negotiated dated API version. */
-                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
-                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
-                    "RateLimit-Limit": number;
-                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
-                    "RateLimit-Remaining": number;
-                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
-                    "RateLimit-Reset": number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "request.invalid",
-                     *         "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
-                     *         "message": "The request was invalid. See `code` and `details`.",
-                     *         "reasonClass": "invalid_input",
-                     *         "requestId": "unavailable"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"] & {
-                        error?: {
-                            hint: string;
-                        };
-                    };
-                };
-            };
-            /** @description Authentication required: the API key is missing or invalid. */
-            401: {
-                headers: {
-                    /** @description Current request identifier, also echoed in errors. */
-                    "BCTRL-Request-Id": string;
-                    /** @description Negotiated dated API version. */
-                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
-                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
-                    "RateLimit-Limit": number;
-                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
-                    "RateLimit-Remaining": number;
-                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
-                    "RateLimit-Reset": number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "auth.required",
-                     *         "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
-                     *         "message": "Authentication required: the API key is missing or invalid.",
-                     *         "reasonClass": "unauthorized",
-                     *         "requestId": "unavailable"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"] & {
-                        error?: {
-                            hint: string;
-                        };
-                    };
-                };
-            };
-            /** @description Forbidden: the API key cannot access this resource. */
-            403: {
-                headers: {
-                    /** @description Current request identifier, also echoed in errors. */
-                    "BCTRL-Request-Id": string;
-                    /** @description Negotiated dated API version. */
-                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
-                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
-                    "RateLimit-Limit": number;
-                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
-                    "RateLimit-Remaining": number;
-                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
-                    "RateLimit-Reset": number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "auth.forbidden",
-                     *         "hint": "Authenticate with a valid principal that has access to this resource and operation.",
-                     *         "message": "Forbidden: the API key cannot access this resource.",
-                     *         "reasonClass": "capability_denied",
-                     *         "requestId": "unavailable"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"] & {
-                        error?: {
-                            hint: string;
-                        };
-                    };
-                };
-            };
-            /** @description The requested resource was not found. Example code: `secrets.not_found`. */
-            404: {
-                headers: {
-                    /** @description Current request identifier, also echoed in errors. */
-                    "BCTRL-Request-Id": string;
-                    /** @description Negotiated dated API version. */
-                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
-                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
-                    "RateLimit-Limit": number;
-                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
-                    "RateLimit-Remaining": number;
-                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
-                    "RateLimit-Reset": number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "secrets.not_found",
-                     *         "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
-                     *         "message": "The requested resource was not found.",
-                     *         "reasonClass": "not_found",
-                     *         "requestId": "unavailable"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"] & {
-                        error?: {
-                            hint: string;
-                        };
-                    };
-                };
-            };
-            /** @description The request conflicts with the current resource state. Example code: `secrets.conflict`. */
-            409: {
-                headers: {
-                    /** @description Current request identifier, also echoed in errors. */
-                    "BCTRL-Request-Id": string;
-                    /** @description Negotiated dated API version. */
-                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
-                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
-                    "RateLimit-Limit": number;
-                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
-                    "RateLimit-Remaining": number;
-                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
-                    "RateLimit-Reset": number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "secrets.conflict",
-                     *         "hint": "Read the current resource state and the operation requirements before retrying; contact support with requestId if it persists.",
-                     *         "message": "The request conflicts with the current resource state.",
-                     *         "reasonClass": "conflict",
-                     *         "requestId": "unavailable"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"] & {
-                        error?: {
-                            hint: string;
-                        };
-                    };
-                };
-            };
-            /** @description The If-Match version is not the current version of the resource. */
-            412: {
-                headers: {
-                    /** @description Current request identifier, also echoed in errors. */
-                    "BCTRL-Request-Id": string;
-                    /** @description Negotiated dated API version. */
-                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
-                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
-                    "RateLimit-Limit": number;
-                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
-                    "RateLimit-Remaining": number;
-                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
-                    "RateLimit-Reset": number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "secrets.version_mismatch",
-                     *         "hint": "Read the latest Secret version and retry with its current If-Match value.",
-                     *         "message": "The If-Match version is not the current version of the resource.",
-                     *         "reasonClass": "conflict",
-                     *         "requestId": "unavailable"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"] & {
-                        error?: {
-                            hint: string;
-                        };
-                    };
-                };
-            };
-            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
-            429: {
-                headers: {
-                    /** @description Current request identifier, also echoed in errors. */
-                    "BCTRL-Request-Id": string;
-                    /** @description Negotiated dated API version. */
-                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
-                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
-                    "RateLimit-Limit": number;
-                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
-                    "RateLimit-Remaining": number;
-                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
-                    "RateLimit-Reset": number;
-                    /** @description Seconds to wait before retrying. */
-                    "Retry-After"?: number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    /**
-                     * @example {
-                     *       "error": {
-                     *         "code": "rate_limited",
-                     *         "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
-                     *         "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
-                     *         "reasonClass": "rate_limited",
-                     *         "requestId": "unavailable"
-                     *       }
-                     *     }
-                     */
-                    "application/json": components["schemas"]["ErrorResponse"] & {
-                        error?: {
-                            hint: string;
-                        };
-                    };
-                };
-            };
-            /** @description Unexpected error. */
-            default: {
-                headers: {
-                    /** @description Current request identifier, also echoed in errors. */
-                    "BCTRL-Request-Id": string;
-                    /** @description Negotiated dated API version. */
-                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
-                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
-                    "RateLimit-Limit": number;
-                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
-                    "RateLimit-Remaining": number;
-                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
-                    "RateLimit-Reset": number;
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
     "secrets.delete": {
         parameters: {
             query?: never;
@@ -25767,8 +26411,8 @@ export interface operations {
                 "Idempotency-Key"?: string;
             };
             path: {
-                /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
-                path: string;
+                /** @description Unique secret identifier generated by BCTRL. */
+                secret: string;
             };
             cookie?: never;
         };
@@ -26002,8 +26646,8 @@ export interface operations {
                 "Idempotency-Key"?: string;
             };
             path: {
-                /** @description Secret path, for example `prod/github/bot`. May contain `/`. */
-                path: string;
+                /** @description Unique secret identifier generated by BCTRL. */
+                secret: string;
             };
             cookie?: never;
         };
@@ -26228,6 +26872,443 @@ export interface operations {
                      *         "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
                      *         "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
                      *         "reasonClass": "rate_limited",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "secrets.reveal": {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Dated API version. Defaults to the release pinned when the API key was created. */
+                "BCTRL-Version"?: "2026-10-01" | "2026-10-03";
+                /** @description Select one authorized Space by its opaque ID or unique name. Omission uses the operation default. */
+                "BCTRL-Space"?: string;
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+                /** @description Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409. */
+                "Idempotency-Key"?: string;
+            };
+            path: {
+                /** @description Unique secret identifier generated by BCTRL. */
+                secret: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SecretRevealRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SecretRevealResponse"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "request.invalid",
+                     *         "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *         "message": "The request was invalid. See `code` and `details`.",
+                     *         "reasonClass": "invalid_input",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.required",
+                     *         "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *         "message": "Authentication required: the API key is missing or invalid.",
+                     *         "reasonClass": "unauthorized",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.forbidden",
+                     *         "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *         "message": "Forbidden: the API key cannot access this resource.",
+                     *         "reasonClass": "capability_denied",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description The requested resource was not found. Example code: `secrets.not_found`. */
+            404: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "secrets.not_found",
+                     *         "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *         "message": "The requested resource was not found.",
+                     *         "reasonClass": "not_found",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Rate limit exceeded. Retry after the delay indicated by Retry-After. */
+            429: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    /** @description Seconds to wait before retrying. */
+                    "Retry-After"?: number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "rate_limited",
+                     *         "hint": "Wait for the Retry-After delay, or use exponential backoff when no delay is provided, then retry.",
+                     *         "message": "Rate limit exceeded. Retry after the delay indicated by Retry-After.",
+                     *         "reasonClass": "rate_limited",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Unexpected error. */
+            default: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    "secrets.versions": {
+        parameters: {
+            query?: {
+                cursor?: string;
+                /** @description Order by createdAt and ID. Defaults to desc. */
+                order?: "asc" | "desc";
+                limit?: number;
+            };
+            header?: {
+                /** @description Dated API version. Defaults to the release pinned when the API key was created. */
+                "BCTRL-Version"?: "2026-10-01" | "2026-10-03";
+                /** @description Select one authorized Space by its opaque ID or unique name. Omission uses the operation default. */
+                "BCTRL-Space"?: string;
+                /** @description Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount. */
+                "BCTRL-Subaccount-Id"?: string;
+            };
+            path: {
+                /** @description Unique secret identifier generated by BCTRL. */
+                secret: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SecretVersionList"];
+                };
+            };
+            /** @description The request was invalid. See `code` and `details`. Example code: `request.invalid`. */
+            400: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "request.invalid",
+                     *         "hint": "Check the operation schema and supply valid, supported input fields before retrying.",
+                     *         "message": "The request was invalid. See `code` and `details`.",
+                     *         "reasonClass": "invalid_input",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Authentication required: the API key is missing or invalid. */
+            401: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.required",
+                     *         "hint": "Authenticate with a valid API key or complete device authorization, then retry.",
+                     *         "message": "Authentication required: the API key is missing or invalid.",
+                     *         "reasonClass": "unauthorized",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description Forbidden: the API key cannot access this resource. */
+            403: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "auth.forbidden",
+                     *         "hint": "Authenticate with a valid principal that has access to this resource and operation.",
+                     *         "message": "Forbidden: the API key cannot access this resource.",
+                     *         "reasonClass": "capability_denied",
+                     *         "requestId": "unavailable"
+                     *       }
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ErrorResponse"] & {
+                        error?: {
+                            hint: string;
+                        };
+                    };
+                };
+            };
+            /** @description The requested resource was not found. Example code: `secrets.not_found`. */
+            404: {
+                headers: {
+                    /** @description Current request identifier, also echoed in errors. */
+                    "BCTRL-Request-Id": string;
+                    /** @description Negotiated dated API version. */
+                    "BCTRL-Version": "2026-10-01" | "2026-10-03";
+                    /** @description Evaluated policy limit; zero when no finite policy was evaluated. */
+                    "RateLimit-Limit": number;
+                    /** @description Remaining policy budget; zero when no finite policy was evaluated. */
+                    "RateLimit-Remaining": number;
+                    /** @description Seconds until reset; zero when no finite policy was evaluated. */
+                    "RateLimit-Reset": number;
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "error": {
+                     *         "code": "secrets.not_found",
+                     *         "hint": "List the resource in the same organization and Space, then retry with an existing resource ID.",
+                     *         "message": "The requested resource was not found.",
+                     *         "reasonClass": "not_found",
                      *         "requestId": "unavailable"
                      *       }
                      *     }

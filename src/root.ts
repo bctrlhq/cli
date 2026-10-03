@@ -1,64 +1,22 @@
 import { Command } from 'commander';
 import type { Factory } from './factory.js';
-import { createAiCommand } from './commands/ai/index.js';
-import { createAccountCommand } from './commands/account/index.js';
-import { createApiKeyCommand } from './commands/api-key/index.js';
 import { createAuthCommand } from './commands/auth/index.js';
-import { createBrowserExtensionCommand } from './commands/browser-extension/index.js';
-import { createConversationCommand } from './commands/conversation/index.js';
-import { createFileCommand } from './commands/file/index.js';
-import { createHelpCommand } from './commands/help/index.js';
-import { createLocationsCommand } from './commands/locations/index.js';
-import { createNotificationRecipientCommand } from './commands/notification-recipient/index.js';
-import { createProxyCommand } from './commands/proxy/index.js';
-import { createRunCommand } from './commands/run/index.js';
-import { createBrowserCommand } from './commands/browser/index.js';
-import { createSecretsCommand, createSecretsRunCommand } from './commands/secrets/index.js';
-import { createSpaceCommand } from './commands/space/index.js';
-import { createSubaccountCommand } from './commands/subaccount/index.js';
-import { createToolCommand } from './commands/tool/index.js';
-import { createToolCallCommand } from './commands/tool-call/index.js';
-import { createToolsetCommand } from './commands/toolset/index.js';
-import { createUsageCommand } from './commands/usage/index.js';
-import { createViewsCommand } from './commands/view/index.js';
 import { createVersionCommand } from './commands/version/version.js';
-import { createWebhookCommand } from './commands/webhook/index.js';
+import { registerSecretConveniences } from './commands/secrets/index.js';
+import { registerGeneratedCommands } from './commands/generated.js';
+import { createMcpCommand } from './commands/mcp.js';
 
 export function createRootCommand(factory: Factory): Command {
-  const command = new Command();
-
-  command
-    .name('bctrl')
+  const command = new Command('bctrl')
     .description('BCTRL command-line interface')
     .usage('<command> [flags]')
     .showHelpAfterError()
     .showSuggestionAfterError()
     .option('--no-color', 'Disable color output');
-
   command.addCommand(createVersionCommand(factory));
-  command.addCommand(createAccountCommand(factory));
   command.addCommand(createAuthCommand(factory));
-  command.addCommand(createAiCommand(factory));
-  command.addCommand(createApiKeyCommand(factory));
-  command.addCommand(createBrowserExtensionCommand(factory));
-  command.addCommand(createConversationCommand(factory));
-  command.addCommand(createFileCommand(factory));
-  command.addCommand(createHelpCommand(factory));
-  command.addCommand(createLocationsCommand(factory));
-  command.addCommand(createNotificationRecipientCommand(factory));
-  command.addCommand(createRunCommand(factory));
-  command.addCommand(createBrowserCommand(factory));
-  command.addCommand(createSecretsCommand(factory));
-  command.addCommand(createSecretsRunCommand(factory));
-  command.addCommand(createProxyCommand(factory));
-  command.addCommand(createSpaceCommand(factory));
-  command.addCommand(createSubaccountCommand(factory));
-  command.addCommand(createToolCommand(factory));
-  command.addCommand(createToolsetCommand(factory));
-  command.addCommand(createToolCallCommand(factory));
-  command.addCommand(createUsageCommand(factory));
-  command.addCommand(createViewsCommand(factory));
-  command.addCommand(createWebhookCommand(factory));
-
+  command.addCommand(createMcpCommand(factory));
+  registerGeneratedCommands(command, factory);
+  registerSecretConveniences(command, factory);
   return command;
 }
