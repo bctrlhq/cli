@@ -22891,7 +22891,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
+            type: "string[]",
             required: true,
           },
         ],
@@ -22912,7 +22912,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
+          type: "string[]",
           required: true,
         },
         {
@@ -23471,7 +23471,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
+          type: "string[]",
           required: true,
         },
         {
@@ -24014,7 +24014,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
+            type: "string[]",
             required: false,
           },
           {
@@ -24040,7 +24040,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | tool_call.completed | tool_call.failed | turn.completed | turn.failed | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready | runtime.control.changed | runtime.started | runtime.start_failed | spending_cap.warning | spending_cap.stop_requested | spending_cap.stopped[]",
+          type: "string[]",
           required: true,
         },
         {

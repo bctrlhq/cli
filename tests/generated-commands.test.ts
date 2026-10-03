@@ -75,3 +75,13 @@ test('generated cap commands retain named Spaces and explicit zero or null USD l
     { method: 'patch', path: '/spaces/team%20checkout/spending-cap', options: { body: { amount: null, currency: 'USD' } } },
   ]);
 });
+
+
+test('generated webhook commands allow additive Event subscriptions', async () => {
+  const calls: ApiCall[] = [];
+  const events = ['spending_cap.reached', 'task.awaiting_input', 'future.new_event'];
+  await command(calls).parseAsync(['webhooks', 'create', '--body', JSON.stringify({ url: 'https://example.test/events', events })], { from: 'user' });
+  await command(calls).parseAsync(['webhooks', 'update', 'wh_fixture', '--body', JSON.stringify({ events })], { from: 'user' });
+  assert.deepEqual(calls, [{ method: 'post', path: '/webhooks', options: { body: { url: 'https://example.test/events', events } } },
+    { method: 'patch', path: '/webhooks/wh_fixture', options: { body: { events } } }]);
+});

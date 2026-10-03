@@ -18496,30 +18496,12 @@
           "properties": {
             "events": {
               "items": {
-                "enum": [
-                  "run.started",
-                  "tool_call.completed",
-                  "tool_call.failed",
-                  "turn.completed",
-                  "turn.failed",
-                  "run.completed",
-                  "run.failed",
-                  "tool_input.requested",
-                  "tool_input.responded",
-                  "tool_input.expired",
-                  "view.created",
-                  "view.revoked",
-                  "recording.ready",
-                  "runtime.control.changed",
-                  "runtime.started",
-                  "runtime.start_failed",
-                  "spending_cap.warning",
-                  "spending_cap.stop_requested",
-                  "spending_cap.stopped"
-                ],
+                "maxLength": 200,
+                "minLength": 3,
+                "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
                 "type": "string"
               },
-              "maxItems": 19,
+              "maxItems": 100,
               "minItems": 1,
               "type": "array"
             },
@@ -19215,30 +19197,12 @@
             },
             "events": {
               "items": {
-                "enum": [
-                  "run.started",
-                  "tool_call.completed",
-                  "tool_call.failed",
-                  "turn.completed",
-                  "turn.failed",
-                  "run.completed",
-                  "run.failed",
-                  "tool_input.requested",
-                  "tool_input.responded",
-                  "tool_input.expired",
-                  "view.created",
-                  "view.revoked",
-                  "recording.ready",
-                  "runtime.control.changed",
-                  "runtime.started",
-                  "runtime.start_failed",
-                  "spending_cap.warning",
-                  "spending_cap.stop_requested",
-                  "spending_cap.stopped"
-                ],
+                "maxLength": 200,
+                "minLength": 3,
+                "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
                 "type": "string"
               },
-              "maxItems": 19,
+              "maxItems": 100,
               "minItems": 1,
               "type": "array"
             },
