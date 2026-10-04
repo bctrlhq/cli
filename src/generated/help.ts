@@ -525,6 +525,277 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "agents.a2a.card": {
+    type: "topic",
+    topic: "agents.a2a.card",
+    aliases: ["agents a2a card"],
+    title: "Get the agent A2A card",
+    summary:
+      "The Agent2Agent (A2A v1.0) card of this Agent: its JSON-RPC interface, capabilities and bearer API-key security.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "defaultInputModes",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "defaultOutputModes",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "description",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "provider",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "securityRequirements",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "securitySchemes",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "skills",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "supportedInterfaces",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "version",
+          type: "string",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/agents/{agentId}/a2a/.well-known/agent-card.json",
+      operationId: "agents.a2a.card",
+      responseFields: [
+        "capabilities",
+        "defaultInputModes",
+        "defaultOutputModes",
+        "description",
+        "name",
+        "provider",
+        "securityRequirements",
+        "securitySchemes",
+        "skills",
+        "supportedInterfaces",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.a2a.card",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents a2a card",
+      usage: "bctrl agents a2a card <agentId>",
+    },
+    mcp: {
+      toolName: "agents_a2a_card",
+      operationResource: "operations://agents.a2a.card",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents a2a card --help",
+      },
+    ],
+  },
+  "agents.a2a.rpc": {
+    type: "topic",
+    topic: "agents.a2a.rpc",
+    aliases: ["agents a2a rpc"],
+    title: "Call the agent over A2A",
+    summary:
+      "A2A v1.0 JSON-RPC: SendMessage starts or continues a Task (blocking unless configuration.returnImmediately), GetTask, ListTasks and CancelTask read and cancel this Agent’s Tasks. Send the A2A-Version: 1.0 header. Errors are JSON-RPC errors with HTTP 200.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "A2AJsonRpcRequest",
+        schemaResource: "schemas://A2AJsonRpcRequest",
+        fields: [
+          {
+            name: "id",
+            type: "unknown",
+            required: false,
+          },
+          {
+            name: "jsonrpc",
+            type: "unknown",
+            required: false,
+          },
+          {
+            name: "method",
+            type: "unknown",
+            required: false,
+          },
+          {
+            name: "params",
+            type: "unknown",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "error",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "id",
+          type: "string | number | null",
+          required: true,
+        },
+        {
+          name: "jsonrpc",
+          type: "2.0",
+          required: true,
+          values: ["2.0"],
+        },
+        {
+          name: "result",
+          type: "unknown",
+          required: false,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/agents/{agentId}/a2a",
+      operationId: "agents.a2a.rpc",
+      requestFields: ["id", "jsonrpc", "method", "params"],
+      responseFields: ["error", "id", "jsonrpc", "result"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.a2a.rpc",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents a2a rpc",
+      usage: "bctrl agents a2a rpc <agentId>",
+    },
+    mcp: {
+      toolName: "agents_a2a_rpc",
+      operationResource: "operations://agents.a2a.rpc",
+      schemaResources: ["schemas://A2AJsonRpcRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents a2a rpc --help",
+      },
+    ],
+  },
   "agents.create": {
     type: "topic",
     topic: "agents.create",

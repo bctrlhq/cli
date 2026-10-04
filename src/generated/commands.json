@@ -357,6 +357,171 @@
     }
   },
   {
+    "operationId": "agents.a2a.card",
+    "method": "GET",
+    "path": "/v1/agents/{agentId}/a2a/.well-known/agent-card.json",
+    "description": "The Agent2Agent (A2A v1.0) card of this Agent: its JSON-RPC interface, capabilities and bearer API-key security.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents a2a card",
+      "positionalArgs": [
+        "agentId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "agents_a2a_card",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "agentId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "agentId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "agents.a2a.rpc",
+    "method": "POST",
+    "path": "/v1/agents/{agentId}/a2a",
+    "description": "A2A v1.0 JSON-RPC: SendMessage starts or continues a Task (blocking unless configuration.returnImmediately), GetTask, ListTasks and CancelTask read and cancel this Agent’s Tasks. Send the A2A-Version: 1.0 header. Errors are JSON-RPC errors with HTTP 200.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents a2a rpc",
+      "positionalArgs": [
+        "agentId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "agents_a2a_rpc",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "agentId"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/A2AJsonRpcRequest"
+        }
+      },
+      "required": [
+        "agentId",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "A2AJsonRpcRequest": {
+          "properties": {
+            "id": {},
+            "jsonrpc": {},
+            "method": {},
+            "params": {}
+          },
+          "type": "object"
+        }
+      }
+    }
+  },
+  {
     "operationId": "agents.create",
     "method": "POST",
     "path": "/v1/agents",

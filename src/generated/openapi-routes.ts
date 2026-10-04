@@ -5,6 +5,8 @@ export const CLI_OPENAPI_ROUTES = {
   "account.spendingCap.get": { method: "get", path: "/account/spending-cap" },
   "account.spendingCap.update": { method: "patch", path: "/account/spending-cap" },
   "account.update": { method: "patch", path: "/account" },
+  "agents.a2a.card": { method: "get", path: "/agents/{agentId}/a2a/.well-known/agent-card.json" },
+  "agents.a2a.rpc": { method: "post", path: "/agents/{agentId}/a2a" },
   "agents.create": { method: "post", path: "/agents" },
   "agents.delete": { method: "delete", path: "/agents/{agentId}" },
   "agents.get": { method: "get", path: "/agents/{agentId}" },
