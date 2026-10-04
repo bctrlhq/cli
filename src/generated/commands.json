@@ -19736,7 +19736,7 @@
     "operationId": "spaces.delete",
     "method": "DELETE",
     "path": "/v1/spaces/{spaceId}",
-    "description": "Delete a space after its active runtimes have been stopped.",
+    "description": "Delete a Space and everything in it: its browsers and sandboxes are stopped and destroyed, and its agents, Tasks, Conversations, files and views deleted. Run records, usage and Events stay with the organization. The deletion runs in the background; the Space shows status deleting until it is gone. Pass wait to block until then.",
     "stability": "stable",
     "cli": {
       "command": "spaces delete",
@@ -19751,7 +19751,8 @@
       "readOnlyHint": false
     },
     "wait": {
-      "supported": false
+      "maxSeconds": 60,
+      "supported": true
     },
     "pagination": {
       "supported": false
@@ -19770,6 +19771,20 @@
         "spaceId": {
           "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
           "type": "string"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "wait": {
+              "default": 0,
+              "description": "Seconds to wait for the deletion to finish before answering.",
+              "maximum": 60,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
         },
         "headers": {
           "type": "object",
