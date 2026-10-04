@@ -18642,10 +18642,16 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox_connection"],
         },
         {
-          name: "protocol",
-          type: "terminal",
+          name: "port",
+          type: "integer | null",
           required: true,
-          values: ["terminal"],
+          description: "The sandbox port, for a port preview.",
+        },
+        {
+          name: "protocol",
+          type: "terminal | ssh | port",
+          required: true,
+          values: ["terminal", "ssh", "port"],
         },
         {
           name: "revokedAt",
@@ -18702,6 +18708,7 @@ export const CLI_HELP_COMMANDS = {
         "expiresAt",
         "id",
         "object",
+        "port",
         "protocol",
         "revokedAt",
         "sandboxId",
@@ -18819,10 +18826,16 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox_connection"],
         },
         {
-          name: "protocol",
-          type: "terminal",
+          name: "port",
+          type: "integer | null",
           required: true,
-          values: ["terminal"],
+          description: "The sandbox port, for a port preview.",
+        },
+        {
+          name: "protocol",
+          type: "terminal | ssh | port",
+          required: true,
+          values: ["terminal", "ssh", "port"],
         },
         {
           name: "revokedAt",
@@ -18852,6 +18865,7 @@ export const CLI_HELP_COMMANDS = {
         "expiresAt",
         "id",
         "object",
+        "port",
         "protocol",
         "revokedAt",
         "sandboxId",
@@ -18956,10 +18970,16 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox_connection"],
         },
         {
-          name: "protocol",
-          type: "terminal",
+          name: "port",
+          type: "integer | null",
           required: true,
-          values: ["terminal"],
+          description: "The sandbox port, for a port preview.",
+        },
+        {
+          name: "protocol",
+          type: "terminal | ssh | port",
+          required: true,
+          values: ["terminal", "ssh", "port"],
         },
         {
           name: "revokedAt",
@@ -18989,6 +19009,7 @@ export const CLI_HELP_COMMANDS = {
         "expiresAt",
         "id",
         "object",
+        "port",
         "protocol",
         "revokedAt",
         "sandboxId",
@@ -19072,7 +19093,7 @@ export const CLI_HELP_COMMANDS = {
             type: "string",
             required: false,
             description:
-              "Approved sandbox image identifier, for example `bctrl-pi-stable`.",
+              "An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.",
           },
           {
             name: "name",
@@ -20012,6 +20033,351 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl sandboxes list --help",
+      },
+    ],
+  },
+  "sandboxes.ports.create": {
+    type: "topic",
+    topic: "sandboxes.ports.create",
+    aliases: ["sandboxes ports create"],
+    title: "Expose a sandbox port as a preview URL",
+    summary:
+      "An authenticated HTTPS URL that forwards to a TCP port inside the sandbox until it expires or is deleted.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxPortCreateRequest",
+        schemaResource: "schemas://SandboxPortCreateRequest",
+        fields: [
+          {
+            name: "port",
+            type: "integer",
+            required: true,
+            description:
+              "A TCP port a process in the sandbox listens on (127.0.0.1).",
+          },
+          {
+            name: "expiresInSeconds",
+            type: "integer",
+            required: false,
+            description: "How long the preview URL works.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "expiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Unique sandboxConnection identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "sandbox_port",
+          required: true,
+          values: ["sandbox_port"],
+        },
+        {
+          name: "port",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "url",
+          type: "string",
+          required: true,
+          description:
+            "Authenticated preview URL. It carries its credential: share it only with whoever may use the port.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/ports",
+      operationId: "sandboxes.ports.create",
+      requestFields: ["port", "expiresInSeconds"],
+      responseFields: [
+        "createdAt",
+        "expiresAt",
+        "id",
+        "object",
+        "port",
+        "sandboxId",
+        "url",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.ports.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes ports create",
+      usage: "bctrl sandboxes ports create <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_ports_create",
+      operationResource: "operations://sandboxes.ports.create",
+      schemaResources: ["schemas://SandboxPortCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes ports create --help",
+      },
+    ],
+  },
+  "sandboxes.ports.delete": {
+    type: "topic",
+    topic: "sandboxes.ports.delete",
+    aliases: ["sandboxes ports delete"],
+    title: "Close the previews of a sandbox port",
+    summary:
+      "Revokes every open preview of the port; their URLs stop working at once.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "port",
+          type: "integer",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "closed",
+          type: "integer",
+          required: true,
+          description: "Previews of this port that were closed.",
+        },
+        {
+          name: "object",
+          type: "sandbox_port.deleted",
+          required: true,
+          values: ["sandbox_port.deleted"],
+        },
+        {
+          name: "port",
+          type: "integer",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/sandboxes/{sandboxId}/ports/{port}",
+      operationId: "sandboxes.ports.delete",
+      responseFields: ["closed", "object", "port"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.ports.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes ports delete",
+      usage: "bctrl sandboxes ports delete <sandboxId> <port>",
+    },
+    mcp: {
+      toolName: "sandboxes_ports_delete",
+      operationResource: "operations://sandboxes.ports.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes ports delete --help",
+      },
+    ],
+  },
+  "sandboxes.ports.list": {
+    type: "topic",
+    topic: "sandboxes.ports.list",
+    aliases: ["sandboxes ports list"],
+    title: "List open port previews of a sandbox",
+    summary:
+      "The ports of the sandbox that have an open, unexpired preview, with the preview connections of each.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/sandboxes/{sandboxId}/ports",
+      operationId: "sandboxes.ports.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.ports.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes ports list",
+      usage: "bctrl sandboxes ports list <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_ports_list",
+      operationResource: "operations://sandboxes.ports.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes ports list --help",
       },
     ],
   },
@@ -21095,6 +21461,188 @@ export const CLI_HELP_COMMANDS = {
       {
         audience: "cli",
         command: "bctrl sandboxes snapshots list --help",
+      },
+    ],
+  },
+  "sandboxes.sshSessions.create": {
+    type: "topic",
+    topic: "sandboxes.sshSessions.create",
+    aliases: ["sandboxes sshSessions create"],
+    title: "Open an SSH session to a sandbox",
+    summary:
+      "Short-lived SSH credentials (host, port, one-time password) for a shell or commands in the sandbox. Revoke with DELETE /v1/sandboxes/{sandboxId}/connections/{id}.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxSshSessionCreateRequest",
+        schemaResource: "schemas://SandboxSshSessionCreateRequest",
+        fields: [
+          {
+            name: "expiresInSeconds",
+            type: "integer",
+            required: false,
+            description: "How long the session may stay open.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "command",
+          type: "string",
+          required: true,
+          description: "A ready-to-run OpenSSH command.",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "expiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "host",
+          type: "string",
+          required: true,
+          description: "SSH host to connect to.",
+        },
+        {
+          name: "hostKeyFingerprint",
+          type: "string | null",
+          required: true,
+          description:
+            "SHA-256 fingerprint of the SSH host key, when published.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Unique sandboxConnection identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "sandbox_ssh_session",
+          required: true,
+          values: ["sandbox_ssh_session"],
+        },
+        {
+          name: "password",
+          type: "string",
+          required: true,
+          description:
+            "One-time password, valid for one minute: log in once; the session then lasts until `expiresAt`.",
+        },
+        {
+          name: "passwordExpiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "port",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "username",
+          type: "string",
+          required: true,
+          description: "SSH user name (the session ID).",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/ssh-sessions",
+      operationId: "sandboxes.sshSessions.create",
+      requestFields: ["expiresInSeconds"],
+      responseFields: [
+        "command",
+        "createdAt",
+        "expiresAt",
+        "host",
+        "hostKeyFingerprint",
+        "id",
+        "object",
+        "password",
+        "passwordExpiresAt",
+        "port",
+        "sandboxId",
+        "username",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.sshSessions.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes sshSessions create",
+      usage: "bctrl sandboxes sshSessions create <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_sshSessions_create",
+      operationResource: "operations://sandboxes.sshSessions.create",
+      schemaResources: ["schemas://SandboxSshSessionCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes sshSessions create --help",
       },
     ],
   },

@@ -16338,8 +16338,9 @@
               "x-bctrl-type": "SandboxSnapshotId"
             },
             "image": {
-              "description": "Approved sandbox image identifier, for example `bctrl-pi-stable`.",
-              "pattern": "^[a-z0-9][a-z0-9._-]{0,99}$",
+              "description": "An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.",
+              "maxLength": 200,
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._/:@-]{0,199}$",
               "type": "string"
             },
             "name": {
@@ -16901,6 +16902,269 @@
         }
       },
       "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "sandboxes.ports.create",
+    "method": "POST",
+    "path": "/v1/sandboxes/{sandboxId}/ports",
+    "description": "An authenticated HTTPS URL that forwards to a TCP port inside the sandbox until it expires or is deleted.",
+    "stability": "preview",
+    "cli": {
+      "command": "sandboxes ports create",
+      "positionalArgs": [
+        "sandboxId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "sandboxes_ports_create",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "sandboxId"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sandboxId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/SandboxPortCreateRequest"
+        }
+      },
+      "required": [
+        "sandboxId",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "SandboxPortCreateRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "expiresInSeconds": {
+              "default": 900,
+              "description": "How long the preview URL works.",
+              "maximum": 900,
+              "minimum": 60,
+              "type": "integer"
+            },
+            "port": {
+              "description": "A TCP port a process in the sandbox listens on (127.0.0.1).",
+              "maximum": 65535,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "port"
+          ],
+          "type": "object"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "sandboxes.ports.delete",
+    "method": "DELETE",
+    "path": "/v1/sandboxes/{sandboxId}/ports/{port}",
+    "description": "Revokes every open preview of the port; their URLs stop working at once.",
+    "stability": "preview",
+    "cli": {
+      "command": "sandboxes ports delete",
+      "positionalArgs": [
+        "sandboxId",
+        "port"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": true,
+      "expose": true,
+      "name": "sandboxes_ports_delete",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "sandboxId",
+      "port"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sandboxId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "port": {
+          "maximum": 65535,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "sandboxId",
+        "port"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "sandboxes.ports.list",
+    "method": "GET",
+    "path": "/v1/sandboxes/{sandboxId}/ports",
+    "description": "The ports of the sandbox that have an open, unexpired preview, with the preview connections of each.",
+    "stability": "preview",
+    "cli": {
+      "command": "sandboxes ports list",
+      "positionalArgs": [
+        "sandboxId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "sandboxes_ports_list",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "sandboxId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sandboxId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "sandboxId"
+      ],
       "additionalProperties": false
     }
   },
@@ -17639,6 +17903,104 @@
         "sandboxId"
       ],
       "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "sandboxes.sshSessions.create",
+    "method": "POST",
+    "path": "/v1/sandboxes/{sandboxId}/ssh-sessions",
+    "description": "Short-lived SSH credentials (host, port, one-time password) for a shell or commands in the sandbox. Revoke with DELETE /v1/sandboxes/{sandboxId}/connections/{id}.",
+    "stability": "preview",
+    "cli": {
+      "command": "sandboxes sshSessions create",
+      "positionalArgs": [
+        "sandboxId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "sandboxes_sshSessions_create",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "sandboxId"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sandboxId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/SandboxSshSessionCreateRequest"
+        }
+      },
+      "required": [
+        "sandboxId",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "SandboxSshSessionCreateRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "expiresInSeconds": {
+              "default": 900,
+              "description": "How long the session may stay open.",
+              "maximum": 900,
+              "minimum": 60,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        }
+      }
     }
   },
   {
