@@ -20,23 +20,15 @@ function buildCommand(calls: ApiCall[]) {
   return command;
 }
 
-test('automation commands map to the canonical tools, conversations, and trace routes', async () => {
+test('automation commands map to the canonical tools, tasks, conversations, and trace routes', async () => {
   const calls: ApiCall[] = [];
 
   await buildCommand(calls).parseAsync(
-    [
-      'tools',
-      'call',
-      'stagehand.act',
-      '--bctrl-runtime-id',
-      'rt_1',
-      '--body',
-      '{"instruction":"Continue"}',
-    ],
+    ['tools', 'calls', 'create', 'stagehand.act', '--body', '{"input":{"instruction":"Continue"},"runtimeId":"br_u1234567890123456789012"}'],
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(
-    ['tools', 'calls', 'create', 'captcha.solve', '--bctrl-runtime-id', 'rt_1', '--body', '{}'],
+    ['tools', 'calls', 'create', 'captcha.solve', '--body', '{"input":{},"runtimeId":"br_u1234567890123456789012"}'],
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(
@@ -46,12 +38,12 @@ test('automation commands map to the canonical tools, conversations, and trace r
       'create',
       'code.execute',
       '--body',
-      '{"source":"export default async () => ({ ok: true });"}',
+      '{"input":{"source":"export default async () => ({ ok: true });"}}',
     ],
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(
-    ['conversations', 'messages', 'create', 'conv_u1234567890123456789012', '--body', '{"text":"Complete checkout"}'],
+    ['tasks', 'create', '--body', '{"agent":"agt_1","input":"Complete checkout"}'],
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(
@@ -64,19 +56,23 @@ test('automation commands map to the canonical tools, conversations, and trace r
   assert.deepEqual(
     calls.map(({ method, path }) => `${method} ${path}`),
     [
-      'post /tools/stagehand.act/call',
+      'post /tools/stagehand.act/calls',
       'post /tools/captcha.solve/calls',
       'post /tools/code.execute/calls',
-      'post /conversations/conv_u1234567890123456789012/messages',
+      'post /tasks',
       'patch /conversations/conv_u1234567890123456789012',
       'get /runs/run_u1234567890123456789012/trace',
       'get /runs/run_u1234567890123456789012/events',
     ]
   );
-  assert.equal((calls[0]?.options as { headers?: Record<string,string> } | undefined)?.headers?.['BCTRL-Runtime-Id'], 'rt_1');
-  assert.equal((calls[0]?.options as { body?: Record<string, unknown> } | undefined)?.body?.runtimeId, undefined);
-  assert.equal((calls[1]?.options as { headers?: Record<string,string> } | undefined)?.headers?.['BCTRL-Runtime-Id'], 'rt_1');
-  assert.equal((calls[2]?.options as { headers?: Record<string,string> } | undefined)?.headers?.['BCTRL-Runtime-Id'], undefined);
+  // The browser is a body field; the old BCTRL-Runtime-Id header is gone.
+  const options = calls.map((call) => call.options as { headers?: Record<string, string>; body?: Record<string, unknown> } | undefined);
+  assert.equal(options[0]?.headers?.['BCTRL-Runtime-Id'], undefined);
+  assert.equal(options[0]?.body?.runtimeId, 'br_u1234567890123456789012');
+  assert.equal(options[2]?.body?.runtimeId, undefined);
+  assert.deepEqual(options[3]?.body, { agent: 'agt_1', input: 'Complete checkout' });
+  const root = buildCommand([]);
+  assert.equal(root.commands.find((command) => command.name() === 'tools')?.commands.some((command) => command.name() === 'call'), false);
 });
 
 test('async commands send bounded waits in the query and print 202 handles', async () => {
@@ -84,11 +80,11 @@ test('async commands send bounded waits in the query and print 202 handles', asy
   await buildCommand(calls).parseAsync(['browsers', 'start', 'br_1'], { from: 'user' });
   await buildCommand(calls).parseAsync(['browsers', 'get', 'br_1', '--wait', '60'], { from: 'user' });
   await buildCommand(calls).parseAsync(['tool-calls', 'result', 'tc_u1234567890123456789012', '--wait', '1'], { from: 'user' });
-  await buildCommand(calls).parseAsync(['conversations', 'turns', 'get', 'conv_u1234567890123456789012', 'turn_u1234567890123456789012', '--wait', '60'], { from: 'user' });
-  await buildCommand(calls).parseAsync(['conversations', 'turns', 'cancel', 'conv_u1234567890123456789012', 'turn_u1234567890123456789012'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['tasks', 'get', 'task_u1234567890123456789012', '--wait', '60'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['tasks', 'cancel', 'task_u1234567890123456789012'], { from: 'user' });
   assert.deepEqual(calls.map(({ method, path }) => `${method} ${path}`), [
     'post /browsers/br_1/start', 'get /browsers/br_1', 'get /tool-calls/tc_u1234567890123456789012/result',
-    'get /conversations/conv_u1234567890123456789012/turns/turn_u1234567890123456789012', 'post /conversations/conv_u1234567890123456789012/turns/turn_u1234567890123456789012/cancel',
+    'get /tasks/task_u1234567890123456789012', 'post /tasks/task_u1234567890123456789012/cancel',
   ]);
   const options = calls.map((call) => call.options as { query?: { wait?: number }; body?: unknown });
   assert.deepEqual(options.slice(0, 4).map((option) => option.query?.wait), [undefined, 60, 1, 60]);

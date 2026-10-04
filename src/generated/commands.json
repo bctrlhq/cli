@@ -357,6 +357,923 @@
     }
   },
   {
+    "operationId": "agents.create",
+    "method": "POST",
+    "path": "/v1/agents",
+    "description": "Create an Agent and its first immutable, promoted version in a Space.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents create",
+      "positionalArgs": []
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "agents_create",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/AgentCreateRequest"
+        }
+      },
+      "required": [
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "AgentCreateRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "instructions": {
+              "default": "",
+              "maxLength": 16000,
+              "type": "string"
+            },
+            "memory": {
+              "default": "space_notes",
+              "enum": [
+                "space_notes",
+                "none"
+              ],
+              "type": "string"
+            },
+            "metadata": {
+              "$ref": "#/$defs/JsonObject"
+            },
+            "model": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": {
+              "$ref": "#/$defs/ResourceName"
+            },
+            "requireApprovalForPromotion": {
+              "default": true,
+              "type": "boolean"
+            },
+            "scope": {
+              "additionalProperties": false,
+              "properties": {
+                "budgetUsd": {
+                  "anyOf": [
+                    {
+                      "maximum": 9007199254740991,
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "Per-Task spend ceiling in USD minor units (cents), or null for no additional ceiling."
+                },
+                "capabilities": {
+                  "default": [
+                    "*"
+                  ],
+                  "items": {
+                    "maxLength": 160,
+                    "minLength": 1,
+                    "pattern": "^(?:\\*|[a-z][a-z0-9_-]*(?:\\.[a-z][a-z0-9_-]*)*(?:\\.\\*)?)$",
+                    "type": "string"
+                  },
+                  "maxItems": 128,
+                  "type": "array"
+                },
+                "maxConcurrentRuntimes": {
+                  "default": 3,
+                  "maximum": 20,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "spaces": {
+                  "items": {
+                    "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "spaceId": {
+              "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+              "type": "string"
+            },
+            "tools": {
+              "items": {
+                "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+                "type": "string"
+              },
+              "maxItems": 100,
+              "type": "array"
+            }
+          },
+          "required": [
+            "name",
+            "model"
+          ],
+          "type": "object"
+        },
+        "JsonObject": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "properties": {},
+          "type": "object"
+        },
+        "JsonValue": {
+          "description": "Any valid JSON value: object, array, string, number, boolean, or null."
+        },
+        "ResourceName": {
+          "description": "Customer-facing resource name. 1–200 characters.",
+          "examples": [
+            "Production browser"
+          ],
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^(?![A-Za-z][A-Za-z0-9]*_)(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)[\\s\\S]+$",
+          "title": "ResourceName",
+          "type": "string",
+          "x-bctrl-type": "ResourceName"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "agents.delete",
+    "method": "DELETE",
+    "path": "/v1/agents/{agentId}",
+    "description": "Archive an Agent definition. Existing Tasks and immutable version history remain available.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents delete",
+      "positionalArgs": [
+        "agentId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": true,
+      "expose": true,
+      "name": "agents_delete",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "agentId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "agentId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "agents.get",
+    "method": "GET",
+    "path": "/v1/agents/{agentId}",
+    "description": "Read an Agent by ID or scoped name, including its promoted version and latest draft number.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents get",
+      "positionalArgs": [
+        "agentId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "agents_get",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "agentId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "agentId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "agents.list",
+    "method": "GET",
+    "path": "/v1/agents",
+    "description": "List Agent definitions visible in the selected Space or tenant, with their promoted immutable version.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents list",
+      "positionalArgs": []
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "agents_list",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": true
+    },
+    "stream": false,
+    "pathParams": [],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "object",
+          "properties": {
+            "cursor": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "order": {
+              "description": "Order by createdAt and ID. Defaults to desc.",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            },
+            "limit": {
+              "default": 50,
+              "exclusiveMinimum": 0,
+              "maximum": 200,
+              "type": "integer"
+            },
+            "name": {
+              "$ref": "#/$defs/ResourceName"
+            },
+            "spaceId": {
+              "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+              "type": "string"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "$defs": {
+        "ResourceName": {
+          "description": "Customer-facing resource name. 1–200 characters.",
+          "examples": [
+            "Production browser"
+          ],
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^(?![A-Za-z][A-Za-z0-9]*_)(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)[\\s\\S]+$",
+          "title": "ResourceName",
+          "type": "string",
+          "x-bctrl-type": "ResourceName"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "agents.update",
+    "method": "PATCH",
+    "path": "/v1/agents/{agentId}",
+    "description": "Append an immutable Agent version. Tasks keep their selected version and the promoted version changes only on promotion.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents update",
+      "positionalArgs": [
+        "agentId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "agents_update",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "agentId"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/AgentUpdateRequest"
+        }
+      },
+      "required": [
+        "agentId",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "AgentUpdateRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "instructions": {
+              "maxLength": 16000,
+              "type": "string"
+            },
+            "memory": {
+              "enum": [
+                "space_notes",
+                "none"
+              ],
+              "type": "string"
+            },
+            "metadata": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/JsonObject"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "model": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": {
+              "$ref": "#/$defs/ResourceName"
+            },
+            "requireApprovalForPromotion": {
+              "type": "boolean"
+            },
+            "scope": {
+              "additionalProperties": false,
+              "properties": {
+                "budgetUsd": {
+                  "anyOf": [
+                    {
+                      "maximum": 9007199254740991,
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "capabilities": {
+                  "items": {
+                    "maxLength": 160,
+                    "minLength": 1,
+                    "pattern": "^(?:\\*|[a-z][a-z0-9_-]*(?:\\.[a-z][a-z0-9_-]*)*(?:\\.\\*)?)$",
+                    "type": "string"
+                  },
+                  "maxItems": 128,
+                  "type": "array"
+                },
+                "maxConcurrentRuntimes": {
+                  "maximum": 20,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "spaces": {
+                  "items": {
+                    "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "tools": {
+              "items": {
+                "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+                "type": "string"
+              },
+              "maxItems": 100,
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "JsonObject": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "properties": {},
+          "type": "object"
+        },
+        "JsonValue": {
+          "description": "Any valid JSON value: object, array, string, number, boolean, or null."
+        },
+        "ResourceName": {
+          "description": "Customer-facing resource name. 1–200 characters.",
+          "examples": [
+            "Production browser"
+          ],
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^(?![A-Za-z][A-Za-z0-9]*_)(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)[\\s\\S]+$",
+          "title": "ResourceName",
+          "type": "string",
+          "x-bctrl-type": "ResourceName"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "agents.versions.get",
+    "method": "GET",
+    "path": "/v1/agents/{agentId}/versions/{version}",
+    "description": "Read the immutable definition of one numbered Agent version.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents versions get",
+      "positionalArgs": [
+        "agentId",
+        "version"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "agents_versions_get",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "agentId",
+      "version"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "version": {
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991,
+          "type": "integer"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "agentId",
+        "version"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "agents.versions.list",
+    "method": "GET",
+    "path": "/v1/agents/{agentId}/versions",
+    "description": "List immutable versions of an Agent in creation order.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents versions list",
+      "positionalArgs": [
+        "agentId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "agents_versions_list",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": true
+    },
+    "stream": false,
+    "pathParams": [
+      "agentId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "cursor": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "order": {
+              "description": "Order by createdAt and ID. Defaults to desc.",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            },
+            "limit": {
+              "default": 50,
+              "exclusiveMinimum": 0,
+              "maximum": 200,
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "agentId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "agents.versions.promote",
+    "method": "POST",
+    "path": "/v1/agents/{agentId}/versions/{version}/promote",
+    "description": "Select an immutable version for future Tasks. When approval is required, a person must promote it or answer the stored Task approval request.",
+    "stability": "preview",
+    "cli": {
+      "command": "agents versions promote",
+      "positionalArgs": [
+        "agentId",
+        "version"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "agents_versions_promote",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "agentId",
+      "version"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "version": {
+          "exclusiveMinimum": 0,
+          "maximum": 9007199254740991,
+          "type": "integer"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/AgentPromoteRequest"
+        }
+      },
+      "required": [
+        "agentId",
+        "version",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "AgentPromoteRequest": {
+          "additionalProperties": false,
+          "properties": {},
+          "type": "object"
+        }
+      }
+    }
+  },
+  {
     "operationId": "ai.credentials.create",
     "method": "POST",
     "path": "/v1/ai/credentials",
@@ -9031,21 +9948,21 @@
     }
   },
   {
-    "operationId": "conversations.cancel",
-    "method": "POST",
-    "path": "/v1/conversations/{conversationId}/cancel",
-    "description": "Cancel the active turn in a conversation.",
+    "operationId": "conversations.delete",
+    "method": "DELETE",
+    "path": "/v1/conversations/{conversationId}",
+    "description": "Delete an idle Conversation and retire its workspace.",
     "stability": "preview",
     "cli": {
-      "command": "conversations cancel",
+      "command": "conversations delete",
       "positionalArgs": [
         "conversationId"
       ]
     },
     "mcp": {
-      "destructiveHint": false,
+      "destructiveHint": true,
       "expose": true,
-      "name": "conversations_cancel",
+      "name": "conversations_delete",
       "readOnlyHint": false
     },
     "wait": {
@@ -9111,20 +10028,282 @@
     }
   },
   {
-    "operationId": "conversations.create",
-    "method": "POST",
-    "path": "/v1/conversations",
-    "description": "Create an agent conversation bound to an active runtime.",
+    "operationId": "conversations.events.list",
+    "method": "GET",
+    "path": "/v1/conversations/{conversationId}/events",
+    "description": "Read canonical Conversation history across its Tasks. Events inside runtimes remain in each Run log.",
     "stability": "preview",
     "cli": {
-      "command": "conversations create",
-      "positionalArgs": []
+      "command": "conversations events list",
+      "positionalArgs": [
+        "conversationId"
+      ]
     },
     "mcp": {
       "destructiveHint": false,
       "expose": true,
-      "name": "conversations_create",
-      "readOnlyHint": false
+      "name": "conversations_events_list",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": true
+    },
+    "stream": false,
+    "pathParams": [
+      "conversationId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "conversationId": {
+          "description": "Unique conversation identifier generated by BCTRL.",
+          "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
+          "title": "ConversationId",
+          "type": "string",
+          "x-bctrl-type": "ConversationId"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "lifecycle",
+                    "control",
+                    "machine",
+                    "human",
+                    "secrets",
+                    "connection",
+                    "agent",
+                    "page",
+                    "console",
+                    "network",
+                    "captcha"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "lifecycle",
+                      "control",
+                      "machine",
+                      "human",
+                      "secrets",
+                      "connection",
+                      "agent",
+                      "page",
+                      "console",
+                      "network",
+                      "captcha"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "type": {
+              "anyOf": [
+                {
+                  "maxLength": 200,
+                  "minLength": 3,
+                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "actor": {
+              "description": "Actor ID.",
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "actorType": {
+              "enum": [
+                "api_key",
+                "agent",
+                "human",
+                "platform"
+              ],
+              "type": "string"
+            },
+            "channel": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "api",
+                    "cdp",
+                    "webdriver",
+                    "live_view",
+                    "computer",
+                    "tool",
+                    "process",
+                    "ssh",
+                    "files",
+                    "platform"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "api",
+                      "cdp",
+                      "webdriver",
+                      "live_view",
+                      "computer",
+                      "tool",
+                      "process",
+                      "ssh",
+                      "files",
+                      "platform"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "outcome": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "ok",
+                    "denied",
+                    "failed",
+                    "unknown"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "ok",
+                      "denied",
+                      "failed",
+                      "unknown"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "from": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "to": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "cursor": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "order": {
+              "description": "Order by createdAt and ID. Defaults to desc.",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            },
+            "limit": {
+              "default": 50,
+              "exclusiveMinimum": 0,
+              "maximum": 200,
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "conversationId"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "Rfc3339Timestamp": {
+          "description": "RFC 3339 timestamp with a UTC offset.",
+          "examples": [
+            "2026-07-26T12:00:00Z"
+          ],
+          "format": "date-time",
+          "title": "Rfc3339Timestamp",
+          "type": "string",
+          "x-bctrl-type": "Rfc3339Timestamp"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "conversations.events.stream",
+    "method": "GET",
+    "path": "/v1/conversations/{conversationId}/events/stream",
+    "description": "Resume canonical Conversation history by Event ID. The stream stays pinned to this Conversation and rechecks reader authority; heartbeats are SSE comments.",
+    "stability": "preview",
+    "cli": {
+      "command": "conversations events stream",
+      "positionalArgs": [
+        "conversationId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "conversations_events_stream",
+      "readOnlyHint": true
     },
     "wait": {
       "supported": false
@@ -9132,17 +10311,189 @@
     "pagination": {
       "supported": false
     },
-    "stream": false,
-    "pathParams": [],
-    "requestContentTypes": [
-      "application/json"
+    "stream": true,
+    "pathParams": [
+      "conversationId"
     ],
+    "requestContentTypes": [],
     "responseContentTypes": [
-      "application/json"
+      "text/event-stream"
     ],
     "inputSchema": {
       "type": "object",
       "properties": {
+        "conversationId": {
+          "description": "Unique conversation identifier generated by BCTRL.",
+          "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
+          "title": "ConversationId",
+          "type": "string",
+          "x-bctrl-type": "ConversationId"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "lifecycle",
+                    "control",
+                    "machine",
+                    "human",
+                    "secrets",
+                    "connection",
+                    "agent",
+                    "page",
+                    "console",
+                    "network",
+                    "captcha"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "lifecycle",
+                      "control",
+                      "machine",
+                      "human",
+                      "secrets",
+                      "connection",
+                      "agent",
+                      "page",
+                      "console",
+                      "network",
+                      "captcha"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "type": {
+              "anyOf": [
+                {
+                  "maxLength": 200,
+                  "minLength": 3,
+                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "actor": {
+              "description": "Actor ID.",
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "actorType": {
+              "enum": [
+                "api_key",
+                "agent",
+                "human",
+                "platform"
+              ],
+              "type": "string"
+            },
+            "channel": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "api",
+                    "cdp",
+                    "webdriver",
+                    "live_view",
+                    "computer",
+                    "tool",
+                    "process",
+                    "ssh",
+                    "files",
+                    "platform"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "api",
+                      "cdp",
+                      "webdriver",
+                      "live_view",
+                      "computer",
+                      "tool",
+                      "process",
+                      "ssh",
+                      "files",
+                      "platform"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "outcome": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "ok",
+                    "denied",
+                    "failed",
+                    "unknown"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "ok",
+                      "denied",
+                      "failed",
+                      "unknown"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "from": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "to": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "after": {
+              "description": "Resume after this Event ID from the same Conversation history.",
+              "examples": [
+                "evt_uAAAAAAAAAAAAAAAAAAAAAA"
+              ],
+              "title": "RunEventId",
+              "type": "string",
+              "x-bctrl-type": "RunEventId"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
         "headers": {
           "type": "object",
           "properties": {
@@ -9164,56 +10515,40 @@
               "type": "string",
               "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
             },
-            "Idempotency-Key": {
-              "maxLength": 200,
+            "Last-Event-ID": {
               "minLength": 1,
               "type": "string",
-              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+              "description": "Optional last delivered event identifier used to resume an SSE stream."
             }
           },
           "required": [],
           "additionalProperties": false
         },
-        "body": {
-          "$ref": "#/$defs/ConversationCreateRequest"
+        "maxEvents": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
         }
       },
       "required": [
-        "body"
+        "conversationId"
       ],
       "additionalProperties": false,
       "$defs": {
-        "ConversationCreateRequest": {
-          "additionalProperties": false,
-          "properties": {
-            "model": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "runtimeId": {
-              "description": "Unique browser identifier generated by BCTRL.",
-              "pattern": "^br_u[A-Za-z0-9_-]{22}$",
-              "title": "BrowserId",
-              "type": "string",
-              "x-bctrl-type": "BrowserId"
-            },
-            "title": {
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string"
-            },
-            "toolsetId": {
-              "description": "Unique toolset identifier generated by BCTRL.",
-              "pattern": "^tset_u[A-Za-z0-9_-]{22}$",
-              "title": "ToolsetId",
-              "type": "string",
-              "x-bctrl-type": "ToolsetId"
-            }
-          },
-          "required": [
-            "runtimeId"
+        "Rfc3339Timestamp": {
+          "description": "RFC 3339 timestamp with a UTC offset.",
+          "examples": [
+            "2026-07-26T12:00:00Z"
           ],
-          "type": "object"
+          "format": "date-time",
+          "title": "Rfc3339Timestamp",
+          "type": "string",
+          "x-bctrl-type": "Rfc3339Timestamp"
         }
       }
     }
@@ -9222,7 +10557,7 @@
     "operationId": "conversations.get",
     "method": "GET",
     "path": "/v1/conversations/{conversationId}",
-    "description": "Get a conversation with its durable messages and turns.",
+    "description": "Get a runtime-free Conversation record; read its events for history.",
     "stability": "preview",
     "cli": {
       "command": "conversations get",
@@ -9259,23 +10594,6 @@
           "title": "ConversationId",
           "type": "string",
           "x-bctrl-type": "ConversationId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "messageCursor": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "messageLimit": {
-              "default": 50,
-              "exclusiveMinimum": 0,
-              "maximum": 200,
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
         },
         "headers": {
           "type": "object",
@@ -9343,24 +10661,6 @@
         "query": {
           "type": "object",
           "properties": {
-            "spaceId": {
-              "type": "string",
-              "description": "Filter by a prefixed space ID, or pass `default` to use the caller default space."
-            },
-            "runtimeId": {
-              "description": "Unique browser identifier generated by BCTRL.",
-              "pattern": "^br_u[A-Za-z0-9_-]{22}$",
-              "title": "BrowserId",
-              "type": "string",
-              "x-bctrl-type": "BrowserId"
-            },
-            "status": {
-              "enum": [
-                "idle",
-                "active"
-              ],
-              "type": "string"
-            },
             "cursor": {
               "minLength": 1,
               "type": "string"
@@ -9378,6 +10678,20 @@
               "exclusiveMinimum": 0,
               "maximum": 200,
               "type": "integer"
+            },
+            "spaceId": {
+              "type": "string",
+              "description": "Filter by a prefixed space ID, or pass `default` to use the caller default space."
+            },
+            "agent": {
+              "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+              "type": "string"
+            },
+            "from": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "to": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
             }
           },
           "required": [],
@@ -9410,611 +10724,26 @@
         }
       },
       "required": [],
-      "additionalProperties": false
-    }
-  },
-  {
-    "operationId": "conversations.messages.create",
-    "method": "POST",
-    "path": "/v1/conversations/{conversationId}/messages",
-    "description": "Append a user message and start one agent turn.",
-    "stability": "preview",
-    "cli": {
-      "command": "conversations messages create",
-      "positionalArgs": [
-        "conversationId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "conversations_messages_create",
-      "readOnlyHint": false
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": false,
-    "pathParams": [
-      "conversationId"
-    ],
-    "requestContentTypes": [
-      "application/json"
-    ],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "conversationId": {
-          "description": "Unique conversation identifier generated by BCTRL.",
-          "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
-          "title": "ConversationId",
-          "type": "string",
-          "x-bctrl-type": "ConversationId"
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Idempotency-Key": {
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "body": {
-          "$ref": "#/$defs/ConversationMessageCreateRequest"
-        }
-      },
-      "required": [
-        "conversationId",
-        "body"
-      ],
       "additionalProperties": false,
       "$defs": {
-        "ConversationMessageCreateRequest": {
-          "additionalProperties": false,
-          "properties": {
-            "fileIds": {
-              "items": {
-                "description": "Unique file identifier generated by BCTRL.",
-                "pattern": "^file_u[A-Za-z0-9_-]{22}$",
-                "title": "FileId",
-                "type": "string",
-                "x-bctrl-type": "FileId"
-              },
-              "maxItems": 50,
-              "type": "array"
-            },
-            "model": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "pageId": {
-              "description": "Unique page identifier generated by BCTRL.",
-              "pattern": "^page_u[A-Za-z0-9_-]{22}$",
-              "title": "PageId",
-              "type": "string",
-              "x-bctrl-type": "PageId"
-            },
-            "text": {
-              "maxLength": 100000,
-              "minLength": 1,
-              "type": "string"
-            },
-            "variables": {
-              "$ref": "#/$defs/ConversationVariables"
-            }
-          },
-          "required": [
-            "text"
+        "Rfc3339Timestamp": {
+          "description": "RFC 3339 timestamp with a UTC offset.",
+          "examples": [
+            "2026-07-26T12:00:00Z"
           ],
-          "type": "object"
-        },
-        "ConversationVariables": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "maxLength": 100000,
-                "type": "string"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "properties": {},
-          "type": "object"
+          "format": "date-time",
+          "title": "Rfc3339Timestamp",
+          "type": "string",
+          "x-bctrl-type": "Rfc3339Timestamp"
         }
       }
-    }
-  },
-  {
-    "operationId": "conversations.start",
-    "method": "POST",
-    "path": "/v1/conversations/start",
-    "description": "Create a conversation and queue its first agent turn in one call, starting the runtime when needed.",
-    "stability": "preview",
-    "cli": {
-      "command": "conversations start",
-      "positionalArgs": []
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "conversations_start",
-      "readOnlyHint": false
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": false,
-    "pathParams": [],
-    "requestContentTypes": [
-      "application/json"
-    ],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Idempotency-Key": {
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "body": {
-          "$ref": "#/$defs/ConversationStartRequest"
-        }
-      },
-      "required": [
-        "body"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "ConversationStartRequest": {
-          "additionalProperties": false,
-          "properties": {
-            "fileIds": {
-              "items": {
-                "description": "Unique file identifier generated by BCTRL.",
-                "pattern": "^file_u[A-Za-z0-9_-]{22}$",
-                "title": "FileId",
-                "type": "string",
-                "x-bctrl-type": "FileId"
-              },
-              "maxItems": 50,
-              "type": "array"
-            },
-            "model": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "pageId": {
-              "description": "Unique page identifier generated by BCTRL.",
-              "pattern": "^page_u[A-Za-z0-9_-]{22}$",
-              "title": "PageId",
-              "type": "string",
-              "x-bctrl-type": "PageId"
-            },
-            "runtimeId": {
-              "description": "Unique browser identifier generated by BCTRL.",
-              "pattern": "^br_u[A-Za-z0-9_-]{22}$",
-              "title": "BrowserId",
-              "type": "string",
-              "x-bctrl-type": "BrowserId"
-            },
-            "startRuntime": {
-              "default": true,
-              "description": "Start the Runtime when it is stopped. When false, a stopped Runtime is rejected with a conflict.",
-              "type": "boolean"
-            },
-            "text": {
-              "maxLength": 100000,
-              "minLength": 1,
-              "type": "string"
-            },
-            "title": {
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string"
-            },
-            "toolsetId": {
-              "description": "Unique toolset identifier generated by BCTRL.",
-              "pattern": "^tset_u[A-Za-z0-9_-]{22}$",
-              "title": "ToolsetId",
-              "type": "string",
-              "x-bctrl-type": "ToolsetId"
-            },
-            "variables": {
-              "$ref": "#/$defs/ConversationVariables"
-            }
-          },
-          "required": [
-            "runtimeId",
-            "text"
-          ],
-          "type": "object"
-        },
-        "ConversationVariables": {
-          "additionalProperties": {
-            "anyOf": [
-              {
-                "maxLength": 100000,
-                "type": "string"
-              },
-              {
-                "type": "number"
-              },
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "properties": {},
-          "type": "object"
-        }
-      }
-    }
-  },
-  {
-    "operationId": "conversations.stream",
-    "method": "GET",
-    "path": "/v1/conversations/{conversationId}/stream",
-    "description": "Stream normalized durable conversation events.",
-    "stability": "preview",
-    "cli": {
-      "command": "conversations stream",
-      "positionalArgs": [
-        "conversationId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "conversations_stream",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": true,
-    "pathParams": [
-      "conversationId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "text/event-stream"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "conversationId": {
-          "description": "Unique conversation identifier generated by BCTRL.",
-          "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
-          "title": "ConversationId",
-          "type": "string",
-          "x-bctrl-type": "ConversationId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "after": {
-              "minLength": 1,
-              "type": "string"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Last-Event-ID": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional last delivered event identifier used to resume an SSE stream."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "maxEvents": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 200
-        },
-        "timeoutMs": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 60000
-        }
-      },
-      "required": [
-        "conversationId"
-      ],
-      "additionalProperties": false
-    }
-  },
-  {
-    "operationId": "conversations.turns.cancel",
-    "method": "POST",
-    "path": "/v1/conversations/{conversationId}/turns/{turnId}/cancel",
-    "description": "Cancel one specific agent turn.",
-    "stability": "preview",
-    "cli": {
-      "command": "conversations turns cancel",
-      "positionalArgs": [
-        "conversationId",
-        "turnId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "conversations_turns_cancel",
-      "readOnlyHint": false
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": false,
-    "pathParams": [
-      "conversationId",
-      "turnId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "conversationId": {
-          "description": "Unique conversation identifier generated by BCTRL.",
-          "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
-          "title": "ConversationId",
-          "type": "string",
-          "x-bctrl-type": "ConversationId"
-        },
-        "turnId": {
-          "description": "Unique agentTurn identifier generated by BCTRL.",
-          "pattern": "^turn_u[A-Za-z0-9_-]{22}$",
-          "title": "AgentTurnId",
-          "type": "string",
-          "x-bctrl-type": "AgentTurnId"
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Idempotency-Key": {
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        }
-      },
-      "required": [
-        "conversationId",
-        "turnId"
-      ],
-      "additionalProperties": false
-    }
-  },
-  {
-    "operationId": "conversations.turns.get",
-    "method": "GET",
-    "path": "/v1/conversations/{conversationId}/turns/{turnId}",
-    "description": "Get one agent turn with its status and execution attribution.",
-    "stability": "preview",
-    "cli": {
-      "command": "conversations turns get",
-      "positionalArgs": [
-        "conversationId",
-        "turnId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "conversations_turns_get",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "maxSeconds": 60,
-      "supported": true
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": false,
-    "pathParams": [
-      "conversationId",
-      "turnId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "conversationId": {
-          "description": "Unique conversation identifier generated by BCTRL.",
-          "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
-          "title": "ConversationId",
-          "type": "string",
-          "x-bctrl-type": "ConversationId"
-        },
-        "turnId": {
-          "description": "Unique agentTurn identifier generated by BCTRL.",
-          "pattern": "^turn_u[A-Za-z0-9_-]{22}$",
-          "title": "AgentTurnId",
-          "type": "string",
-          "x-bctrl-type": "AgentTurnId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "wait": {
-              "default": 0,
-              "maximum": 60,
-              "minimum": 0,
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        }
-      },
-      "required": [
-        "conversationId",
-        "turnId"
-      ],
-      "additionalProperties": false
     }
   },
   {
     "operationId": "conversations.update",
     "method": "PATCH",
     "path": "/v1/conversations/{conversationId}",
-    "description": "Update the defaults used by future turns in a conversation.",
+    "description": "Update a Conversation title and metadata.",
     "stability": "preview",
     "cli": {
       "command": "conversations update",
@@ -10086,7 +10815,7 @@
           "additionalProperties": false
         },
         "body": {
-          "$ref": "#/$defs/ConversationUpdateRequest"
+          "$ref": "#/$defs/ConversationsUpdateRequest"
         }
       },
       "required": [
@@ -10095,12 +10824,18 @@
       ],
       "additionalProperties": false,
       "$defs": {
-        "ConversationUpdateRequest": {
+        "ConversationsUpdateRequest": {
           "additionalProperties": false,
           "properties": {
-            "model": {
-              "minLength": 1,
-              "type": "string"
+            "metadata": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/JsonObject"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             },
             "title": {
               "anyOf": [
@@ -10113,23 +10848,19 @@
                   "type": "null"
                 }
               ]
-            },
-            "toolsetId": {
-              "anyOf": [
-                {
-                  "description": "Unique toolset identifier generated by BCTRL.",
-                  "pattern": "^tset_u[A-Za-z0-9_-]{22}$",
-                  "title": "ToolsetId",
-                  "type": "string",
-                  "x-bctrl-type": "ToolsetId"
-                },
-                {
-                  "type": "null"
-                }
-              ]
             }
           },
           "type": "object"
+        },
+        "JsonObject": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "properties": {},
+          "type": "object"
+        },
+        "JsonValue": {
+          "description": "Any valid JSON value: object, array, string, number, boolean, or null."
         }
       }
     }
@@ -10138,7 +10869,7 @@
     "operationId": "environments.connections.create",
     "method": "POST",
     "path": "/v1/environments/{environmentId}/connections",
-    "description": "Open direct terminal access to a ready Environment. Returns a WebSocket URL and a one-time ticket. Refused while a managed conversation turn is using the Environment.",
+    "description": "Open direct terminal access to a ready Environment. Returns a WebSocket URL and a one-time ticket. Refused while a Task is using the Environment.",
     "stability": "preview",
     "cli": {
       "command": "environments connections create",
@@ -16456,12 +17187,11 @@
                 "enum": [
                   "queued",
                   "running",
-                  "requires_input",
-                  "suspended",
+                  "awaiting_input",
                   "succeeded",
                   "failed",
-                  "cancelled",
-                  "timed_out"
+                  "canceled",
+                  "unknown"
                 ],
                 "type": "string"
               },
@@ -16959,7 +17689,7 @@
     "operationId": "secrets.reveal",
     "method": "POST",
     "path": "/v1/secrets/{secret}/reveal",
-    "description": "Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Agent turns, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.",
+    "description": "Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Task agents, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.",
     "stability": "stable",
     "cli": {
       "command": "secrets reveal",
@@ -20060,6 +20790,1334 @@
     }
   },
   {
+    "operationId": "tasks.cancel",
+    "method": "POST",
+    "path": "/v1/tasks/{taskId}/cancel",
+    "description": "Cancel the Task and revoke its delegated credential. Its Conversation remains busy until native cleanup is acknowledged.",
+    "stability": "preview",
+    "cli": {
+      "command": "tasks cancel",
+      "positionalArgs": [
+        "taskId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "tasks_cancel",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "taskId"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "description": "Unique task identifier generated by BCTRL.",
+          "pattern": "^task_u[A-Za-z0-9_-]{22}$",
+          "title": "TaskId",
+          "type": "string",
+          "x-bctrl-type": "TaskId"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/TaskCancelRequest"
+        }
+      },
+      "required": [
+        "taskId",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "TaskCancelRequest": {
+          "additionalProperties": false,
+          "properties": {},
+          "type": "object"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "tasks.create",
+    "method": "POST",
+    "path": "/v1/tasks",
+    "description": "Run an Agent on the input in a new or existing idle Conversation. The Task starts queued; read or wait on it with GET /v1/tasks/{taskId}.",
+    "stability": "preview",
+    "cli": {
+      "command": "tasks create",
+      "positionalArgs": []
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "tasks_create",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/TaskCreateRequest"
+        }
+      },
+      "required": [
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "TaskCreateRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "agent": {
+              "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+              "type": "string"
+            },
+            "conversation": {
+              "description": "Unique conversation identifier generated by BCTRL.",
+              "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
+              "title": "ConversationId",
+              "type": "string",
+              "x-bctrl-type": "ConversationId"
+            },
+            "input": {
+              "$ref": "#/$defs/TaskInput"
+            },
+            "metadata": {
+              "$ref": "#/$defs/JsonObject"
+            },
+            "outputSchema": {
+              "$ref": "#/$defs/JsonObject"
+            },
+            "spaceId": {
+              "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+              "type": "string"
+            },
+            "version": {
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "agent",
+            "input"
+          ],
+          "type": "object"
+        },
+        "TaskInput": {
+          "anyOf": [
+            {
+              "maxLength": 100000,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "items": {
+                "$ref": "#/$defs/TaskInputPart"
+              },
+              "maxItems": 50,
+              "minItems": 1,
+              "type": "array"
+            }
+          ]
+        },
+        "TaskInputPart": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "text": {
+                  "maxLength": 100000,
+                  "type": "string"
+                },
+                "type": {
+                  "const": "text",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "text"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "fileId": {
+                  "description": "Unique file identifier generated by BCTRL.",
+                  "pattern": "^file_u[A-Za-z0-9_-]{22}$",
+                  "title": "FileId",
+                  "type": "string",
+                  "x-bctrl-type": "FileId"
+                },
+                "type": {
+                  "const": "file",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "fileId"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "data": {
+                  "$ref": "#/$defs/JsonValue"
+                },
+                "type": {
+                  "const": "json",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "data"
+              ],
+              "type": "object"
+            }
+          ],
+          "type": "object"
+        },
+        "JsonValue": {
+          "description": "Any valid JSON value: object, array, string, number, boolean, or null."
+        },
+        "JsonObject": {
+          "additionalProperties": {
+            "$ref": "#/$defs/JsonValue"
+          },
+          "properties": {},
+          "type": "object"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "tasks.events.list",
+    "method": "GET",
+    "path": "/v1/tasks/{taskId}/events",
+    "description": "Read the Task’s canonical history. Events inside its runtimes remain in each Run log.",
+    "stability": "preview",
+    "cli": {
+      "command": "tasks events list",
+      "positionalArgs": [
+        "taskId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "tasks_events_list",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": true
+    },
+    "stream": false,
+    "pathParams": [
+      "taskId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "description": "Unique task identifier generated by BCTRL.",
+          "pattern": "^task_u[A-Za-z0-9_-]{22}$",
+          "title": "TaskId",
+          "type": "string",
+          "x-bctrl-type": "TaskId"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "lifecycle",
+                    "control",
+                    "machine",
+                    "human",
+                    "secrets",
+                    "connection",
+                    "agent",
+                    "page",
+                    "console",
+                    "network",
+                    "captcha"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "lifecycle",
+                      "control",
+                      "machine",
+                      "human",
+                      "secrets",
+                      "connection",
+                      "agent",
+                      "page",
+                      "console",
+                      "network",
+                      "captcha"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "type": {
+              "anyOf": [
+                {
+                  "maxLength": 200,
+                  "minLength": 3,
+                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "actor": {
+              "description": "Actor ID.",
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "actorType": {
+              "enum": [
+                "api_key",
+                "agent",
+                "human",
+                "platform"
+              ],
+              "type": "string"
+            },
+            "channel": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "api",
+                    "cdp",
+                    "webdriver",
+                    "live_view",
+                    "computer",
+                    "tool",
+                    "process",
+                    "ssh",
+                    "files",
+                    "platform"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "api",
+                      "cdp",
+                      "webdriver",
+                      "live_view",
+                      "computer",
+                      "tool",
+                      "process",
+                      "ssh",
+                      "files",
+                      "platform"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "outcome": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "ok",
+                    "denied",
+                    "failed",
+                    "unknown"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "ok",
+                      "denied",
+                      "failed",
+                      "unknown"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "from": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "to": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "cursor": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "order": {
+              "description": "Order by createdAt and ID. Defaults to desc.",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            },
+            "limit": {
+              "default": 50,
+              "exclusiveMinimum": 0,
+              "maximum": 200,
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "taskId"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "Rfc3339Timestamp": {
+          "description": "RFC 3339 timestamp with a UTC offset.",
+          "examples": [
+            "2026-07-26T12:00:00Z"
+          ],
+          "format": "date-time",
+          "title": "Rfc3339Timestamp",
+          "type": "string",
+          "x-bctrl-type": "Rfc3339Timestamp"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "tasks.events.stream",
+    "method": "GET",
+    "path": "/v1/tasks/{taskId}/events/stream",
+    "description": "Resume canonical Task history by Event ID. The stream stays pinned to this Task and rechecks reader authority.",
+    "stability": "preview",
+    "cli": {
+      "command": "tasks events stream",
+      "positionalArgs": [
+        "taskId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "tasks_events_stream",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": true,
+    "pathParams": [
+      "taskId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "text/event-stream"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "description": "Unique task identifier generated by BCTRL.",
+          "pattern": "^task_u[A-Za-z0-9_-]{22}$",
+          "title": "TaskId",
+          "type": "string",
+          "x-bctrl-type": "TaskId"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "category": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "lifecycle",
+                    "control",
+                    "machine",
+                    "human",
+                    "secrets",
+                    "connection",
+                    "agent",
+                    "page",
+                    "console",
+                    "network",
+                    "captcha"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "lifecycle",
+                      "control",
+                      "machine",
+                      "human",
+                      "secrets",
+                      "connection",
+                      "agent",
+                      "page",
+                      "console",
+                      "network",
+                      "captcha"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "type": {
+              "anyOf": [
+                {
+                  "maxLength": 200,
+                  "minLength": 3,
+                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "actor": {
+              "description": "Actor ID.",
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "actorType": {
+              "enum": [
+                "api_key",
+                "agent",
+                "human",
+                "platform"
+              ],
+              "type": "string"
+            },
+            "channel": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "api",
+                    "cdp",
+                    "webdriver",
+                    "live_view",
+                    "computer",
+                    "tool",
+                    "process",
+                    "ssh",
+                    "files",
+                    "platform"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "api",
+                      "cdp",
+                      "webdriver",
+                      "live_view",
+                      "computer",
+                      "tool",
+                      "process",
+                      "ssh",
+                      "files",
+                      "platform"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "outcome": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "ok",
+                    "denied",
+                    "failed",
+                    "unknown"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "ok",
+                      "denied",
+                      "failed",
+                      "unknown"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "from": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "to": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "after": {
+              "description": "Resume after this Event ID from the same Task history.",
+              "examples": [
+                "evt_uAAAAAAAAAAAAAAAAAAAAAA"
+              ],
+              "title": "RunEventId",
+              "type": "string",
+              "x-bctrl-type": "RunEventId"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Last-Event-ID": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional last delivered event identifier used to resume an SSE stream."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "maxEvents": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
+        }
+      },
+      "required": [
+        "taskId"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "Rfc3339Timestamp": {
+          "description": "RFC 3339 timestamp with a UTC offset.",
+          "examples": [
+            "2026-07-26T12:00:00Z"
+          ],
+          "format": "date-time",
+          "title": "Rfc3339Timestamp",
+          "type": "string",
+          "x-bctrl-type": "Rfc3339Timestamp"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "tasks.get",
+    "method": "GET",
+    "path": "/v1/tasks/{taskId}",
+    "description": "Read Task status, structured output, artifacts, input request, Browser Runs and usage. Wait ends when the Task finishes or requests input.",
+    "stability": "preview",
+    "cli": {
+      "command": "tasks get",
+      "positionalArgs": [
+        "taskId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "tasks_get",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "maxSeconds": 60,
+      "supported": true
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "taskId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "description": "Unique task identifier generated by BCTRL.",
+          "pattern": "^task_u[A-Za-z0-9_-]{22}$",
+          "title": "TaskId",
+          "type": "string",
+          "x-bctrl-type": "TaskId"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "wait": {
+              "default": 0,
+              "maximum": 60,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "taskId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "tasks.input",
+    "method": "POST",
+    "path": "/v1/tasks/{taskId}/input",
+    "description": "Answer its current input request by requestId, or steer a running Task. Approval applies only its immutable stored proposal.",
+    "stability": "preview",
+    "cli": {
+      "command": "tasks input",
+      "positionalArgs": [
+        "taskId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "tasks_input",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "taskId"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "description": "Unique task identifier generated by BCTRL.",
+          "pattern": "^task_u[A-Za-z0-9_-]{22}$",
+          "title": "TaskId",
+          "type": "string",
+          "x-bctrl-type": "TaskId"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/TaskInputRequest"
+        }
+      },
+      "required": [
+        "taskId",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "TaskInputRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "input": {
+              "$ref": "#/$defs/JsonValue"
+            },
+            "requestId": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "input"
+          ],
+          "type": "object"
+        },
+        "JsonValue": {
+          "description": "Any valid JSON value: object, array, string, number, boolean, or null."
+        }
+      }
+    }
+  },
+  {
+    "operationId": "tasks.list",
+    "method": "GET",
+    "path": "/v1/tasks",
+    "description": "List Tasks by Agent, Conversation, status and time in the selected tenant or Space.",
+    "stability": "preview",
+    "cli": {
+      "command": "tasks list",
+      "positionalArgs": []
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "tasks_list",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": true
+    },
+    "stream": false,
+    "pathParams": [],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "object",
+          "properties": {
+            "cursor": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "order": {
+              "description": "Order by createdAt and ID. Defaults to desc.",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            },
+            "limit": {
+              "default": 50,
+              "exclusiveMinimum": 0,
+              "maximum": 200,
+              "type": "integer"
+            },
+            "agent": {
+              "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+              "type": "string"
+            },
+            "conversation": {
+              "description": "Unique conversation identifier generated by BCTRL.",
+              "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
+              "title": "ConversationId",
+              "type": "string",
+              "x-bctrl-type": "ConversationId"
+            },
+            "status": {
+              "enum": [
+                "queued",
+                "running",
+                "awaiting_input",
+                "succeeded",
+                "failed",
+                "canceled",
+                "unknown"
+              ],
+              "type": "string"
+            },
+            "from": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "to": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "$defs": {
+        "Rfc3339Timestamp": {
+          "description": "RFC 3339 timestamp with a UTC offset.",
+          "examples": [
+            "2026-07-26T12:00:00Z"
+          ],
+          "format": "date-time",
+          "title": "Rfc3339Timestamp",
+          "type": "string",
+          "x-bctrl-type": "Rfc3339Timestamp"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "tasks.trace.list",
+    "method": "GET",
+    "path": "/v1/tasks/{taskId}/trace",
+    "description": "Page spans across the Runs opened by this Task, retaining each Run and parent span ID.",
+    "stability": "preview",
+    "cli": {
+      "command": "tasks trace list",
+      "positionalArgs": [
+        "taskId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "tasks_trace_list",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": true
+    },
+    "stream": false,
+    "pathParams": [
+      "taskId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "description": "Unique task identifier generated by BCTRL.",
+          "pattern": "^task_u[A-Za-z0-9_-]{22}$",
+          "title": "TaskId",
+          "type": "string",
+          "x-bctrl-type": "TaskId"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "parentId": {
+              "description": "Unique traceSpan identifier generated by BCTRL.",
+              "pattern": "^span_u[A-Za-z0-9_-]{22}$",
+              "title": "TraceSpanId",
+              "type": "string",
+              "x-bctrl-type": "TraceSpanId"
+            },
+            "kind": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "runtime",
+                    "agent",
+                    "tool",
+                    "llm",
+                    "browser",
+                    "network",
+                    "file",
+                    "system"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "runtime",
+                      "agent",
+                      "tool",
+                      "llm",
+                      "browser",
+                      "network",
+                      "file",
+                      "system"
+                    ],
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              ]
+            },
+            "status": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "queued",
+                    "running",
+                    "awaiting_input",
+                    "succeeded",
+                    "failed",
+                    "canceled",
+                    "unknown"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "queued",
+                      "running",
+                      "awaiting_input",
+                      "succeeded",
+                      "failed",
+                      "canceled",
+                      "unknown"
+                    ],
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              ]
+            },
+            "resourceType": {
+              "enum": [
+                "run",
+                "runtime",
+                "tool_call",
+                "agent_turn",
+                "message",
+                "file",
+                "artifact",
+                "connection"
+              ],
+              "type": "string"
+            },
+            "cursor": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "order": {
+              "description": "Order by createdAt and ID. Defaults to desc.",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            },
+            "limit": {
+              "default": 50,
+              "exclusiveMinimum": 0,
+              "maximum": 200,
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "taskId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
     "operationId": "tool-calls.cancel",
     "method": "POST",
     "path": "/v1/tool-calls/{toolCallId}/cancel",
@@ -20158,7 +22216,8 @@
       "readOnlyHint": true
     },
     "wait": {
-      "supported": false
+      "maxSeconds": 60,
+      "supported": true
     },
     "pagination": {
       "supported": false
@@ -20180,6 +22239,19 @@
           "title": "ToolCallId",
           "type": "string",
           "x-bctrl-type": "ToolCallId"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "wait": {
+              "default": 0,
+              "maximum": 60,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
         },
         "headers": {
           "type": "object",
@@ -20261,8 +22333,12 @@
               "type": "string",
               "x-bctrl-type": "RunId"
             },
-            "turnId": {
-              "type": "string"
+            "taskId": {
+              "description": "Unique task identifier generated by BCTRL.",
+              "pattern": "^task_u[A-Za-z0-9_-]{22}$",
+              "title": "TaskId",
+              "type": "string",
+              "x-bctrl-type": "TaskId"
             },
             "tool": {
               "maxLength": 200,
@@ -20274,11 +22350,11 @@
               "enum": [
                 "queued",
                 "running",
-                "requires_input",
+                "awaiting_input",
                 "succeeded",
                 "failed",
-                "cancelled",
-                "timed_out"
+                "canceled",
+                "unknown"
               ],
               "type": "string"
             },
@@ -20518,110 +22594,10 @@
     }
   },
   {
-    "operationId": "tools.call",
-    "method": "POST",
-    "path": "/v1/tools/{toolRef}/call",
-    "description": "Call a synchronous tool and wait for its validated result.",
-    "stability": "preview",
-    "cli": {
-      "command": "tools call",
-      "positionalArgs": [
-        "toolRef"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "tools_call",
-      "readOnlyHint": false
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": false,
-    "pathParams": [
-      "toolRef"
-    ],
-    "requestContentTypes": [
-      "application/json"
-    ],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "toolRef": {
-          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
-          "type": "string"
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "BCTRL-Runtime-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly."
-            },
-            "Idempotency-Key": {
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "body": {
-          "$ref": "#/$defs/JsonObject"
-        }
-      },
-      "required": [
-        "toolRef",
-        "body"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "JsonObject": {
-          "additionalProperties": {
-            "$ref": "#/$defs/JsonValue"
-          },
-          "properties": {},
-          "type": "object"
-        },
-        "JsonValue": {
-          "description": "Any valid JSON value: object, array, string, number, boolean, or null."
-        }
-      }
-    }
-  },
-  {
     "operationId": "tools.calls.create",
     "method": "POST",
     "path": "/v1/tools/{toolRef}/calls",
-    "description": "Start one durable asynchronous tool call.",
+    "description": "Create a durable ToolCall and optionally wait for its status.",
     "stability": "preview",
     "cli": {
       "command": "tools calls create",
@@ -20636,7 +22612,8 @@
       "readOnlyHint": false
     },
     "wait": {
-      "supported": false
+      "maxSeconds": 60,
+      "supported": true
     },
     "pagination": {
       "supported": false
@@ -20657,6 +22634,19 @@
         "toolRef": {
           "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
           "type": "string"
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "wait": {
+              "default": 0,
+              "maximum": 60,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
         },
         "headers": {
           "type": "object",
@@ -20679,11 +22669,6 @@
               "type": "string",
               "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
             },
-            "BCTRL-Runtime-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly."
-            },
             "Idempotency-Key": {
               "maxLength": 200,
               "minLength": 1,
@@ -20695,7 +22680,7 @@
           "additionalProperties": false
         },
         "body": {
-          "$ref": "#/$defs/JsonObject"
+          "$ref": "#/$defs/ToolCallRequest"
         }
       },
       "required": [
@@ -20704,6 +22689,25 @@
       ],
       "additionalProperties": false,
       "$defs": {
+        "ToolCallRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "input": {
+              "$ref": "#/$defs/JsonObject"
+            },
+            "runtimeId": {
+              "description": "Unique browser identifier generated by BCTRL.",
+              "pattern": "^br_u[A-Za-z0-9_-]{22}$",
+              "title": "BrowserId",
+              "type": "string",
+              "x-bctrl-type": "BrowserId"
+            }
+          },
+          "required": [
+            "input"
+          ],
+          "type": "object"
+        },
         "JsonObject": {
           "additionalProperties": {
             "$ref": "#/$defs/JsonValue"
@@ -20721,7 +22725,7 @@
     "operationId": "tools.create",
     "method": "POST",
     "path": "/v1/tools",
-    "description": "Create an organization custom callable tool. Agents can use these tools through space toolsets during hosted work.",
+    "description": "Create an organization custom callable tool. Agents select these tools in their immutable version definitions.",
     "stability": "preview",
     "cli": {
       "command": "tools create",
@@ -20831,21 +22835,6 @@
                 "inputSchema": {
                   "$ref": "#/$defs/JsonObject"
                 },
-                "modes": {
-                  "default": [
-                    "sync",
-                    "async"
-                  ],
-                  "items": {
-                    "enum": [
-                      "sync",
-                      "async"
-                    ],
-                    "type": "string"
-                  },
-                  "minItems": 1,
-                  "type": "array"
-                },
                 "name": {
                   "maxLength": 200,
                   "minLength": 3,
@@ -20931,21 +22920,6 @@
                 "inputSchema": {
                   "$ref": "#/$defs/JsonObject"
                 },
-                "modes": {
-                  "default": [
-                    "sync",
-                    "async"
-                  ],
-                  "items": {
-                    "enum": [
-                      "sync",
-                      "async"
-                    ],
-                    "type": "string"
-                  },
-                  "minItems": 1,
-                  "type": "array"
-                },
                 "name": {
                   "maxLength": 200,
                   "minLength": 3,
@@ -21018,21 +22992,6 @@
                     "sourceTurnId"
                   ],
                   "type": "object"
-                },
-                "modes": {
-                  "default": [
-                    "sync",
-                    "async"
-                  ],
-                  "items": {
-                    "enum": [
-                      "sync",
-                      "async"
-                    ],
-                    "type": "string"
-                  },
-                  "minItems": 1,
-                  "type": "array"
                 },
                 "name": {
                   "maxLength": 200,
@@ -21494,17 +23453,6 @@
             "inputSchema": {
               "$ref": "#/$defs/JsonObject"
             },
-            "modes": {
-              "items": {
-                "enum": [
-                  "sync",
-                  "async"
-                ],
-                "type": "string"
-              },
-              "minItems": 1,
-              "type": "array"
-            },
             "outputSchema": {
               "$ref": "#/$defs/JsonObject"
             },
@@ -21533,575 +23481,6 @@
         },
         "JsonValue": {
           "description": "Any valid JSON value: object, array, string, number, boolean, or null."
-        }
-      }
-    }
-  },
-  {
-    "operationId": "toolsets.create",
-    "method": "POST",
-    "path": "/v1/toolsets",
-    "description": "Create an ordered reusable bundle of built-in and custom tools.",
-    "stability": "preview",
-    "cli": {
-      "command": "toolsets create",
-      "positionalArgs": []
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "toolsets_create",
-      "readOnlyHint": false
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": false,
-    "pathParams": [],
-    "requestContentTypes": [
-      "application/json"
-    ],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Idempotency-Key": {
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "body": {
-          "$ref": "#/$defs/ToolsetCreateRequest"
-        }
-      },
-      "required": [
-        "body"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "ToolsetCreateRequest": {
-          "additionalProperties": false,
-          "properties": {
-            "description": {
-              "anyOf": [
-                {
-                  "maxLength": 2000,
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "name": {
-              "$ref": "#/$defs/ResourceName"
-            },
-            "spaceId": {
-              "anyOf": [
-                {
-                  "description": "Unique space identifier generated by BCTRL.",
-                  "pattern": "^sp_u[A-Za-z0-9_-]{22}$",
-                  "title": "SpaceId",
-                  "type": "string",
-                  "x-bctrl-type": "SpaceId"
-                },
-                {
-                  "const": "default",
-                  "type": "string"
-                }
-              ]
-            },
-            "tools": {
-              "items": {
-                "anyOf": [
-                  {
-                    "enum": [
-                      "stagehand.act",
-                      "stagehand.observe",
-                      "stagehand.extract",
-                      "captcha.solve",
-                      "captcha.status",
-                      "captcha.wait",
-                      "human.request",
-                      "browser.pages.list",
-                      "browser.pages.open",
-                      "browser.pages.get",
-                      "browser.pages.activate",
-                      "browser.pages.close",
-                      "browser.setInputFiles",
-                      "runtime.files.list",
-                      "run.files.list",
-                      "run.files.add",
-                      "run.files.collect",
-                      "run.files.export",
-                      "files.list",
-                      "files.read_text",
-                      "secrets.list",
-                      "secrets.fill",
-                      "secrets.request",
-                      "computer.use"
-                    ],
-                    "type": "string"
-                  },
-                  {
-                    "description": "Unique tool identifier generated by BCTRL.",
-                    "pattern": "^tool_u[A-Za-z0-9_-]{22}$",
-                    "title": "ToolId",
-                    "type": "string",
-                    "x-bctrl-type": "ToolId"
-                  }
-                ]
-              },
-              "maxItems": 200,
-              "type": "array"
-            }
-          },
-          "required": [
-            "name"
-          ],
-          "type": "object"
-        },
-        "ResourceName": {
-          "description": "Customer-facing resource name. 1–200 characters.",
-          "examples": [
-            "Production browser"
-          ],
-          "maxLength": 200,
-          "minLength": 1,
-          "pattern": "^(?![A-Za-z][A-Za-z0-9]*_)(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)[\\s\\S]+$",
-          "title": "ResourceName",
-          "type": "string",
-          "x-bctrl-type": "ResourceName"
-        }
-      }
-    }
-  },
-  {
-    "operationId": "toolsets.delete",
-    "method": "DELETE",
-    "path": "/v1/toolsets/{toolsetId}",
-    "description": "Delete a toolset when it should no longer be used for new work.",
-    "stability": "preview",
-    "cli": {
-      "command": "toolsets delete",
-      "positionalArgs": [
-        "toolsetId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": true,
-      "expose": true,
-      "name": "toolsets_delete",
-      "readOnlyHint": false
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": false,
-    "pathParams": [
-      "toolsetId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "toolsetId": {
-          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
-          "type": "string"
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Idempotency-Key": {
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        }
-      },
-      "required": [
-        "toolsetId"
-      ],
-      "additionalProperties": false
-    }
-  },
-  {
-    "operationId": "toolsets.get",
-    "method": "GET",
-    "path": "/v1/toolsets/{toolsetId}",
-    "description": "Get one toolset, including enabled built-in capabilities, custom tool IDs, and metadata.",
-    "stability": "preview",
-    "cli": {
-      "command": "toolsets get",
-      "positionalArgs": [
-        "toolsetId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "toolsets_get",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": false,
-    "pathParams": [
-      "toolsetId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "toolsetId": {
-          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
-          "type": "string"
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        }
-      },
-      "required": [
-        "toolsetId"
-      ],
-      "additionalProperties": false
-    }
-  },
-  {
-    "operationId": "toolsets.list",
-    "method": "GET",
-    "path": "/v1/toolsets",
-    "description": "List reusable tool bundles in a space using the simplified response envelope.",
-    "stability": "preview",
-    "cli": {
-      "command": "toolsets list",
-      "positionalArgs": []
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "toolsets_list",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": true
-    },
-    "stream": false,
-    "pathParams": [],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "query": {
-          "type": "object",
-          "properties": {
-            "spaceId": {
-              "type": "string",
-              "description": "Filter by a prefixed space ID, or pass `default` to use the caller default space."
-            },
-            "cursor": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "order": {
-              "description": "Order by createdAt and ID. Defaults to desc.",
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string"
-            },
-            "limit": {
-              "default": 50,
-              "exclusiveMinimum": 0,
-              "maximum": 200,
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        }
-      },
-      "required": [],
-      "additionalProperties": false
-    }
-  },
-  {
-    "operationId": "toolsets.update",
-    "method": "PATCH",
-    "path": "/v1/toolsets/{toolsetId}",
-    "description": "Update a reusable tool bundle by changing its name, built-in capabilities, custom tools, or metadata.",
-    "stability": "preview",
-    "cli": {
-      "command": "toolsets update",
-      "positionalArgs": [
-        "toolsetId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "toolsets_update",
-      "readOnlyHint": false
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": false,
-    "pathParams": [
-      "toolsetId"
-    ],
-    "requestContentTypes": [
-      "application/json"
-    ],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "toolsetId": {
-          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
-          "type": "string"
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Idempotency-Key": {
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "body": {
-          "$ref": "#/$defs/ToolsetUpdateRequest"
-        }
-      },
-      "required": [
-        "toolsetId",
-        "body"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "ToolsetUpdateRequest": {
-          "additionalProperties": false,
-          "properties": {
-            "description": {
-              "anyOf": [
-                {
-                  "maxLength": 2000,
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "name": {
-              "$ref": "#/$defs/ResourceName"
-            },
-            "tools": {
-              "items": {
-                "anyOf": [
-                  {
-                    "enum": [
-                      "stagehand.act",
-                      "stagehand.observe",
-                      "stagehand.extract",
-                      "captcha.solve",
-                      "captcha.status",
-                      "captcha.wait",
-                      "human.request",
-                      "browser.pages.list",
-                      "browser.pages.open",
-                      "browser.pages.get",
-                      "browser.pages.activate",
-                      "browser.pages.close",
-                      "browser.setInputFiles",
-                      "runtime.files.list",
-                      "run.files.list",
-                      "run.files.add",
-                      "run.files.collect",
-                      "run.files.export",
-                      "files.list",
-                      "files.read_text",
-                      "secrets.list",
-                      "secrets.fill",
-                      "secrets.request",
-                      "computer.use"
-                    ],
-                    "type": "string"
-                  },
-                  {
-                    "description": "Unique tool identifier generated by BCTRL.",
-                    "pattern": "^tool_u[A-Za-z0-9_-]{22}$",
-                    "title": "ToolId",
-                    "type": "string",
-                    "x-bctrl-type": "ToolId"
-                  }
-                ]
-              },
-              "maxItems": 200,
-              "type": "array"
-            }
-          },
-          "type": "object"
-        },
-        "ResourceName": {
-          "description": "Customer-facing resource name. 1–200 characters.",
-          "examples": [
-            "Production browser"
-          ],
-          "maxLength": 200,
-          "minLength": 1,
-          "pattern": "^(?![A-Za-z][A-Za-z0-9]*_)(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)[\\s\\S]+$",
-          "title": "ResourceName",
-          "type": "string",
-          "x-bctrl-type": "ResourceName"
         }
       }
     }
@@ -22248,7 +23627,7 @@
               "type": "boolean"
             },
             "conversationSend": {
-              "description": "Allow sending messages to and cancelling turns in the included conversations. Defaults to the value of control.",
+              "description": "Allow giving input to and cancelling Tasks in the included conversations. Defaults to the value of control.",
               "type": "boolean"
             },
             "expiresInSeconds": {
