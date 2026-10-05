@@ -16466,6 +16466,9 @@
             "name": {
               "$ref": "#/$defs/ResourceName"
             },
+            "secretEnv": {
+              "$ref": "#/$defs/SandboxSecretEnv"
+            },
             "snapshotSchedule": {
               "$ref": "#/$defs/SandboxSnapshotSchedule"
             },
@@ -16487,6 +16490,50 @@
           "title": "ResourceName",
           "type": "string",
           "x-bctrl-type": "ResourceName"
+        },
+        "SandboxSecretEnv": {
+          "additionalProperties": {
+            "additionalProperties": false,
+            "properties": {
+              "format": {
+                "description": "The header value, with `${value}` for the secret (default `Bearer ${value}`).",
+                "maxLength": 1024,
+                "minLength": 1,
+                "type": "string"
+              },
+              "header": {
+                "description": "The request header written (default `Authorization`).",
+                "pattern": "^[A-Za-z0-9-]{1,128}$",
+                "type": "string"
+              },
+              "hosts": {
+                "description": "The secret is written only into requests to these hosts.",
+                "items": {
+                  "description": "A hostname (`api.openai.com`) or one wildcard level (`*.openai.com`).",
+                  "maxLength": 253,
+                  "minLength": 1,
+                  "pattern": "^(\\*\\.)?[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)*$",
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "minItems": 1,
+                "type": "array"
+              },
+              "secret": {
+                "description": "The Secret and field, e.g. `secret:openai/prod#value`. Resolved each time the sandbox starts.",
+                "pattern": "^secret:(?=[^#]{1,512}#)(?!\\.{1,2}(?:\\/|#))[A-Za-z0-9._-]+(?:\\/(?!\\.{1,2}(?:\\/|#))[A-Za-z0-9._-]+)*#(?:password|totp|value|notes|username)(?:@[1-9][0-9]{0,9})?(?![\\s\\S])$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "secret",
+              "hosts"
+            ],
+            "type": "object"
+          },
+          "description": "Environment variable names (letters, digits, underscore; not PATH, HOME, *_PROXY, BCTRL_* and other reserved names) to the Secret written for them.",
+          "properties": {},
+          "type": "object"
         },
         "SandboxSnapshotSchedule": {
           "additionalProperties": false,

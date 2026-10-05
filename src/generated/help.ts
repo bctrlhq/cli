@@ -19099,6 +19099,12 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
           name: "snapshotSchedule",
           type: "object | null",
           required: true,
@@ -19145,6 +19151,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "secretEnv",
         "snapshotSchedule",
         "spaceId",
         "status",
@@ -19748,6 +19755,13 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
+            name: "secretEnv",
+            type: "object",
+            required: false,
+            description:
+              "Environment variable names (letters, digits, underscore; not PATH, HOME, *_PROXY, BCTRL_* and other reserved names) to the Secret written for them.",
+          },
+          {
             name: "fromSnapshot",
             type: "string",
             required: false,
@@ -19810,6 +19824,12 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
           name: "snapshotSchedule",
           type: "object | null",
           required: true,
@@ -19850,6 +19870,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "snapshotSchedule",
+        "secretEnv",
         "fromSnapshot",
       ],
       responseFields: [
@@ -19862,6 +19883,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "secretEnv",
         "snapshotSchedule",
         "spaceId",
         "status",
@@ -20522,6 +20544,12 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
           name: "snapshotSchedule",
           type: "object | null",
           required: true,
@@ -20567,6 +20595,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "secretEnv",
         "snapshotSchedule",
         "spaceId",
         "status",
@@ -21753,6 +21782,12 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
           name: "snapshotSchedule",
           type: "object | null",
           required: true,
@@ -21798,6 +21833,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "secretEnv",
         "snapshotSchedule",
         "spaceId",
         "status",
@@ -21952,6 +21988,12 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
           name: "snapshotSchedule",
           type: "object | null",
           required: true,
@@ -21998,6 +22040,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "secretEnv",
         "snapshotSchedule",
         "spaceId",
         "status",
@@ -22799,6 +22842,12 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
           name: "snapshotSchedule",
           type: "object | null",
           required: true,
@@ -22844,6 +22893,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "secretEnv",
         "snapshotSchedule",
         "spaceId",
         "status",
@@ -22987,6 +23037,12 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
           name: "snapshotSchedule",
           type: "object | null",
           required: true,
@@ -23033,6 +23089,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "secretEnv",
         "snapshotSchedule",
         "spaceId",
         "status",
