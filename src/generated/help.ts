@@ -7571,6 +7571,139 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "browsers.fetchStream": {
+    type: "topic",
+    topic: "browsers.fetchStream",
+    aliases: ["browsers fetchStream"],
+    title: "Stream a response the browser fetches",
+    summary:
+      "Send an HTTP request from the browser itself, like fetch, and stream the response body back as it arrives, of any size and with bounded memory at every hop; a slow reader slows the upstream read. The upstream status is in BCTRL-Fetch-Status and its headers (JSON) in BCTRL-Fetch-Headers. A failure before the first byte is an error response; a failure after it aborts the stream, and the Run's completion Event records unknown. Human control blocks it.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowserFetchStreamRequest",
+        schemaResource: "schemas://BrowserFetchStreamRequest",
+        fields: [
+          {
+            name: "body",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "bodyEncoding",
+            type: "utf8 | base64",
+            required: false,
+            values: ["utf8", "base64"],
+          },
+          {
+            name: "headers",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "method",
+            type: "GET | HEAD | POST | PUT | PATCH | DELETE | OPTIONS",
+            required: false,
+            values: [
+              "GET",
+              "HEAD",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE",
+              "OPTIONS",
+            ],
+          },
+          {
+            name: "timeoutMs",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "url",
+            type: "string",
+            required: true,
+          },
+        ],
+      },
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/fetch/stream",
+      operationId: "browsers.fetchStream",
+      requestFields: [
+        "body",
+        "bodyEncoding",
+        "headers",
+        "method",
+        "timeoutMs",
+        "url",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.fetchStream",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers fetchStream",
+      usage: "bctrl browsers fetchStream <browserId>",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers fetchStream --help",
+      },
+    ],
+  },
   "browsers.files.delete": {
     type: "topic",
     topic: "browsers.files.delete",

@@ -52,6 +52,7 @@ export const CLI_OPENAPI_ROUTES = {
   "browsers.delete": { method: "delete", path: "/browsers/{browserId}" },
   "browsers.events.stream": { method: "get", path: "/browsers/{browserId}/events/stream" },
   "browsers.fetch": { method: "post", path: "/browsers/{browserId}/fetch" },
+  "browsers.fetchStream": { method: "post", path: "/browsers/{browserId}/fetch/stream" },
   "browsers.files.delete": { method: "delete", path: "/browsers/{browserId}/files" },
   "browsers.files.download": { method: "get", path: "/browsers/{browserId}/files/content" },
   "browsers.files.list": { method: "get", path: "/browsers/{browserId}/files" },

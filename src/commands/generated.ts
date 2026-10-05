@@ -139,7 +139,7 @@ export function registerGeneratedCommands(root: Command, factory: Factory): void
       } else if (descriptor.stream) {
         for await (const chunk of await client.streamText(path, request)) factory.io.writeOut(chunk);
       } else if (binary) {
-        await writeBinary(String(options.output), await client.download(path, request));
+        await writeBinary(String(options.output), await client.download(descriptor.method, path, request));
       } else {
         const method = descriptor.method.toLowerCase() as 'get' | 'post' | 'patch' | 'put' | 'delete';
         const response = await client[method](path, request);

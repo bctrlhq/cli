@@ -9,7 +9,8 @@ export type BctrlApiClient = {
   patch: <T>(path: string, options?: JsonRequestOptions) => Promise<T>;
   put: <T>(path: string, options?: JsonRequestOptions) => Promise<T>;
   delete: <T>(path: string, options?: RequestOptions) => Promise<T>;
-  download: (path: string, options?: RequestOptions) => Promise<Uint8Array>;
+  /** A binary response, as a stream: a large body is never held in memory. */
+  download: (method: string, path: string, options?: JsonRequestOptions) => Promise<ReadableStream<Uint8Array>>;
   streamText: (path: string, options?: RequestOptions) => Promise<AsyncIterable<string>>;
   uploadFile: <T>(
     path: string,
@@ -40,7 +41,7 @@ export function createBctrlApiClient(
     patch: (path, options) => requestJson(config, env, 'PATCH', path, options),
     put: (path, options) => requestJson(config, env, 'PUT', path, options),
     delete: (path, options) => requestJson(config, env, 'DELETE', path, options),
-    download: (path, options) => requestBinary(config, env, 'GET', path, options),
+    download: (method, path, options) => requestBinary(config, env, method, path, options),
     streamText: (path, options) => requestTextStream(config, env, path, options),
     uploadFile: (path, options) => uploadFile(config, env, path, options),
   };
@@ -90,22 +91,25 @@ async function requestBinary(
   env: NodeJS.ProcessEnv,
   method: string,
   path: string,
-  options?: RequestOptions
-): Promise<Uint8Array> {
+  options?: JsonRequestOptions
+): Promise<ReadableStream<Uint8Array>> {
   if (!config.activeToken) {
     throw new AuthError();
   }
 
-  const response = await fetch(buildUrl(config.apiBaseUrl, path, options?.query), {
-    method,
-    headers: requestHeaders(config.activeToken.token, options),
-  });
+  const headers = requestHeaders(config.activeToken.token, options);
+  let body: string | undefined;
+  if (options?.body !== undefined) {
+    headers['content-type'] = 'application/json';
+    body = JSON.stringify(options.body);
+  }
+  const response = await fetch(buildUrl(config.apiBaseUrl, path, options?.query), { method, headers, body });
 
   if (!response.ok) {
     throw await reconcileStoredCredentialAuthError(config, env, await apiErrorFromResponse(response));
   }
 
-  return new Uint8Array(await response.arrayBuffer());
+  return response.body ?? new ReadableStream<Uint8Array>({ start: (controller) => controller.close() });
 }
 
 async function requestTextStream(
