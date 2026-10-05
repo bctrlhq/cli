@@ -16466,6 +16466,9 @@
             "name": {
               "$ref": "#/$defs/ResourceName"
             },
+            "snapshotSchedule": {
+              "$ref": "#/$defs/SandboxSnapshotSchedule"
+            },
             "spaceId": {
               "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
               "type": "string"
@@ -16484,6 +16487,33 @@
           "title": "ResourceName",
           "type": "string",
           "x-bctrl-type": "ResourceName"
+        },
+        "SandboxSnapshotSchedule": {
+          "additionalProperties": false,
+          "properties": {
+            "intervalSeconds": {
+              "description": "Take a snapshot this often (at least a minute).",
+              "maximum": 2592000,
+              "minimum": 60,
+              "type": "integer"
+            },
+            "keepCount": {
+              "description": "Keep at most this many scheduled snapshots.",
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "keepMaxAgeSeconds": {
+              "description": "Delete scheduled snapshots older than this.",
+              "maximum": 31536000,
+              "minimum": 60,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "intervalSeconds"
+          ],
+          "type": "object"
         }
       }
     }
@@ -17678,6 +17708,195 @@
         "processId"
       ],
       "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "sandboxes.snapshot-schedule.delete",
+    "method": "DELETE",
+    "path": "/v1/sandboxes/{sandboxId}/snapshot-schedule",
+    "description": "Stop snapshotting a sandbox on a schedule. Scheduled snapshots already taken are kept until deleted.",
+    "stability": "preview",
+    "cli": {
+      "command": "sandboxes snapshot-schedule delete",
+      "positionalArgs": [
+        "sandboxId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": true,
+      "expose": true,
+      "name": "sandboxes_snapshot-schedule_delete",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "sandboxId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sandboxId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "sandboxId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "sandboxes.snapshot-schedule.set",
+    "method": "PUT",
+    "path": "/v1/sandboxes/{sandboxId}/snapshot-schedule",
+    "description": "Snapshot a sandbox on a schedule (it applies at once to a running sandbox and on every start). Scheduled snapshots are listed with its snapshots (scheduled: true) and deleted by the retention.",
+    "stability": "preview",
+    "cli": {
+      "command": "sandboxes snapshot-schedule set",
+      "positionalArgs": [
+        "sandboxId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "sandboxes_snapshot-schedule_set",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "sandboxId"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sandboxId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/SandboxSnapshotSchedule"
+        }
+      },
+      "required": [
+        "sandboxId",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "SandboxSnapshotSchedule": {
+          "additionalProperties": false,
+          "properties": {
+            "intervalSeconds": {
+              "description": "Take a snapshot this often (at least a minute).",
+              "maximum": 2592000,
+              "minimum": 60,
+              "type": "integer"
+            },
+            "keepCount": {
+              "description": "Keep at most this many scheduled snapshots.",
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "keepMaxAgeSeconds": {
+              "description": "Delete scheduled snapshots older than this.",
+              "maximum": 31536000,
+              "minimum": 60,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "intervalSeconds"
+          ],
+          "type": "object"
+        }
+      }
     }
   },
   {

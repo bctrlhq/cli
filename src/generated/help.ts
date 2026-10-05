@@ -12332,6 +12332,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "sandboxId",
+          type: "string | null",
+          required: true,
+        },
+        {
           name: "seq",
           type: "integer",
           required: true,
@@ -12411,6 +12416,7 @@ export const CLI_HELP_COMMANDS = {
         "pageId",
         "runId",
         "runtimeId",
+        "sandboxId",
         "seq",
         "source",
         "spaceId",
@@ -19093,6 +19099,11 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
           name: "spaceId",
           type: "string",
           required: true,
@@ -19134,6 +19145,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "snapshotSchedule",
         "spaceId",
         "status",
         "updatedAt",
@@ -19731,6 +19743,11 @@ export const CLI_HELP_COMMANDS = {
             description: "Customer-facing resource name. 1–200 characters.",
           },
           {
+            name: "snapshotSchedule",
+            type: "object",
+            required: false,
+          },
+          {
             name: "fromSnapshot",
             type: "string",
             required: false,
@@ -19793,6 +19810,11 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
           name: "spaceId",
           type: "string",
           required: true,
@@ -19823,7 +19845,13 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/sandboxes",
       operationId: "sandboxes.create",
-      requestFields: ["spaceId", "image", "name", "fromSnapshot"],
+      requestFields: [
+        "spaceId",
+        "image",
+        "name",
+        "snapshotSchedule",
+        "fromSnapshot",
+      ],
       responseFields: [
         "browserId",
         "capabilities",
@@ -19834,6 +19862,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "snapshotSchedule",
         "spaceId",
         "status",
         "updatedAt",
@@ -20493,6 +20522,11 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
           name: "spaceId",
           type: "string",
           required: true,
@@ -20533,6 +20567,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "snapshotSchedule",
         "spaceId",
         "status",
         "updatedAt",
@@ -21616,6 +21651,382 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
   },
+  "sandboxes.snapshot-schedule.delete": {
+    type: "topic",
+    topic: "sandboxes.snapshot-schedule.delete",
+    aliases: ["sandboxes snapshot-schedule delete"],
+    title: "Remove a sandbox snapshot schedule",
+    summary:
+      "Stop snapshotting a sandbox on a schedule. Scheduled snapshots already taken are kept until deleted.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "browserId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+          description:
+            "Capabilities qualified for this sandbox. false means not available.",
+        },
+        {
+          name: "conversationId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "image",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "provisioning | ready | stopping | stopped | failed | deleting",
+          required: true,
+          values: [
+            "provisioning",
+            "ready",
+            "stopping",
+            "stopped",
+            "failed",
+            "deleting",
+          ],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/sandboxes/{sandboxId}/snapshot-schedule",
+      operationId: "sandboxes.snapshot-schedule.delete",
+      responseFields: [
+        "browserId",
+        "capabilities",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "id",
+        "image",
+        "name",
+        "object",
+        "snapshotSchedule",
+        "spaceId",
+        "status",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.snapshot-schedule.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes snapshot-schedule delete",
+      usage: "bctrl sandboxes snapshot-schedule delete <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_snapshot-schedule_delete",
+      operationResource: "operations://sandboxes.snapshot-schedule.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes snapshot-schedule delete --help",
+      },
+    ],
+  },
+  "sandboxes.snapshot-schedule.set": {
+    type: "topic",
+    topic: "sandboxes.snapshot-schedule.set",
+    aliases: ["sandboxes snapshot-schedule set"],
+    title: "Set a sandbox snapshot schedule",
+    summary:
+      "Snapshot a sandbox on a schedule (it applies at once to a running sandbox and on every start). Scheduled snapshots are listed with its snapshots (scheduled: true) and deleted by the retention.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxSnapshotSchedule",
+        schemaResource: "schemas://SandboxSnapshotSchedule",
+        fields: [
+          {
+            name: "intervalSeconds",
+            type: "integer",
+            required: true,
+            description: "Take a snapshot this often (at least a minute).",
+          },
+          {
+            name: "keepCount",
+            type: "integer",
+            required: false,
+            description: "Keep at most this many scheduled snapshots.",
+          },
+          {
+            name: "keepMaxAgeSeconds",
+            type: "integer",
+            required: false,
+            description: "Delete scheduled snapshots older than this.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "browserId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+          description:
+            "Capabilities qualified for this sandbox. false means not available.",
+        },
+        {
+          name: "conversationId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "image",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "provisioning | ready | stopping | stopped | failed | deleting",
+          required: true,
+          values: [
+            "provisioning",
+            "ready",
+            "stopping",
+            "stopped",
+            "failed",
+            "deleting",
+          ],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "PUT",
+      path: "/v1/sandboxes/{sandboxId}/snapshot-schedule",
+      operationId: "sandboxes.snapshot-schedule.set",
+      requestFields: ["intervalSeconds", "keepCount", "keepMaxAgeSeconds"],
+      responseFields: [
+        "browserId",
+        "capabilities",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "id",
+        "image",
+        "name",
+        "object",
+        "snapshotSchedule",
+        "spaceId",
+        "status",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.snapshot-schedule.set",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes snapshot-schedule set",
+      usage: "bctrl sandboxes snapshot-schedule set <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_snapshot-schedule_set",
+      operationResource: "operations://sandboxes.snapshot-schedule.set",
+      schemaResources: ["schemas://SandboxSnapshotSchedule"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes snapshot-schedule set --help",
+      },
+    ],
+  },
   "sandboxes.snapshots.create": {
     type: "topic",
     topic: "sandboxes.snapshots.create",
@@ -21715,6 +22126,11 @@ export const CLI_HELP_COMMANDS = {
             "The sandbox it was taken from; null once that sandbox is deleted.",
         },
         {
+          name: "scheduled",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "sizeBytes",
           type: "integer | null",
           required: true,
@@ -21739,6 +22155,7 @@ export const CLI_HELP_COMMANDS = {
         "name",
         "object",
         "sandboxId",
+        "scheduled",
         "sizeBytes",
         "spaceId",
       ],
@@ -21956,6 +22373,11 @@ export const CLI_HELP_COMMANDS = {
             "The sandbox it was taken from; null once that sandbox is deleted.",
         },
         {
+          name: "scheduled",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "sizeBytes",
           type: "integer | null",
           required: true,
@@ -21979,6 +22401,7 @@ export const CLI_HELP_COMMANDS = {
         "name",
         "object",
         "sandboxId",
+        "scheduled",
         "sizeBytes",
         "spaceId",
       ],
@@ -22376,6 +22799,11 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
           name: "spaceId",
           type: "string",
           required: true,
@@ -22416,6 +22844,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "snapshotSchedule",
         "spaceId",
         "status",
         "updatedAt",
@@ -22558,6 +22987,11 @@ export const CLI_HELP_COMMANDS = {
           values: ["sandbox"],
         },
         {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
           name: "spaceId",
           type: "string",
           required: true,
@@ -22599,6 +23033,7 @@ export const CLI_HELP_COMMANDS = {
         "image",
         "name",
         "object",
+        "snapshotSchedule",
         "spaceId",
         "status",
         "updatedAt",

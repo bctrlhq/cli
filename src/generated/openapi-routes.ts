@@ -139,6 +139,8 @@ export const CLI_OPENAPI_ROUTES = {
   "sandboxes.processes.create": { method: "post", path: "/sandboxes/{sandboxId}/processes" },
   "sandboxes.processes.get": { method: "get", path: "/sandboxes/{sandboxId}/processes/{processId}" },
   "sandboxes.processes.stream": { method: "get", path: "/sandboxes/{sandboxId}/processes/{processId}/stream" },
+  "sandboxes.snapshot-schedule.delete": { method: "delete", path: "/sandboxes/{sandboxId}/snapshot-schedule" },
+  "sandboxes.snapshot-schedule.set": { method: "put", path: "/sandboxes/{sandboxId}/snapshot-schedule" },
   "sandboxes.snapshots.create": { method: "post", path: "/sandboxes/{sandboxId}/snapshots" },
   "sandboxes.snapshots.delete": { method: "delete", path: "/sandboxes/{sandboxId}/snapshots/{snapshotId}" },
   "sandboxes.snapshots.get": { method: "get", path: "/sandboxes/{sandboxId}/snapshots/{snapshotId}" },
