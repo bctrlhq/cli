@@ -51,7 +51,8 @@ test('automation commands map to the canonical tools, tasks, conversations, and 
     { from: 'user' }
   );
   await buildCommand(calls).parseAsync(['runs', 'trace', 'list', 'run_u1234567890123456789012'], { from: 'user' });
-  await buildCommand(calls).parseAsync(['runs', 'events', 'list', 'run_u1234567890123456789012'], { from: 'user' });
+  // A Run's events are the one Event log filtered by run.
+  await buildCommand(calls).parseAsync(['events', 'list', '--query', '{"run":"run_u1234567890123456789012"}'], { from: 'user' });
 
   assert.deepEqual(
     calls.map(({ method, path }) => `${method} ${path}`),
@@ -62,7 +63,7 @@ test('automation commands map to the canonical tools, tasks, conversations, and 
       'post /tasks',
       'patch /conversations/conv_u1234567890123456789012',
       'get /runs/run_u1234567890123456789012/trace',
-      'get /runs/run_u1234567890123456789012/events',
+      'get /events',
     ]
   );
   // The browser is a body field; the old BCTRL-Runtime-Id header is gone.
@@ -71,6 +72,7 @@ test('automation commands map to the canonical tools, tasks, conversations, and 
   assert.equal(options[0]?.body?.runtimeId, 'br_u1234567890123456789012');
   assert.equal(options[2]?.body?.runtimeId, undefined);
   assert.deepEqual(options[3]?.body, { agent: 'agt_1', input: 'Complete checkout' });
+  assert.equal((options[6] as { query?: Record<string, unknown> } | undefined)?.query?.run, 'run_u1234567890123456789012');
   const root = buildCommand([]);
   assert.equal(root.commands.find((command) => command.name() === 'tools')?.commands.some((command) => command.name() === 'call'), false);
 });

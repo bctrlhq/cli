@@ -6504,269 +6504,6 @@
     }
   },
   {
-    "operationId": "browsers.events.stream",
-    "method": "GET",
-    "path": "/v1/browsers/{browserId}/events/stream",
-    "description": "Stream immutable Events from the browser’s current Run, selected when the connection opens. The stream stays on that Run across browser restarts. Resume using an Event ID from the selected Run.",
-    "stability": "stable",
-    "cli": {
-      "command": "browsers events stream",
-      "positionalArgs": [
-        "browserId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "browsers_events_stream",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": true,
-    "pathParams": [
-      "browserId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "text/event-stream"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "browserId": {
-          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
-          "type": "string"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "category": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "lifecycle",
-                    "control",
-                    "machine",
-                    "human",
-                    "secrets",
-                    "connection",
-                    "agent",
-                    "page",
-                    "console",
-                    "network",
-                    "captcha"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "lifecycle",
-                      "control",
-                      "machine",
-                      "human",
-                      "secrets",
-                      "connection",
-                      "agent",
-                      "page",
-                      "console",
-                      "network",
-                      "captcha"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "type": {
-              "anyOf": [
-                {
-                  "maxLength": 200,
-                  "minLength": 3,
-                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "maxLength": 200,
-                    "minLength": 3,
-                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "actor": {
-              "description": "Actor ID.",
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string"
-            },
-            "actorType": {
-              "enum": [
-                "api_key",
-                "agent",
-                "human",
-                "platform"
-              ],
-              "type": "string"
-            },
-            "channel": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "api",
-                    "cdp",
-                    "webdriver",
-                    "live_view",
-                    "computer",
-                    "tool",
-                    "process",
-                    "ssh",
-                    "files",
-                    "platform"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "api",
-                      "cdp",
-                      "webdriver",
-                      "live_view",
-                      "computer",
-                      "tool",
-                      "process",
-                      "ssh",
-                      "files",
-                      "platform"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "outcome": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "ok",
-                    "denied",
-                    "failed",
-                    "unknown"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "ok",
-                      "denied",
-                      "failed",
-                      "unknown"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "from": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "to": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "after": {
-              "description": "Resume after this Event ID from the same Run.",
-              "examples": [
-                "evt_uAAAAAAAAAAAAAAAAAAAAAA"
-              ],
-              "title": "RunEventId",
-              "type": "string",
-              "x-bctrl-type": "RunEventId"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Last-Event-ID": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional last delivered event identifier used to resume an SSE stream."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "maxEvents": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 200
-        },
-        "timeoutMs": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 60000
-        }
-      },
-      "required": [
-        "browserId"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "Rfc3339Timestamp": {
-          "description": "RFC 3339 timestamp with a UTC offset.",
-          "examples": [
-            "2026-07-26T12:00:00Z"
-          ],
-          "format": "date-time",
-          "title": "Rfc3339Timestamp",
-          "type": "string",
-          "x-bctrl-type": "Rfc3339Timestamp"
-        }
-      }
-    }
-  },
-  {
     "operationId": "browsers.fetch",
     "method": "POST",
     "path": "/v1/browsers/{browserId}/fetch",
@@ -10353,532 +10090,6 @@
     }
   },
   {
-    "operationId": "conversations.events.list",
-    "method": "GET",
-    "path": "/v1/conversations/{conversationId}/events",
-    "description": "Read canonical Conversation history across its Tasks. Events inside runtimes remain in each Run log.",
-    "stability": "preview",
-    "cli": {
-      "command": "conversations events list",
-      "positionalArgs": [
-        "conversationId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "conversations_events_list",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": true
-    },
-    "stream": false,
-    "pathParams": [
-      "conversationId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "conversationId": {
-          "description": "Unique conversation identifier generated by BCTRL.",
-          "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
-          "title": "ConversationId",
-          "type": "string",
-          "x-bctrl-type": "ConversationId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "category": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "lifecycle",
-                    "control",
-                    "machine",
-                    "human",
-                    "secrets",
-                    "connection",
-                    "agent",
-                    "page",
-                    "console",
-                    "network",
-                    "captcha"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "lifecycle",
-                      "control",
-                      "machine",
-                      "human",
-                      "secrets",
-                      "connection",
-                      "agent",
-                      "page",
-                      "console",
-                      "network",
-                      "captcha"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "type": {
-              "anyOf": [
-                {
-                  "maxLength": 200,
-                  "minLength": 3,
-                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "maxLength": 200,
-                    "minLength": 3,
-                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "actor": {
-              "description": "Actor ID.",
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string"
-            },
-            "actorType": {
-              "enum": [
-                "api_key",
-                "agent",
-                "human",
-                "platform"
-              ],
-              "type": "string"
-            },
-            "channel": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "api",
-                    "cdp",
-                    "webdriver",
-                    "live_view",
-                    "computer",
-                    "tool",
-                    "process",
-                    "ssh",
-                    "files",
-                    "platform"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "api",
-                      "cdp",
-                      "webdriver",
-                      "live_view",
-                      "computer",
-                      "tool",
-                      "process",
-                      "ssh",
-                      "files",
-                      "platform"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "outcome": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "ok",
-                    "denied",
-                    "failed",
-                    "unknown"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "ok",
-                      "denied",
-                      "failed",
-                      "unknown"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "from": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "to": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "cursor": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "order": {
-              "description": "Order by createdAt and ID. Defaults to desc.",
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string"
-            },
-            "limit": {
-              "default": 50,
-              "exclusiveMinimum": 0,
-              "maximum": 200,
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        }
-      },
-      "required": [
-        "conversationId"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "Rfc3339Timestamp": {
-          "description": "RFC 3339 timestamp with a UTC offset.",
-          "examples": [
-            "2026-07-26T12:00:00Z"
-          ],
-          "format": "date-time",
-          "title": "Rfc3339Timestamp",
-          "type": "string",
-          "x-bctrl-type": "Rfc3339Timestamp"
-        }
-      }
-    }
-  },
-  {
-    "operationId": "conversations.events.stream",
-    "method": "GET",
-    "path": "/v1/conversations/{conversationId}/events/stream",
-    "description": "Resume canonical Conversation history by Event ID. The stream stays pinned to this Conversation and rechecks reader authority; heartbeats are SSE comments.",
-    "stability": "preview",
-    "cli": {
-      "command": "conversations events stream",
-      "positionalArgs": [
-        "conversationId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "conversations_events_stream",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": true,
-    "pathParams": [
-      "conversationId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "text/event-stream"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "conversationId": {
-          "description": "Unique conversation identifier generated by BCTRL.",
-          "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
-          "title": "ConversationId",
-          "type": "string",
-          "x-bctrl-type": "ConversationId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "category": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "lifecycle",
-                    "control",
-                    "machine",
-                    "human",
-                    "secrets",
-                    "connection",
-                    "agent",
-                    "page",
-                    "console",
-                    "network",
-                    "captcha"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "lifecycle",
-                      "control",
-                      "machine",
-                      "human",
-                      "secrets",
-                      "connection",
-                      "agent",
-                      "page",
-                      "console",
-                      "network",
-                      "captcha"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "type": {
-              "anyOf": [
-                {
-                  "maxLength": 200,
-                  "minLength": 3,
-                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "maxLength": 200,
-                    "minLength": 3,
-                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "actor": {
-              "description": "Actor ID.",
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string"
-            },
-            "actorType": {
-              "enum": [
-                "api_key",
-                "agent",
-                "human",
-                "platform"
-              ],
-              "type": "string"
-            },
-            "channel": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "api",
-                    "cdp",
-                    "webdriver",
-                    "live_view",
-                    "computer",
-                    "tool",
-                    "process",
-                    "ssh",
-                    "files",
-                    "platform"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "api",
-                      "cdp",
-                      "webdriver",
-                      "live_view",
-                      "computer",
-                      "tool",
-                      "process",
-                      "ssh",
-                      "files",
-                      "platform"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "outcome": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "ok",
-                    "denied",
-                    "failed",
-                    "unknown"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "ok",
-                      "denied",
-                      "failed",
-                      "unknown"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "from": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "to": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "after": {
-              "description": "Resume after this Event ID from the same Conversation history.",
-              "examples": [
-                "evt_uAAAAAAAAAAAAAAAAAAAAAA"
-              ],
-              "title": "RunEventId",
-              "type": "string",
-              "x-bctrl-type": "RunEventId"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Last-Event-ID": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional last delivered event identifier used to resume an SSE stream."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "maxEvents": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 200
-        },
-        "timeoutMs": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 60000
-        }
-      },
-      "required": [
-        "conversationId"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "Rfc3339Timestamp": {
-          "description": "RFC 3339 timestamp with a UTC offset.",
-          "examples": [
-            "2026-07-26T12:00:00Z"
-          ],
-          "format": "date-time",
-          "title": "Rfc3339Timestamp",
-          "type": "string",
-          "x-bctrl-type": "Rfc3339Timestamp"
-        }
-      }
-    }
-  },
-  {
     "operationId": "conversations.get",
     "method": "GET",
     "path": "/v1/conversations/{conversationId}",
@@ -11191,10 +10402,84 @@
     }
   },
   {
+    "operationId": "events.get",
+    "method": "GET",
+    "path": "/v1/events/{eventId}",
+    "description": "Read one Event by its ID.",
+    "stability": "stable",
+    "cli": {
+      "command": "events get",
+      "positionalArgs": [
+        "eventId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "events_get",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "eventId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "description": "Unique runEvent identifier generated by BCTRL.",
+          "pattern": "^evt_u[A-Za-z0-9_-]{22}$",
+          "title": "RunEventId",
+          "type": "string",
+          "x-bctrl-type": "RunEventId"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "eventId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
     "operationId": "events.list",
     "method": "GET",
     "path": "/v1/events",
-    "description": "List immutable Events visible in the organization, subaccount and selected Space. Filter by Run, browser, event metadata or occurrence time.",
+    "description": "List immutable Events visible in the organization, subaccount and selected Space: every kind of Event, read in one place. Filter by browser, sandbox, Run, Task, Conversation (its history), agent, category (audit logs are the always-on categories), type, actor, channel, outcome or time.",
     "stability": "stable",
     "cli": {
       "command": "events list",
@@ -11224,6 +10509,48 @@
         "query": {
           "type": "object",
           "properties": {
+            "browser": {
+              "description": "Events of this browser, across its Runs.",
+              "pattern": "^br_u[A-Za-z0-9_-]{22}$",
+              "title": "BrowserId",
+              "type": "string",
+              "x-bctrl-type": "BrowserId"
+            },
+            "sandbox": {
+              "description": "Events of this sandbox.",
+              "pattern": "^sbx_u[A-Za-z0-9_-]{22}$",
+              "title": "SandboxId",
+              "type": "string",
+              "x-bctrl-type": "SandboxId"
+            },
+            "run": {
+              "description": "Events of this Run.",
+              "pattern": "^run_u[A-Za-z0-9_-]{22}$",
+              "title": "RunId",
+              "type": "string",
+              "x-bctrl-type": "RunId"
+            },
+            "task": {
+              "description": "Events of this Task.",
+              "pattern": "^task_u[A-Za-z0-9_-]{22}$",
+              "title": "TaskId",
+              "type": "string",
+              "x-bctrl-type": "TaskId"
+            },
+            "conversation": {
+              "description": "A Conversation history: its Events.",
+              "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
+              "title": "ConversationId",
+              "type": "string",
+              "x-bctrl-type": "ConversationId"
+            },
+            "agent": {
+              "description": "Events of Tasks run by this agent.",
+              "pattern": "^agt_u[A-Za-z0-9_-]{22}$",
+              "title": "AgentId",
+              "type": "string",
+              "x-bctrl-type": "AgentId"
+            },
             "category": {
               "anyOf": [
                 {
@@ -11238,7 +10565,8 @@
                     "page",
                     "console",
                     "network",
-                    "captcha"
+                    "captcha",
+                    "vm"
                   ],
                   "type": "string"
                 },
@@ -11255,7 +10583,8 @@
                       "page",
                       "console",
                       "network",
-                      "captcha"
+                      "captcha",
+                      "vm"
                     ],
                     "type": "string"
                   },
@@ -11390,20 +10719,6 @@
               "exclusiveMinimum": 0,
               "maximum": 200,
               "type": "integer"
-            },
-            "runId": {
-              "description": "Unique run identifier generated by BCTRL.",
-              "pattern": "^run_u[A-Za-z0-9_-]{22}$",
-              "title": "RunId",
-              "type": "string",
-              "x-bctrl-type": "RunId"
-            },
-            "runtimeId": {
-              "description": "Unique browser identifier generated by BCTRL.",
-              "pattern": "^br_u[A-Za-z0-9_-]{22}$",
-              "title": "BrowserId",
-              "type": "string",
-              "x-bctrl-type": "BrowserId"
             }
           },
           "required": [],
@@ -11433,6 +10748,303 @@
           },
           "required": [],
           "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "$defs": {
+        "Rfc3339Timestamp": {
+          "description": "RFC 3339 timestamp with a UTC offset.",
+          "examples": [
+            "2026-07-26T12:00:00Z"
+          ],
+          "format": "date-time",
+          "title": "Rfc3339Timestamp",
+          "type": "string",
+          "x-bctrl-type": "Rfc3339Timestamp"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "events.stream",
+    "method": "GET",
+    "path": "/v1/events/stream",
+    "description": "Stream the same Events as they are committed, with the same filters. Resume after an Event ID with Last-Event-ID or after: the stream is in commit order, so a resumed stream has no gaps.",
+    "stability": "stable",
+    "cli": {
+      "command": "events stream",
+      "positionalArgs": []
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "events_stream",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": true,
+    "pathParams": [],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "text/event-stream"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "object",
+          "properties": {
+            "browser": {
+              "description": "Events of this browser, across its Runs.",
+              "pattern": "^br_u[A-Za-z0-9_-]{22}$",
+              "title": "BrowserId",
+              "type": "string",
+              "x-bctrl-type": "BrowserId"
+            },
+            "sandbox": {
+              "description": "Events of this sandbox.",
+              "pattern": "^sbx_u[A-Za-z0-9_-]{22}$",
+              "title": "SandboxId",
+              "type": "string",
+              "x-bctrl-type": "SandboxId"
+            },
+            "run": {
+              "description": "Events of this Run.",
+              "pattern": "^run_u[A-Za-z0-9_-]{22}$",
+              "title": "RunId",
+              "type": "string",
+              "x-bctrl-type": "RunId"
+            },
+            "task": {
+              "description": "Events of this Task.",
+              "pattern": "^task_u[A-Za-z0-9_-]{22}$",
+              "title": "TaskId",
+              "type": "string",
+              "x-bctrl-type": "TaskId"
+            },
+            "conversation": {
+              "description": "A Conversation history: its Events.",
+              "pattern": "^conv_u[A-Za-z0-9_-]{22}$",
+              "title": "ConversationId",
+              "type": "string",
+              "x-bctrl-type": "ConversationId"
+            },
+            "agent": {
+              "description": "Events of Tasks run by this agent.",
+              "pattern": "^agt_u[A-Za-z0-9_-]{22}$",
+              "title": "AgentId",
+              "type": "string",
+              "x-bctrl-type": "AgentId"
+            },
+            "category": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "lifecycle",
+                    "control",
+                    "machine",
+                    "human",
+                    "secrets",
+                    "connection",
+                    "agent",
+                    "page",
+                    "console",
+                    "network",
+                    "captcha",
+                    "vm"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "lifecycle",
+                      "control",
+                      "machine",
+                      "human",
+                      "secrets",
+                      "connection",
+                      "agent",
+                      "page",
+                      "console",
+                      "network",
+                      "captcha",
+                      "vm"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "type": {
+              "anyOf": [
+                {
+                  "maxLength": 200,
+                  "minLength": 3,
+                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "maxLength": 200,
+                    "minLength": 3,
+                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "actor": {
+              "description": "Actor ID.",
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "actorType": {
+              "enum": [
+                "api_key",
+                "agent",
+                "human",
+                "platform"
+              ],
+              "type": "string"
+            },
+            "channel": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "api",
+                    "cdp",
+                    "webdriver",
+                    "live_view",
+                    "computer",
+                    "tool",
+                    "process",
+                    "ssh",
+                    "files",
+                    "platform"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "api",
+                      "cdp",
+                      "webdriver",
+                      "live_view",
+                      "computer",
+                      "tool",
+                      "process",
+                      "ssh",
+                      "files",
+                      "platform"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "outcome": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "ok",
+                    "denied",
+                    "failed",
+                    "unknown"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "enum": [
+                      "ok",
+                      "denied",
+                      "failed",
+                      "unknown"
+                    ],
+                    "type": "string"
+                  },
+                  "maxItems": 100,
+                  "minItems": 1,
+                  "type": "array"
+                }
+              ]
+            },
+            "from": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "to": {
+              "$ref": "#/$defs/Rfc3339Timestamp"
+            },
+            "after": {
+              "description": "Resume after this Event ID (as Last-Event-ID does).",
+              "examples": [
+                "evt_uAAAAAAAAAAAAAAAAAAAAAA"
+              ],
+              "title": "RunEventId",
+              "type": "string",
+              "x-bctrl-type": "RunEventId"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Last-Event-ID": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional last delivered event identifier used to resume an SSE stream."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "maxEvents": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60000
         }
       },
       "required": [],
@@ -14086,548 +13698,6 @@
         "runId"
       ],
       "additionalProperties": false
-    }
-  },
-  {
-    "operationId": "runs.events.list",
-    "method": "GET",
-    "path": "/v1/runs/{runId}/events",
-    "description": "List raw machine-readable runtime events for a run.",
-    "stability": "stable",
-    "cli": {
-      "command": "runs events list",
-      "positionalArgs": [
-        "runId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "runs_events_list",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": true
-    },
-    "stream": false,
-    "pathParams": [
-      "runId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "runId": {
-          "description": "Unique run identifier generated by BCTRL.",
-          "pattern": "^run_u[A-Za-z0-9_-]{22}$",
-          "title": "RunId",
-          "type": "string",
-          "x-bctrl-type": "RunId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "category": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "lifecycle",
-                    "control",
-                    "machine",
-                    "human",
-                    "secrets",
-                    "connection",
-                    "agent",
-                    "page",
-                    "console",
-                    "network",
-                    "captcha"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "lifecycle",
-                      "control",
-                      "machine",
-                      "human",
-                      "secrets",
-                      "connection",
-                      "agent",
-                      "page",
-                      "console",
-                      "network",
-                      "captcha"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "type": {
-              "items": {
-                "minLength": 1,
-                "type": "string"
-              },
-              "type": "array",
-              "description": "Filter by one or more namespaced event types. Repeat the query parameter for multiple values."
-            },
-            "actor": {
-              "description": "Actor ID.",
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string"
-            },
-            "actorType": {
-              "enum": [
-                "api_key",
-                "agent",
-                "human",
-                "platform"
-              ],
-              "type": "string"
-            },
-            "channel": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "api",
-                    "cdp",
-                    "webdriver",
-                    "live_view",
-                    "computer",
-                    "tool",
-                    "process",
-                    "ssh",
-                    "files",
-                    "platform"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "api",
-                      "cdp",
-                      "webdriver",
-                      "live_view",
-                      "computer",
-                      "tool",
-                      "process",
-                      "ssh",
-                      "files",
-                      "platform"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "outcome": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "ok",
-                    "denied",
-                    "failed",
-                    "unknown"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "ok",
-                      "denied",
-                      "failed",
-                      "unknown"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "from": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "to": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "source": {
-              "items": {
-                "enum": [
-                  "browser",
-                  "network",
-                  "runtime",
-                  "agent",
-                  "tool",
-                  "system"
-                ],
-                "type": "string"
-              },
-              "type": "array",
-              "description": "Filter by one or more event sources. Repeat the query parameter for multiple values."
-            },
-            "spanId": {
-              "description": "Unique traceSpan identifier generated by BCTRL.",
-              "pattern": "^span_u[A-Za-z0-9_-]{22}$",
-              "title": "TraceSpanId",
-              "type": "string",
-              "x-bctrl-type": "TraceSpanId"
-            },
-            "pageId": {
-              "description": "Unique page identifier generated by BCTRL.",
-              "pattern": "^page_u[A-Za-z0-9_-]{22}$",
-              "title": "PageId",
-              "type": "string",
-              "x-bctrl-type": "PageId"
-            },
-            "cursor": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "order": {
-              "description": "Order by createdAt and ID. Defaults to desc.",
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string"
-            },
-            "limit": {
-              "default": 50,
-              "exclusiveMinimum": 0,
-              "maximum": 200,
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        }
-      },
-      "required": [
-        "runId"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "Rfc3339Timestamp": {
-          "description": "RFC 3339 timestamp with a UTC offset.",
-          "examples": [
-            "2026-07-26T12:00:00Z"
-          ],
-          "format": "date-time",
-          "title": "Rfc3339Timestamp",
-          "type": "string",
-          "x-bctrl-type": "Rfc3339Timestamp"
-        }
-      }
-    }
-  },
-  {
-    "operationId": "runs.events.stream",
-    "method": "GET",
-    "path": "/v1/runs/{runId}/events/stream",
-    "description": "Stream immutable Events from one Run. Resume after an Event ID using Last-Event-ID or after; ended Runs remain open for late finalization events.",
-    "stability": "stable",
-    "cli": {
-      "command": "runs events stream",
-      "positionalArgs": [
-        "runId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "runs_events_stream",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": true,
-    "pathParams": [
-      "runId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "text/event-stream"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "runId": {
-          "description": "Unique run identifier generated by BCTRL.",
-          "pattern": "^run_u[A-Za-z0-9_-]{22}$",
-          "title": "RunId",
-          "type": "string",
-          "x-bctrl-type": "RunId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "category": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "lifecycle",
-                    "control",
-                    "machine",
-                    "human",
-                    "secrets",
-                    "connection",
-                    "agent",
-                    "page",
-                    "console",
-                    "network",
-                    "captcha"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "lifecycle",
-                      "control",
-                      "machine",
-                      "human",
-                      "secrets",
-                      "connection",
-                      "agent",
-                      "page",
-                      "console",
-                      "network",
-                      "captcha"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "type": {
-              "anyOf": [
-                {
-                  "maxLength": 200,
-                  "minLength": 3,
-                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "maxLength": 200,
-                    "minLength": 3,
-                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "actor": {
-              "description": "Actor ID.",
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string"
-            },
-            "actorType": {
-              "enum": [
-                "api_key",
-                "agent",
-                "human",
-                "platform"
-              ],
-              "type": "string"
-            },
-            "channel": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "api",
-                    "cdp",
-                    "webdriver",
-                    "live_view",
-                    "computer",
-                    "tool",
-                    "process",
-                    "ssh",
-                    "files",
-                    "platform"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "api",
-                      "cdp",
-                      "webdriver",
-                      "live_view",
-                      "computer",
-                      "tool",
-                      "process",
-                      "ssh",
-                      "files",
-                      "platform"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "outcome": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "ok",
-                    "denied",
-                    "failed",
-                    "unknown"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "ok",
-                      "denied",
-                      "failed",
-                      "unknown"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "from": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "to": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "after": {
-              "description": "Resume after this Event ID from the same Run.",
-              "examples": [
-                "evt_uAAAAAAAAAAAAAAAAAAAAAA"
-              ],
-              "title": "RunEventId",
-              "type": "string",
-              "x-bctrl-type": "RunEventId"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Last-Event-ID": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional last delivered event identifier used to resume an SSE stream."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "maxEvents": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 200
-        },
-        "timeoutMs": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 60000
-        }
-      },
-      "required": [
-        "runId"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "Rfc3339Timestamp": {
-          "description": "RFC 3339 timestamp with a UTC offset.",
-          "examples": [
-            "2026-07-26T12:00:00Z"
-          ],
-          "format": "date-time",
-          "title": "Rfc3339Timestamp",
-          "type": "string",
-          "x-bctrl-type": "Rfc3339Timestamp"
-        }
-      }
     }
   },
   {
@@ -22167,532 +21237,6 @@
           },
           "properties": {},
           "type": "object"
-        }
-      }
-    }
-  },
-  {
-    "operationId": "tasks.events.list",
-    "method": "GET",
-    "path": "/v1/tasks/{taskId}/events",
-    "description": "Read the Task’s canonical history. Events inside its runtimes remain in each Run log.",
-    "stability": "preview",
-    "cli": {
-      "command": "tasks events list",
-      "positionalArgs": [
-        "taskId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "tasks_events_list",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": true
-    },
-    "stream": false,
-    "pathParams": [
-      "taskId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "taskId": {
-          "description": "Unique task identifier generated by BCTRL.",
-          "pattern": "^task_u[A-Za-z0-9_-]{22}$",
-          "title": "TaskId",
-          "type": "string",
-          "x-bctrl-type": "TaskId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "category": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "lifecycle",
-                    "control",
-                    "machine",
-                    "human",
-                    "secrets",
-                    "connection",
-                    "agent",
-                    "page",
-                    "console",
-                    "network",
-                    "captcha"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "lifecycle",
-                      "control",
-                      "machine",
-                      "human",
-                      "secrets",
-                      "connection",
-                      "agent",
-                      "page",
-                      "console",
-                      "network",
-                      "captcha"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "type": {
-              "anyOf": [
-                {
-                  "maxLength": 200,
-                  "minLength": 3,
-                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "maxLength": 200,
-                    "minLength": 3,
-                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "actor": {
-              "description": "Actor ID.",
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string"
-            },
-            "actorType": {
-              "enum": [
-                "api_key",
-                "agent",
-                "human",
-                "platform"
-              ],
-              "type": "string"
-            },
-            "channel": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "api",
-                    "cdp",
-                    "webdriver",
-                    "live_view",
-                    "computer",
-                    "tool",
-                    "process",
-                    "ssh",
-                    "files",
-                    "platform"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "api",
-                      "cdp",
-                      "webdriver",
-                      "live_view",
-                      "computer",
-                      "tool",
-                      "process",
-                      "ssh",
-                      "files",
-                      "platform"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "outcome": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "ok",
-                    "denied",
-                    "failed",
-                    "unknown"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "ok",
-                      "denied",
-                      "failed",
-                      "unknown"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "from": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "to": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "cursor": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "order": {
-              "description": "Order by createdAt and ID. Defaults to desc.",
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string"
-            },
-            "limit": {
-              "default": 50,
-              "exclusiveMinimum": 0,
-              "maximum": 200,
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        }
-      },
-      "required": [
-        "taskId"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "Rfc3339Timestamp": {
-          "description": "RFC 3339 timestamp with a UTC offset.",
-          "examples": [
-            "2026-07-26T12:00:00Z"
-          ],
-          "format": "date-time",
-          "title": "Rfc3339Timestamp",
-          "type": "string",
-          "x-bctrl-type": "Rfc3339Timestamp"
-        }
-      }
-    }
-  },
-  {
-    "operationId": "tasks.events.stream",
-    "method": "GET",
-    "path": "/v1/tasks/{taskId}/events/stream",
-    "description": "Resume canonical Task history by Event ID. The stream stays pinned to this Task and rechecks reader authority.",
-    "stability": "preview",
-    "cli": {
-      "command": "tasks events stream",
-      "positionalArgs": [
-        "taskId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "tasks_events_stream",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": false
-    },
-    "stream": true,
-    "pathParams": [
-      "taskId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "text/event-stream"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "taskId": {
-          "description": "Unique task identifier generated by BCTRL.",
-          "pattern": "^task_u[A-Za-z0-9_-]{22}$",
-          "title": "TaskId",
-          "type": "string",
-          "x-bctrl-type": "TaskId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "category": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "lifecycle",
-                    "control",
-                    "machine",
-                    "human",
-                    "secrets",
-                    "connection",
-                    "agent",
-                    "page",
-                    "console",
-                    "network",
-                    "captcha"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "lifecycle",
-                      "control",
-                      "machine",
-                      "human",
-                      "secrets",
-                      "connection",
-                      "agent",
-                      "page",
-                      "console",
-                      "network",
-                      "captcha"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "type": {
-              "anyOf": [
-                {
-                  "maxLength": 200,
-                  "minLength": 3,
-                  "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "maxLength": 200,
-                    "minLength": 3,
-                    "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$",
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "actor": {
-              "description": "Actor ID.",
-              "maxLength": 200,
-              "minLength": 1,
-              "type": "string"
-            },
-            "actorType": {
-              "enum": [
-                "api_key",
-                "agent",
-                "human",
-                "platform"
-              ],
-              "type": "string"
-            },
-            "channel": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "api",
-                    "cdp",
-                    "webdriver",
-                    "live_view",
-                    "computer",
-                    "tool",
-                    "process",
-                    "ssh",
-                    "files",
-                    "platform"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "api",
-                      "cdp",
-                      "webdriver",
-                      "live_view",
-                      "computer",
-                      "tool",
-                      "process",
-                      "ssh",
-                      "files",
-                      "platform"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "outcome": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "ok",
-                    "denied",
-                    "failed",
-                    "unknown"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "ok",
-                      "denied",
-                      "failed",
-                      "unknown"
-                    ],
-                    "type": "string"
-                  },
-                  "maxItems": 100,
-                  "minItems": 1,
-                  "type": "array"
-                }
-              ]
-            },
-            "from": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "to": {
-              "$ref": "#/$defs/Rfc3339Timestamp"
-            },
-            "after": {
-              "description": "Resume after this Event ID from the same Task history.",
-              "examples": [
-                "evt_uAAAAAAAAAAAAAAAAAAAAAA"
-              ],
-              "title": "RunEventId",
-              "type": "string",
-              "x-bctrl-type": "RunEventId"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            },
-            "Last-Event-ID": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional last delivered event identifier used to resume an SSE stream."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "maxEvents": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 200
-        },
-        "timeoutMs": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 60000
-        }
-      },
-      "required": [
-        "taskId"
-      ],
-      "additionalProperties": false,
-      "$defs": {
-        "Rfc3339Timestamp": {
-          "description": "RFC 3339 timestamp with a UTC offset.",
-          "examples": [
-            "2026-07-26T12:00:00Z"
-          ],
-          "format": "date-time",
-          "title": "Rfc3339Timestamp",
-          "type": "string",
-          "x-bctrl-type": "Rfc3339Timestamp"
         }
       }
     }
