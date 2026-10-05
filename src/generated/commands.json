@@ -10402,6 +10402,896 @@
     }
   },
   {
+    "operationId": "drains.create",
+    "method": "POST",
+    "path": "/v1/drains",
+    "description": "Create a drain. Events after now are exported in batches, in commit order, retried with backoff until delivered: otlp sends them as OTLP/HTTP logs and their finished spans as traces, s3 and r2 write gzipped NDJSON under time-partitioned keys, https posts NDJSON signed like webhooks (the secret is returned once). Credentials are secret references.",
+    "stability": "preview",
+    "cli": {
+      "command": "drains create",
+      "positionalArgs": []
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "drains_create",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/DrainCreateRequest"
+        }
+      },
+      "required": [
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "DrainCreateRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "categories": {
+              "default": [],
+              "items": {
+                "enum": [
+                  "lifecycle",
+                  "control",
+                  "machine",
+                  "human",
+                  "secrets",
+                  "connection",
+                  "agent",
+                  "page",
+                  "console",
+                  "network",
+                  "captcha",
+                  "vm"
+                ],
+                "type": "string"
+              },
+              "maxItems": 20,
+              "type": "array"
+            },
+            "destination": {
+              "$ref": "#/$defs/DrainDestination"
+            },
+            "name": {
+              "maxLength": 80,
+              "$ref": "#/$defs/ResourceName"
+            }
+          },
+          "required": [
+            "destination"
+          ],
+          "type": "object"
+        },
+        "DrainDestination": {
+          "discriminator": {
+            "mapping": {
+              "https": "#/components/schemas/DrainHttpsDestination",
+              "otlp": "#/components/schemas/DrainOtlpDestination",
+              "r2": "#/components/schemas/DrainR2Destination",
+              "s3": "#/components/schemas/DrainS3Destination"
+            },
+            "propertyName": "type"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/DrainOtlpDestination"
+            },
+            {
+              "$ref": "#/$defs/DrainS3Destination"
+            },
+            {
+              "$ref": "#/$defs/DrainR2Destination"
+            },
+            {
+              "$ref": "#/$defs/DrainHttpsDestination"
+            }
+          ],
+          "type": "object"
+        },
+        "DrainOtlpDestination": {
+          "additionalProperties": false,
+          "properties": {
+            "endpoint": {
+              "format": "uri",
+              "maxLength": 2048,
+              "type": "string"
+            },
+            "headers": {
+              "additionalProperties": {
+                "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+                "type": "string"
+              },
+              "default": {},
+              "properties": {},
+              "type": "object"
+            },
+            "type": {
+              "const": "otlp",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "endpoint"
+          ],
+          "type": "object"
+        },
+        "DrainS3Destination": {
+          "additionalProperties": false,
+          "properties": {
+            "accessKeyId": {
+              "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+              "type": "string"
+            },
+            "bucket": {
+              "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+              "type": "string"
+            },
+            "endpoint": {
+              "format": "uri",
+              "maxLength": 2048,
+              "type": "string"
+            },
+            "prefix": {
+              "default": "",
+              "maxLength": 200,
+              "pattern": "^(?:[A-Za-z0-9!_.*'()-]+\\/)*$",
+              "type": "string"
+            },
+            "region": {
+              "pattern": "^[a-z0-9-]{2,32}$",
+              "type": "string"
+            },
+            "secretAccessKey": {
+              "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+              "type": "string"
+            },
+            "type": {
+              "const": "s3",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "bucket",
+            "region",
+            "accessKeyId",
+            "secretAccessKey"
+          ],
+          "type": "object"
+        },
+        "DrainR2Destination": {
+          "additionalProperties": false,
+          "properties": {
+            "accessKeyId": {
+              "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+              "type": "string"
+            },
+            "accountId": {
+              "pattern": "^[a-f0-9]{32}$",
+              "type": "string"
+            },
+            "bucket": {
+              "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+              "type": "string"
+            },
+            "prefix": {
+              "default": "",
+              "maxLength": 200,
+              "pattern": "^(?:[A-Za-z0-9!_.*'()-]+\\/)*$",
+              "type": "string"
+            },
+            "secretAccessKey": {
+              "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+              "type": "string"
+            },
+            "type": {
+              "const": "r2",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "accountId",
+            "bucket",
+            "accessKeyId",
+            "secretAccessKey"
+          ],
+          "type": "object"
+        },
+        "DrainHttpsDestination": {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "https",
+              "type": "string"
+            },
+            "url": {
+              "format": "uri",
+              "maxLength": 2048,
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "url"
+          ],
+          "type": "object"
+        },
+        "ResourceName": {
+          "description": "Customer-facing resource name. 1–200 characters.",
+          "examples": [
+            "Production browser"
+          ],
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^(?![A-Za-z][A-Za-z0-9]*_)(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)[\\s\\S]+$",
+          "title": "ResourceName",
+          "type": "string",
+          "x-bctrl-type": "ResourceName"
+        }
+      }
+    }
+  },
+  {
+    "operationId": "drains.delete",
+    "method": "DELETE",
+    "path": "/v1/drains/{drainId}",
+    "description": "Delete a drain. Events not yet sent are not exported.",
+    "stability": "preview",
+    "cli": {
+      "command": "drains delete",
+      "positionalArgs": [
+        "drainId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": true,
+      "expose": true,
+      "name": "drains_delete",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "drainId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "drainId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "drainId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "drains.get",
+    "method": "GET",
+    "path": "/v1/drains/{drainId}",
+    "description": "Get a drain with its delivery status: last delivery, last error and the Events and bytes sent.",
+    "stability": "preview",
+    "cli": {
+      "command": "drains get",
+      "positionalArgs": [
+        "drainId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "drains_get",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "drainId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "drainId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "drainId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "drains.list",
+    "method": "GET",
+    "path": "/v1/drains",
+    "description": "List the drains that export Events to your own observability stack or bucket.",
+    "stability": "preview",
+    "cli": {
+      "command": "drains list",
+      "positionalArgs": []
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "drains_list",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": true
+    },
+    "stream": false,
+    "pathParams": [],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "object",
+          "properties": {
+            "cursor": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "order": {
+              "description": "Order by createdAt and ID. Defaults to desc.",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            },
+            "limit": {
+              "default": 50,
+              "exclusiveMinimum": 0,
+              "maximum": 200,
+              "type": "integer"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "drains.test",
+    "method": "POST",
+    "path": "/v1/drains/{drainId}/test",
+    "description": "Send one test Event to the drain destination now and report the outcome. The drain position does not move.",
+    "stability": "preview",
+    "cli": {
+      "command": "drains test",
+      "positionalArgs": [
+        "drainId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "drains_test",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "drainId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "drainId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "drainId"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "operationId": "drains.update",
+    "method": "PATCH",
+    "path": "/v1/drains/{drainId}",
+    "description": "Update a drain destination, its category filter, label or enabled state. A disabled drain keeps its place and resumes from it.",
+    "stability": "preview",
+    "cli": {
+      "command": "drains update",
+      "positionalArgs": [
+        "drainId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "drains_update",
+      "readOnlyHint": false
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "drainId"
+    ],
+    "requestContentTypes": [
+      "application/json"
+    ],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "drainId": {
+          "description": "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            },
+            "Idempotency-Key": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "body": {
+          "$ref": "#/$defs/DrainUpdateRequest"
+        }
+      },
+      "required": [
+        "drainId",
+        "body"
+      ],
+      "additionalProperties": false,
+      "$defs": {
+        "DrainUpdateRequest": {
+          "additionalProperties": false,
+          "properties": {
+            "categories": {
+              "items": {
+                "enum": [
+                  "lifecycle",
+                  "control",
+                  "machine",
+                  "human",
+                  "secrets",
+                  "connection",
+                  "agent",
+                  "page",
+                  "console",
+                  "network",
+                  "captcha",
+                  "vm"
+                ],
+                "type": "string"
+              },
+              "maxItems": 20,
+              "type": "array"
+            },
+            "destination": {
+              "$ref": "#/$defs/DrainDestination"
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "name": {
+              "anyOf": [
+                {
+                  "maxLength": 80,
+                  "$ref": "#/$defs/ResourceName"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "DrainDestination": {
+          "discriminator": {
+            "mapping": {
+              "https": "#/components/schemas/DrainHttpsDestination",
+              "otlp": "#/components/schemas/DrainOtlpDestination",
+              "r2": "#/components/schemas/DrainR2Destination",
+              "s3": "#/components/schemas/DrainS3Destination"
+            },
+            "propertyName": "type"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/DrainOtlpDestination"
+            },
+            {
+              "$ref": "#/$defs/DrainS3Destination"
+            },
+            {
+              "$ref": "#/$defs/DrainR2Destination"
+            },
+            {
+              "$ref": "#/$defs/DrainHttpsDestination"
+            }
+          ],
+          "type": "object"
+        },
+        "DrainOtlpDestination": {
+          "additionalProperties": false,
+          "properties": {
+            "endpoint": {
+              "format": "uri",
+              "maxLength": 2048,
+              "type": "string"
+            },
+            "headers": {
+              "additionalProperties": {
+                "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+                "type": "string"
+              },
+              "default": {},
+              "properties": {},
+              "type": "object"
+            },
+            "type": {
+              "const": "otlp",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "endpoint"
+          ],
+          "type": "object"
+        },
+        "DrainS3Destination": {
+          "additionalProperties": false,
+          "properties": {
+            "accessKeyId": {
+              "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+              "type": "string"
+            },
+            "bucket": {
+              "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+              "type": "string"
+            },
+            "endpoint": {
+              "format": "uri",
+              "maxLength": 2048,
+              "type": "string"
+            },
+            "prefix": {
+              "default": "",
+              "maxLength": 200,
+              "pattern": "^(?:[A-Za-z0-9!_.*'()-]+\\/)*$",
+              "type": "string"
+            },
+            "region": {
+              "pattern": "^[a-z0-9-]{2,32}$",
+              "type": "string"
+            },
+            "secretAccessKey": {
+              "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+              "type": "string"
+            },
+            "type": {
+              "const": "s3",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "bucket",
+            "region",
+            "accessKeyId",
+            "secretAccessKey"
+          ],
+          "type": "object"
+        },
+        "DrainR2Destination": {
+          "additionalProperties": false,
+          "properties": {
+            "accessKeyId": {
+              "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+              "type": "string"
+            },
+            "accountId": {
+              "pattern": "^[a-f0-9]{32}$",
+              "type": "string"
+            },
+            "bucket": {
+              "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+              "type": "string"
+            },
+            "prefix": {
+              "default": "",
+              "maxLength": 200,
+              "pattern": "^(?:[A-Za-z0-9!_.*'()-]+\\/)*$",
+              "type": "string"
+            },
+            "secretAccessKey": {
+              "description": "A secret reference, `secret:<path>[#<field>][@<version>]`, resolved server-side when used. Fields: password, totp, value, notes, username.",
+              "type": "string"
+            },
+            "type": {
+              "const": "r2",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "accountId",
+            "bucket",
+            "accessKeyId",
+            "secretAccessKey"
+          ],
+          "type": "object"
+        },
+        "DrainHttpsDestination": {
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "const": "https",
+              "type": "string"
+            },
+            "url": {
+              "format": "uri",
+              "maxLength": 2048,
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "url"
+          ],
+          "type": "object"
+        },
+        "ResourceName": {
+          "description": "Customer-facing resource name. 1–200 characters.",
+          "examples": [
+            "Production browser"
+          ],
+          "maxLength": 200,
+          "minLength": 1,
+          "pattern": "^(?![A-Za-z][A-Za-z0-9]*_)(?![0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$)[\\s\\S]+$",
+          "title": "ResourceName",
+          "type": "string",
+          "x-bctrl-type": "ResourceName"
+        }
+      }
+    }
+  },
+  {
     "operationId": "events.get",
     "method": "GET",
     "path": "/v1/events/{eventId}",
@@ -21565,189 +22455,6 @@
     }
   },
   {
-    "operationId": "tasks.trace.list",
-    "method": "GET",
-    "path": "/v1/tasks/{taskId}/trace",
-    "description": "Page spans across the Runs opened by this Task, retaining each Run and parent span ID.",
-    "stability": "preview",
-    "cli": {
-      "command": "tasks trace list",
-      "positionalArgs": [
-        "taskId"
-      ]
-    },
-    "mcp": {
-      "destructiveHint": false,
-      "expose": true,
-      "name": "tasks_trace_list",
-      "readOnlyHint": true
-    },
-    "wait": {
-      "supported": false
-    },
-    "pagination": {
-      "supported": true
-    },
-    "stream": false,
-    "pathParams": [
-      "taskId"
-    ],
-    "requestContentTypes": [],
-    "responseContentTypes": [
-      "application/json"
-    ],
-    "inputSchema": {
-      "type": "object",
-      "properties": {
-        "taskId": {
-          "description": "Unique task identifier generated by BCTRL.",
-          "pattern": "^task_u[A-Za-z0-9_-]{22}$",
-          "title": "TaskId",
-          "type": "string",
-          "x-bctrl-type": "TaskId"
-        },
-        "query": {
-          "type": "object",
-          "properties": {
-            "parentId": {
-              "description": "Unique traceSpan identifier generated by BCTRL.",
-              "pattern": "^span_u[A-Za-z0-9_-]{22}$",
-              "title": "TraceSpanId",
-              "type": "string",
-              "x-bctrl-type": "TraceSpanId"
-            },
-            "kind": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "runtime",
-                    "agent",
-                    "tool",
-                    "llm",
-                    "browser",
-                    "network",
-                    "file",
-                    "system"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "runtime",
-                      "agent",
-                      "tool",
-                      "llm",
-                      "browser",
-                      "network",
-                      "file",
-                      "system"
-                    ],
-                    "type": "string"
-                  },
-                  "type": "array"
-                }
-              ]
-            },
-            "status": {
-              "anyOf": [
-                {
-                  "enum": [
-                    "queued",
-                    "running",
-                    "awaiting_input",
-                    "succeeded",
-                    "failed",
-                    "canceled",
-                    "unknown"
-                  ],
-                  "type": "string"
-                },
-                {
-                  "items": {
-                    "enum": [
-                      "queued",
-                      "running",
-                      "awaiting_input",
-                      "succeeded",
-                      "failed",
-                      "canceled",
-                      "unknown"
-                    ],
-                    "type": "string"
-                  },
-                  "type": "array"
-                }
-              ]
-            },
-            "resourceType": {
-              "enum": [
-                "run",
-                "runtime",
-                "tool_call",
-                "agent_turn",
-                "message",
-                "file",
-                "artifact",
-                "connection"
-              ],
-              "type": "string"
-            },
-            "cursor": {
-              "minLength": 1,
-              "type": "string"
-            },
-            "order": {
-              "description": "Order by createdAt and ID. Defaults to desc.",
-              "enum": [
-                "asc",
-                "desc"
-              ],
-              "type": "string"
-            },
-            "limit": {
-              "default": 50,
-              "exclusiveMinimum": 0,
-              "maximum": 200,
-              "type": "integer"
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        },
-        "headers": {
-          "type": "object",
-          "properties": {
-            "BCTRL-Version": {
-              "enum": [
-                "2026-10-01",
-                "2026-10-03"
-              ],
-              "type": "string",
-              "description": "Dated API version. Defaults to the release pinned when the API key was created."
-            },
-            "BCTRL-Space": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
-            },
-            "BCTRL-Subaccount-Id": {
-              "minLength": 1,
-              "type": "string",
-              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
-            }
-          },
-          "required": [],
-          "additionalProperties": false
-        }
-      },
-      "required": [
-        "taskId"
-      ],
-      "additionalProperties": false
-    }
-  },
-  {
     "operationId": "tool-calls.cancel",
     "method": "POST",
     "path": "/v1/tool-calls/{toolCallId}/cancel",
@@ -23113,6 +23820,77 @@
           "description": "Any valid JSON value: object, array, string, number, boolean, or null."
         }
       }
+    }
+  },
+  {
+    "operationId": "traces.get",
+    "method": "GET",
+    "path": "/v1/traces/{traceId}",
+    "description": "Read a trace as OpenTelemetry spans built from its Events: every API request is a server span, a Task an invoke_agent span with its LLM calls (chat) and tool uses beneath it, following the GenAI semantic conventions (pinned, named in semconv). Send a W3C traceparent on any request to continue your own trace into BCTRL; Runs and Tasks carry their traceId.",
+    "stability": "preview",
+    "cli": {
+      "command": "traces get",
+      "positionalArgs": [
+        "traceId"
+      ]
+    },
+    "mcp": {
+      "destructiveHint": false,
+      "expose": true,
+      "name": "traces_get",
+      "readOnlyHint": true
+    },
+    "wait": {
+      "supported": false
+    },
+    "pagination": {
+      "supported": false
+    },
+    "stream": false,
+    "pathParams": [
+      "traceId"
+    ],
+    "requestContentTypes": [],
+    "responseContentTypes": [
+      "application/json"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "traceId": {
+          "pattern": "^[0-9a-f]{32}$",
+          "type": "string"
+        },
+        "headers": {
+          "type": "object",
+          "properties": {
+            "BCTRL-Version": {
+              "enum": [
+                "2026-10-01",
+                "2026-10-03"
+              ],
+              "type": "string",
+              "description": "Dated API version. Defaults to the release pinned when the API key was created."
+            },
+            "BCTRL-Space": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default."
+            },
+            "BCTRL-Subaccount-Id": {
+              "minLength": 1,
+              "type": "string",
+              "description": "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "traceId"
+      ],
+      "additionalProperties": false
     }
   },
   {
