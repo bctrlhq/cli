@@ -2775,7 +2775,7 @@ export interface paths {
         put?: never;
         /**
          * Create a webhook
-         * @description Create a signed webhook endpoint. The signing secret is returned once; store it securely and verify every delivery signature.
+         * @description Create a webhook endpoint. Deliveries are signed per Standard Webhooks (webhook-id, webhook-timestamp, webhook-signature), so any Standard Webhooks library verifies them. The whsec_ signing secret is returned once; store it securely.
          */
         post: operations["webhooks.create"];
         delete?: never;
@@ -2863,7 +2863,7 @@ export interface paths {
         put?: never;
         /**
          * Rotate a webhook secret
-         * @description Replace a webhook signing secret immediately. The new secret is returned once.
+         * @description Replace a webhook signing secret. The new secret is returned once and signs every delivery from now on; for 24 hours the previous secret also signs (a second v1 signature), so receivers can switch without dropping deliveries.
          */
         post: operations["webhooks.rotate-secret"];
         delete?: never;
