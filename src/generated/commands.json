@@ -10487,12 +10487,14 @@
                   "human",
                   "secrets",
                   "connection",
+                  "alert",
                   "agent",
                   "page",
                   "console",
                   "network",
                   "captcha",
-                  "vm"
+                  "vm",
+                  "kernel"
                 ],
                 "type": "string"
               },
@@ -11088,12 +11090,14 @@
                   "human",
                   "secrets",
                   "connection",
+                  "alert",
                   "agent",
                   "page",
                   "console",
                   "network",
                   "captcha",
-                  "vm"
+                  "vm",
+                  "kernel"
                 ],
                 "type": "string"
               },
@@ -11451,12 +11455,14 @@
                     "human",
                     "secrets",
                     "connection",
+                    "alert",
                     "agent",
                     "page",
                     "console",
                     "network",
                     "captcha",
-                    "vm"
+                    "vm",
+                    "kernel"
                   ],
                   "type": "string"
                 },
@@ -11469,12 +11475,14 @@
                       "human",
                       "secrets",
                       "connection",
+                      "alert",
                       "agent",
                       "page",
                       "console",
                       "network",
                       "captcha",
-                      "vm"
+                      "vm",
+                      "kernel"
                     ],
                     "type": "string"
                   },
@@ -11742,12 +11750,14 @@
                     "human",
                     "secrets",
                     "connection",
+                    "alert",
                     "agent",
                     "page",
                     "console",
                     "network",
                     "captcha",
-                    "vm"
+                    "vm",
+                    "kernel"
                   ],
                   "type": "string"
                 },
@@ -11760,12 +11770,14 @@
                       "human",
                       "secrets",
                       "connection",
+                      "alert",
                       "agent",
                       "page",
                       "console",
                       "network",
                       "captcha",
-                      "vm"
+                      "vm",
+                      "kernel"
                     ],
                     "type": "string"
                   },

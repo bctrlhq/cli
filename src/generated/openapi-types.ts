@@ -4647,7 +4647,7 @@ export interface components {
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
         };
         Drain: {
-            categories: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm")[];
+            categories: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel")[];
             createdAt: components["schemas"]["Rfc3339Timestamp"];
             destination: components["schemas"]["DrainDestinationOutput"];
             enabled: boolean;
@@ -4669,12 +4669,12 @@ export interface components {
         };
         DrainCreateRequest: {
             /** @default [] */
-            categories: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm")[];
+            categories: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel")[];
             destination: components["schemas"]["DrainDestination"];
             name?: components["schemas"]["ResourceName"];
         };
         DrainCreateResponse: {
-            categories: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm")[];
+            categories: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel")[];
             createdAt: components["schemas"]["Rfc3339Timestamp"];
             destination: components["schemas"]["DrainDestinationOutput"];
             enabled: boolean;
@@ -4844,7 +4844,7 @@ export interface components {
             responseStatus: number | null;
         };
         DrainUpdateRequest: {
-            categories?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm")[];
+            categories?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel")[];
             destination?: components["schemas"]["DrainDestination"];
             enabled?: boolean;
             name?: components["schemas"]["ResourceName"] | null;
@@ -4969,7 +4969,7 @@ export interface components {
                 type: "api_key" | "agent" | "human" | "platform";
             };
             /** @enum {string} */
-            category: "lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm";
+            category: "lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel";
             /** @enum {string} */
             channel: "api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform";
             conversationId: string | null;
@@ -5989,7 +5989,7 @@ export interface components {
                 type: "api_key" | "agent" | "human" | "platform";
             };
             /** @enum {string} */
-            category: "lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm";
+            category: "lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel";
             /** @enum {string} */
             channel: "api" | "cdp" | "webdriver" | "live_view" | "computer" | "tool" | "process" | "ssh" | "files" | "platform";
             conversationId: string | null;
@@ -26175,7 +26175,7 @@ export interface operations {
                 conversation?: string;
                 /** @description Events of Tasks run by this agent. */
                 agent?: string;
-                category?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm") | ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm")[];
+                category?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel") | ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel")[];
                 type?: string | string[];
                 /** @description Actor ID. */
                 actor?: string;
@@ -26590,7 +26590,7 @@ export interface operations {
                 conversation?: string;
                 /** @description Events of Tasks run by this agent. */
                 agent?: string;
-                category?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm") | ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "agent" | "page" | "console" | "network" | "captcha" | "vm")[];
+                category?: ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel") | ("lifecycle" | "control" | "machine" | "human" | "secrets" | "connection" | "alert" | "agent" | "page" | "console" | "network" | "captcha" | "vm" | "kernel")[];
                 type?: string | string[];
                 /** @description Actor ID. */
                 actor?: string;

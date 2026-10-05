@@ -11452,7 +11452,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "categories",
-            type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm[]",
+            type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
             required: false,
           },
         ],
@@ -11462,7 +11462,7 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "categories",
-          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm[]",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
           required: true,
         },
         {
@@ -11707,7 +11707,7 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "categories",
-          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm[]",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
           required: true,
         },
         {
@@ -12089,7 +12089,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "categories",
-            type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm[]",
+            type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
             required: false,
           },
           {
@@ -12104,7 +12104,7 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "categories",
-          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm[]",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
           required: true,
         },
         {
@@ -12248,7 +12248,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "category",
-          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel",
           required: true,
           values: [
             "lifecycle",
@@ -12257,12 +12257,14 @@ export const CLI_HELP_COMMANDS = {
             "human",
             "secrets",
             "connection",
+            "alert",
             "agent",
             "page",
             "console",
             "network",
             "captcha",
             "vm",
+            "kernel",
           ],
         },
         {
@@ -12499,7 +12501,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "category",
-          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm | lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm[]",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel | lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
           required: false,
         },
         {
@@ -12678,7 +12680,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "category",
-          type: "lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm | lifecycle | control | machine | human | secrets | connection | agent | page | console | network | captcha | vm[]",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel | lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
           required: false,
         },
         {
