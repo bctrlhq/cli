@@ -6182,6 +6182,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
+        {
           name: "autoUpgrade",
           type: "boolean",
           required: true,
@@ -6341,6 +6347,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/browsers/{browserId}/connections/revoke",
       operationId: "browsers.connections.revoke",
       responseFields: [
+        "audit",
         "autoUpgrade",
         "captcha",
         "createdAt",
@@ -6932,11 +6939,23 @@ export const CLI_HELP_COMMANDS = {
             type: "object",
             required: false,
           },
+          {
+            name: "audit",
+            type: "object",
+            required: false,
+            description: "Machine audit detail (preview).",
+          },
         ],
       },
     },
     output: {
       fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
         {
           name: "autoUpgrade",
           type: "boolean",
@@ -7116,8 +7135,10 @@ export const CLI_HELP_COMMANDS = {
         "proxy",
         "extensions",
         "metadata",
+        "audit",
       ],
       responseFields: [
+        "audit",
         "autoUpgrade",
         "captcha",
         "createdAt",
@@ -8217,6 +8238,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
+        {
           name: "autoUpgrade",
           type: "boolean",
           required: true,
@@ -8376,6 +8403,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/browsers/{browserId}",
       operationId: "browsers.get",
       responseFields: [
+        "audit",
         "autoUpgrade",
         "captcha",
         "createdAt",
@@ -9948,6 +9976,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
+        {
           name: "autoUpgrade",
           type: "boolean",
           required: true,
@@ -10107,6 +10141,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/browsers/{browserId}/start",
       operationId: "browsers.start",
       responseFields: [
+        "audit",
         "autoUpgrade",
         "captcha",
         "createdAt",
@@ -10234,6 +10269,12 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
         {
           name: "autoUpgrade",
           type: "boolean",
@@ -10395,6 +10436,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "browsers.stop",
       requestFields: ["discardState"],
       responseFields: [
+        "audit",
         "autoUpgrade",
         "captcha",
         "createdAt",
@@ -10603,11 +10645,23 @@ export const CLI_HELP_COMMANDS = {
             type: "object",
             required: false,
           },
+          {
+            name: "audit",
+            type: "object",
+            required: false,
+            description: "Machine audit detail (preview).",
+          },
         ],
       },
     },
     output: {
       fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
         {
           name: "autoUpgrade",
           type: "boolean",
@@ -10786,8 +10840,10 @@ export const CLI_HELP_COMMANDS = {
         "proxy",
         "extensions",
         "metadata",
+        "audit",
       ],
       responseFields: [
+        "audit",
         "autoUpgrade",
         "captcha",
         "createdAt",
@@ -19051,6 +19107,11 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
           name: "browserId",
           type: "string | null",
           required: true,
@@ -19144,6 +19205,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "sandboxes.browser.attach",
       requestFields: ["browserId"],
       responseFields: [
+        "audit",
         "browserId",
         "capabilities",
         "conversationId",
@@ -19764,6 +19826,11 @@ export const CLI_HELP_COMMANDS = {
               "Environment variable names (letters, digits, underscore; not PATH, HOME, *_PROXY, BCTRL_* and other reserved names) to the Secret written for them.",
           },
           {
+            name: "audit",
+            type: "object",
+            required: false,
+          },
+          {
             name: "fromSnapshot",
             type: "string",
             required: false,
@@ -19775,6 +19842,11 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
         {
           name: "browserId",
           type: "string | null",
@@ -19873,9 +19945,11 @@ export const CLI_HELP_COMMANDS = {
         "name",
         "snapshotSchedule",
         "secretEnv",
+        "audit",
         "fromSnapshot",
       ],
       responseFields: [
+        "audit",
         "browserId",
         "capabilities",
         "conversationId",
@@ -20496,6 +20570,11 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
           name: "browserId",
           type: "string | null",
           required: true,
@@ -20588,6 +20667,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/sandboxes/{sandboxId}",
       operationId: "sandboxes.get",
       responseFields: [
+        "audit",
         "browserId",
         "capabilities",
         "conversationId",
@@ -21734,6 +21814,11 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
           name: "browserId",
           type: "string | null",
           required: true,
@@ -21826,6 +21911,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/sandboxes/{sandboxId}/snapshot-schedule",
       operationId: "sandboxes.snapshot-schedule.delete",
       responseFields: [
+        "audit",
         "browserId",
         "capabilities",
         "conversationId",
@@ -21940,6 +22026,11 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
           name: "browserId",
           type: "string | null",
           required: true,
@@ -22033,6 +22124,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "sandboxes.snapshot-schedule.set",
       requestFields: ["intervalSeconds", "keepCount", "keepMaxAgeSeconds"],
       responseFields: [
+        "audit",
         "browserId",
         "capabilities",
         "conversationId",
@@ -22794,6 +22886,11 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
           name: "browserId",
           type: "string | null",
           required: true,
@@ -22886,6 +22983,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/sandboxes/{sandboxId}/start",
       operationId: "sandboxes.start",
       responseFields: [
+        "audit",
         "browserId",
         "capabilities",
         "conversationId",
@@ -22989,6 +23087,11 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
           name: "browserId",
           type: "string | null",
           required: true,
@@ -23082,6 +23185,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "sandboxes.stop",
       requestFields: ["force"],
       responseFields: [
+        "audit",
         "browserId",
         "capabilities",
         "conversationId",

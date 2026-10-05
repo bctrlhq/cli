@@ -5605,6 +5605,24 @@
         "BrowserCreateRequest": {
           "additionalProperties": false,
           "properties": {
+            "audit": {
+              "additionalProperties": false,
+              "description": "Machine audit detail (preview).",
+              "properties": {
+                "files": {
+                  "description": "File writes in the VM audit: per process and directory per minute (default), or per file.",
+                  "enum": [
+                    "summary",
+                    "full"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "files"
+              ],
+              "type": "object"
+            },
             "autoUpgrade": {
               "type": "boolean"
             },
@@ -9225,6 +9243,24 @@
         "BrowsersUpdateRequest": {
           "additionalProperties": false,
           "properties": {
+            "audit": {
+              "additionalProperties": false,
+              "description": "Machine audit detail (preview).",
+              "properties": {
+                "files": {
+                  "description": "File writes in the VM audit: per process and directory per minute (default), or per file.",
+                  "enum": [
+                    "summary",
+                    "full"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "files"
+              ],
+              "type": "object"
+            },
             "autoUpgrade": {
               "type": "boolean"
             },
@@ -16462,6 +16498,9 @@
         "SandboxCreateRequest": {
           "additionalProperties": false,
           "properties": {
+            "audit": {
+              "$ref": "#/$defs/SandboxAudit"
+            },
             "fromSnapshot": {
               "description": "Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot.",
               "pattern": "^snap_u[A-Za-z0-9_-]{22}$",
@@ -16489,6 +16528,23 @@
               "type": "string"
             }
           },
+          "type": "object"
+        },
+        "SandboxAudit": {
+          "additionalProperties": false,
+          "properties": {
+            "files": {
+              "description": "File writes: per process and directory per minute, or per file.",
+              "enum": [
+                "summary",
+                "full"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "files"
+          ],
           "type": "object"
         },
         "ResourceName": {

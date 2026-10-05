@@ -3595,6 +3595,14 @@ export interface components {
             status: "succeeded" | "unknown";
         };
         BrowserCreateRequest: {
+            /** @description Machine audit detail (preview). */
+            audit?: {
+                /**
+                 * @description File writes in the VM audit: per process and directory per minute (default), or per file.
+                 * @enum {string}
+                 */
+                files: "summary" | "full";
+            };
             autoUpgrade?: boolean;
             captcha?: {
                 autoSolve?: boolean;
@@ -4100,6 +4108,14 @@ export interface components {
         });
         BrowserProxyInput: string | components["schemas"]["BrowserSavedProxyInput"] | components["schemas"]["BrowserInlineCustomProxyUrlInput"] | components["schemas"]["BrowserInlineCustomProxyConnectionInput"] | components["schemas"]["BrowserInlineManagedRotatingProxyInput"] | components["schemas"]["BrowserInlineManagedRotatingDefaultProxyInput"];
         BrowserResource: {
+            /** @description Machine audit detail (preview). */
+            audit?: {
+                /**
+                 * @description File writes in the VM audit: per process and directory per minute (default), or per file.
+                 * @enum {string}
+                 */
+                files: "summary" | "full";
+            };
             autoUpgrade: boolean;
             captcha?: {
                 autoSolve?: boolean;
@@ -4315,6 +4331,14 @@ export interface components {
             discardState?: boolean;
         };
         BrowsersUpdateRequest: {
+            /** @description Machine audit detail (preview). */
+            audit?: {
+                /**
+                 * @description File writes in the VM audit: per process and directory per minute (default), or per file.
+                 * @enum {string}
+                 */
+                files: "summary" | "full";
+            };
             autoUpgrade?: boolean;
             captcha?: {
                 autoSolve?: boolean;
@@ -6209,6 +6233,7 @@ export interface components {
             runtimeSeconds: number | null;
         };
         Sandbox: {
+            audit: components["schemas"]["SandboxAudit"];
             browserId: string | null;
             capabilities: components["schemas"]["SandboxCapabilities"];
             conversationId: string | null;
@@ -6238,6 +6263,13 @@ export interface components {
             spaceId: string;
             status: components["schemas"]["SandboxStatus"];
             updatedAt: components["schemas"]["Rfc3339Timestamp"];
+        };
+        SandboxAudit: {
+            /**
+             * @description File writes: per process and directory per minute, or per file.
+             * @enum {string}
+             */
+            files: "summary" | "full";
         };
         SandboxBrowserAttachRequest: {
             /**
@@ -6328,6 +6360,7 @@ export interface components {
             url: string;
         };
         SandboxCreateRequest: {
+            audit?: components["schemas"]["SandboxAudit"];
             /**
              * SandboxSnapshotId
              * @description Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot.
