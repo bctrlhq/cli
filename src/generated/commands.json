@@ -5652,6 +5652,10 @@
             "forceOpenShadowRoots": {
               "type": "boolean"
             },
+            "fromBrowser": {
+              "description": "Preview. Start from a copy of the last saved state of this browser (cookies, site storage, tabs, preferences); the source is not touched. Requires persona.",
+              "type": "string"
+            },
             "gpu": {
               "type": "boolean"
             },
@@ -5670,6 +5674,10 @@
             },
             "networkTraffic": {
               "$ref": "#/$defs/BrowserNetworkTrafficConfig"
+            },
+            "persona": {
+              "description": "Preview. Required with fromBrowser.",
+              "$ref": "#/$defs/BrowserPersonaChoice"
             },
             "proxy": {
               "anyOf": [
@@ -5847,6 +5855,14 @@
             }
           },
           "type": "object"
+        },
+        "BrowserPersonaChoice": {
+          "description": "same: the copy keeps the persona of the source (continue one identity elsewhere, one at a time); new: the copy gets a new persona with the copied site state.",
+          "enum": [
+            "same",
+            "new"
+          ],
+          "type": "string"
         },
         "BrowserProxyInput": {
           "anyOf": [

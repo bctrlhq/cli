@@ -6198,6 +6198,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
           name: "createdAt",
           type: "datetime",
           required: true,
@@ -6336,6 +6343,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
           name: "webRtcProxyOnly",
           type: "boolean",
           required: true,
@@ -6350,6 +6362,7 @@ export const CLI_HELP_COMMANDS = {
         "audit",
         "autoUpgrade",
         "captcha",
+        "copiedFrom",
         "createdAt",
         "currentRun",
         "expireAfterIdleDays",
@@ -6375,6 +6388,7 @@ export const CLI_HELP_COMMANDS = {
         "type",
         "updatedAt",
         "viewport",
+        "warnings",
         "webRtcProxyOnly",
       ],
     },
@@ -6945,6 +6959,21 @@ export const CLI_HELP_COMMANDS = {
             required: false,
             description: "Machine audit detail (preview).",
           },
+          {
+            name: "fromBrowser",
+            type: "string",
+            required: false,
+            description:
+              "Preview. Start from a copy of the last saved state of this browser (cookies, site storage, tabs, preferences); the source is not touched. Requires persona.",
+          },
+          {
+            name: "persona",
+            type: "same | new",
+            required: false,
+            description:
+              "same: the copy keeps the persona of the source (continue one identity elsewhere, one at a time); new: the copy gets a new persona with the copied site state.",
+            values: ["same", "new"],
+          },
         ],
       },
     },
@@ -6965,6 +6994,13 @@ export const CLI_HELP_COMMANDS = {
           name: "captcha",
           type: "object",
           required: false,
+        },
+        {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
         },
         {
           name: "createdAt",
@@ -7105,6 +7141,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
           name: "webRtcProxyOnly",
           type: "boolean",
           required: true,
@@ -7136,11 +7177,14 @@ export const CLI_HELP_COMMANDS = {
         "extensions",
         "metadata",
         "audit",
+        "fromBrowser",
+        "persona",
       ],
       responseFields: [
         "audit",
         "autoUpgrade",
         "captcha",
+        "copiedFrom",
         "createdAt",
         "currentRun",
         "expireAfterIdleDays",
@@ -7166,6 +7210,7 @@ export const CLI_HELP_COMMANDS = {
         "type",
         "updatedAt",
         "viewport",
+        "warnings",
         "webRtcProxyOnly",
       ],
     },
@@ -8254,6 +8299,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
           name: "createdAt",
           type: "datetime",
           required: true,
@@ -8392,6 +8444,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
           name: "webRtcProxyOnly",
           type: "boolean",
           required: true,
@@ -8406,6 +8463,7 @@ export const CLI_HELP_COMMANDS = {
         "audit",
         "autoUpgrade",
         "captcha",
+        "copiedFrom",
         "createdAt",
         "currentRun",
         "expireAfterIdleDays",
@@ -8431,6 +8489,7 @@ export const CLI_HELP_COMMANDS = {
         "type",
         "updatedAt",
         "viewport",
+        "warnings",
         "webRtcProxyOnly",
       ],
     },
@@ -9992,6 +10051,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
           name: "createdAt",
           type: "datetime",
           required: true,
@@ -10130,6 +10196,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
           name: "webRtcProxyOnly",
           type: "boolean",
           required: true,
@@ -10144,6 +10215,7 @@ export const CLI_HELP_COMMANDS = {
         "audit",
         "autoUpgrade",
         "captcha",
+        "copiedFrom",
         "createdAt",
         "currentRun",
         "expireAfterIdleDays",
@@ -10169,6 +10241,7 @@ export const CLI_HELP_COMMANDS = {
         "type",
         "updatedAt",
         "viewport",
+        "warnings",
         "webRtcProxyOnly",
       ],
     },
@@ -10286,6 +10359,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
           name: "createdAt",
           type: "datetime",
           required: true,
@@ -10424,6 +10504,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
           name: "webRtcProxyOnly",
           type: "boolean",
           required: true,
@@ -10439,6 +10524,7 @@ export const CLI_HELP_COMMANDS = {
         "audit",
         "autoUpgrade",
         "captcha",
+        "copiedFrom",
         "createdAt",
         "currentRun",
         "expireAfterIdleDays",
@@ -10464,6 +10550,7 @@ export const CLI_HELP_COMMANDS = {
         "type",
         "updatedAt",
         "viewport",
+        "warnings",
         "webRtcProxyOnly",
       ],
     },
@@ -10673,6 +10760,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
           name: "createdAt",
           type: "datetime",
           required: true,
@@ -10811,6 +10905,11 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
           name: "webRtcProxyOnly",
           type: "boolean",
           required: true,
@@ -10846,6 +10945,7 @@ export const CLI_HELP_COMMANDS = {
         "audit",
         "autoUpgrade",
         "captcha",
+        "copiedFrom",
         "createdAt",
         "currentRun",
         "expireAfterIdleDays",
@@ -10871,6 +10971,7 @@ export const CLI_HELP_COMMANDS = {
         "type",
         "updatedAt",
         "viewport",
+        "warnings",
         "webRtcProxyOnly",
       ],
     },
@@ -18282,6 +18383,11 @@ export const CLI_HELP_COMMANDS = {
           type: "object",
           required: false,
         },
+        {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
       ],
     },
     docs: [
@@ -18316,6 +18422,7 @@ export const CLI_HELP_COMMANDS = {
         "traceId",
         "updatedAt",
         "usage",
+        "warnings",
       ],
     },
     sdk: [
