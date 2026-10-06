@@ -18238,9 +18238,10 @@ export const CLI_HELP_COMMANDS = {
       query: [
         {
           name: "include",
-          type: "usage",
+          type: "usage | machineAccess",
           required: false,
-          values: ["usage"],
+          description:
+            "usage: the Run’s usage; machineAccess: whether BCTRL machine channels or programs outside the browser were used (preview).",
         },
         {
           name: "wait",
@@ -18312,6 +18313,13 @@ export const CLI_HELP_COMMANDS = {
           type: "us-east",
           required: true,
           values: ["us-east"],
+        },
+        {
+          name: "machineAccess",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview, with include=machineAccess. null when the Run’s log is not complete enough to tell.",
         },
         {
           name: "object",
@@ -18411,6 +18419,7 @@ export const CLI_HELP_COMMANDS = {
         "endReason",
         "id",
         "location",
+        "machineAccess",
         "object",
         "recording",
         "resourceId",

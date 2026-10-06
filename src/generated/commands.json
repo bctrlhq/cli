@@ -15407,8 +15407,17 @@
           "type": "object",
           "properties": {
             "include": {
-              "const": "usage",
-              "type": "string"
+              "anyOf": [
+                {
+                  "const": "usage",
+                  "type": "string"
+                },
+                {
+                  "const": "machineAccess",
+                  "type": "string"
+                }
+              ],
+              "description": "usage: the Run’s usage; machineAccess: whether BCTRL machine channels or programs outside the browser were used (preview)."
             },
             "wait": {
               "default": 0,

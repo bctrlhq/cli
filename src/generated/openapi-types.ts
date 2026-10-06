@@ -5988,6 +5988,14 @@ export interface components {
              */
             id: string;
             location: components["schemas"]["LocationId"];
+            /** @description Preview, with include=machineAccess. null when the Run’s log is not complete enough to tell. */
+            machineAccess?: {
+                count: number;
+                firstAt: components["schemas"]["Rfc3339Timestamp"] | null;
+                inheritedFrom: string | null;
+                /** @description A BCTRL machine channel (files, processes) was used, or the VM ran a program outside the browser, in this Run or the saved state it started from. */
+                used: boolean;
+            } | null;
             /** @constant */
             object: "run";
             recording: {
@@ -31285,7 +31293,8 @@ export interface operations {
     "runs.get": {
         parameters: {
             query?: {
-                include?: "usage";
+                /** @description usage: the Run’s usage; machineAccess: whether BCTRL machine channels or programs outside the browser were used (preview). */
+                include?: "usage" | "machineAccess";
                 wait?: number;
             };
             header?: {
