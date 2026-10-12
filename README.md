@@ -5,33 +5,44 @@ npm install -g @bctrl/cli
 bctrl auth login
 ```
 
-Create and start runtimes with `bctrl runtime`. Automation is exposed through a
-small generic Tool interface:
+The CLI covers the current public API: browsers, sandboxes, tasks, agents, spaces,
+files, tools, secrets, runs, and account resources. Inspect any command with `--help`.
 
 ```bash
-bctrl tools call stagehand.act \
-  --body '{"runtimeId":"rt_...","instruction":"Click Continue"}'
-
-bctrl tools start captcha.solve --body '{"runtimeId":"rt_..."}'
-bctrl tool-calls result call_... --params '{"waitSeconds":60}'
+bctrl browsers create --body '{"name":"checkout","recording":true}' --wait 60
+bctrl browsers get checkout
+bctrl browsers computer click checkout --body '{"coordinate":[100,200]}'
+bctrl browsers stop checkout --body '{}'
 ```
 
-Use persistent conversations for long-running agents:
+Run an Agent in a Task and inspect the result:
 
 ```bash
-bctrl conversations create \
-  --body '{"runtimeId":"rt_..."}'
-bctrl conversations message conv_... --body '{"text":"Complete checkout"}'
-bctrl conversations stream conv_...
+bctrl tasks create --body '{"agent":"assistant","input":"Complete checkout"}'
+bctrl tasks get task_u... --wait 60
 ```
 
-Every automation path contributes to one Run:
+Upload files, download bytes, and stream events:
 
 ```bash
-bctrl runs trace run_...
-bctrl runs events run_...
-bctrl runs stream run_...
+bctrl files upload --file ./input.csv --space my-space
+bctrl browsers files download checkout --path /downloads/result.csv --out ./result.csv
+bctrl runs events run_u...
+bctrl runs stream run_u... --timeout-ms 60000 --max-events 100
 ```
 
-All JSON-body commands accept inline JSON, `@file.json`, or `-` for stdin through
-`--body`. Use `--json`, `--jq`, or `--template` to control output.
+JSON inputs accept inline JSON, `@file.json`, or `-` for stdin through `--body`,
+`--query`, `--headers`, and multipart `--fields`. Only one input can consume stdin.
+Query fields also have individual flags, such as `--limit` and `--wait`; use
+`--query-subaccount-id` when a query field overlaps the `--subaccount-id` header.
+Use `--json`, `--jq`, or `--template` to format JSON responses. Binary responses
+use `--out` (default: stdout), and streams keep their SSE framing.
+
+Requests use `BCTRL-Version: 2026-10-03`. Select an authorized Space with `--space`
+and an effective subaccount with `--subaccount-id`. Destructive operations such as
+`browsers delete` and `webhooks rotate-secret` require `--yes`.
+
+Version 0.2 replaces the retired `runtime` and `toolsets` commands with the current
+API command names. Resource groups are plural (`spaces`, `files`, `proxies`, etc.),
+and updates use `update`. Local `auth login`, `status`, `token`, and `logout` remain
+available, alongside `auth whoami`.

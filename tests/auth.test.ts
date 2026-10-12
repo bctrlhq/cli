@@ -25,6 +25,7 @@ import { authTokenRun } from '../src/commands/auth/token.js';
 import { createMemoryIO } from './helpers/io.js';
 
 const storedWhoami = {
+  object: 'identity' as const,
   email: 'user@example.com',
   scope: 'organization' as const,
   organizationId: 'org_test',

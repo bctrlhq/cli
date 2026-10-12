@@ -81,46 +81,34 @@ function suggestionForApiError(error: ApiErrorInfo): string | null {
     case 'auth.forbidden':
       return 'bctrl auth status';
     case 'space.not_found':
-      return 'bctrl space list';
-    case 'runtime.not_found':
-      return error.details && typeof error.details.spaceId === 'string'
-        ? `bctrl runtime list --space ${error.details.spaceId}`
-        : 'bctrl runtime list';
+      return 'bctrl spaces list';
+    case 'browser.not_found':
+      return 'bctrl browsers list';
+    case 'sandbox.not_found':
+      return 'bctrl sandboxes list';
+    case 'task.not_found':
+      return 'bctrl tasks list';
     case 'run.not_found':
-      return error.details && typeof error.details.runtimeId === 'string'
-        ? `bctrl runtime runs ${error.details.runtimeId}`
-        : 'bctrl run list';
+      return 'bctrl runs list';
     case 'file.not_found':
-      return error.details && typeof error.details.spaceId === 'string'
-        ? `bctrl file list --space ${error.details.spaceId}`
-        : 'bctrl file list';
-    case 'tool.not_found':
-      return commandWithOptionalSpace('bctrl tool list', error.details);
-    case 'toolset.not_found':
-      return commandWithOptionalSpace('bctrl toolset list', error.details);
-    case 'tool_call.not_found':
-      return 'bctrl tool-call list';
+      return 'bctrl files list';
     case 'tool.not_found':
       return 'bctrl tools list';
+    case 'tool_call.not_found':
+      return 'bctrl tool-calls list';
     case 'browser_extension.not_found':
-      return 'bctrl browser extension list';
+      return 'bctrl browser extensions list';
     case 'ai_credential.not_found':
       return 'bctrl ai credentials list';
     case 'proxy.not_found':
-      return 'bctrl ai proxy list';
+      return 'bctrl proxies list';
     case 'subaccount.not_found':
-      return 'bctrl subaccount list';
+      return 'bctrl subaccounts list';
     case 'subaccount_api_key.not_found':
-      return error.details && typeof error.details.subaccountId === 'string'
-        ? `bctrl subaccount key list ${error.details.subaccountId}`
-        : 'bctrl subaccount list';
+      return 'bctrl api-keys list';
     default:
       return null;
   }
-}
-
-function commandWithOptionalSpace(command: string, details: Record<string, unknown> | undefined): string {
-  return details && typeof details.spaceId === 'string' ? `${command} --space ${details.spaceId}` : command;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

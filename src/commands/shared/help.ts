@@ -30,15 +30,15 @@ export type CommandHelpSpec = {
   docs?: CommandHelpDocLink[];
   flags?: CommandHelpFlag[];
   inputs?: {
-    path?: CommandHelpField[];
-    query?: CommandHelpField[];
-    headers?: CommandHelpField[];
+    path?: readonly CommandHelpField[];
+    query?: readonly CommandHelpField[];
+    headers?: readonly CommandHelpField[];
     body?: {
       schema?: string;
-      fields?: CommandHelpField[];
+      fields?: readonly CommandHelpField[];
       discriminator?: {
         property: string;
-        variants: Array<{
+        variants: ReadonlyArray<{
           value: string;
           schema?: string;
           summary?: string;
@@ -205,7 +205,7 @@ function renderDiscriminator(discriminator: NonNullable<NonNullable<NonNullable<
   return renderRows(`Body variants (${discriminator.property})`, rows);
 }
 
-function renderFields(title: string, fields: CommandHelpField[]): string {
+function renderFields(title: string, fields: readonly CommandHelpField[]): string {
   const rows = fields.map((field) => ({
     left: field.name,
     right: [

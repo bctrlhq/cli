@@ -34,17 +34,17 @@ type CliOpenApiContractPairs = [
   Assert<Equal<CliOperationPathParams<'spaces.get'>, OpenApiPathParams<'spaces.get'>>>,
   Assert<Equal<CliOperationJsonBody<'spaces.create'>, OpenApiJsonBody<'spaces.create'>>>,
   Assert<Equal<CliOperationJsonBody<'spaces.update'>, OpenApiJsonBody<'spaces.update'>>>,
-  Assert<Equal<CliOperationQuery<'runtimes.list'>, OpenApiQuery<'runtimes.list'>>>,
-  Assert<Equal<CliOperationPathParams<'runtimes.get'>, OpenApiPathParams<'runtimes.get'>>>,
-  Assert<Equal<CliOperationJsonBody<'runtimes.create'>, OpenApiJsonBody<'runtimes.create'>>>,
-  Assert<Equal<CliOperationJsonBody<'runtimes.update'>, OpenApiJsonBody<'runtimes.update'>>>,
+  Assert<Equal<CliOperationQuery<'browsers.list'>, OpenApiQuery<'browsers.list'>>>,
+  Assert<Equal<CliOperationPathParams<'browsers.get'>, OpenApiPathParams<'browsers.get'>>>,
+  Assert<Equal<CliOperationJsonBody<'browsers.create'>, OpenApiJsonBody<'browsers.create'>>>,
+  Assert<Equal<CliOperationJsonBody<'browsers.update'>, OpenApiJsonBody<'browsers.update'>>>,
   Assert<
     Equal<
-      CliOperationJsonBody<'conversations.messages.create'>,
-      OpenApiJsonBody<'conversations.messages.create'>
+      CliOperationJsonBody<'tasks.create'>,
+      OpenApiJsonBody<'tasks.create'>
     >
   >,
-  Assert<Equal<CliOperationPathParams<'tools.call'>, OpenApiPathParams<'tools.call'>>>,
+  Assert<Equal<CliOperationPathParams<'sandboxes.get'>, OpenApiPathParams<'sandboxes.get'>>>,
 ];
 
 export type _CliOpenApiContractPairs = CliOpenApiContractPairs;

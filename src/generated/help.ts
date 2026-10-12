@@ -7,12 +7,37 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["account get"],
     title: "Get organization settings",
     summary: "Get organization settings and their fully resolved values.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
+    },
     output: {
       fields: [
         {
           name: "branding",
           type: "object",
           required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "id",
@@ -23,6 +48,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "account",
+          required: true,
+          values: ["account"],
         },
         {
           name: "updatedAt",
@@ -46,7 +77,14 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/account",
       operationId: "account.get",
-      responseFields: ["branding", "id", "name", "updatedAt"],
+      responseFields: [
+        "branding",
+        "createdAt",
+        "id",
+        "name",
+        "object",
+        "updatedAt",
+      ],
     },
     sdk: [
       {
@@ -56,17 +94,299 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic account.get",
-      usage: "bctrl help --topic account.get",
+      command: "bctrl account get",
+      usage: "bctrl account get",
     },
     mcp: {
-      toolName: "bctrl_account_get",
+      toolName: "account_get",
       operationResource: "operations://account.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic account.get",
+        command: "bctrl account get --help",
+      },
+    ],
+  },
+  "account.spendingCap.get": {
+    type: "topic",
+    topic: "account.spendingCap.get",
+    aliases: ["account spendingCap get"],
+    title: "Get the organization monthly spending cap",
+    summary:
+      "Read the current UTC calendar-month limit and accrued usage in USD cents. Warning occurs once per month at 80%; at 100%, new billable starts are refused and running work is stopped within at most one minute of additional usage.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "amount",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "currency",
+          type: "USD",
+          required: true,
+          values: ["USD"],
+        },
+        {
+          name: "object",
+          type: "spending_cap",
+          required: true,
+          values: ["spending_cap"],
+        },
+        {
+          name: "period",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "scope",
+          type: "organization | space",
+          required: true,
+          values: ["organization", "space"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "disabled | ok | warning | reached",
+          required: true,
+          values: ["disabled", "ok", "warning", "reached"],
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnAtPercent",
+          type: "80",
+          required: true,
+          values: ["80"],
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Account and organization",
+        url: "https://platform.bctrl.ai/sdk/account",
+        markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
+        description:
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/account/spending-cap",
+      operationId: "account.spendingCap.get",
+      responseFields: [
+        "amount",
+        "currency",
+        "object",
+        "period",
+        "scope",
+        "spaceId",
+        "status",
+        "usage",
+        "warnAtPercent",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "account.spendingCap.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl account spendingCap get",
+      usage: "bctrl account spendingCap get",
+    },
+    mcp: {
+      toolName: "account_spendingCap_get",
+      operationResource: "operations://account.spendingCap.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl account spendingCap get --help",
+      },
+    ],
+  },
+  "account.spendingCap.update": {
+    type: "topic",
+    topic: "account.spendingCap.update",
+    aliases: ["account spendingCap update"],
+    title: "Set or disable the organization monthly spending cap",
+    summary:
+      "People may set a whole-cent USD limit; null disables it and zero refuses new billable starts. Raising the limit permits starts once it exceeds current usage. The UTC calendar month resets usage; raising or disabling a cap does not reset its warning marker.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SpendingCapPatchRequest",
+        schemaResource: "schemas://SpendingCapPatchRequest",
+        fields: [
+          {
+            name: "amount",
+            type: "integer | null",
+            required: true,
+          },
+          {
+            name: "currency",
+            type: "USD",
+            required: true,
+            values: ["USD"],
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "amount",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "currency",
+          type: "USD",
+          required: true,
+          values: ["USD"],
+        },
+        {
+          name: "object",
+          type: "spending_cap",
+          required: true,
+          values: ["spending_cap"],
+        },
+        {
+          name: "period",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "scope",
+          type: "organization | space",
+          required: true,
+          values: ["organization", "space"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "disabled | ok | warning | reached",
+          required: true,
+          values: ["disabled", "ok", "warning", "reached"],
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnAtPercent",
+          type: "80",
+          required: true,
+          values: ["80"],
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Account and organization",
+        url: "https://platform.bctrl.ai/sdk/account",
+        markdownUrl: "https://platform.bctrl.ai/sdk/account.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/account.md",
+        description:
+          "Manage authentication, API keys, subaccounts, notifications, usage, and account settings.",
+      },
+    ],
+    api: {
+      method: "PATCH",
+      path: "/v1/account/spending-cap",
+      operationId: "account.spendingCap.update",
+      requestFields: ["amount", "currency"],
+      responseFields: [
+        "amount",
+        "currency",
+        "object",
+        "period",
+        "scope",
+        "spaceId",
+        "status",
+        "usage",
+        "warnAtPercent",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "account.spendingCap.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl account spendingCap update",
+      usage: "bctrl account spendingCap update",
+    },
+    mcp: {
+      toolName: "account_spendingCap_update",
+      operationResource: "operations://account.spendingCap.update",
+      schemaResources: ["schemas://SpendingCapPatchRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl account spendingCap update --help",
       },
     ],
   },
@@ -86,6 +406,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "Idempotency-Key",
           type: "string",
@@ -114,6 +449,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
           name: "id",
           type: "string",
           required: true,
@@ -122,6 +463,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "account",
+          required: true,
+          values: ["account"],
         },
         {
           name: "updatedAt",
@@ -146,7 +493,14 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/account",
       operationId: "account.update",
       requestFields: ["branding"],
-      responseFields: ["branding", "id", "name", "updatedAt"],
+      responseFields: [
+        "branding",
+        "createdAt",
+        "id",
+        "name",
+        "object",
+        "updatedAt",
+      ],
     },
     sdk: [
       {
@@ -156,18 +510,1463 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic account.update",
-      usage: "bctrl help --topic account.update",
+      command: "bctrl account update",
+      usage: "bctrl account update",
     },
     mcp: {
-      toolName: "bctrl_account_update",
+      toolName: "account_update",
       operationResource: "operations://account.update",
       schemaResources: ["schemas://AccountPatchRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic account.update",
+        command: "bctrl account update --help",
+      },
+    ],
+  },
+  "agents.a2a.card": {
+    type: "topic",
+    topic: "agents.a2a.card",
+    aliases: ["agents a2a card"],
+    title: "Get the agent A2A card",
+    summary:
+      "The Agent2Agent (A2A v1.0) card of this Agent: its JSON-RPC interface, capabilities and bearer API-key security.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "defaultInputModes",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "defaultOutputModes",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "description",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "provider",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "securityRequirements",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "securitySchemes",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "skills",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "supportedInterfaces",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "version",
+          type: "string",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/agents/{agentId}/a2a/.well-known/agent-card.json",
+      operationId: "agents.a2a.card",
+      responseFields: [
+        "capabilities",
+        "defaultInputModes",
+        "defaultOutputModes",
+        "description",
+        "name",
+        "provider",
+        "securityRequirements",
+        "securitySchemes",
+        "skills",
+        "supportedInterfaces",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.a2a.card",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents a2a card",
+      usage: "bctrl agents a2a card <agentId>",
+    },
+    mcp: {
+      toolName: "agents_a2a_card",
+      operationResource: "operations://agents.a2a.card",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents a2a card --help",
+      },
+    ],
+  },
+  "agents.a2a.rpc": {
+    type: "topic",
+    topic: "agents.a2a.rpc",
+    aliases: ["agents a2a rpc"],
+    title: "Call the agent over A2A",
+    summary:
+      "A2A v1.0 JSON-RPC: SendMessage starts or continues a Task (blocking unless configuration.returnImmediately), GetTask, ListTasks and CancelTask read and cancel this Agent’s Tasks. Send the A2A-Version: 1.0 header. Errors are JSON-RPC errors with HTTP 200.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "A2AJsonRpcRequest",
+        schemaResource: "schemas://A2AJsonRpcRequest",
+        fields: [
+          {
+            name: "id",
+            type: "unknown",
+            required: false,
+          },
+          {
+            name: "jsonrpc",
+            type: "unknown",
+            required: false,
+          },
+          {
+            name: "method",
+            type: "unknown",
+            required: false,
+          },
+          {
+            name: "params",
+            type: "unknown",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "error",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "id",
+          type: "string | number | null",
+          required: true,
+        },
+        {
+          name: "jsonrpc",
+          type: "2.0",
+          required: true,
+          values: ["2.0"],
+        },
+        {
+          name: "result",
+          type: "unknown",
+          required: false,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/agents/{agentId}/a2a",
+      operationId: "agents.a2a.rpc",
+      requestFields: ["id", "jsonrpc", "method", "params"],
+      responseFields: ["error", "id", "jsonrpc", "result"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.a2a.rpc",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents a2a rpc",
+      usage: "bctrl agents a2a rpc <agentId>",
+    },
+    mcp: {
+      toolName: "agents_a2a_rpc",
+      operationResource: "operations://agents.a2a.rpc",
+      schemaResources: ["schemas://A2AJsonRpcRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents a2a rpc --help",
+      },
+    ],
+  },
+  "agents.create": {
+    type: "topic",
+    topic: "agents.create",
+    aliases: ["agents create"],
+    title: "Create an agent",
+    summary:
+      "Create an Agent and its first immutable, promoted version in a Space.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "AgentCreateRequest",
+        schemaResource: "schemas://AgentCreateRequest",
+        fields: [
+          {
+            name: "instructions",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "memory",
+            type: "space_notes | none",
+            required: false,
+            values: ["space_notes", "none"],
+          },
+          {
+            name: "metadata",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "model",
+            type: "string",
+            required: true,
+          },
+          {
+            name: "name",
+            type: "string",
+            required: true,
+            description: "Customer-facing resource name. 1–200 characters.",
+          },
+          {
+            name: "requireApprovalForPromotion",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "scope",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "spaceId",
+            type: "string",
+            required: false,
+            description:
+              "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          },
+          {
+            name: "tools",
+            type: "string[]",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+        {
+          name: "latestVersion",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "agent",
+          required: true,
+          values: ["agent"],
+        },
+        {
+          name: "promotedVersion",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "version",
+          type: "object",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/agents",
+      operationId: "agents.create",
+      requestFields: [
+        "instructions",
+        "memory",
+        "metadata",
+        "model",
+        "name",
+        "requireApprovalForPromotion",
+        "scope",
+        "spaceId",
+        "tools",
+      ],
+      responseFields: [
+        "createdAt",
+        "id",
+        "latestVersion",
+        "metadata",
+        "name",
+        "object",
+        "promotedVersion",
+        "spaceId",
+        "updatedAt",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents create",
+      usage: "bctrl agents create",
+    },
+    mcp: {
+      toolName: "agents_create",
+      operationResource: "operations://agents.create",
+      schemaResources: ["schemas://AgentCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents create --help",
+      },
+    ],
+  },
+  "agents.delete": {
+    type: "topic",
+    topic: "agents.delete",
+    aliases: ["agents delete"],
+    title: "Delete an agent",
+    summary:
+      "Archive an Agent definition. Existing Tasks and immutable version history remain available.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "deleted",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/agents/{agentId}",
+      operationId: "agents.delete",
+      responseFields: ["deleted", "id"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents delete",
+      usage: "bctrl agents delete <agentId>",
+    },
+    mcp: {
+      toolName: "agents_delete",
+      operationResource: "operations://agents.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents delete --help",
+      },
+    ],
+  },
+  "agents.get": {
+    type: "topic",
+    topic: "agents.get",
+    aliases: ["agents get"],
+    title: "Get an agent",
+    summary:
+      "Read an Agent by ID or scoped name, including its promoted version and latest draft number.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+        {
+          name: "latestVersion",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "agent",
+          required: true,
+          values: ["agent"],
+        },
+        {
+          name: "promotedVersion",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "version",
+          type: "object",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/agents/{agentId}",
+      operationId: "agents.get",
+      responseFields: [
+        "createdAt",
+        "id",
+        "latestVersion",
+        "metadata",
+        "name",
+        "object",
+        "promotedVersion",
+        "spaceId",
+        "updatedAt",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents get",
+      usage: "bctrl agents get <agentId>",
+    },
+    mcp: {
+      toolName: "agents_get",
+      operationResource: "operations://agents.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents get --help",
+      },
+    ],
+  },
+  "agents.list": {
+    type: "topic",
+    topic: "agents.list",
+    aliases: ["agents list"],
+    title: "List agents",
+    summary:
+      "List Agent definitions visible in the selected Space or tenant, with their promoted immutable version.",
+    inputs: {
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: false,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: false,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/agents",
+      operationId: "agents.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents list",
+      usage: "bctrl agents list",
+    },
+    mcp: {
+      toolName: "agents_list",
+      operationResource: "operations://agents.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents list --help",
+      },
+    ],
+  },
+  "agents.update": {
+    type: "topic",
+    topic: "agents.update",
+    aliases: ["agents update"],
+    title: "Create an agent draft",
+    summary:
+      "Append an immutable Agent version. Tasks keep their selected version and the promoted version changes only on promotion.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "AgentUpdateRequest",
+        schemaResource: "schemas://AgentUpdateRequest",
+        fields: [
+          {
+            name: "instructions",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "memory",
+            type: "space_notes | none",
+            required: false,
+            values: ["space_notes", "none"],
+          },
+          {
+            name: "metadata",
+            type: "object | null",
+            required: false,
+          },
+          {
+            name: "model",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "name",
+            type: "string",
+            required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
+          },
+          {
+            name: "requireApprovalForPromotion",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "scope",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "tools",
+            type: "string[]",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+        {
+          name: "latestVersion",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "agent",
+          required: true,
+          values: ["agent"],
+        },
+        {
+          name: "promotedVersion",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "version",
+          type: "object",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "PATCH",
+      path: "/v1/agents/{agentId}",
+      operationId: "agents.update",
+      requestFields: [
+        "instructions",
+        "memory",
+        "metadata",
+        "model",
+        "name",
+        "requireApprovalForPromotion",
+        "scope",
+        "tools",
+      ],
+      responseFields: [
+        "createdAt",
+        "id",
+        "latestVersion",
+        "metadata",
+        "name",
+        "object",
+        "promotedVersion",
+        "spaceId",
+        "updatedAt",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents update",
+      usage: "bctrl agents update <agentId>",
+    },
+    mcp: {
+      toolName: "agents_update",
+      operationResource: "operations://agents.update",
+      schemaResources: ["schemas://AgentUpdateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents update --help",
+      },
+    ],
+  },
+  "agents.versions.get": {
+    type: "topic",
+    topic: "agents.versions.get",
+    aliases: ["agents versions get"],
+    title: "Get an agent version",
+    summary: "Read the immutable definition of one numbered Agent version.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique agentVersion identifier generated by BCTRL.",
+        },
+        {
+          name: "instructions",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "memory",
+          type: "space_notes | none",
+          required: true,
+          values: ["space_notes", "none"],
+        },
+        {
+          name: "model",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "agent.version",
+          required: true,
+          values: ["agent.version"],
+        },
+        {
+          name: "requireApprovalForPromotion",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "scope",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "tools",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | computer.use | string[]",
+          required: true,
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/agents/{agentId}/versions/{version}",
+      operationId: "agents.versions.get",
+      responseFields: [
+        "agentId",
+        "createdAt",
+        "id",
+        "instructions",
+        "memory",
+        "model",
+        "object",
+        "requireApprovalForPromotion",
+        "scope",
+        "tools",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.versions.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents versions get",
+      usage: "bctrl agents versions get <agentId> <version>",
+    },
+    mcp: {
+      toolName: "agents_versions_get",
+      operationResource: "operations://agents.versions.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents versions get --help",
+      },
+    ],
+  },
+  "agents.versions.list": {
+    type: "topic",
+    topic: "agents.versions.list",
+    aliases: ["agents versions list"],
+    title: "List agent versions",
+    summary: "List immutable versions of an Agent in creation order.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/agents/{agentId}/versions",
+      operationId: "agents.versions.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.versions.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents versions list",
+      usage: "bctrl agents versions list <agentId>",
+    },
+    mcp: {
+      toolName: "agents_versions_list",
+      operationResource: "operations://agents.versions.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents versions list --help",
+      },
+    ],
+  },
+  "agents.versions.promote": {
+    type: "topic",
+    topic: "agents.versions.promote",
+    aliases: ["agents versions promote"],
+    title: "Promote an agent version",
+    summary:
+      "Select an immutable version for future Tasks. When approval is required, a person must promote it or answer the stored Task approval request.",
+    inputs: {
+      path: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "AgentPromoteRequest",
+        schemaResource: "schemas://AgentPromoteRequest",
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+        {
+          name: "latestVersion",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "agent",
+          required: true,
+          values: ["agent"],
+        },
+        {
+          name: "promotedVersion",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "version",
+          type: "object",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/agents/{agentId}/versions/{version}/promote",
+      operationId: "agents.versions.promote",
+      responseFields: [
+        "createdAt",
+        "id",
+        "latestVersion",
+        "metadata",
+        "name",
+        "object",
+        "promotedVersion",
+        "spaceId",
+        "updatedAt",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "agents.versions.promote",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl agents versions promote",
+      usage: "bctrl agents versions promote <agentId> <version>",
+    },
+    mcp: {
+      toolName: "agents_versions_promote",
+      operationResource: "operations://agents.versions.promote",
+      schemaResources: ["schemas://AgentPromoteRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl agents versions promote --help",
       },
     ],
   },
@@ -180,6 +1979,21 @@ export const CLI_HELP_COMMANDS = {
       "Create a saved BYOK AI credential. Name is optional and defaults server-side; pass test=true to verify credentials before saving.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -203,6 +2017,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "provider",
@@ -229,6 +2044,8 @@ export const CLI_HELP_COMMANDS = {
             name: "apiKey",
             type: "string",
             required: false,
+            description:
+              "The provider API key, or a secret reference such as `secret:ai/openai#value`.",
           },
           {
             name: "status",
@@ -256,6 +2073,13 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "apiKeyReference",
+          type: "string | null",
+          required: true,
+          description:
+            "The `secret:` reference the key is read from, or null when a literal key is stored.",
+        },
         {
           name: "baseUrl",
           type: "string",
@@ -286,6 +2110,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "ai_credential",
+          required: true,
+          values: ["ai_credential"],
         },
         {
           name: "provider",
@@ -352,12 +2182,14 @@ export const CLI_HELP_COMMANDS = {
         "test",
       ],
       responseFields: [
+        "apiKeyReference",
         "baseUrl",
         "createdAt",
         "defaultModel",
         "hasApiKey",
         "id",
         "name",
+        "object",
         "provider",
         "status",
         "subaccountId",
@@ -372,18 +2204,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.create",
-      usage: "bctrl help --topic ai.credentials.create",
+      command: "bctrl ai credentials create",
+      usage: "bctrl ai credentials create",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_create",
+      toolName: "ai_credentials_create",
       operationResource: "operations://ai.credentials.create",
       schemaResources: ["schemas://AiCredentialCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.create",
+        command: "bctrl ai credentials create --help",
       },
     ],
   },
@@ -399,9 +2231,26 @@ export const CLI_HELP_COMMANDS = {
           name: "credentialId",
           type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -431,6 +2280,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "object",
+          type: "ai_credential",
+          required: true,
+          values: ["ai_credential"],
+        },
       ],
     },
     docs: [
@@ -447,7 +2302,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/ai/credentials/{credentialId}",
       operationId: "ai.credentials.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -457,17 +2312,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.delete",
-      usage: "bctrl help --topic ai.credentials.delete",
+      command: "bctrl ai credentials delete",
+      usage: "bctrl ai credentials delete <credentialId>",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_delete",
+      toolName: "ai_credentials_delete",
       operationResource: "operations://ai.credentials.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.delete",
+        command: "bctrl ai credentials delete --help",
       },
     ],
   },
@@ -483,9 +2338,26 @@ export const CLI_HELP_COMMANDS = {
           name: "credentialId",
           type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -497,6 +2369,13 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "apiKeyReference",
+          type: "string | null",
+          required: true,
+          description:
+            "The `secret:` reference the key is read from, or null when a literal key is stored.",
+        },
         {
           name: "baseUrl",
           type: "string",
@@ -527,6 +2406,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "ai_credential",
+          required: true,
+          values: ["ai_credential"],
         },
         {
           name: "provider",
@@ -584,12 +2469,14 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/ai/credentials/{credentialId}",
       operationId: "ai.credentials.get",
       responseFields: [
+        "apiKeyReference",
         "baseUrl",
         "createdAt",
         "defaultModel",
         "hasApiKey",
         "id",
         "name",
+        "object",
         "provider",
         "status",
         "subaccountId",
@@ -604,17 +2491,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.get",
-      usage: "bctrl help --topic ai.credentials.get",
+      command: "bctrl ai credentials get",
+      usage: "bctrl ai credentials get <credentialId>",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_get",
+      toolName: "ai_credentials_get",
       operationResource: "operations://ai.credentials.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.get",
+        command: "bctrl ai credentials get --help",
       },
     ],
   },
@@ -665,12 +2552,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -685,6 +2594,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -708,7 +2622,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/ai/credentials",
       operationId: "ai.credentials.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -718,17 +2632,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.list",
-      usage: "bctrl help --topic ai.credentials.list",
+      command: "bctrl ai credentials list",
+      usage: "bctrl ai credentials list",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_list",
+      toolName: "ai_credentials_list",
       operationResource: "operations://ai.credentials.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.list",
+        command: "bctrl ai credentials list --help",
       },
     ],
   },
@@ -744,9 +2658,26 @@ export const CLI_HELP_COMMANDS = {
           name: "credentialId",
           type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -782,6 +2713,12 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "object",
+          type: "test.result",
+          required: true,
+          values: ["test.result"],
+        },
+        {
           name: "ok",
           type: "boolean",
           required: true,
@@ -802,7 +2739,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/ai/credentials/{credentialId}/test",
       operationId: "ai.credentials.test",
-      responseFields: ["checkedAt", "error", "latencySeconds", "ok"],
+      responseFields: ["checkedAt", "error", "latencySeconds", "object", "ok"],
     },
     sdk: [
       {
@@ -812,17 +2749,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.test",
-      usage: "bctrl help --topic ai.credentials.test",
+      command: "bctrl ai credentials test",
+      usage: "bctrl ai credentials test <credentialId>",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_test",
+      toolName: "ai_credentials_test",
       operationResource: "operations://ai.credentials.test",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.test",
+        command: "bctrl ai credentials test --help",
       },
     ],
   },
@@ -839,9 +2776,26 @@ export const CLI_HELP_COMMANDS = {
           name: "credentialId",
           type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -865,6 +2819,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "apiKey",
@@ -892,6 +2847,13 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "apiKeyReference",
+          type: "string | null",
+          required: true,
+          description:
+            "The `secret:` reference the key is read from, or null when a literal key is stored.",
+        },
         {
           name: "baseUrl",
           type: "string",
@@ -922,6 +2884,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+        },
+        {
+          name: "object",
+          type: "ai_credential",
+          required: true,
+          values: ["ai_credential"],
         },
         {
           name: "provider",
@@ -980,12 +2948,14 @@ export const CLI_HELP_COMMANDS = {
       operationId: "ai.credentials.update",
       requestFields: ["name", "apiKey", "status", "defaultModel", "baseUrl"],
       responseFields: [
+        "apiKeyReference",
         "baseUrl",
         "createdAt",
         "defaultModel",
         "hasApiKey",
         "id",
         "name",
+        "object",
         "provider",
         "status",
         "subaccountId",
@@ -1000,18 +2970,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.credentials.update",
-      usage: "bctrl help --topic ai.credentials.update",
+      command: "bctrl ai credentials update",
+      usage: "bctrl ai credentials update <credentialId>",
     },
     mcp: {
-      toolName: "bctrl_ai_credentials_update",
+      toolName: "ai_credentials_update",
       operationResource: "operations://ai.credentials.update",
       schemaResources: ["schemas://AiCredentialUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.credentials.update",
+        command: "bctrl ai credentials update --help",
       },
     ],
   },
@@ -1063,6 +3033,40 @@ export const CLI_HELP_COMMANDS = {
           type: "boolean",
           required: false,
         },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
       ],
     },
     output: {
@@ -1070,6 +3074,16 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
           required: true,
         },
       ],
@@ -1088,7 +3102,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/ai/models",
       operationId: "ai.models.list",
-      responseFields: ["data"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -1098,17 +3112,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic ai.models.list",
-      usage: "bctrl help --topic ai.models.list",
+      command: "bctrl ai models list",
+      usage: "bctrl ai models list",
     },
     mcp: {
-      toolName: "bctrl_ai_models_list",
+      toolName: "ai_models_list",
       operationResource: "operations://ai.models.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic ai.models.list",
+        command: "bctrl ai models list --help",
       },
     ],
   },
@@ -1121,6 +3135,21 @@ export const CLI_HELP_COMMANDS = {
       "Create an organization or subaccount API key. The secret is returned once in the response. To rotate a key, create its replacement first, cut traffic over, then revoke the old key — key prefixes identify which key made a request.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "Idempotency-Key",
           type: "string",
@@ -1147,12 +3176,23 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "scopes",
-            type: "*[]",
+            type: "string[]",
             required: false,
           },
           {
             name: "expiresAt",
             type: "datetime | null",
+            required: false,
+          },
+          {
+            name: "type",
+            type: "organization | subaccount | agent",
+            required: false,
+            values: ["organization", "subaccount", "agent"],
+          },
+          {
+            name: "agent",
+            type: "object",
             required: false,
           },
         ],
@@ -1186,7 +3226,14 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/api-keys",
       operationId: "api-keys.create",
-      requestFields: ["name", "subaccountId", "scopes", "expiresAt"],
+      requestFields: [
+        "name",
+        "subaccountId",
+        "scopes",
+        "expiresAt",
+        "type",
+        "agent",
+      ],
       responseFields: ["data", "secret"],
     },
     sdk: [
@@ -1197,18 +3244,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic api-keys.create",
-      usage: "bctrl help --topic api-keys.create",
+      command: "bctrl api-keys create",
+      usage: "bctrl api-keys create",
     },
     mcp: {
-      toolName: "bctrl_api_keys_create",
+      toolName: "api-keys_create",
       operationResource: "operations://api-keys.create",
       schemaResources: ["schemas://ApiKeyCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic api-keys.create",
+        command: "bctrl api-keys create --help",
       },
     ],
   },
@@ -1228,6 +3275,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "Idempotency-Key",
           type: "string",
@@ -1250,6 +3312,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "object",
+          type: "api_key",
+          required: true,
+          values: ["api_key"],
+        },
       ],
     },
     docs: [
@@ -1266,7 +3334,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/api-keys/{keyId}",
       operationId: "api-keys.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -1276,17 +3344,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic api-keys.delete",
-      usage: "bctrl help --topic api-keys.delete",
+      command: "bctrl api-keys delete",
+      usage: "bctrl api-keys delete <keyId>",
     },
     mcp: {
-      toolName: "bctrl_api_keys_delete",
+      toolName: "api-keys_delete",
       operationResource: "operations://api-keys.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic api-keys.delete",
+        command: "bctrl api-keys delete --help",
       },
     ],
   },
@@ -1304,6 +3372,13 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
@@ -1316,9 +3391,26 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "type",
-          type: "organization | subaccount",
+          type: "organization | subaccount | agent",
           required: false,
-          values: ["organization", "subaccount"],
+          values: ["organization", "subaccount", "agent"],
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
       ],
     },
@@ -1327,6 +3419,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -1350,7 +3447,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/api-keys",
       operationId: "api-keys.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -1360,17 +3457,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic api-keys.list",
-      usage: "bctrl help --topic api-keys.list",
+      command: "bctrl api-keys list",
+      usage: "bctrl api-keys list",
     },
     mcp: {
-      toolName: "bctrl_api_keys_list",
+      toolName: "api-keys_list",
       operationResource: "operations://api-keys.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic api-keys.list",
+        command: "bctrl api-keys list --help",
       },
     ],
   },
@@ -1383,6 +3480,21 @@ export const CLI_HELP_COMMANDS = {
       "Return the API key actor for the current request. Use this to validate CLI credentials and show whether the key is scoped to an organization or subaccount.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -1413,6 +3525,12 @@ export const CLI_HELP_COMMANDS = {
           name: "keyId",
           type: "string | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "identity",
+          required: true,
+          values: ["identity"],
         },
         {
           name: "organizationId",
@@ -1457,6 +3575,7 @@ export const CLI_HELP_COMMANDS = {
         "effectiveScope",
         "email",
         "keyId",
+        "object",
         "organizationId",
         "plan",
         "scope",
@@ -1471,17 +3590,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic auth.whoami",
-      usage: "bctrl help --topic auth.whoami",
+      command: "bctrl auth whoami",
+      usage: "bctrl auth whoami",
     },
     mcp: {
-      toolName: "bctrl_auth_whoami",
+      toolName: "auth_whoami",
       operationResource: "operations://auth.whoami",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic auth.whoami",
+        command: "bctrl auth whoami --help",
       },
     ],
   },
@@ -1494,6 +3613,21 @@ export const CLI_HELP_COMMANDS = {
       "Create a browser extension from an uploaded package or Chrome Web Store URL.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -1532,6 +3666,12 @@ export const CLI_HELP_COMMANDS = {
           name: "admissionPolicyVersion",
           type: "integer",
           required: false,
+        },
+        {
+          name: "browserCount",
+          type: "integer",
+          required: true,
+          description: "Non-negative whole-number count.",
         },
         {
           name: "chromeExtensionId",
@@ -1582,15 +3722,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "extension",
+          required: true,
+          values: ["extension"],
+        },
+        {
           name: "permissions",
           type: "string[]",
           required: true,
-        },
-        {
-          name: "profileCount",
-          type: "integer",
-          required: true,
-          description: "Non-negative whole-number count.",
         },
         {
           name: "sizeBytes",
@@ -1645,6 +3785,7 @@ export const CLI_HELP_COMMANDS = {
       requestFields: ["name", "url"],
       responseFields: [
         "admissionPolicyVersion",
+        "browserCount",
         "chromeExtensionId",
         "contentHash",
         "createdAt",
@@ -1653,8 +3794,8 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "manifestVersion",
         "name",
+        "object",
         "permissions",
-        "profileCount",
         "sizeBytes",
         "sourceUrl",
         "subaccountId",
@@ -1671,18 +3812,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.create",
-      usage: "bctrl help --topic browser.extensions.create",
+      command: "bctrl browser extensions create",
+      usage: "bctrl browser extensions create",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_create",
+      toolName: "browser_extensions_create",
       operationResource: "operations://browser.extensions.create",
       schemaResources: ["schemas://BrowserExtensionCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.create",
+        command: "bctrl browser extensions create --help",
       },
     ],
   },
@@ -1700,10 +3841,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique browser extension identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -1735,6 +3891,12 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Unique browser extension identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "extension",
+          required: true,
+          values: ["extension"],
+        },
       ],
     },
     docs: [
@@ -1751,7 +3913,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/browser/extensions/{extensionId}",
       operationId: "browser.extensions.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -1761,17 +3923,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.delete",
-      usage: "bctrl help --topic browser.extensions.delete",
+      command: "bctrl browser extensions delete",
+      usage: "bctrl browser extensions delete <extensionId>",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_delete",
+      toolName: "browser_extensions_delete",
       operationResource: "operations://browser.extensions.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.delete",
+        command: "bctrl browser extensions delete --help",
       },
     ],
   },
@@ -1789,10 +3951,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique browser extension identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -1808,6 +3985,12 @@ export const CLI_HELP_COMMANDS = {
           name: "admissionPolicyVersion",
           type: "integer",
           required: false,
+        },
+        {
+          name: "browserCount",
+          type: "integer",
+          required: true,
+          description: "Non-negative whole-number count.",
         },
         {
           name: "chromeExtensionId",
@@ -1858,15 +4041,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "extension",
+          required: true,
+          values: ["extension"],
+        },
+        {
           name: "permissions",
           type: "string[]",
           required: true,
-        },
-        {
-          name: "profileCount",
-          type: "integer",
-          required: true,
-          description: "Non-negative whole-number count.",
         },
         {
           name: "sizeBytes",
@@ -1920,6 +4103,7 @@ export const CLI_HELP_COMMANDS = {
       operationId: "browser.extensions.get",
       responseFields: [
         "admissionPolicyVersion",
+        "browserCount",
         "chromeExtensionId",
         "contentHash",
         "createdAt",
@@ -1928,8 +4112,8 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "manifestVersion",
         "name",
+        "object",
         "permissions",
-        "profileCount",
         "sizeBytes",
         "sourceUrl",
         "subaccountId",
@@ -1946,17 +4130,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.get",
-      usage: "bctrl help --topic browser.extensions.get",
+      command: "bctrl browser extensions get",
+      usage: "bctrl browser extensions get <extensionId>",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_get",
+      toolName: "browser_extensions_get",
       operationResource: "operations://browser.extensions.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.get",
+        command: "bctrl browser extensions get --help",
       },
     ],
   },
@@ -1973,6 +4157,13 @@ export const CLI_HELP_COMMANDS = {
           name: "cursor",
           type: "string",
           required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
         },
         {
           name: "limit",
@@ -1999,6 +4190,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -2012,6 +4218,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -2035,7 +4246,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/browser/extensions",
       operationId: "browser.extensions.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -2045,17 +4256,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.list",
-      usage: "bctrl help --topic browser.extensions.list",
+      command: "bctrl browser extensions list",
+      usage: "bctrl browser extensions list",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_list",
+      toolName: "browser_extensions_list",
       operationResource: "operations://browser.extensions.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.list",
+        command: "bctrl browser extensions list --help",
       },
     ],
   },
@@ -2073,10 +4284,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique browser extension identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -2111,6 +4337,12 @@ export const CLI_HELP_COMMANDS = {
           name: "admissionPolicyVersion",
           type: "integer",
           required: false,
+        },
+        {
+          name: "browserCount",
+          type: "integer",
+          required: true,
+          description: "Non-negative whole-number count.",
         },
         {
           name: "chromeExtensionId",
@@ -2161,15 +4393,15 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "extension",
+          required: true,
+          values: ["extension"],
+        },
+        {
           name: "permissions",
           type: "string[]",
           required: true,
-        },
-        {
-          name: "profileCount",
-          type: "integer",
-          required: true,
-          description: "Non-negative whole-number count.",
         },
         {
           name: "sizeBytes",
@@ -2224,6 +4456,7 @@ export const CLI_HELP_COMMANDS = {
       requestFields: ["name"],
       responseFields: [
         "admissionPolicyVersion",
+        "browserCount",
         "chromeExtensionId",
         "contentHash",
         "createdAt",
@@ -2232,8 +4465,8 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "manifestVersion",
         "name",
+        "object",
         "permissions",
-        "profileCount",
         "sizeBytes",
         "sourceUrl",
         "subaccountId",
@@ -2250,119 +4483,61 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic browser.extensions.update",
-      usage: "bctrl help --topic browser.extensions.update",
+      command: "bctrl browser extensions update",
+      usage: "bctrl browser extensions update <extensionId>",
     },
     mcp: {
-      toolName: "bctrl_browser_extensions_update",
+      toolName: "browser_extensions_update",
       operationResource: "operations://browser.extensions.update",
       schemaResources: ["schemas://BrowserExtensionUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic browser.extensions.update",
+        command: "bctrl browser extensions update --help",
       },
     ],
   },
-  "conversations.cancel": {
+  "browsers.computer.batch": {
     type: "topic",
-    topic: "conversations.cancel",
-    aliases: ["conversations cancel"],
-    title: "Cancel the active agent turn",
-    summary: "Cancel the active turn in a conversation.",
+    topic: "browsers.computer.batch",
+    aliases: ["browsers computer batch"],
+    title: "Execute desktop batch",
+    summary:
+      "Execute up to twenty desktop actions in order on one current Browser Run. Every action is validated before acceptance. Execution stops at the first uncertain result and returns unknown with null data; earlier actions may have taken effect. Reusing the same Idempotency-Key replays the terminal result without repeating the batch.",
     inputs: {
       path: [
         {
-          name: "conversationId",
+          name: "browserId",
           type: "string",
           required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
         },
       ],
       headers: [
         {
-          name: "BCTRL-Subaccount-Id",
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
           type: "string",
           required: false,
           description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "cancelled",
-          type: "true",
-          required: true,
-          values: ["true"],
-        },
-        {
-          name: "conversationId",
-          type: "string",
-          required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
-        },
-        {
-          name: "turnId",
-          type: "string | null",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/conversations/{conversationId}/cancel",
-      operationId: "conversations.cancel",
-      responseFields: ["cancelled", "conversationId", "turnId"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "conversations.cancel",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic conversations.cancel",
-      usage: "bctrl help --topic conversations.cancel",
-    },
-    mcp: {
-      toolName: "bctrl_conversations_cancel",
-      operationResource: "operations://conversations.cancel",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic conversations.cancel",
-      },
-    ],
-  },
-  "conversations.create": {
-    type: "topic",
-    topic: "conversations.create",
-    aliases: ["conversations create"],
-    title: "Create a conversation bound to an active runtime",
-    summary: "Create an agent conversation bound to an active runtime.",
-    inputs: {
-      headers: [
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -2379,28 +4554,151 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       body: {
-        schema: "ConversationCreateRequest",
-        schemaResource: "schemas://ConversationCreateRequest",
+        schema: "ComputerBatchRequest",
+        schemaResource: "schemas://ComputerBatchRequest",
         fields: [
           {
-            name: "runtimeId",
-            type: "string",
+            name: "actions",
+            type: "object[]",
             required: true,
-            description: "Unique runtime identifier generated by BCTRL.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/computer/batch",
+      operationId: "browsers.computer.batch",
+      requestFields: ["actions"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.batch",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer batch",
+      usage: "bctrl browsers computer batch <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_batch",
+      operationResource: "operations://browsers.computer.batch",
+      schemaResources: ["schemas://ComputerBatchRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer batch --help",
+      },
+    ],
+  },
+  "browsers.computer.click": {
+    type: "topic",
+    topic: "browsers.computer.click",
+    aliases: ["browsers computer click"],
+    title: "Execute desktop click",
+    summary:
+      "Click the current Browser Run at screenshot-pixel coordinates, or at the cursor when omitted. Button defaults to left; two or three clicks require the left button. An interrupted action returns unknown and must not be repeated automatically.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersComputerClickRequest",
+        schemaResource: "schemas://BrowsersComputerClickRequest",
+        fields: [
+          {
+            name: "button",
+            type: "left | right | middle",
+            required: false,
+            values: ["left", "right", "middle"],
           },
           {
-            name: "model",
-            type: "string",
+            name: "clickCount",
+            type: "integer",
             required: false,
           },
           {
-            name: "toolsetId",
-            type: "string",
+            name: "coordinate",
+            type: "unknown[]",
             required: false,
-            description: "Unique toolset identifier generated by BCTRL.",
           },
           {
-            name: "title",
+            name: "modifiers",
             type: "string",
             required: false,
           },
@@ -2410,331 +4708,100 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "activeTurnId",
-          type: "string | null",
+          name: "data",
+          type: "object | null",
           required: true,
         },
         {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "environmentId",
-          type: "string | null",
-          required: true,
-          description:
-            "Agent Environment bound to this conversation, or null until one is allocated.",
-        },
-        {
-          name: "id",
+          name: "eventId",
           type: "string",
           required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
+          description: "Unique runEvent identifier generated by BCTRL.",
         },
         {
-          name: "model",
-          type: "string",
+          name: "object",
+          type: "computer.result",
           required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
+          values: ["computer.result"],
         },
         {
           name: "status",
-          type: "idle | active",
+          type: "succeeded | unknown",
           required: true,
-          values: ["idle", "active"],
-        },
-        {
-          name: "title",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "toolsetId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
+          values: ["succeeded", "unknown"],
         },
       ],
     },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
     api: {
       method: "POST",
-      path: "/v1/conversations",
-      operationId: "conversations.create",
-      requestFields: ["runtimeId", "model", "toolsetId", "title"],
-      responseFields: [
-        "activeTurnId",
-        "createdAt",
-        "environmentId",
-        "id",
-        "model",
-        "runtimeId",
-        "spaceId",
-        "status",
-        "title",
-        "toolsetId",
-        "updatedAt",
-      ],
+      path: "/v1/browsers/{browserId}/computer/click",
+      operationId: "browsers.computer.click",
+      requestFields: ["button", "clickCount", "coordinate", "modifiers"],
+      responseFields: ["data", "eventId", "object", "status"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "conversations.create",
+        method: "browsers.computer.click",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.create",
-      usage: "bctrl help --topic conversations.create",
+      command: "bctrl browsers computer click",
+      usage: "bctrl browsers computer click <browserId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_create",
-      operationResource: "operations://conversations.create",
-      schemaResources: ["schemas://ConversationCreateRequest"],
+      toolName: "browsers_computer_click",
+      operationResource: "operations://browsers.computer.click",
+      schemaResources: ["schemas://BrowsersComputerClickRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.create",
+        command: "bctrl browsers computer click --help",
       },
     ],
   },
-  "conversations.get": {
+  "browsers.computer.clipboard.read": {
     type: "topic",
-    topic: "conversations.get",
-    aliases: ["conversations get"],
-    title: "Get a conversation with its messages and turns",
-    summary: "Get a conversation with its durable messages and turns.",
+    topic: "browsers.computer.clipboard.read",
+    aliases: ["browsers computer clipboard read"],
+    title: "Read the system clipboard",
+    summary:
+      "Read the system clipboard of the current Browser Run as text (at most 256 KiB of UTF-8). Reading has no effect on the page. The result carries its canonical Event ID; interrupted execution returns unknown.",
     inputs: {
       path: [
         {
-          name: "conversationId",
+          name: "browserId",
           type: "string",
           required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       query: [
         {
-          name: "messageCursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "messageLimit",
-          type: "integer",
+          name: "spaceId",
+          type: "string | default",
           required: false,
         },
       ],
       headers: [
         {
-          name: "BCTRL-Subaccount-Id",
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
           type: "string",
           required: false,
           description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "activeTurnId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "environmentId",
-          type: "string | null",
-          required: true,
-          description:
-            "Agent Environment bound to this conversation, or null until one is allocated.",
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
-        },
-        {
-          name: "messages",
-          type: "object[]",
-          required: true,
-        },
-        {
-          name: "model",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "nextMessageCursor",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "idle | active",
-          required: true,
-          values: ["idle", "active"],
-        },
-        {
-          name: "streamCursor",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "title",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "toolsetId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/conversations/{conversationId}",
-      operationId: "conversations.get",
-      responseFields: [
-        "activeTurnId",
-        "createdAt",
-        "environmentId",
-        "id",
-        "messages",
-        "model",
-        "nextMessageCursor",
-        "runtimeId",
-        "spaceId",
-        "status",
-        "streamCursor",
-        "title",
-        "toolsetId",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "conversations.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic conversations.get",
-      usage: "bctrl help --topic conversations.get",
-    },
-    mcp: {
-      toolName: "bctrl_conversations_get",
-      operationResource: "operations://conversations.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic conversations.get",
-      },
-    ],
-  },
-  "conversations.list": {
-    type: "topic",
-    topic: "conversations.list",
-    aliases: ["conversations list"],
-    title: "List agent conversations",
-    summary: "List durable agent conversations.",
-    inputs: {
-      query: [
-        {
-          name: "spaceId",
-          type: "string",
-          required: false,
-          description:
-            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
-        },
-        {
-          name: "runtimeId",
-          type: "string",
-          required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "idle | active",
-          required: false,
-          values: ["idle", "active"],
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -2748,69 +4815,97 @@ export const CLI_HELP_COMMANDS = {
       fields: [
         {
           name: "data",
-          type: "object[]",
+          type: "object | null",
           required: true,
         },
         {
-          name: "nextCursor",
-          type: "string | null",
+          name: "eventId",
+          type: "string",
           required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
         },
       ],
     },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
     api: {
       method: "GET",
-      path: "/v1/conversations",
-      operationId: "conversations.list",
-      responseFields: ["data", "nextCursor"],
+      path: "/v1/browsers/{browserId}/computer/clipboard",
+      operationId: "browsers.computer.clipboard.read",
+      responseFields: ["data", "eventId", "object", "status"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "conversations.list",
+        method: "browsers.computer.clipboard.read",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.list",
-      usage: "bctrl help --topic conversations.list",
+      command: "bctrl browsers computer clipboard read",
+      usage: "bctrl browsers computer clipboard read <browserId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_list",
-      operationResource: "operations://conversations.list",
+      toolName: "browsers_computer_clipboard_read",
+      operationResource: "operations://browsers.computer.clipboard.read",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.list",
+        command: "bctrl browsers computer clipboard read --help",
       },
     ],
   },
-  "conversations.messages.create": {
+  "browsers.computer.clipboard.write": {
     type: "topic",
-    topic: "conversations.messages.create",
-    aliases: ["conversations messages create"],
-    title: "Append a user message and start one agent turn",
-    summary: "Append a user message and start one agent turn.",
+    topic: "browsers.computer.clipboard.write",
+    aliases: ["browsers computer clipboard write"],
+    title: "Write the system clipboard",
+    summary:
+      "Replace the system clipboard of the current Browser Run with text (at most 256 KiB of UTF-8, no NUL); empty text clears it. Nothing is pasted. The text is excluded from Events. Human control blocks automation; an interrupted write returns unknown.",
     inputs: {
       path: [
         {
-          name: "conversationId",
+          name: "browserId",
           type: "string",
           required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -2827,33 +4922,245 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       body: {
-        schema: "ConversationMessageCreateRequest",
-        schemaResource: "schemas://ConversationMessageCreateRequest",
+        schema: "ComputerClipboardWriteRequest",
+        schemaResource: "schemas://ComputerClipboardWriteRequest",
         fields: [
           {
             name: "text",
             type: "string",
             required: true,
           },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "PUT",
+      path: "/v1/browsers/{browserId}/computer/clipboard",
+      operationId: "browsers.computer.clipboard.write",
+      requestFields: ["text"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.clipboard.write",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer clipboard write",
+      usage: "bctrl browsers computer clipboard write <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_clipboard_write",
+      operationResource: "operations://browsers.computer.clipboard.write",
+      schemaResources: ["schemas://ComputerClipboardWriteRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer clipboard write --help",
+      },
+    ],
+  },
+  "browsers.computer.cursor": {
+    type: "topic",
+    topic: "browsers.computer.cursor",
+    aliases: ["browsers computer cursor"],
+    title: "Read the desktop cursor",
+    summary:
+      "Read the cursor position and desktop dimensions of the current Browser Run. The result carries its canonical Event ID. Human control blocks automation; interrupted execution returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}/computer/cursor",
+      operationId: "browsers.computer.cursor",
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.cursor",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer cursor",
+      usage: "bctrl browsers computer cursor <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_cursor",
+      operationResource: "operations://browsers.computer.cursor",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer cursor --help",
+      },
+    ],
+  },
+  "browsers.computer.doubleClick": {
+    type: "topic",
+    topic: "browsers.computer.doubleClick",
+    aliases: ["browsers computer doubleClick"],
+    title: "Execute desktop double-click",
+    summary:
+      "Double-click the left mouse button in the current Browser Run. Coordinates use screenshot pixels; omission uses the current cursor. An interrupted action returns unknown with its accepted Event ID.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersComputerDoubleClickRequest",
+        schemaResource: "schemas://BrowsersComputerDoubleClickRequest",
+        fields: [
           {
-            name: "variables",
-            type: "object",
+            name: "coordinate",
+            type: "unknown[]",
             required: false,
           },
           {
-            name: "model",
+            name: "modifiers",
             type: "string",
-            required: false,
-          },
-          {
-            name: "pageId",
-            type: "string",
-            required: false,
-            description: "Unique page identifier generated by BCTRL.",
-          },
-          {
-            name: "fileIds",
-            type: "string[]",
             required: false,
           },
         ],
@@ -2862,10 +5169,1330 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "messageId",
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
           type: "string",
           required: true,
-          description: "Unique message identifier generated by BCTRL.",
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/computer/double-click",
+      operationId: "browsers.computer.doubleClick",
+      requestFields: ["coordinate", "modifiers"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.doubleClick",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer doubleClick",
+      usage: "bctrl browsers computer doubleClick <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_doubleClick",
+      operationResource: "operations://browsers.computer.doubleClick",
+      schemaResources: ["schemas://BrowsersComputerDoubleClickRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer doubleClick --help",
+      },
+    ],
+  },
+  "browsers.computer.drag": {
+    type: "topic",
+    topic: "browsers.computer.drag",
+    aliases: ["browsers computer drag"],
+    title: "Execute desktop drag",
+    summary:
+      "Drag the left mouse button in the current Browser Run to the requested coordinates, with an optional starting position and bounded path. Human control blocks automation. An interrupted action returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersComputerDragRequest",
+        schemaResource: "schemas://BrowsersComputerDragRequest",
+        fields: [
+          {
+            name: "coordinate",
+            type: "unknown[]",
+            required: true,
+          },
+          {
+            name: "modifiers",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "path",
+            type: "unknown[][]",
+            required: false,
+          },
+          {
+            name: "startCoordinate",
+            type: "unknown[]",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/computer/drag",
+      operationId: "browsers.computer.drag",
+      requestFields: ["coordinate", "modifiers", "path", "startCoordinate"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.drag",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer drag",
+      usage: "bctrl browsers computer drag <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_drag",
+      operationResource: "operations://browsers.computer.drag",
+      schemaResources: ["schemas://BrowsersComputerDragRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer drag --help",
+      },
+    ],
+  },
+  "browsers.computer.key": {
+    type: "topic",
+    topic: "browsers.computer.key",
+    aliases: ["browsers computer key"],
+    title: "Execute desktop key",
+    summary:
+      "Send one bounded key chord to the current Browser Run, with an optional repeat count. Human control blocks automation. An interrupted action returns unknown with its accepted Event ID.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersComputerKeyRequest",
+        schemaResource: "schemas://BrowsersComputerKeyRequest",
+        fields: [
+          {
+            name: "keys",
+            type: "string",
+            required: true,
+          },
+          {
+            name: "repeat",
+            type: "integer",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/computer/key",
+      operationId: "browsers.computer.key",
+      requestFields: ["keys", "repeat"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.key",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer key",
+      usage: "bctrl browsers computer key <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_key",
+      operationResource: "operations://browsers.computer.key",
+      schemaResources: ["schemas://BrowsersComputerKeyRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer key --help",
+      },
+    ],
+  },
+  "browsers.computer.move": {
+    type: "topic",
+    topic: "browsers.computer.move",
+    aliases: ["browsers computer move"],
+    title: "Execute desktop move",
+    summary:
+      "Move the cursor in the current Browser Run to screenshot-pixel coordinates. Human control blocks automation. An interrupted action returns unknown with its accepted Event ID.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersComputerMoveRequest",
+        schemaResource: "schemas://BrowsersComputerMoveRequest",
+        fields: [
+          {
+            name: "coordinate",
+            type: "unknown[]",
+            required: true,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/computer/move",
+      operationId: "browsers.computer.move",
+      requestFields: ["coordinate"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.move",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer move",
+      usage: "bctrl browsers computer move <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_move",
+      operationResource: "operations://browsers.computer.move",
+      schemaResources: ["schemas://BrowsersComputerMoveRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer move --help",
+      },
+    ],
+  },
+  "browsers.computer.screenshot": {
+    type: "topic",
+    topic: "browsers.computer.screenshot",
+    aliases: ["browsers computer screenshot"],
+    title: "Execute desktop screenshot",
+    summary:
+      "Capture the headed desktop of the current Browser Run as a JPEG. The result carries its canonical Event ID. An interrupted capture returns unknown with null data.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersComputerScreenshotRequest",
+        schemaResource: "schemas://BrowsersComputerScreenshotRequest",
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/computer/screenshot",
+      operationId: "browsers.computer.screenshot",
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.screenshot",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer screenshot",
+      usage: "bctrl browsers computer screenshot <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_screenshot",
+      operationResource: "operations://browsers.computer.screenshot",
+      schemaResources: ["schemas://BrowsersComputerScreenshotRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer screenshot --help",
+      },
+    ],
+  },
+  "browsers.computer.scroll": {
+    type: "topic",
+    topic: "browsers.computer.scroll",
+    aliases: ["browsers computer scroll"],
+    title: "Execute desktop scroll",
+    summary:
+      "Scroll the current Browser Run in the requested direction by a bounded amount, optionally at screenshot-pixel coordinates. Human control blocks automation. An interrupted action returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersComputerScrollRequest",
+        schemaResource: "schemas://BrowsersComputerScrollRequest",
+        fields: [
+          {
+            name: "amount",
+            type: "integer",
+            required: true,
+          },
+          {
+            name: "coordinate",
+            type: "unknown[]",
+            required: false,
+          },
+          {
+            name: "direction",
+            type: "up | down | left | right",
+            required: true,
+            values: ["up", "down", "left", "right"],
+          },
+          {
+            name: "modifiers",
+            type: "string",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/computer/scroll",
+      operationId: "browsers.computer.scroll",
+      requestFields: ["amount", "coordinate", "direction", "modifiers"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.scroll",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer scroll",
+      usage: "bctrl browsers computer scroll <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_scroll",
+      operationResource: "operations://browsers.computer.scroll",
+      schemaResources: ["schemas://BrowsersComputerScrollRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer scroll --help",
+      },
+    ],
+  },
+  "browsers.computer.type": {
+    type: "topic",
+    topic: "browsers.computer.type",
+    aliases: ["browsers computer type"],
+    title: "Execute desktop type",
+    summary:
+      "Type text into the focused control in the current Browser Run. Text is excluded from canonical capability Events and replay results are encrypted. Human control blocks automation; an interrupted action returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersComputerTypeRequest",
+        schemaResource: "schemas://BrowsersComputerTypeRequest",
+        fields: [
+          {
+            name: "text",
+            type: "string",
+            required: true,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/computer/type",
+      operationId: "browsers.computer.type",
+      requestFields: ["text"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.type",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer type",
+      usage: "bctrl browsers computer type <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_type",
+      operationResource: "operations://browsers.computer.type",
+      schemaResources: ["schemas://BrowsersComputerTypeRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer type --help",
+      },
+    ],
+  },
+  "browsers.computer.wait": {
+    type: "topic",
+    topic: "browsers.computer.wait",
+    aliases: ["browsers computer wait"],
+    title: "Execute desktop wait",
+    summary:
+      "Wait up to ten seconds in the current Browser Run. Human control blocks automation. The result carries its canonical Event ID; interrupted execution returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersComputerWaitRequest",
+        schemaResource: "schemas://BrowsersComputerWaitRequest",
+        fields: [
+          {
+            name: "duration",
+            type: "number",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "computer.result",
+          required: true,
+          values: ["computer.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/computer/wait",
+      operationId: "browsers.computer.wait",
+      requestFields: ["duration"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.computer.wait",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers computer wait",
+      usage: "bctrl browsers computer wait <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_computer_wait",
+      operationResource: "operations://browsers.computer.wait",
+      schemaResources: ["schemas://BrowsersComputerWaitRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers computer wait --help",
+      },
+    ],
+  },
+  "browsers.connections.revoke": {
+    type: "topic",
+    topic: "browsers.connections.revoke",
+    aliases: ["browsers connections revoke"],
+    title: "Revoke current Run URLs and issue new connections",
+    summary:
+      "Invalidate every existing connection URL for the current Run and issue connections in a new credential generation. Refresh the browser before reconnecting.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersConnectionsRevokeRequest",
+        schemaResource: "schemas://BrowsersConnectionsRevokeRequest",
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/connections/revoke",
+      operationId: "browsers.connections.revoke",
+      responseFields: [
+        "audit",
+        "autoUpgrade",
+        "captcha",
+        "copiedFrom",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "warnings",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.connections.revoke",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers connections revoke",
+      usage: "bctrl browsers connections revoke <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_connections_revoke",
+      operationResource: "operations://browsers.connections.revoke",
+      schemaResources: ["schemas://BrowsersConnectionsRevokeRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers connections revoke --help",
+      },
+    ],
+  },
+  "browsers.control.get": {
+    type: "topic",
+    topic: "browsers.control.get",
+    aliases: ["browsers control get"],
+    title: "Read Browser control",
+    summary:
+      "Read desired control and native confirmation for the current Browser Run. The holder credential is never returned. A human hold persists across restarts, while old viewer credentials cannot control a newer Run.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "epoch",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "expiresAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "holder",
+          type: "agent | human | none",
+          required: true,
+          values: ["agent", "human", "none"],
+        },
+        {
+          name: "object",
+          type: "control",
+          required: true,
+          values: ["control"],
         },
         {
           name: "runId",
@@ -2874,847 +6501,89 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique run identifier generated by BCTRL.",
         },
         {
-          name: "spanId",
-          type: "string",
-          required: true,
-          description: "Unique traceSpan identifier generated by BCTRL.",
-        },
-        {
           name: "status",
-          type: "queued",
+          type: "succeeded | unknown",
           required: true,
-          values: ["queued"],
-        },
-        {
-          name: "streamCursor",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "turnId",
-          type: "string",
-          required: true,
-          description: "Unique agentTurn identifier generated by BCTRL.",
+          values: ["succeeded", "unknown"],
         },
       ],
     },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
     api: {
-      method: "POST",
-      path: "/v1/conversations/{conversationId}/messages",
-      operationId: "conversations.messages.create",
-      requestFields: ["text", "variables", "model", "pageId", "fileIds"],
+      method: "GET",
+      path: "/v1/browsers/{browserId}/control",
+      operationId: "browsers.control.get",
       responseFields: [
-        "messageId",
+        "browserId",
+        "epoch",
+        "expiresAt",
+        "holder",
+        "object",
         "runId",
-        "spanId",
         "status",
-        "streamCursor",
-        "turnId",
       ],
     },
     sdk: [
       {
         language: "typescript",
-        method: "conversations.messages.create",
+        method: "browsers.control.get",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic conversations.messages.create",
-      usage: "bctrl help --topic conversations.messages.create",
+      command: "bctrl browsers control get",
+      usage: "bctrl browsers control get <browserId>",
     },
     mcp: {
-      toolName: "bctrl_conversations_messages_create",
-      operationResource: "operations://conversations.messages.create",
-      schemaResources: ["schemas://ConversationMessageCreateRequest"],
+      toolName: "browsers_control_get",
+      operationResource: "operations://browsers.control.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic conversations.messages.create",
+        command: "bctrl browsers control get --help",
       },
     ],
   },
-  "conversations.start": {
+  "browsers.control.release": {
     type: "topic",
-    topic: "conversations.start",
-    aliases: ["conversations start"],
-    title: "Start a conversation with its first message",
+    topic: "browsers.control.release",
+    aliases: ["browsers control release"],
+    title: "Release Browser control",
     summary:
-      "Create a conversation and queue its first agent turn in one call, starting the runtime when needed.",
-    inputs: {
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "ConversationStartRequest",
-        schemaResource: "schemas://ConversationStartRequest",
-        fields: [
-          {
-            name: "runtimeId",
-            type: "string",
-            required: true,
-            description: "Unique runtime identifier generated by BCTRL.",
-          },
-          {
-            name: "text",
-            type: "string",
-            required: true,
-          },
-          {
-            name: "variables",
-            type: "object",
-            required: false,
-          },
-          {
-            name: "pageId",
-            type: "string",
-            required: false,
-            description: "Unique page identifier generated by BCTRL.",
-          },
-          {
-            name: "fileIds",
-            type: "string[]",
-            required: false,
-          },
-          {
-            name: "model",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "toolsetId",
-            type: "string",
-            required: false,
-            description: "Unique toolset identifier generated by BCTRL.",
-          },
-          {
-            name: "title",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "startRuntime",
-            type: "boolean",
-            required: false,
-            description:
-              "Start the Runtime when it is stopped. When false, a stopped Runtime is rejected with a conflict.",
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "conversationId",
-          type: "string",
-          required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
-        },
-        {
-          name: "messageId",
-          type: "string",
-          required: true,
-          description: "Unique message identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "queued",
-          required: true,
-          values: ["queued"],
-        },
-        {
-          name: "streamCursor",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "turnId",
-          type: "string",
-          required: true,
-          description: "Unique agentTurn identifier generated by BCTRL.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/conversations/start",
-      operationId: "conversations.start",
-      requestFields: [
-        "runtimeId",
-        "text",
-        "variables",
-        "pageId",
-        "fileIds",
-        "model",
-        "toolsetId",
-        "title",
-        "startRuntime",
-      ],
-      responseFields: [
-        "conversationId",
-        "messageId",
-        "status",
-        "streamCursor",
-        "turnId",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "conversations.start",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic conversations.start",
-      usage: "bctrl help --topic conversations.start",
-    },
-    mcp: {
-      toolName: "bctrl_conversations_start",
-      operationResource: "operations://conversations.start",
-      schemaResources: ["schemas://ConversationStartRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic conversations.start",
-      },
-    ],
-  },
-  "conversations.stream": {
-    type: "topic",
-    topic: "conversations.stream",
-    aliases: ["conversations stream"],
-    title: "Stream normalized conversation events",
-    summary: "Stream normalized durable conversation events.",
+      "Release control held by the supplied current viewer. Another viewer cannot release its hold. A stale epoch or ended Run is refused before mutation. Automation remains blocked until the native applied ACK. Interrupted delivery returns unknown with its canonical Event ID and must not be retried automatically.",
     inputs: {
       path: [
         {
-          name: "conversationId",
+          name: "browserId",
           type: "string",
           required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       query: [
         {
-          name: "after",
-          type: "string",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Last-Event-ID",
-          type: "string",
-          required: false,
-          description:
-            "Optional last delivered event identifier used to resume an SSE stream.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/conversations/{conversationId}/stream",
-      operationId: "conversations.stream",
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "conversations.stream",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic conversations.stream",
-      usage: "bctrl help --topic conversations.stream",
-    },
-    mcp: {
-      toolName: "bctrl_conversations_stream",
-      operationResource: "operations://conversations.stream",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic conversations.stream",
-      },
-    ],
-  },
-  "conversations.turns.cancel": {
-    type: "topic",
-    topic: "conversations.turns.cancel",
-    aliases: ["conversations turns cancel"],
-    title: "Cancel one agent turn",
-    summary: "Cancel one specific agent turn.",
-    inputs: {
-      path: [
-        {
-          name: "conversationId",
-          type: "string",
-          required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
-        },
-        {
-          name: "turnId",
-          type: "string",
-          required: true,
-          description: "Unique agentTurn identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "conversationId",
-          type: "string",
-          required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "errorCode",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "errorMessage",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "finishedAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique agentTurn identifier generated by BCTRL.",
-        },
-        {
-          name: "model",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "requestMessageId",
-          type: "string",
-          required: true,
-          description: "Unique message identifier generated by BCTRL.",
-        },
-        {
-          name: "responseMessageId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "string | null",
-          required: true,
-          description: "Run that executed the turn; null until admitted.",
-        },
-        {
-          name: "spanId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "startedAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "queued | running | requires_input | suspended | succeeded | failed | cancelled | timed_out",
-          required: true,
-          values: [
-            "queued",
-            "running",
-            "requires_input",
-            "suspended",
-            "succeeded",
-            "failed",
-            "cancelled",
-            "timed_out",
-          ],
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/conversations/{conversationId}/turns/{turnId}/cancel",
-      operationId: "conversations.turns.cancel",
-      responseFields: [
-        "conversationId",
-        "createdAt",
-        "errorCode",
-        "errorMessage",
-        "finishedAt",
-        "id",
-        "model",
-        "requestMessageId",
-        "responseMessageId",
-        "runId",
-        "spanId",
-        "startedAt",
-        "status",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "conversations.turns.cancel",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic conversations.turns.cancel",
-      usage: "bctrl help --topic conversations.turns.cancel",
-    },
-    mcp: {
-      toolName: "bctrl_conversations_turns_cancel",
-      operationResource: "operations://conversations.turns.cancel",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic conversations.turns.cancel",
-      },
-    ],
-  },
-  "conversations.turns.get": {
-    type: "topic",
-    topic: "conversations.turns.get",
-    aliases: ["conversations turns get"],
-    title: "Get one agent turn",
-    summary: "Get one agent turn with its status and execution attribution.",
-    inputs: {
-      path: [
-        {
-          name: "conversationId",
-          type: "string",
-          required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
-        },
-        {
-          name: "turnId",
-          type: "string",
-          required: true,
-          description: "Unique agentTurn identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "conversationId",
-          type: "string",
-          required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "errorCode",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "errorMessage",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "finishedAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique agentTurn identifier generated by BCTRL.",
-        },
-        {
-          name: "model",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "requestMessageId",
-          type: "string",
-          required: true,
-          description: "Unique message identifier generated by BCTRL.",
-        },
-        {
-          name: "responseMessageId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "string | null",
-          required: true,
-          description: "Run that executed the turn; null until admitted.",
-        },
-        {
-          name: "spanId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "startedAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "queued | running | requires_input | suspended | succeeded | failed | cancelled | timed_out",
-          required: true,
-          values: [
-            "queued",
-            "running",
-            "requires_input",
-            "suspended",
-            "succeeded",
-            "failed",
-            "cancelled",
-            "timed_out",
-          ],
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/conversations/{conversationId}/turns/{turnId}",
-      operationId: "conversations.turns.get",
-      responseFields: [
-        "conversationId",
-        "createdAt",
-        "errorCode",
-        "errorMessage",
-        "finishedAt",
-        "id",
-        "model",
-        "requestMessageId",
-        "responseMessageId",
-        "runId",
-        "spanId",
-        "startedAt",
-        "status",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "conversations.turns.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic conversations.turns.get",
-      usage: "bctrl help --topic conversations.turns.get",
-    },
-    mcp: {
-      toolName: "bctrl_conversations_turns_get",
-      operationResource: "operations://conversations.turns.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic conversations.turns.get",
-      },
-    ],
-  },
-  "conversations.update": {
-    type: "topic",
-    topic: "conversations.update",
-    aliases: ["conversations update"],
-    title: "Update conversation defaults",
-    summary: "Update the defaults used by future turns in a conversation.",
-    inputs: {
-      path: [
-        {
-          name: "conversationId",
-          type: "string",
-          required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "ConversationUpdateRequest",
-        schemaResource: "schemas://ConversationUpdateRequest",
-        fields: [
-          {
-            name: "model",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "toolsetId",
-            type: "string | null",
-            required: false,
-          },
-          {
-            name: "title",
-            type: "string | null",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "activeTurnId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "environmentId",
-          type: "string | null",
-          required: true,
-          description:
-            "Agent Environment bound to this conversation, or null until one is allocated.",
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique conversation identifier generated by BCTRL.",
-        },
-        {
-          name: "model",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
           name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "idle | active",
-          required: true,
-          values: ["idle", "active"],
-        },
-        {
-          name: "title",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "toolsetId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Conversations",
-        url: "https://platform.bctrl.ai/sdk/conversations",
-        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
-        description: "Persistent Agent message threads bound to a Runtime.",
-      },
-    ],
-    api: {
-      method: "PATCH",
-      path: "/v1/conversations/{conversationId}",
-      operationId: "conversations.update",
-      requestFields: ["model", "toolsetId", "title"],
-      responseFields: [
-        "activeTurnId",
-        "createdAt",
-        "environmentId",
-        "id",
-        "model",
-        "runtimeId",
-        "spaceId",
-        "status",
-        "title",
-        "toolsetId",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "conversations.update",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic conversations.update",
-      usage: "bctrl help --topic conversations.update",
-    },
-    mcp: {
-      toolName: "bctrl_conversations_update",
-      operationResource: "operations://conversations.update",
-      schemaResources: ["schemas://ConversationUpdateRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic conversations.update",
-      },
-    ],
-  },
-  "environments.connections.create": {
-    type: "topic",
-    topic: "environments.connections.create",
-    aliases: ["environments connections create"],
-    title: "Open a terminal connection to an Environment",
-    summary:
-      "Open direct terminal access to a ready Environment. Returns a WebSocket URL and a one-time ticket. Refused while a managed conversation turn is using the Environment.",
-    inputs: {
-      path: [
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          type: "string | default",
+          required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -3731,364 +6600,119 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       body: {
-        schema: "EnvironmentConnectionCreateRequest",
-        schemaResource: "schemas://EnvironmentConnectionCreateRequest",
-        description:
-          "fields is the union-wide field superset. For valid bodies, use discriminator.variants and each variant required/example as authoritative.",
+        schema: "BrowserControlChangeRequest",
+        schemaResource: "schemas://BrowserControlChangeRequest",
         fields: [
           {
-            name: "protocol",
-            type: "terminal",
-            required: true,
-            values: ["terminal"],
-          },
-          {
-            name: "expiresInSeconds",
+            name: "expectedEpoch",
             type: "integer",
             required: false,
-            description:
-              "Connection lifetime. An open terminal is closed when it ends.",
+          },
+          {
+            name: "viewerId",
+            type: "string",
+            required: true,
           },
         ],
-        discriminator: {
-          property: "protocol",
-          variants: [
-            {
-              value: "terminal",
-              schema: "EnvironmentTerminalConnectionRequest",
-              schemaResource: "schemas://EnvironmentTerminalConnectionRequest",
-              required: ["protocol"],
-            },
-          ],
-        },
       },
     },
     output: {
       fields: [
         {
-          name: "createdAt",
-          type: "datetime",
+          name: "data",
+          type: "object | null",
           required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
-          name: "environmentId",
+          name: "eventId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description: "Unique runEvent identifier generated by BCTRL.",
         },
         {
-          name: "expiresAt",
-          type: "datetime",
+          name: "object",
+          type: "control.result",
           required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
+          values: ["control.result"],
         },
         {
-          name: "id",
-          type: "string",
+          name: "status",
+          type: "succeeded | unknown",
           required: true,
-          description:
-            "Unique environmentConnection identifier generated by BCTRL.",
-        },
-        {
-          name: "protocol",
-          type: "terminal",
-          required: true,
-          values: ["terminal"],
-        },
-        {
-          name: "revokedAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "subprotocol",
-          type: "bctrl.terminal.v1",
-          required: true,
-          description: "WebSocket subprotocol the client must offer.",
-          values: ["bctrl.terminal.v1"],
-        },
-        {
-          name: "ticket",
-          type: "string",
-          required: true,
-          description:
-            "One-time credential for opening the WebSocket, valid for one minute. Send it as `Authorization: Bearer <ticket>`, or from a browser as the subprotocol `bctrl.ticket.<ticket>` alongside `bctrl.terminal.v1`.",
-        },
-        {
-          name: "ticketExpiresAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "url",
-          type: "string",
-          required: true,
-          description: "WebSocket URL to open. It carries no credential.",
+          values: ["succeeded", "unknown"],
         },
       ],
     },
     api: {
       method: "POST",
-      path: "/v1/environments/{environmentId}/connections",
-      operationId: "environments.connections.create",
-      requestFields: ["protocol", "expiresInSeconds"],
-      responseFields: [
-        "createdAt",
-        "environmentId",
-        "expiresAt",
-        "id",
-        "protocol",
-        "revokedAt",
-        "subprotocol",
-        "ticket",
-        "ticketExpiresAt",
-        "url",
-      ],
+      path: "/v1/browsers/{browserId}/control/release",
+      operationId: "browsers.control.release",
+      requestFields: ["expectedEpoch", "viewerId"],
+      responseFields: ["data", "eventId", "object", "status"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "environments.connections.create",
+        method: "browsers.control.release",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.connections.create",
-      usage: "bctrl help --topic environments.connections.create",
+      command: "bctrl browsers control release",
+      usage: "bctrl browsers control release <browserId>",
     },
     mcp: {
-      toolName: "bctrl_environments_connections_create",
-      operationResource: "operations://environments.connections.create",
-      schemaResources: ["schemas://EnvironmentConnectionCreateRequest"],
+      toolName: "browsers_control_release",
+      operationResource: "operations://browsers.control.release",
+      schemaResources: ["schemas://BrowserControlChangeRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.connections.create",
+        command: "bctrl browsers control release --help",
       },
     ],
   },
-  "environments.connections.delete": {
+  "browsers.control.take": {
     type: "topic",
-    topic: "environments.connections.delete",
-    aliases: ["environments connections delete"],
-    title: "Revoke an Environment connection",
+    topic: "browsers.control.take",
+    aliases: ["browsers control take"],
+    title: "Take Browser control",
     summary:
-      "Revoke an Environment connection. An open terminal is closed within seconds.",
+      "Give a current input-enabled viewer human control of the Browser. The viewer credential must belong to this Browser and current Run, and its parent View must still permit input. The hold ends with that viewer. The result names the canonical control Event; an unconfirmed native ACK returns unknown. Reusing the same Idempotency-Key never repeats the transition.",
     inputs: {
       path: [
         {
-          name: "connectionId",
+          name: "browserId",
           type: "string",
           required: true,
           description:
-            "Unique environmentConnection identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
         },
       ],
       headers: [
         {
-          name: "BCTRL-Subaccount-Id",
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
           type: "string",
           required: false,
           description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-        {
-          name: "expiresAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description:
-            "Unique environmentConnection identifier generated by BCTRL.",
-        },
-        {
-          name: "protocol",
-          type: "terminal",
-          required: true,
-          values: ["terminal"],
-        },
-        {
-          name: "revokedAt",
-          type: "datetime | null",
-          required: true,
-        },
-      ],
-    },
-    api: {
-      method: "DELETE",
-      path: "/v1/environment-connections/{connectionId}",
-      operationId: "environments.connections.delete",
-      responseFields: [
-        "createdAt",
-        "environmentId",
-        "expiresAt",
-        "id",
-        "protocol",
-        "revokedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.connections.delete",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.connections.delete",
-      usage: "bctrl help --topic environments.connections.delete",
-    },
-    mcp: {
-      toolName: "bctrl_environments_connections_delete",
-      operationResource: "operations://environments.connections.delete",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.connections.delete",
-      },
-    ],
-  },
-  "environments.connections.get": {
-    type: "topic",
-    topic: "environments.connections.get",
-    aliases: ["environments connections get"],
-    title: "Get an Environment connection",
-    summary: "Get an Environment connection and whether it has been revoked.",
-    inputs: {
-      path: [
-        {
-          name: "connectionId",
-          type: "string",
-          required: true,
-          description:
-            "Unique environmentConnection identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-        {
-          name: "expiresAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description:
-            "Unique environmentConnection identifier generated by BCTRL.",
-        },
-        {
-          name: "protocol",
-          type: "terminal",
-          required: true,
-          values: ["terminal"],
-        },
-        {
-          name: "revokedAt",
-          type: "datetime | null",
-          required: true,
-        },
-      ],
-    },
-    api: {
-      method: "GET",
-      path: "/v1/environment-connections/{connectionId}",
-      operationId: "environments.connections.get",
-      responseFields: [
-        "createdAt",
-        "environmentId",
-        "expiresAt",
-        "id",
-        "protocol",
-        "revokedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.connections.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.connections.get",
-      usage: "bctrl help --topic environments.connections.get",
-    },
-    mcp: {
-      toolName: "bctrl_environments_connections_get",
-      operationResource: "operations://environments.connections.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.connections.get",
-      },
-    ],
-  },
-  "environments.create": {
-    type: "topic",
-    topic: "environments.create",
-    aliases: ["environments create"],
-    title: "Create an agent Environment",
-    summary:
-      "Create an agent Environment from an approved image. Returns while the sandbox is provisioning.",
-    inputs: {
-      headers: [
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4105,8 +6729,128 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       body: {
-        schema: "EnvironmentCreateRequest",
-        schemaResource: "schemas://EnvironmentCreateRequest",
+        schema: "BrowserControlChangeRequest",
+        schemaResource: "schemas://BrowserControlChangeRequest",
+        fields: [
+          {
+            name: "expectedEpoch",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "viewerId",
+            type: "string",
+            required: true,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "control.result",
+          required: true,
+          values: ["control.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/control/take",
+      operationId: "browsers.control.take",
+      requestFields: ["expectedEpoch", "viewerId"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.control.take",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers control take",
+      usage: "bctrl browsers control take <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_control_take",
+      operationResource: "operations://browsers.control.take",
+      schemaResources: ["schemas://BrowserControlChangeRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers control take --help",
+      },
+    ],
+  },
+  "browsers.create": {
+    type: "topic",
+    topic: "browsers.create",
+    aliases: ["browsers create"],
+    title: "Create and start a browser",
+    summary:
+      "Create a reusable browser and durably request its first Run. Use wait to wait up to 60 seconds for startup; currentRun is null until a Run is admitted and connections appear after the browser starts.",
+    inputs: {
+      query: [
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowserCreateRequest",
+        schemaResource: "schemas://BrowserCreateRequest",
         fields: [
           {
             name: "spaceId",
@@ -4114,16 +6858,121 @@ export const CLI_HELP_COMMANDS = {
             required: false,
           },
           {
-            name: "image",
-            type: "string",
-            required: true,
-            description:
-              "Approved Environment image identifier, for example `bctrl-pi-stable`.",
-          },
-          {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
+          },
+          {
+            name: "location",
+            type: "auto | us-east",
+            required: false,
+            description:
+              "Compute location, or auto to choose the allowed live location (currently us-east).",
+          },
+          {
+            name: "expireAfterIdleDays",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "stealth",
+            type: "normal | best | experimental",
+            required: false,
+            values: ["normal", "best", "experimental"],
+          },
+          {
+            name: "gpu",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "viewport",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "headless",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "recording",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "timeoutSeconds",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "standbyAfterSeconds",
+            type: "0",
+            required: false,
+            description: "Standby is currently disabled; use 0.",
+            values: ["0"],
+          },
+          {
+            name: "autoUpgrade",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "webRtcProxyOnly",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "forceOpenShadowRoots",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "networkTraffic",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "captcha",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "proxy",
+            type: "string | object | object",
+            required: false,
+          },
+          {
+            name: "extensions",
+            type: "string[]",
+            required: false,
+          },
+          {
+            name: "metadata",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "audit",
+            type: "object",
+            required: false,
+            description: "Machine audit detail (preview).",
+          },
+          {
+            name: "fromBrowser",
+            type: "string",
+            required: false,
+            description:
+              "Preview. Start from a copy of the last saved state of this browser (cookies, site storage, tabs, preferences); the source is not touched. Requires persona.",
+          },
+          {
+            name: "persona",
+            type: "same | new",
+            required: false,
+            description:
+              "same: the copy keeps the persona of the source (continue one identity elsewhere, one at a time); new: the copy gets a new persona with the copied site state.",
+            values: ["same", "new"],
           },
         ],
       },
@@ -4131,16 +6980,27 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "capabilities",
+          name: "audit",
           type: "object",
-          required: true,
-          description:
-            "Capabilities qualified for this Environment. false means not available.",
+          required: false,
+          description: "Machine audit detail (preview).",
         },
         {
-          name: "conversationId",
-          type: "string | null",
+          name: "autoUpgrade",
+          type: "boolean",
           required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
         },
         {
           name: "createdAt",
@@ -4149,29 +7009,88 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
-          name: "errorCode",
-          type: "string | null",
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
           required: true,
         },
         {
           name: "id",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
-          name: "image",
-          type: "string",
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
           required: true,
         },
         {
           name: "name",
-          type: "string | null",
+          type: "string",
           required: true,
         },
         {
-          name: "runtimeId",
-          type: "string | null",
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
           required: true,
         },
         {
@@ -4181,17 +7100,34 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique space identifier generated by BCTRL.",
         },
         {
-          name: "status",
-          type: "provisioning | ready | stopping | stopped | failed | deleting",
+          name: "standbyAfterSeconds",
+          type: "0",
           required: true,
-          values: [
-            "provisioning",
-            "ready",
-            "stopping",
-            "stopped",
-            "failed",
-            "deleting",
-          ],
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
         },
         {
           name: "updatedAt",
@@ -4199,67 +7135,148 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
       ],
     },
     api: {
       method: "POST",
-      path: "/v1/environments",
-      operationId: "environments.create",
-      requestFields: ["spaceId", "image", "name"],
-      responseFields: [
-        "capabilities",
-        "conversationId",
-        "createdAt",
-        "errorCode",
-        "id",
-        "image",
-        "name",
-        "runtimeId",
+      path: "/v1/browsers",
+      operationId: "browsers.create",
+      requestFields: [
         "spaceId",
+        "name",
+        "location",
+        "expireAfterIdleDays",
+        "stealth",
+        "gpu",
+        "viewport",
+        "headless",
+        "recording",
+        "timeoutSeconds",
+        "standbyAfterSeconds",
+        "autoUpgrade",
+        "webRtcProxyOnly",
+        "forceOpenShadowRoots",
+        "networkTraffic",
+        "captcha",
+        "proxy",
+        "extensions",
+        "metadata",
+        "audit",
+        "fromBrowser",
+        "persona",
+      ],
+      responseFields: [
+        "audit",
+        "autoUpgrade",
+        "captcha",
+        "copiedFrom",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
         "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
         "updatedAt",
+        "viewport",
+        "warnings",
+        "webRtcProxyOnly",
       ],
     },
     sdk: [
       {
         language: "typescript",
-        method: "environments.create",
+        method: "browsers.create",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.create",
-      usage: "bctrl help --topic environments.create",
+      command: "bctrl browsers create",
+      usage: "bctrl browsers create",
     },
     mcp: {
-      toolName: "bctrl_environments_create",
-      operationResource: "operations://environments.create",
-      schemaResources: ["schemas://EnvironmentCreateRequest"],
+      toolName: "browsers_create",
+      operationResource: "operations://browsers.create",
+      schemaResources: ["schemas://BrowserCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.create",
+        command: "bctrl browsers create --help",
       },
     ],
   },
-  "environments.delete": {
+  "browsers.delete": {
     type: "topic",
-    topic: "environments.delete",
-    aliases: ["environments delete"],
-    title: "Delete an agent Environment",
+    topic: "browsers.delete",
+    aliases: ["browsers delete"],
+    title: "Delete a browser and its saved state",
     summary:
-      "Permanently delete an Environment that is not bound to a conversation.",
+      "Delete the browser configuration and saved state, cancelling queued starts and stopping its current Run. Retained Run records remain readable.",
     inputs: {
       path: [
         {
-          name: "environmentId",
+          name: "browserId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4288,207 +7305,78 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
       ],
     },
     api: {
       method: "DELETE",
-      path: "/v1/environments/{environmentId}",
-      operationId: "environments.delete",
+      path: "/v1/browsers/{browserId}",
+      operationId: "browsers.delete",
       responseFields: ["deleted", "id"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "environments.delete",
+        method: "browsers.delete",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.delete",
-      usage: "bctrl help --topic environments.delete",
+      command: "bctrl browsers delete",
+      usage: "bctrl browsers delete <browserId>",
     },
     mcp: {
-      toolName: "bctrl_environments_delete",
-      operationResource: "operations://environments.delete",
+      toolName: "browsers_delete",
+      operationResource: "operations://browsers.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.delete",
+        command: "bctrl browsers delete --help",
       },
     ],
   },
-  "environments.execs.cancel": {
+  "browsers.fetch": {
     type: "topic",
-    topic: "environments.execs.cancel",
-    aliases: ["environments execs cancel"],
-    title: "Cancel an Environment execution",
-    summary: "Cancel one Environment execution.",
-    inputs: {
-      path: [
-        {
-          name: "execId",
-          type: "string",
-          required: true,
-          description: "Unique environmentExec identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-        {
-          name: "errorCode",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "exitCode",
-          type: "integer | null",
-          required: true,
-          description:
-            "Process exit code; null until known. A non-zero code is still a completed execution.",
-        },
-        {
-          name: "finishedAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique environmentExec identifier generated by BCTRL.",
-        },
-        {
-          name: "startedAt",
-          type: "datetime | null",
-          required: true,
-        },
-        {
-          name: "status",
-          type: "queued | running | succeeded | failed | cancelled | timed_out",
-          required: true,
-          values: [
-            "queued",
-            "running",
-            "succeeded",
-            "failed",
-            "cancelled",
-            "timed_out",
-          ],
-        },
-        {
-          name: "stderr",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "stderrTruncated",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "stdout",
-          type: "string",
-          required: true,
-          description:
-            "Captured standard output, decoded as UTF-8 with replacement.",
-        },
-        {
-          name: "stdoutTruncated",
-          type: "boolean",
-          required: true,
-        },
-      ],
-    },
-    api: {
-      method: "POST",
-      path: "/v1/environment-execs/{execId}/cancel",
-      operationId: "environments.execs.cancel",
-      responseFields: [
-        "createdAt",
-        "environmentId",
-        "errorCode",
-        "exitCode",
-        "finishedAt",
-        "id",
-        "startedAt",
-        "status",
-        "stderr",
-        "stderrTruncated",
-        "stdout",
-        "stdoutTruncated",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.execs.cancel",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.execs.cancel",
-      usage: "bctrl help --topic environments.execs.cancel",
-    },
-    mcp: {
-      toolName: "bctrl_environments_execs_cancel",
-      operationResource: "operations://environments.execs.cancel",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.execs.cancel",
-      },
-    ],
-  },
-  "environments.execs.create": {
-    type: "topic",
-    topic: "environments.execs.create",
-    aliases: ["environments execs create"],
-    title: "Run a command in an Environment",
+    topic: "browsers.fetch",
+    aliases: ["browsers fetch"],
+    title: "Send a request from the browser",
     summary:
-      "Start a bounded command in an Environment. The command is an argument array, never a shell string.",
+      "Send an HTTP request from the browser itself: it carries the browser's cookies, proxy and TLS/HTTP2 fingerprint and is not subject to CORS. The response body is returned base64 encoded up to maxBytes (truncated is true beyond it). Human control blocks it; the Run's Events record the URL without its query, the status and the byte count. An interrupted request returns unknown and must not be repeated automatically.",
     inputs: {
       path: [
         {
-          name: "environmentId",
+          name: "browserId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4505,23 +7393,2195 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       body: {
-        schema: "EnvironmentExecCreateRequest",
-        schemaResource: "schemas://EnvironmentExecCreateRequest",
+        schema: "BrowserFetchRequest",
+        schemaResource: "schemas://BrowserFetchRequest",
         fields: [
           {
-            name: "command",
-            type: "string[]",
-            required: true,
-            description:
-              "Program and arguments. Never interpreted by a host shell.",
-          },
-          {
-            name: "cwd",
+            name: "body",
             type: "string",
             required: false,
           },
           {
-            name: "timeoutSeconds",
+            name: "bodyEncoding",
+            type: "utf8 | base64",
+            required: false,
+            values: ["utf8", "base64"],
+          },
+          {
+            name: "headers",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "maxBytes",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "method",
+            type: "GET | HEAD | POST | PUT | PATCH | DELETE | OPTIONS",
+            required: false,
+            values: [
+              "GET",
+              "HEAD",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE",
+              "OPTIONS",
+            ],
+          },
+          {
+            name: "timeoutMs",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "url",
+            type: "string",
+            required: true,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "fetch.result",
+          required: true,
+          values: ["fetch.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/fetch",
+      operationId: "browsers.fetch",
+      requestFields: [
+        "body",
+        "bodyEncoding",
+        "headers",
+        "maxBytes",
+        "method",
+        "timeoutMs",
+        "url",
+      ],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.fetch",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers fetch",
+      usage: "bctrl browsers fetch <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_fetch",
+      operationResource: "operations://browsers.fetch",
+      schemaResources: ["schemas://BrowserFetchRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers fetch --help",
+      },
+    ],
+  },
+  "browsers.fetchStream": {
+    type: "topic",
+    topic: "browsers.fetchStream",
+    aliases: ["browsers fetchStream"],
+    title: "Stream a response the browser fetches",
+    summary:
+      "Send an HTTP request from the browser itself, like fetch, and stream the response body back as it arrives, of any size and with bounded memory at every hop; a slow reader slows the upstream read. The upstream status is in BCTRL-Fetch-Status and its headers (JSON) in BCTRL-Fetch-Headers. A failure before the first byte is an error response; a failure after it aborts the stream, and the Run's completion Event records unknown. Human control blocks it.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowserFetchStreamRequest",
+        schemaResource: "schemas://BrowserFetchStreamRequest",
+        fields: [
+          {
+            name: "body",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "bodyEncoding",
+            type: "utf8 | base64",
+            required: false,
+            values: ["utf8", "base64"],
+          },
+          {
+            name: "headers",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "method",
+            type: "GET | HEAD | POST | PUT | PATCH | DELETE | OPTIONS",
+            required: false,
+            values: [
+              "GET",
+              "HEAD",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE",
+              "OPTIONS",
+            ],
+          },
+          {
+            name: "timeoutMs",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "url",
+            type: "string",
+            required: true,
+          },
+        ],
+      },
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/fetch/stream",
+      operationId: "browsers.fetchStream",
+      requestFields: [
+        "body",
+        "bodyEncoding",
+        "headers",
+        "method",
+        "timeoutMs",
+        "url",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.fetchStream",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers fetchStream",
+      usage: "bctrl browsers fetchStream <browserId>",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers fetchStream --help",
+      },
+    ],
+  },
+  "browsers.files.delete": {
+    type: "topic",
+    topic: "browsers.files.delete",
+    aliases: ["browsers files delete"],
+    title: "Delete a browser file or directory",
+    summary:
+      "Delete a file or directory of the current Browser Run; a non-empty directory needs recursive. Top-level directories and /files cannot be deleted. An interrupted deletion returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "path",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "recursive",
+          type: "true | false",
+          required: false,
+          values: ["true", "false"],
+        },
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "files.result",
+          required: true,
+          values: ["files.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/browsers/{browserId}/files",
+      operationId: "browsers.files.delete",
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.files.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers files delete",
+      usage: "bctrl browsers files delete <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_files_delete",
+      operationResource: "operations://browsers.files.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers files delete --help",
+      },
+    ],
+  },
+  "browsers.files.download": {
+    type: "topic",
+    topic: "browsers.files.download",
+    aliases: ["browsers files download"],
+    title: "Download a browser file",
+    summary:
+      "Download one file of the current Browser Run (at most 1 GiB) as bytes. Headers carry its size and SHA-256.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "path",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}/files/content",
+      operationId: "browsers.files.download",
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.files.download",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers files download",
+      usage: "bctrl browsers files download <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_files_download",
+      operationResource: "operations://browsers.files.download",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers files download --help",
+      },
+    ],
+  },
+  "browsers.files.list": {
+    type: "topic",
+    topic: "browsers.files.list",
+    aliases: ["browsers files list"],
+    title: "List a browser directory",
+    summary:
+      "List a directory of the current Browser Run. The top level holds /downloads, /files (the Run's Space files, read only) and /workspace; nothing else of the machine is reachable. Pages are ordered by name and a cursor belongs to its Run.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "path",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "files.result",
+          required: true,
+          values: ["files.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}/files",
+      operationId: "browsers.files.list",
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.files.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers files list",
+      usage: "bctrl browsers files list <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_files_list",
+      operationResource: "operations://browsers.files.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers files list --help",
+      },
+    ],
+  },
+  "browsers.files.move": {
+    type: "topic",
+    topic: "browsers.files.move",
+    aliases: ["browsers files move"],
+    title: "Move a browser file or directory",
+    summary:
+      "Move or rename a file or directory of the current Browser Run within /downloads and /workspace. Set overwrite to replace the destination. An interrupted move returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowserFileMoveRequest",
+        schemaResource: "schemas://BrowserFileMoveRequest",
+        fields: [
+          {
+            name: "destinationPath",
+            type: "string",
+            required: true,
+          },
+          {
+            name: "overwrite",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "sourcePath",
+            type: "string",
+            required: true,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "files.result",
+          required: true,
+          values: ["files.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/files/move",
+      operationId: "browsers.files.move",
+      requestFields: ["destinationPath", "overwrite", "sourcePath"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.files.move",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers files move",
+      usage: "bctrl browsers files move <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_files_move",
+      operationResource: "operations://browsers.files.move",
+      schemaResources: ["schemas://BrowserFileMoveRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers files move --help",
+      },
+    ],
+  },
+  "browsers.files.upload": {
+    type: "topic",
+    topic: "browsers.files.upload",
+    aliases: ["browsers files upload"],
+    title: "Upload a browser file",
+    summary:
+      "Upload one file into /downloads or /workspace of the current Browser Run from multipart field file (at most 25 MiB). The file is written atomically; set overwrite to replace an existing file and createParents to create missing directories. An interrupted upload returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "path",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "overwrite",
+          type: "true | false",
+          required: false,
+          values: ["true", "false"],
+        },
+        {
+          name: "createParents",
+          type: "true | false",
+          required: false,
+          values: ["true", "false"],
+        },
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "files.result",
+          required: true,
+          values: ["files.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "PUT",
+      path: "/v1/browsers/{browserId}/files/content",
+      operationId: "browsers.files.upload",
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.files.upload",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers files upload",
+      usage: "bctrl browsers files upload <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_files_upload",
+      operationResource: "operations://browsers.files.upload",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers files upload --help",
+      },
+    ],
+  },
+  "browsers.get": {
+    type: "topic",
+    topic: "browsers.get",
+    aliases: ["browsers get"],
+    title: "Get a browser and its current Run",
+    summary:
+      "Read a browser and its current Run. Use wait to wait for an accepted start or stop. Saved state remains private to the browser and is restored on its next Run.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}",
+      operationId: "browsers.get",
+      responseFields: [
+        "audit",
+        "autoUpgrade",
+        "captcha",
+        "copiedFrom",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "warnings",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers get",
+      usage: "bctrl browsers get <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_get",
+      operationResource: "operations://browsers.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers get --help",
+      },
+    ],
+  },
+  "browsers.list": {
+    type: "topic",
+    topic: "browsers.list",
+    aliases: ["browsers list"],
+    title: "List browsers",
+    summary:
+      "List browser resources visible in the selected Space. A browser is running while it has a current Run and idle otherwise. Responses include the current Run and its connections when available.",
+    inputs: {
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "q",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: false,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: false,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "status",
+          type: "idle | running | idle | running[]",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers",
+      operationId: "browsers.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers list",
+      usage: "bctrl browsers list",
+    },
+    mcp: {
+      toolName: "browsers_list",
+      operationResource: "operations://browsers.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers list --help",
+      },
+    ],
+  },
+  "browsers.pages.activate": {
+    type: "topic",
+    topic: "browsers.pages.activate",
+    aliases: ["browsers pages activate"],
+    title: "Activate a page",
+    summary:
+      "Bring one page of the current Browser Run to the front. Activation is confirmed by the browser, never assumed. Human control blocks automation; an interrupted action returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "pageId",
+          type: "string",
+          required: true,
+          description: "Unique page identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "pages.result",
+          required: true,
+          values: ["pages.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/pages/{pageId}/activate",
+      operationId: "browsers.pages.activate",
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.pages.activate",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers pages activate",
+      usage: "bctrl browsers pages activate <browserId> <pageId>",
+    },
+    mcp: {
+      toolName: "browsers_pages_activate",
+      operationResource: "operations://browsers.pages.activate",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers pages activate --help",
+      },
+    ],
+  },
+  "browsers.pages.close": {
+    type: "topic",
+    topic: "browsers.pages.close",
+    aliases: ["browsers pages close"],
+    title: "Close a page",
+    summary:
+      "Close one page of the current Browser Run. Human control blocks automation. An interrupted action returns unknown and must not be repeated automatically.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "pageId",
+          type: "string",
+          required: true,
+          description: "Unique page identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "pages.result",
+          required: true,
+          values: ["pages.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/browsers/{browserId}/pages/{pageId}",
+      operationId: "browsers.pages.close",
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.pages.close",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers pages close",
+      usage: "bctrl browsers pages close <browserId> <pageId>",
+    },
+    mcp: {
+      toolName: "browsers_pages_close",
+      operationResource: "operations://browsers.pages.close",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers pages close --help",
+      },
+    ],
+  },
+  "browsers.pages.get": {
+    type: "topic",
+    topic: "browsers.pages.get",
+    aliases: ["browsers pages get"],
+    title: "Read a page",
+    summary:
+      "Read one open page of the current Browser Run: its URL, title and whether it is active. The result carries its canonical Event ID.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "pageId",
+          type: "string",
+          required: true,
+          description: "Unique page identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "pages.result",
+          required: true,
+          values: ["pages.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}/pages/{pageId}",
+      operationId: "browsers.pages.get",
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.pages.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers pages get",
+      usage: "bctrl browsers pages get <browserId> <pageId>",
+    },
+    mcp: {
+      toolName: "browsers_pages_get",
+      operationResource: "operations://browsers.pages.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers pages get --help",
+      },
+    ],
+  },
+  "browsers.pages.list": {
+    type: "topic",
+    topic: "browsers.pages.list",
+    aliases: ["browsers pages list"],
+    title: "List open pages",
+    summary:
+      "List the open pages of the current Browser Run, ordered by Page ID. A cursor belongs to the Run that produced it. The result carries its canonical Event ID; interrupted execution returns unknown.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "pages.result",
+          required: true,
+          values: ["pages.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}/pages",
+      operationId: "browsers.pages.list",
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.pages.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers pages list",
+      usage: "bctrl browsers pages list <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_pages_list",
+      operationResource: "operations://browsers.pages.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers pages list --help",
+      },
+    ],
+  },
+  "browsers.pages.navigate": {
+    type: "topic",
+    topic: "browsers.pages.navigate",
+    aliases: ["browsers pages navigate"],
+    title: "Navigate a page",
+    summary:
+      "Navigate one page of the current Browser Run to an HTTP(S) URL and wait up to timeoutMs for its document. Human control blocks automation. An interrupted navigation returns unknown and must not be repeated automatically.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "pageId",
+          type: "string",
+          required: true,
+          description: "Unique page identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersPagesNavigateRequest",
+        schemaResource: "schemas://BrowsersPagesNavigateRequest",
+        fields: [
+          {
+            name: "timeoutMs",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "url",
+            type: "string",
+            required: true,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "pages.result",
+          required: true,
+          values: ["pages.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/pages/{pageId}/navigate",
+      operationId: "browsers.pages.navigate",
+      requestFields: ["timeoutMs", "url"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.pages.navigate",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers pages navigate",
+      usage: "bctrl browsers pages navigate <browserId> <pageId>",
+    },
+    mcp: {
+      toolName: "browsers_pages_navigate",
+      operationResource: "operations://browsers.pages.navigate",
+      schemaResources: ["schemas://BrowsersPagesNavigateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers pages navigate --help",
+      },
+    ],
+  },
+  "browsers.pages.open": {
+    type: "topic",
+    topic: "browsers.pages.open",
+    aliases: ["browsers pages open"],
+    title: "Open a page",
+    summary:
+      "Open a new page in the current Browser Run at an HTTP(S) URL or about:blank, activated by default. Human control blocks automation. An interrupted action returns unknown and must not be repeated automatically.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersPagesOpenRequest",
+        schemaResource: "schemas://BrowsersPagesOpenRequest",
+        fields: [
+          {
+            name: "activate",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "url",
+            type: "string",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "pages.result",
+          required: true,
+          values: ["pages.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/pages",
+      operationId: "browsers.pages.open",
+      requestFields: ["activate", "url"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.pages.open",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers pages open",
+      usage: "bctrl browsers pages open <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_pages_open",
+      operationResource: "operations://browsers.pages.open",
+      schemaResources: ["schemas://BrowsersPagesOpenRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers pages open --help",
+      },
+    ],
+  },
+  "browsers.pages.pdf": {
+    type: "topic",
+    topic: "browsers.pages.pdf",
+    aliases: ["browsers pages pdf"],
+    title: "Print a page to PDF",
+    summary:
+      "Print one page of the current Browser Run to PDF. The document is returned base64 encoded. Interrupted execution returns unknown with null data.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "pageId",
+          type: "string",
+          required: true,
+          description: "Unique page identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersPagesPdfRequest",
+        schemaResource: "schemas://BrowsersPagesPdfRequest",
+        fields: [
+          {
+            name: "landscape",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "printBackground",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "scale",
+            type: "number",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "pages.result",
+          required: true,
+          values: ["pages.result"],
+        },
+        {
+          name: "status",
+          type: "succeeded | unknown",
+          required: true,
+          values: ["succeeded", "unknown"],
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/pages/{pageId}/pdf",
+      operationId: "browsers.pages.pdf",
+      requestFields: ["landscape", "printBackground", "scale"],
+      responseFields: ["data", "eventId", "object", "status"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.pages.pdf",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers pages pdf",
+      usage: "bctrl browsers pages pdf <browserId> <pageId>",
+    },
+    mcp: {
+      toolName: "browsers_pages_pdf",
+      operationResource: "operations://browsers.pages.pdf",
+      schemaResources: ["schemas://BrowsersPagesPdfRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers pages pdf --help",
+      },
+    ],
+  },
+  "browsers.pages.screenshot": {
+    type: "topic",
+    topic: "browsers.pages.screenshot",
+    aliases: ["browsers pages screenshot"],
+    title: "Capture a page screenshot",
+    summary:
+      "Capture one page of the current Browser Run as PNG or JPEG, optionally the full page. The image is returned base64 encoded. Interrupted execution returns unknown with null data.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "pageId",
+          type: "string",
+          required: true,
+          description: "Unique page identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersPagesScreenshotRequest",
+        schemaResource: "schemas://BrowsersPagesScreenshotRequest",
+        fields: [
+          {
+            name: "format",
+            type: "png | jpeg",
+            required: false,
+            values: ["png", "jpeg"],
+          },
+          {
+            name: "fullPage",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "quality",
             type: "integer",
             required: false,
           },
@@ -4531,78 +9591,102 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "createdAt",
-          type: "datetime",
+          name: "data",
+          type: "object | null",
           required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
-          name: "environmentId",
+          name: "eventId",
           type: "string",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
+          description: "Unique runEvent identifier generated by BCTRL.",
         },
         {
-          name: "id",
-          type: "string",
+          name: "object",
+          type: "pages.result",
           required: true,
-          description: "Unique environmentExec identifier generated by BCTRL.",
+          values: ["pages.result"],
         },
         {
           name: "status",
-          type: "queued",
+          type: "succeeded | unknown",
           required: true,
-          values: ["queued"],
+          values: ["succeeded", "unknown"],
         },
       ],
     },
     api: {
       method: "POST",
-      path: "/v1/environments/{environmentId}/execs",
-      operationId: "environments.execs.create",
-      requestFields: ["command", "cwd", "timeoutSeconds"],
-      responseFields: ["createdAt", "environmentId", "id", "status"],
+      path: "/v1/browsers/{browserId}/pages/{pageId}/screenshot",
+      operationId: "browsers.pages.screenshot",
+      requestFields: ["format", "fullPage", "quality"],
+      responseFields: ["data", "eventId", "object", "status"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "environments.execs.create",
+        method: "browsers.pages.screenshot",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.execs.create",
-      usage: "bctrl help --topic environments.execs.create",
+      command: "bctrl browsers pages screenshot",
+      usage: "bctrl browsers pages screenshot <browserId> <pageId>",
     },
     mcp: {
-      toolName: "bctrl_environments_execs_create",
-      operationResource: "operations://environments.execs.create",
-      schemaResources: ["schemas://EnvironmentExecCreateRequest"],
+      toolName: "browsers_pages_screenshot",
+      operationResource: "operations://browsers.pages.screenshot",
+      schemaResources: ["schemas://BrowsersPagesScreenshotRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.execs.create",
+        command: "bctrl browsers pages screenshot --help",
       },
     ],
   },
-  "environments.execs.get": {
+  "browsers.recording.get": {
     type: "topic",
-    topic: "environments.execs.get",
-    aliases: ["environments execs get"],
-    title: "Get an Environment execution",
+    topic: "browsers.recording.get",
+    aliases: ["browsers recording get"],
+    title: "Read the current Run recording",
     summary:
-      "Get an Environment execution with its exit code and captured output.",
+      "Read capture and MP4 export progress for the current Browser Run. Completed recordings are read through the historical Run recording routes. A succeeded recording includes a direct standalone MP4 URL, expiry, SHA-256 and byte size. Partial capture is reported explicitly. Download URLs expire within five minutes and never outlive a View.",
     inputs: {
       path: [
         {
-          name: "execId",
+          name: "browserId",
           type: "string",
           required: true,
-          description: "Unique environmentExec identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string",
+          required: false,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4621,25 +9705,24 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
-          name: "environmentId",
-          type: "string",
+          name: "downloadExpiresAt",
+          type: "datetime | null",
           required: true,
-          description: "Unique environment identifier generated by BCTRL.",
         },
         {
-          name: "errorCode",
+          name: "downloadUrl",
           type: "string | null",
           required: true,
+          description:
+            "A short-lived direct download of the standalone MP4. Available only when status is succeeded.",
         },
         {
-          name: "exitCode",
+          name: "durationMs",
           type: "integer | null",
           required: true,
-          description:
-            "Process exit code; null until known. A non-zero code is still a completed execution.",
         },
         {
-          name: "finishedAt",
+          name: "endedAt",
           type: "datetime | null",
           required: true,
         },
@@ -4647,7 +9730,42 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
-          description: "Unique environmentExec identifier generated by BCTRL.",
+          description: "Unique recording identifier generated by BCTRL.",
+        },
+        {
+          name: "kind",
+          type: "whole_run",
+          required: true,
+          values: ["whole_run"],
+        },
+        {
+          name: "object",
+          type: "recording",
+          required: true,
+          values: ["recording"],
+        },
+        {
+          name: "partial",
+          type: "boolean | null",
+          required: true,
+          description:
+            "Whether the completed capture is missing media. Null until capture completes.",
+        },
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+        {
+          name: "sha256",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "sizeBytes",
+          type: "integer | null",
+          required: true,
         },
         {
           name: "startedAt",
@@ -4656,105 +9774,3134 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "queued | running | succeeded | failed | cancelled | timed_out",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
           required: true,
           values: [
             "queued",
             "running",
+            "awaiting_input",
             "succeeded",
             "failed",
-            "cancelled",
-            "timed_out",
+            "canceled",
+            "unknown",
           ],
         },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/browsers/{browserId}/recording",
+      operationId: "browsers.recording.get",
+      responseFields: [
+        "createdAt",
+        "downloadExpiresAt",
+        "downloadUrl",
+        "durationMs",
+        "endedAt",
+        "id",
+        "kind",
+        "object",
+        "partial",
+        "runId",
+        "sha256",
+        "sizeBytes",
+        "startedAt",
+        "status",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.recording.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers recording get",
+      usage: "bctrl browsers recording get <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_recording_get",
+      operationResource: "operations://browsers.recording.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers recording get --help",
+      },
+    ],
+  },
+  "browsers.runs.list": {
+    type: "topic",
+    topic: "browsers.runs.list",
+    aliases: ["browsers runs list"],
+    title: "List a browser’s Runs",
+    summary:
+      "List the retained Runs belonging to this browser, including ended and failed Runs, using cursor pagination.",
+    inputs: {
+      path: [
         {
-          name: "stderr",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "stderrTruncated",
-          type: "boolean",
-          required: true,
-        },
-        {
-          name: "stdout",
+          name: "browserId",
           type: "string",
           required: true,
           description:
-            "Captured standard output, decoded as UTF-8 with replacement.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
         },
         {
-          name: "stdoutTruncated",
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "status",
+          type: "starting | active | standby | stopping | ended | failed | starting | active | standby | stopping | ended | failed[]",
+          required: false,
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "include",
+          type: "usage",
+          required: false,
+          values: ["usage"],
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
           type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
           required: true,
         },
       ],
     },
     api: {
       method: "GET",
-      path: "/v1/environment-execs/{execId}",
-      operationId: "environments.execs.get",
+      path: "/v1/browsers/{browserId}/runs",
+      operationId: "browsers.runs.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.runs.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers runs list",
+      usage: "bctrl browsers runs list <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_runs_list",
+      operationResource: "operations://browsers.runs.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers runs list --help",
+      },
+    ],
+  },
+  "browsers.start": {
+    type: "topic",
+    topic: "browsers.start",
+    aliases: ["browsers start"],
+    title: "Start a browser with its saved state",
+    summary:
+      "Durably request a new Run of this browser, restoring its saved state. If a previous Run is stopping or saving, startup waits for it. An existing current Run is returned without starting another browser.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersStartRequest",
+        schemaResource: "schemas://BrowsersStartRequest",
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/start",
+      operationId: "browsers.start",
       responseFields: [
+        "audit",
+        "autoUpgrade",
+        "captcha",
+        "copiedFrom",
         "createdAt",
-        "environmentId",
-        "errorCode",
-        "exitCode",
-        "finishedAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
         "id",
-        "startedAt",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
         "status",
-        "stderr",
-        "stderrTruncated",
-        "stdout",
-        "stdoutTruncated",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "warnings",
+        "webRtcProxyOnly",
       ],
     },
     sdk: [
       {
         language: "typescript",
-        method: "environments.execs.get",
+        method: "browsers.start",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.execs.get",
-      usage: "bctrl help --topic environments.execs.get",
+      command: "bctrl browsers start",
+      usage: "bctrl browsers start <browserId>",
     },
     mcp: {
-      toolName: "bctrl_environments_execs_get",
-      operationResource: "operations://environments.execs.get",
+      toolName: "browsers_start",
+      operationResource: "operations://browsers.start",
+      schemaResources: ["schemas://BrowsersStartRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.execs.get",
+        command: "bctrl browsers start --help",
       },
     ],
   },
-  "environments.execs.stream": {
+  "browsers.stop": {
     type: "topic",
-    topic: "environments.execs.stream",
-    aliases: ["environments execs stream"],
-    title: "Stream an Environment execution",
-    summary: "Stream Environment execution output and completion.",
+    topic: "browsers.stop",
+    aliases: ["browsers stop"],
+    title: "Stop a browser and save state in the background",
+    summary:
+      "Request the current Run to stop. State saving continues in the background after the browser exits. Set discardState to erase saved state and skip saving this Run. Use wait to wait for the requested stop.",
     inputs: {
       path: [
         {
-          name: "execId",
+          name: "browserId",
           type: "string",
           required: true,
-          description: "Unique environmentExec identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       query: [
         {
-          name: "after",
-          type: "string",
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+        {
+          name: "wait",
+          type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersStopRequest",
+        schemaResource: "schemas://BrowsersStopRequest",
+        fields: [
+          {
+            name: "discardState",
+            type: "boolean",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/browsers/{browserId}/stop",
+      operationId: "browsers.stop",
+      requestFields: ["discardState"],
+      responseFields: [
+        "audit",
+        "autoUpgrade",
+        "captcha",
+        "copiedFrom",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "warnings",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.stop",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers stop",
+      usage: "bctrl browsers stop <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_stop",
+      operationResource: "operations://browsers.stop",
+      schemaResources: ["schemas://BrowsersStopRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers stop --help",
+      },
+    ],
+  },
+  "browsers.update": {
+    type: "topic",
+    topic: "browsers.update",
+    aliases: ["browsers update"],
+    title: "Update browser configuration for its next Run",
+    summary:
+      "Update configuration used by the next Run. Changing stealth or viewport requires an idle browser without saved state or a queued start; stop with discardState first.",
+    inputs: {
+      path: [
+        {
+          name: "browserId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "spaceId",
+          type: "string | default",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "BrowsersUpdateRequest",
+        schemaResource: "schemas://BrowsersUpdateRequest",
+        fields: [
+          {
+            name: "name",
+            type: "string",
+            required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
+          },
+          {
+            name: "location",
+            type: "auto | us-east",
+            required: false,
+            description:
+              "Compute location, or auto to choose the allowed live location (currently us-east).",
+          },
+          {
+            name: "expireAfterIdleDays",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "stealth",
+            type: "normal | best | experimental",
+            required: false,
+            values: ["normal", "best", "experimental"],
+          },
+          {
+            name: "gpu",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "viewport",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "headless",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "recording",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "timeoutSeconds",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "standbyAfterSeconds",
+            type: "0",
+            required: false,
+            description: "Standby is currently disabled; use 0.",
+            values: ["0"],
+          },
+          {
+            name: "autoUpgrade",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "webRtcProxyOnly",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "forceOpenShadowRoots",
+            type: "boolean",
+            required: false,
+          },
+          {
+            name: "networkTraffic",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "captcha",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "proxy",
+            type: "string | object | object",
+            required: false,
+          },
+          {
+            name: "extensions",
+            type: "string[]",
+            required: false,
+          },
+          {
+            name: "metadata",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "audit",
+            type: "object",
+            required: false,
+            description: "Machine audit detail (preview).",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: false,
+          description: "Machine audit detail (preview).",
+        },
+        {
+          name: "autoUpgrade",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "captcha",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "copiedFrom",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview. The browser this one was copied from (fromBrowser).",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "currentRun",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "extensions",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "forceOpenShadowRoots",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "gpu",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "headless",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "location",
+          type: "auto | us-east",
+          required: true,
+          description:
+            "Compute location, or auto to choose the allowed live location (currently us-east).",
+        },
+        {
+          name: "metadata",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "networkTraffic",
+          type: "object",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "proxy",
+          type: "object | null | object",
+          required: false,
+        },
+        {
+          name: "recording",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "savedState",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "standbyAfterSeconds",
+          type: "0",
+          required: true,
+          description: "Standby is currently disabled; use 0.",
+          values: ["0"],
+        },
+        {
+          name: "status",
+          type: "idle | running",
+          required: true,
+          values: ["idle", "running"],
+        },
+        {
+          name: "stealth",
+          type: "normal | best | experimental",
+          required: true,
+          values: ["normal", "best", "experimental"],
+        },
+        {
+          name: "timeoutSeconds",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "type",
+          type: "browser",
+          required: true,
+          values: ["browser"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "viewport",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnings",
+          type: "object[]",
+          required: false,
+        },
+        {
+          name: "webRtcProxyOnly",
+          type: "boolean",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "PATCH",
+      path: "/v1/browsers/{browserId}",
+      operationId: "browsers.update",
+      requestFields: [
+        "name",
+        "location",
+        "expireAfterIdleDays",
+        "stealth",
+        "gpu",
+        "viewport",
+        "headless",
+        "recording",
+        "timeoutSeconds",
+        "standbyAfterSeconds",
+        "autoUpgrade",
+        "webRtcProxyOnly",
+        "forceOpenShadowRoots",
+        "networkTraffic",
+        "captcha",
+        "proxy",
+        "extensions",
+        "metadata",
+        "audit",
+      ],
+      responseFields: [
+        "audit",
+        "autoUpgrade",
+        "captcha",
+        "copiedFrom",
+        "createdAt",
+        "currentRun",
+        "expireAfterIdleDays",
+        "extensions",
+        "forceOpenShadowRoots",
+        "gpu",
+        "headless",
+        "id",
+        "lastUsedAt",
+        "location",
+        "metadata",
+        "name",
+        "networkTraffic",
+        "object",
+        "proxy",
+        "recording",
+        "savedState",
+        "spaceId",
+        "standbyAfterSeconds",
+        "status",
+        "stealth",
+        "timeoutSeconds",
+        "type",
+        "updatedAt",
+        "viewport",
+        "warnings",
+        "webRtcProxyOnly",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "browsers.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl browsers update",
+      usage: "bctrl browsers update <browserId>",
+    },
+    mcp: {
+      toolName: "browsers_update",
+      operationResource: "operations://browsers.update",
+      schemaResources: ["schemas://BrowsersUpdateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl browsers update --help",
+      },
+    ],
+  },
+  "conversations.delete": {
+    type: "topic",
+    topic: "conversations.delete",
+    aliases: ["conversations delete"],
+    title: "Delete an idle Conversation",
+    summary: "Delete an idle Conversation and retire its workspace.",
+    inputs: {
+      path: [
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "deleted",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent Agent message threads bound to a Runtime.",
+      },
+    ],
+    api: {
+      method: "DELETE",
+      path: "/v1/conversations/{conversationId}",
+      operationId: "conversations.delete",
+      responseFields: ["deleted", "id"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl conversations delete",
+      usage: "bctrl conversations delete <conversationId>",
+    },
+    mcp: {
+      toolName: "conversations_delete",
+      operationResource: "operations://conversations.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl conversations delete --help",
+      },
+    ],
+  },
+  "conversations.get": {
+    type: "topic",
+    topic: "conversations.get",
+    aliases: ["conversations get"],
+    title: "Get a Conversation record",
+    summary:
+      "Get a runtime-free Conversation record; read its events for history.",
+    inputs: {
+      path: [
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "activeTaskId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "conversation",
+          required: true,
+          values: ["conversation"],
+        },
+        {
+          name: "sandboxId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "idle | active",
+          required: true,
+          values: ["idle", "active"],
+        },
+        {
+          name: "title",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent Agent message threads bound to a Runtime.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/conversations/{conversationId}",
+      operationId: "conversations.get",
+      responseFields: [
+        "activeTaskId",
+        "createdAt",
+        "id",
+        "metadata",
+        "object",
+        "sandboxId",
+        "spaceId",
+        "status",
+        "title",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl conversations get",
+      usage: "bctrl conversations get <conversationId>",
+    },
+    mcp: {
+      toolName: "conversations_get",
+      operationResource: "operations://conversations.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl conversations get --help",
+      },
+    ],
+  },
+  "conversations.list": {
+    type: "topic",
+    topic: "conversations.list",
+    aliases: ["conversations list"],
+    title: "List agent conversations",
+    summary: "List durable agent conversations.",
+    inputs: {
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: false,
+          description:
+            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
+        },
+        {
+          name: "agent",
+          type: "string",
+          required: false,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent Agent message threads bound to a Runtime.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/conversations",
+      operationId: "conversations.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl conversations list",
+      usage: "bctrl conversations list",
+    },
+    mcp: {
+      toolName: "conversations_list",
+      operationResource: "operations://conversations.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl conversations list --help",
+      },
+    ],
+  },
+  "conversations.update": {
+    type: "topic",
+    topic: "conversations.update",
+    aliases: ["conversations update"],
+    title: "Update Conversation title and metadata",
+    summary: "Update a Conversation title and metadata.",
+    inputs: {
+      path: [
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "ConversationsUpdateRequest",
+        schemaResource: "schemas://ConversationsUpdateRequest",
+        fields: [
+          {
+            name: "title",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "metadata",
+            type: "object | null",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "activeTaskId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "conversation",
+          required: true,
+          values: ["conversation"],
+        },
+        {
+          name: "sandboxId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "idle | active",
+          required: true,
+          values: ["idle", "active"],
+        },
+        {
+          name: "title",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Conversations",
+        url: "https://platform.bctrl.ai/sdk/conversations",
+        markdownUrl: "https://platform.bctrl.ai/sdk/conversations.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/conversations.md",
+        description: "Persistent Agent message threads bound to a Runtime.",
+      },
+    ],
+    api: {
+      method: "PATCH",
+      path: "/v1/conversations/{conversationId}",
+      operationId: "conversations.update",
+      requestFields: ["title", "metadata"],
+      responseFields: [
+        "activeTaskId",
+        "createdAt",
+        "id",
+        "metadata",
+        "object",
+        "sandboxId",
+        "spaceId",
+        "status",
+        "title",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "conversations.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl conversations update",
+      usage: "bctrl conversations update <conversationId>",
+    },
+    mcp: {
+      toolName: "conversations_update",
+      operationResource: "operations://conversations.update",
+      schemaResources: ["schemas://ConversationsUpdateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl conversations update --help",
+      },
+    ],
+  },
+  "drains.create": {
+    type: "topic",
+    topic: "drains.create",
+    aliases: ["drains create"],
+    title: "Create a drain",
+    summary:
+      "Create a drain. Events after now are exported in batches, in commit order, retried with backoff until delivered: otlp sends them as OTLP/HTTP logs and their finished spans as traces, s3 and r2 write gzipped NDJSON under time-partitioned keys, https posts NDJSON signed like webhooks (the secret is returned once). Credentials are secret references.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "DrainCreateRequest",
+        schemaResource: "schemas://DrainCreateRequest",
+        fields: [
+          {
+            name: "name",
+            type: "string",
+            required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
+          },
+          {
+            name: "destination",
+            type: "object",
+            required: true,
+          },
+          {
+            name: "categories",
+            type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "categories",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "destination",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "enabled",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique drain identifier generated by BCTRL.",
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "drain",
+          required: true,
+          values: ["drain"],
+        },
+        {
+          name: "secret",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/drains",
+      operationId: "drains.create",
+      requestFields: ["name", "destination", "categories"],
+      responseFields: [
+        "categories",
+        "createdAt",
+        "destination",
+        "enabled",
+        "id",
+        "name",
+        "object",
+        "secret",
+        "status",
+        "subaccountId",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "drains.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl drains create",
+      usage: "bctrl drains create",
+    },
+    mcp: {
+      toolName: "drains_create",
+      operationResource: "operations://drains.create",
+      schemaResources: ["schemas://DrainCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl drains create --help",
+      },
+    ],
+  },
+  "drains.delete": {
+    type: "topic",
+    topic: "drains.delete",
+    aliases: ["drains delete"],
+    title: "Delete a drain",
+    summary: "Delete a drain. Events not yet sent are not exported.",
+    inputs: {
+      path: [
+        {
+          name: "drainId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "deleted",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique drain identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "drain",
+          required: true,
+          values: ["drain"],
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/drains/{drainId}",
+      operationId: "drains.delete",
+      responseFields: ["deleted", "id", "object"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "drains.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl drains delete",
+      usage: "bctrl drains delete <drainId>",
+    },
+    mcp: {
+      toolName: "drains_delete",
+      operationResource: "operations://drains.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl drains delete --help",
+      },
+    ],
+  },
+  "drains.get": {
+    type: "topic",
+    topic: "drains.get",
+    aliases: ["drains get"],
+    title: "Get a drain",
+    summary:
+      "Get a drain with its delivery status: last delivery, last error and the Events and bytes sent.",
+    inputs: {
+      path: [
+        {
+          name: "drainId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "categories",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "destination",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "enabled",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique drain identifier generated by BCTRL.",
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "drain",
+          required: true,
+          values: ["drain"],
+        },
+        {
+          name: "status",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/drains/{drainId}",
+      operationId: "drains.get",
+      responseFields: [
+        "categories",
+        "createdAt",
+        "destination",
+        "enabled",
+        "id",
+        "name",
+        "object",
+        "status",
+        "subaccountId",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "drains.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl drains get",
+      usage: "bctrl drains get <drainId>",
+    },
+    mcp: {
+      toolName: "drains_get",
+      operationResource: "operations://drains.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl drains get --help",
+      },
+    ],
+  },
+  "drains.list": {
+    type: "topic",
+    topic: "drains.list",
+    aliases: ["drains list"],
+    title: "List drains",
+    summary:
+      "List the drains that export Events to your own observability stack or bucket.",
+    inputs: {
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/drains",
+      operationId: "drains.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "drains.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl drains list",
+      usage: "bctrl drains list",
+    },
+    mcp: {
+      toolName: "drains_list",
+      operationResource: "operations://drains.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl drains list --help",
+      },
+    ],
+  },
+  "drains.test": {
+    type: "topic",
+    topic: "drains.test",
+    aliases: ["drains test"],
+    title: "Test a drain",
+    summary:
+      "Send one test Event to the drain destination now and report the outcome. The drain position does not move.",
+    inputs: {
+      path: [
+        {
+          name: "drainId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "bytesSent",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "drainId",
+          type: "string",
+          required: true,
+          description: "Unique drain identifier generated by BCTRL.",
+        },
+        {
+          name: "durationMs",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "error",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "drain_test",
+          required: true,
+          values: ["drain_test"],
+        },
+        {
+          name: "ok",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "responseStatus",
+          type: "integer | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/drains/{drainId}/test",
+      operationId: "drains.test",
+      responseFields: [
+        "bytesSent",
+        "drainId",
+        "durationMs",
+        "error",
+        "object",
+        "ok",
+        "responseStatus",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "drains.test",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl drains test",
+      usage: "bctrl drains test <drainId>",
+    },
+    mcp: {
+      toolName: "drains_test",
+      operationResource: "operations://drains.test",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl drains test --help",
+      },
+    ],
+  },
+  "drains.update": {
+    type: "topic",
+    topic: "drains.update",
+    aliases: ["drains update"],
+    title: "Update a drain",
+    summary:
+      "Update a drain destination, its category filter, label or enabled state. A disabled drain keeps its place and resumes from it.",
+    inputs: {
+      path: [
+        {
+          name: "drainId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "DrainUpdateRequest",
+        schemaResource: "schemas://DrainUpdateRequest",
+        fields: [
+          {
+            name: "name",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "destination",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "categories",
+            type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
+            required: false,
+          },
+          {
+            name: "enabled",
+            type: "boolean",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "categories",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "destination",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "enabled",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique drain identifier generated by BCTRL.",
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "drain",
+          required: true,
+          values: ["drain"],
+        },
+        {
+          name: "status",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "PATCH",
+      path: "/v1/drains/{drainId}",
+      operationId: "drains.update",
+      requestFields: ["name", "destination", "categories", "enabled"],
+      responseFields: [
+        "categories",
+        "createdAt",
+        "destination",
+        "enabled",
+        "id",
+        "name",
+        "object",
+        "status",
+        "subaccountId",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "drains.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl drains update",
+      usage: "bctrl drains update <drainId>",
+    },
+    mcp: {
+      toolName: "drains_update",
+      operationResource: "operations://drains.update",
+      schemaResources: ["schemas://DrainUpdateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl drains update --help",
+      },
+    ],
+  },
+  "events.get": {
+    type: "topic",
+    topic: "events.get",
+    aliases: ["events get"],
+    title: "Get an Event",
+    summary: "Read one Event by its ID.",
+    inputs: {
+      path: [
+        {
+          name: "eventId",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "actor",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "category",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel",
+          required: true,
+          values: [
+            "lifecycle",
+            "control",
+            "machine",
+            "human",
+            "secrets",
+            "connection",
+            "alert",
+            "agent",
+            "page",
+            "console",
+            "network",
+            "captcha",
+            "vm",
+            "kernel",
+          ],
+        },
+        {
+          name: "channel",
+          type: "api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform",
+          required: true,
+          values: [
+            "api",
+            "cdp",
+            "webdriver",
+            "live_view",
+            "computer",
+            "tool",
+            "process",
+            "ssh",
+            "files",
+            "platform",
+          ],
+        },
+        {
+          name: "conversationId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "data",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique runEvent identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "event",
+          required: true,
+          values: ["event"],
+        },
+        {
+          name: "outcome",
+          type: "ok | denied | failed | unknown",
+          required: true,
+          values: ["ok", "denied", "failed", "unknown"],
+        },
+        {
+          name: "pageId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "runId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "runtimeId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "sandboxId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "seq",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "source",
+          type: "browser | network | runtime | agent | tool | system",
+          required: true,
+          values: ["browser", "network", "runtime", "agent", "tool", "system"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spanId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "target",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "taskId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "time",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "timestamp",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "traceId",
+          type: "string | null",
+          required: true,
+          description:
+            "W3C trace ID: GET /traces/{traceId} returns the span tree.",
+        },
+        {
+          name: "type",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/events/{eventId}",
+      operationId: "events.get",
+      responseFields: [
+        "actor",
+        "category",
+        "channel",
+        "conversationId",
+        "createdAt",
+        "data",
+        "id",
+        "object",
+        "outcome",
+        "pageId",
+        "runId",
+        "runtimeId",
+        "sandboxId",
+        "seq",
+        "source",
+        "spaceId",
+        "spanId",
+        "target",
+        "taskId",
+        "time",
+        "timestamp",
+        "traceId",
+        "type",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "events.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl events get",
+      usage: "bctrl events get <eventId>",
+    },
+    mcp: {
+      toolName: "events_get",
+      operationResource: "operations://events.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl events get --help",
+      },
+    ],
+  },
+  "events.list": {
+    type: "topic",
+    topic: "events.list",
+    aliases: ["events list"],
+    title: "List Events",
+    summary:
+      "List immutable Events visible in the organization, subaccount and selected Space: every kind of Event, read in one place. Filter by browser, sandbox, Run, Task, Conversation (its history), agent, category (audit logs are the always-on categories), type, actor, channel, outcome or time.",
+    inputs: {
+      query: [
+        {
+          name: "browser",
+          type: "string",
+          required: false,
+          description: "Events of this browser, across its Runs.",
+        },
+        {
+          name: "sandbox",
+          type: "string",
+          required: false,
+          description: "Events of this sandbox.",
+        },
+        {
+          name: "run",
+          type: "string",
+          required: false,
+          description: "Events of this Run.",
+        },
+        {
+          name: "task",
+          type: "string",
+          required: false,
+          description: "Events of this Task.",
+        },
+        {
+          name: "conversation",
+          type: "string",
+          required: false,
+          description: "A Conversation history: its Events.",
+        },
+        {
+          name: "agent",
+          type: "string",
+          required: false,
+          description: "Events of Tasks run by this agent.",
+        },
+        {
+          name: "category",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel | lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
+          required: false,
+        },
+        {
+          name: "type",
+          type: "string | string[]",
+          required: false,
+        },
+        {
+          name: "actor",
+          type: "string",
+          required: false,
+          description: "Actor ID.",
+        },
+        {
+          name: "actorType",
+          type: "api_key | agent | human | platform",
+          required: false,
+          values: ["api_key", "agent", "human", "platform"],
+        },
+        {
+          name: "channel",
+          type: "api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform | api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform[]",
+          required: false,
+        },
+        {
+          name: "outcome",
+          type: "ok | denied | failed | unknown | ok | denied | failed | unknown[]",
+          required: false,
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/events",
+      operationId: "events.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "events.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl events list",
+      usage: "bctrl events list",
+    },
+    mcp: {
+      toolName: "events_list",
+      operationResource: "operations://events.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl events list --help",
+      },
+    ],
+  },
+  "events.stream": {
+    type: "topic",
+    topic: "events.stream",
+    aliases: ["events stream"],
+    title: "Stream Events",
+    summary:
+      "Stream the same Events as they are committed, with the same filters. Resume after an Event ID with Last-Event-ID or after: the stream is in commit order, so a resumed stream has no gaps.",
+    inputs: {
+      query: [
+        {
+          name: "browser",
+          type: "string",
+          required: false,
+          description: "Events of this browser, across its Runs.",
+        },
+        {
+          name: "sandbox",
+          type: "string",
+          required: false,
+          description: "Events of this sandbox.",
+        },
+        {
+          name: "run",
+          type: "string",
+          required: false,
+          description: "Events of this Run.",
+        },
+        {
+          name: "task",
+          type: "string",
+          required: false,
+          description: "Events of this Task.",
+        },
+        {
+          name: "conversation",
+          type: "string",
+          required: false,
+          description: "A Conversation history: its Events.",
+        },
+        {
+          name: "agent",
+          type: "string",
+          required: false,
+          description: "Events of Tasks run by this agent.",
+        },
+        {
+          name: "category",
+          type: "lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel | lifecycle | control | machine | human | secrets | connection | alert | agent | page | console | network | captcha | vm | kernel[]",
+          required: false,
+        },
+        {
+          name: "type",
+          type: "string | string[]",
+          required: false,
+        },
+        {
+          name: "actor",
+          type: "string",
+          required: false,
+          description: "Actor ID.",
+        },
+        {
+          name: "actorType",
+          type: "api_key | agent | human | platform",
+          required: false,
+          values: ["api_key", "agent", "human", "platform"],
+        },
+        {
+          name: "channel",
+          type: "api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform | api | cdp | webdriver | live_view | computer | tool | process | ssh | files | platform[]",
+          required: false,
+        },
+        {
+          name: "outcome",
+          type: "ok | denied | failed | unknown | ok | denied | failed | unknown[]",
+          required: false,
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "after",
+          type: "string",
+          required: false,
+          description: "Resume after this Event ID (as Last-Event-ID does).",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -4773,1070 +12920,28 @@ export const CLI_HELP_COMMANDS = {
     },
     api: {
       method: "GET",
-      path: "/v1/environment-execs/{execId}/stream",
-      operationId: "environments.execs.stream",
+      path: "/v1/events/stream",
+      operationId: "events.stream",
     },
     sdk: [
       {
         language: "typescript",
-        method: "environments.execs.stream",
+        method: "events.stream",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic environments.execs.stream",
-      usage: "bctrl help --topic environments.execs.stream",
+      command: "bctrl events stream",
+      usage: "bctrl events stream",
     },
     mcp: {
-      toolName: "bctrl_environments_execs_stream",
-      operationResource: "operations://environments.execs.stream",
+      toolName: "events_stream",
+      operationResource: "operations://events.stream",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic environments.execs.stream",
-      },
-    ],
-  },
-  "environments.files.collect": {
-    type: "topic",
-    topic: "environments.files.collect",
-    aliases: ["environments files collect"],
-    title: "Publish an Environment file as a File",
-    summary:
-      "Publish a file from the Environment working directory as a durable File.",
-    inputs: {
-      path: [
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "EnvironmentFileCollectRequest",
-        schemaResource: "schemas://EnvironmentFileCollectRequest",
-        fields: [
-          {
-            name: "path",
-            type: "string",
-            required: true,
-          },
-          {
-            name: "name",
-            type: "string",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "contentType",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "downloadUrl",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "expiresAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique file identifier generated by BCTRL.",
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-          description: "Customer-facing resource name. 1–200 characters.",
-        },
-        {
-          name: "path",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "runId",
-          type: "string",
-          required: false,
-          description: "Unique run identifier generated by BCTRL.",
-        },
-        {
-          name: "runtimeId",
-          type: "string",
-          required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "sizeBytes",
-          type: "integer",
-          required: true,
-          description: "Non-negative number of bytes.",
-        },
-        {
-          name: "source",
-          type: "upload | runtime",
-          required: true,
-          values: ["upload", "runtime"],
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "type",
-          type: "string",
-          required: false,
-        },
-      ],
-    },
-    api: {
-      method: "POST",
-      path: "/v1/environments/{environmentId}/files/collect",
-      operationId: "environments.files.collect",
-      requestFields: ["path", "name"],
-      responseFields: [
-        "contentType",
-        "createdAt",
-        "downloadUrl",
-        "expiresAt",
-        "id",
-        "metadata",
-        "name",
-        "path",
-        "runId",
-        "runtimeId",
-        "sizeBytes",
-        "source",
-        "spaceId",
-        "type",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.files.collect",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.files.collect",
-      usage: "bctrl help --topic environments.files.collect",
-    },
-    mcp: {
-      toolName: "bctrl_environments_files_collect",
-      operationResource: "operations://environments.files.collect",
-      schemaResources: ["schemas://EnvironmentFileCollectRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.files.collect",
-      },
-    ],
-  },
-  "environments.files.list": {
-    type: "topic",
-    topic: "environments.files.list",
-    aliases: ["environments files list"],
-    title: "List Environment working files",
-    summary: "List files in the Environment working directory.",
-    inputs: {
-      path: [
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-      ],
-      query: [
-        {
-          name: "path",
-          type: "string",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
-          type: "object[]",
-          required: true,
-        },
-        {
-          name: "path",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "truncated",
-          type: "boolean",
-          required: true,
-        },
-      ],
-    },
-    api: {
-      method: "GET",
-      path: "/v1/environments/{environmentId}/files",
-      operationId: "environments.files.list",
-      responseFields: ["data", "path", "truncated"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.files.list",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.files.list",
-      usage: "bctrl help --topic environments.files.list",
-    },
-    mcp: {
-      toolName: "bctrl_environments_files_list",
-      operationResource: "operations://environments.files.list",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.files.list",
-      },
-    ],
-  },
-  "environments.files.stage": {
-    type: "topic",
-    topic: "environments.files.stage",
-    aliases: ["environments files stage"],
-    title: "Copy a File into an Environment",
-    summary: "Copy a durable File into the Environment working directory.",
-    inputs: {
-      path: [
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "EnvironmentFileStageRequest",
-        schemaResource: "schemas://EnvironmentFileStageRequest",
-        fields: [
-          {
-            name: "fileId",
-            type: "string",
-            required: true,
-            description: "Unique file identifier generated by BCTRL.",
-          },
-          {
-            name: "path",
-            type: "string",
-            required: true,
-          },
-          {
-            name: "overwrite",
-            type: "boolean",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "path",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "sha256",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "sizeBytes",
-          type: "integer",
-          required: true,
-        },
-      ],
-    },
-    api: {
-      method: "POST",
-      path: "/v1/environments/{environmentId}/files/stage",
-      operationId: "environments.files.stage",
-      requestFields: ["fileId", "path", "overwrite"],
-      responseFields: ["path", "sha256", "sizeBytes"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.files.stage",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.files.stage",
-      usage: "bctrl help --topic environments.files.stage",
-    },
-    mcp: {
-      toolName: "bctrl_environments_files_stage",
-      operationResource: "operations://environments.files.stage",
-      schemaResources: ["schemas://EnvironmentFileStageRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.files.stage",
-      },
-    ],
-  },
-  "environments.get": {
-    type: "topic",
-    topic: "environments.get",
-    aliases: ["environments get"],
-    title: "Get an agent Environment",
-    summary:
-      "Get one agent Environment with its status and qualified capabilities.",
-    inputs: {
-      path: [
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "capabilities",
-          type: "object",
-          required: true,
-          description:
-            "Capabilities qualified for this Environment. false means not available.",
-        },
-        {
-          name: "conversationId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "errorCode",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-        {
-          name: "image",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "name",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "provisioning | ready | stopping | stopped | failed | deleting",
-          required: true,
-          values: [
-            "provisioning",
-            "ready",
-            "stopping",
-            "stopped",
-            "failed",
-            "deleting",
-          ],
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    api: {
-      method: "GET",
-      path: "/v1/environments/{environmentId}",
-      operationId: "environments.get",
-      responseFields: [
-        "capabilities",
-        "conversationId",
-        "createdAt",
-        "errorCode",
-        "id",
-        "image",
-        "name",
-        "runtimeId",
-        "spaceId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.get",
-      usage: "bctrl help --topic environments.get",
-    },
-    mcp: {
-      toolName: "bctrl_environments_get",
-      operationResource: "operations://environments.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.get",
-      },
-    ],
-  },
-  "environments.list": {
-    type: "topic",
-    topic: "environments.list",
-    aliases: ["environments list"],
-    title: "List agent Environments",
-    summary: "List agent Environments visible to the caller.",
-    inputs: {
-      query: [
-        {
-          name: "spaceId",
-          type: "string",
-          required: false,
-          description:
-            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
-          type: "object[]",
-          required: true,
-        },
-        {
-          name: "nextCursor",
-          type: "string | null",
-          required: true,
-        },
-      ],
-    },
-    api: {
-      method: "GET",
-      path: "/v1/environments",
-      operationId: "environments.list",
-      responseFields: ["data", "nextCursor"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.list",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.list",
-      usage: "bctrl help --topic environments.list",
-    },
-    mcp: {
-      toolName: "bctrl_environments_list",
-      operationResource: "operations://environments.list",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.list",
-      },
-    ],
-  },
-  "environments.runtime.attach": {
-    type: "topic",
-    topic: "environments.runtime.attach",
-    aliases: ["environments runtime attach"],
-    title: "Attach a Runtime to an Environment",
-    summary: "Attach one Runtime from the same Space to an Environment.",
-    inputs: {
-      path: [
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "EnvironmentRuntimeAttachRequest",
-        schemaResource: "schemas://EnvironmentRuntimeAttachRequest",
-        fields: [
-          {
-            name: "runtimeId",
-            type: "string",
-            required: true,
-            description: "Unique runtime identifier generated by BCTRL.",
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "capabilities",
-          type: "object",
-          required: true,
-          description:
-            "Capabilities qualified for this Environment. false means not available.",
-        },
-        {
-          name: "conversationId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "errorCode",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-        {
-          name: "image",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "name",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "provisioning | ready | stopping | stopped | failed | deleting",
-          required: true,
-          values: [
-            "provisioning",
-            "ready",
-            "stopping",
-            "stopped",
-            "failed",
-            "deleting",
-          ],
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    api: {
-      method: "POST",
-      path: "/v1/environments/{environmentId}/runtime",
-      operationId: "environments.runtime.attach",
-      requestFields: ["runtimeId"],
-      responseFields: [
-        "capabilities",
-        "conversationId",
-        "createdAt",
-        "errorCode",
-        "id",
-        "image",
-        "name",
-        "runtimeId",
-        "spaceId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.runtime.attach",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.runtime.attach",
-      usage: "bctrl help --topic environments.runtime.attach",
-    },
-    mcp: {
-      toolName: "bctrl_environments_runtime_attach",
-      operationResource: "operations://environments.runtime.attach",
-      schemaResources: ["schemas://EnvironmentRuntimeAttachRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.runtime.attach",
-      },
-    ],
-  },
-  "environments.start": {
-    type: "topic",
-    topic: "environments.start",
-    aliases: ["environments start"],
-    title: "Start an agent Environment",
-    summary:
-      "Ensure an Environment has running compute, keeping its working files.",
-    inputs: {
-      path: [
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "capabilities",
-          type: "object",
-          required: true,
-          description:
-            "Capabilities qualified for this Environment. false means not available.",
-        },
-        {
-          name: "conversationId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "errorCode",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-        {
-          name: "image",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "name",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "provisioning | ready | stopping | stopped | failed | deleting",
-          required: true,
-          values: [
-            "provisioning",
-            "ready",
-            "stopping",
-            "stopped",
-            "failed",
-            "deleting",
-          ],
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    api: {
-      method: "POST",
-      path: "/v1/environments/{environmentId}/start",
-      operationId: "environments.start",
-      responseFields: [
-        "capabilities",
-        "conversationId",
-        "createdAt",
-        "errorCode",
-        "id",
-        "image",
-        "name",
-        "runtimeId",
-        "spaceId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.start",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.start",
-      usage: "bctrl help --topic environments.start",
-    },
-    mcp: {
-      toolName: "bctrl_environments_start",
-      operationResource: "operations://environments.start",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.start",
-      },
-    ],
-  },
-  "environments.stop": {
-    type: "topic",
-    topic: "environments.stop",
-    aliases: ["environments stop"],
-    title: "Stop an agent Environment",
-    summary:
-      "Stop Environment compute. Active work is a conflict unless force is set. Working files stay on the host local disk while stopped and are not replicated: if that host is lost, the Environment fails with `environment.host_lost` and its files may be lost.",
-    inputs: {
-      path: [
-        {
-          name: "environmentId",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "EnvironmentStopRequest",
-        schemaResource: "schemas://EnvironmentStopRequest",
-        fields: [
-          {
-            name: "force",
-            type: "boolean",
-            required: false,
-            description:
-              "Cancel active executions before stopping. Without it, active work is a conflict.",
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "capabilities",
-          type: "object",
-          required: true,
-          description:
-            "Capabilities qualified for this Environment. false means not available.",
-        },
-        {
-          name: "conversationId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "errorCode",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique environment identifier generated by BCTRL.",
-        },
-        {
-          name: "image",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "name",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "provisioning | ready | stopping | stopped | failed | deleting",
-          required: true,
-          values: [
-            "provisioning",
-            "ready",
-            "stopping",
-            "stopped",
-            "failed",
-            "deleting",
-          ],
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    api: {
-      method: "POST",
-      path: "/v1/environments/{environmentId}/stop",
-      operationId: "environments.stop",
-      requestFields: ["force"],
-      responseFields: [
-        "capabilities",
-        "conversationId",
-        "createdAt",
-        "errorCode",
-        "id",
-        "image",
-        "name",
-        "runtimeId",
-        "spaceId",
-        "status",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "environments.stop",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic environments.stop",
-      usage: "bctrl help --topic environments.stop",
-    },
-    mcp: {
-      toolName: "bctrl_environments_stop",
-      operationResource: "operations://environments.stop",
-      schemaResources: ["schemas://EnvironmentStopRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic environments.stop",
+        command: "bctrl events stream --help",
       },
     ],
   },
@@ -5855,7 +12960,30 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique file identifier generated by BCTRL.",
         },
       ],
+      query: [
+        {
+          name: "runId",
+          type: "string",
+          required: false,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+      ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5888,17 +13016,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.content",
-      usage: "bctrl help --topic files.content",
+      command: "bctrl files content",
+      usage: "bctrl files content <fileId>",
     },
     mcp: {
-      toolName: "bctrl_files_content",
+      toolName: "files_content",
       operationResource: "operations://files.content",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.content",
+        command: "bctrl files content --help",
       },
     ],
   },
@@ -5918,6 +13046,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -5948,6 +13091,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique file identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "file",
+          required: true,
+          values: ["file"],
+        },
       ],
     },
     docs: [
@@ -5964,7 +13113,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/files/{fileId}",
       operationId: "files.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -5974,17 +13123,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.delete",
-      usage: "bctrl help --topic files.delete",
+      command: "bctrl files delete",
+      usage: "bctrl files delete <fileId>",
     },
     mcp: {
-      toolName: "bctrl_files_delete",
+      toolName: "files_delete",
       operationResource: "operations://files.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.delete",
+        command: "bctrl files delete --help",
       },
     ],
   },
@@ -6003,7 +13152,30 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique file identifier generated by BCTRL.",
         },
       ],
+      query: [
+        {
+          name: "runId",
+          type: "string",
+          required: false,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+      ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -6015,6 +13187,11 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "canDelete",
+          type: "boolean",
+          required: false,
+        },
         {
           name: "contentType",
           type: "string",
@@ -6038,6 +13215,11 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
@@ -6049,10 +13231,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "name",
-          type: "string",
+          name: "object",
+          type: "file",
           required: true,
-          description: "Customer-facing resource name. 1–200 characters.",
+          values: ["file"],
         },
         {
           name: "path",
@@ -6069,7 +13251,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
@@ -6094,6 +13276,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -6111,13 +13299,15 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/files/{fileId}",
       operationId: "files.get",
       responseFields: [
+        "canDelete",
         "contentType",
         "createdAt",
         "downloadUrl",
         "expiresAt",
+        "filename",
         "id",
         "metadata",
-        "name",
+        "object",
         "path",
         "runId",
         "runtimeId",
@@ -6125,6 +13315,7 @@ export const CLI_HELP_COMMANDS = {
         "source",
         "spaceId",
         "type",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -6135,17 +13326,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.get",
-      usage: "bctrl help --topic files.get",
+      command: "bctrl files get",
+      usage: "bctrl files get <fileId>",
     },
     mcp: {
-      toolName: "bctrl_files_get",
+      toolName: "files_get",
       operationResource: "operations://files.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.get",
+        command: "bctrl files get --help",
       },
     ],
   },
@@ -6196,7 +13387,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "type",
@@ -6223,12 +13414,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -6251,6 +13464,11 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
           name: "nextCursor",
           type: "string | null",
           required: true,
@@ -6271,7 +13489,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/files",
       operationId: "files.list",
-      responseFields: ["data", "folders", "nextCursor"],
+      responseFields: ["data", "folders", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -6281,17 +13499,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.list",
-      usage: "bctrl help --topic files.list",
+      command: "bctrl files list",
+      usage: "bctrl files list",
     },
     mcp: {
-      toolName: "bctrl_files_list",
+      toolName: "files_list",
       operationResource: "operations://files.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.list",
+        command: "bctrl files list --help",
       },
     ],
   },
@@ -6312,6 +13530,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -6331,10 +13564,9 @@ export const CLI_HELP_COMMANDS = {
         schemaResource: "schemas://FileUpdateRequest",
         fields: [
           {
-            name: "name",
+            name: "filename",
             type: "string",
             required: false,
-            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "metadata",
@@ -6346,6 +13578,11 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "canDelete",
+          type: "boolean",
+          required: false,
+        },
         {
           name: "contentType",
           type: "string",
@@ -6369,6 +13606,11 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
@@ -6380,10 +13622,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "name",
-          type: "string",
+          name: "object",
+          type: "file",
           required: true,
-          description: "Customer-facing resource name. 1–200 characters.",
+          values: ["file"],
         },
         {
           name: "path",
@@ -6400,7 +13642,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
@@ -6425,6 +13667,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -6441,15 +13689,17 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/files/{fileId}",
       operationId: "files.update",
-      requestFields: ["name", "metadata"],
+      requestFields: ["filename", "metadata"],
       responseFields: [
+        "canDelete",
         "contentType",
         "createdAt",
         "downloadUrl",
         "expiresAt",
+        "filename",
         "id",
         "metadata",
-        "name",
+        "object",
         "path",
         "runId",
         "runtimeId",
@@ -6457,6 +13707,7 @@ export const CLI_HELP_COMMANDS = {
         "source",
         "spaceId",
         "type",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -6467,18 +13718,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.update",
-      usage: "bctrl help --topic files.update",
+      command: "bctrl files update",
+      usage: "bctrl files update <fileId>",
     },
     mcp: {
-      toolName: "bctrl_files_update",
+      toolName: "files_update",
       operationResource: "operations://files.update",
       schemaResources: ["schemas://FileUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.update",
+        command: "bctrl files update --help",
       },
     ],
   },
@@ -6501,6 +13752,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -6518,6 +13784,11 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "canDelete",
+          type: "boolean",
+          required: false,
+        },
         {
           name: "contentType",
           type: "string",
@@ -6541,6 +13812,11 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
@@ -6552,10 +13828,10 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "name",
-          type: "string",
+          name: "object",
+          type: "file",
           required: true,
-          description: "Customer-facing resource name. 1–200 characters.",
+          values: ["file"],
         },
         {
           name: "path",
@@ -6572,7 +13848,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "sizeBytes",
@@ -6597,6 +13873,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: false,
         },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
       ],
     },
     docs: [
@@ -6614,13 +13896,15 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/files",
       operationId: "files.upload",
       responseFields: [
+        "canDelete",
         "contentType",
         "createdAt",
         "downloadUrl",
         "expiresAt",
+        "filename",
         "id",
         "metadata",
-        "name",
+        "object",
         "path",
         "runId",
         "runtimeId",
@@ -6628,6 +13912,7 @@ export const CLI_HELP_COMMANDS = {
         "source",
         "spaceId",
         "type",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -6638,17 +13923,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic files.upload",
-      usage: "bctrl help --topic files.upload",
+      command: "bctrl files upload",
+      usage: "bctrl files upload",
     },
     mcp: {
-      toolName: "bctrl_files_upload",
+      toolName: "files_upload",
       operationResource: "operations://files.upload",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic files.upload",
+        command: "bctrl files upload --help",
       },
     ],
   },
@@ -6671,6 +13956,23 @@ export const CLI_HELP_COMMANDS = {
           type: "api | sdk | cli | mcp",
           required: false,
           values: ["api", "sdk", "cli", "mcp"],
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
       ],
     },
@@ -6791,17 +14093,109 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic help",
-      usage: "bctrl help --topic help",
+      command: "bctrl help",
+      usage: "bctrl help",
     },
     mcp: {
-      toolName: "bctrl_help",
+      toolName: "help",
       operationResource: "operations://help",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic help",
+        command: "bctrl help --help",
+      },
+    ],
+  },
+  "locations.list": {
+    type: "topic",
+    topic: "locations.list",
+    aliases: ["locations list"],
+    title: "List available compute locations",
+    summary:
+      "List deployed compute locations and current admission availability. Runtime location auto resolves to an allowed live location; homeRegions identifies compatible data homes. Catalog entries are ordered by their immutable ID.",
+    inputs: {
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/locations",
+      operationId: "locations.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "locations.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl locations list",
+      usage: "bctrl locations list",
+    },
+    mcp: {
+      toolName: "locations_list",
+      operationResource: "operations://locations.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl locations list --help",
       },
     ],
   },
@@ -6814,6 +14208,21 @@ export const CLI_HELP_COMMANDS = {
       "Create a notification receiver. Use BCTRL-Subaccount-Id to create it for a subaccount. Supported receiver types are email, SMS, and WhatsApp.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -6848,6 +14257,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
         ],
       },
@@ -6875,6 +14285,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "notification_recipient",
+          required: true,
+          values: ["notification_recipient"],
         },
         {
           name: "subaccountId",
@@ -6919,6 +14335,7 @@ export const CLI_HELP_COMMANDS = {
         "enabled",
         "id",
         "name",
+        "object",
         "subaccountId",
         "type",
         "updatedAt",
@@ -6933,18 +14350,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic notification-recipients.create",
-      usage: "bctrl help --topic notification-recipients.create",
+      command: "bctrl notification-recipients create",
+      usage: "bctrl notification-recipients create",
     },
     mcp: {
-      toolName: "bctrl_notification_recipients_create",
+      toolName: "notification-recipients_create",
       operationResource: "operations://notification-recipients.create",
       schemaResources: ["schemas://NotificationRecipientCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic notification-recipients.create",
+        command: "bctrl notification-recipients create --help",
       },
     ],
   },
@@ -6962,10 +14379,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique notificationRecipient identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -6997,6 +14429,12 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Unique notificationRecipient identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "notification_recipient",
+          required: true,
+          values: ["notification_recipient"],
+        },
       ],
     },
     docs: [
@@ -7013,7 +14451,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/notification-recipients/{recipientId}",
       operationId: "notification-recipients.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -7023,17 +14461,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic notification-recipients.delete",
-      usage: "bctrl help --topic notification-recipients.delete",
+      command: "bctrl notification-recipients delete",
+      usage: "bctrl notification-recipients delete <recipientId>",
     },
     mcp: {
-      toolName: "bctrl_notification_recipients_delete",
+      toolName: "notification-recipients_delete",
       operationResource: "operations://notification-recipients.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic notification-recipients.delete",
+        command: "bctrl notification-recipients delete --help",
       },
     ],
   },
@@ -7050,6 +14488,13 @@ export const CLI_HELP_COMMANDS = {
           name: "cursor",
           type: "string",
           required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
         },
         {
           name: "limit",
@@ -7070,6 +14515,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -7083,6 +14543,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -7106,7 +14571,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/notification-recipients",
       operationId: "notification-recipients.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -7116,17 +14581,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic notification-recipients.list",
-      usage: "bctrl help --topic notification-recipients.list",
+      command: "bctrl notification-recipients list",
+      usage: "bctrl notification-recipients list",
     },
     mcp: {
-      toolName: "bctrl_notification_recipients_list",
+      toolName: "notification-recipients_list",
       operationResource: "operations://notification-recipients.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic notification-recipients.list",
+        command: "bctrl notification-recipients list --help",
       },
     ],
   },
@@ -7143,10 +14608,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Unique notificationRecipient identifier generated by BCTRL.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -7209,6 +14689,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "notification_recipient",
+          required: true,
+          values: ["notification_recipient"],
+        },
+        {
           name: "subaccountId",
           type: "string | null",
           required: true,
@@ -7251,6 +14737,7 @@ export const CLI_HELP_COMMANDS = {
         "enabled",
         "id",
         "name",
+        "object",
         "subaccountId",
         "type",
         "updatedAt",
@@ -7265,18 +14752,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic notification-recipients.update",
-      usage: "bctrl help --topic notification-recipients.update",
+      command: "bctrl notification-recipients update",
+      usage: "bctrl notification-recipients update <recipientId>",
     },
     mcp: {
-      toolName: "bctrl_notification_recipients_update",
+      toolName: "notification-recipients_update",
       operationResource: "operations://notification-recipients.update",
       schemaResources: ["schemas://NotificationRecipientUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic notification-recipients.update",
+        command: "bctrl notification-recipients update --help",
       },
     ],
   },
@@ -7288,6 +14775,21 @@ export const CLI_HELP_COMMANDS = {
     summary: "Create a saved proxy configuration for browser runtimes.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -7319,6 +14821,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "url",
@@ -7371,6 +14874,8 @@ export const CLI_HELP_COMMANDS = {
             name: "password",
             type: "string",
             required: false,
+            description:
+              "The proxy password, or a secret reference such as `secret:proxies/office#password`.",
           },
           {
             name: "udpMode",
@@ -7495,6 +15000,20 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "proxy",
+          required: true,
+          values: ["proxy"],
+        },
+        {
+          name: "passwordReference",
+          type: "string | null",
+          required: false,
+          description:
+            "The `secret:` reference the password is read from, or null when a literal is stored.",
         },
         {
           name: "port",
@@ -7696,6 +15215,8 @@ export const CLI_HELP_COMMANDS = {
         "host",
         "id",
         "name",
+        "object",
+        "passwordReference",
         "port",
         "protocol",
         "subaccountId",
@@ -7733,18 +15254,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.create",
-      usage: "bctrl help --topic proxies.create",
+      command: "bctrl proxies create",
+      usage: "bctrl proxies create",
     },
     mcp: {
-      toolName: "bctrl_proxies_create",
+      toolName: "proxies_create",
       operationResource: "operations://proxies.create",
       schemaResources: ["schemas://ProxyCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.create",
+        command: "bctrl proxies create --help",
       },
     ],
   },
@@ -7758,11 +15279,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "proxyId",
-          type: "uuid",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -7792,6 +15330,12 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
         },
+        {
+          name: "object",
+          type: "proxy",
+          required: true,
+          values: ["proxy"],
+        },
       ],
     },
     docs: [
@@ -7808,7 +15352,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/proxies/{proxyId}",
       operationId: "proxies.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -7818,17 +15362,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.delete",
-      usage: "bctrl help --topic proxies.delete",
+      command: "bctrl proxies delete",
+      usage: "bctrl proxies delete <proxyId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_delete",
+      toolName: "proxies_delete",
       operationResource: "operations://proxies.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.delete",
+        command: "bctrl proxies delete --help",
       },
     ],
   },
@@ -7845,6 +15389,13 @@ export const CLI_HELP_COMMANDS = {
           name: "cursor",
           type: "string",
           required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
         },
         {
           name: "limit",
@@ -7879,12 +15430,34 @@ export const CLI_HELP_COMMANDS = {
           values: ["pool1", "pool2"],
         },
       ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
     },
     output: {
       fields: [
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -7908,7 +15481,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies/geo",
       operationId: "proxies.geo.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -7918,17 +15491,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.geo.list",
-      usage: "bctrl help --topic proxies.geo.list",
+      command: "bctrl proxies geo list",
+      usage: "bctrl proxies geo list",
     },
     mcp: {
-      toolName: "bctrl_proxies_geo_list",
+      toolName: "proxies_geo_list",
       operationResource: "operations://proxies.geo.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.geo.list",
+        command: "bctrl proxies geo list --help",
       },
     ],
   },
@@ -7942,11 +15515,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "proxyId",
-          type: "uuid",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -7988,6 +15578,20 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "proxy",
+          required: true,
+          values: ["proxy"],
+        },
+        {
+          name: "passwordReference",
+          type: "string | null",
+          required: false,
+          description:
+            "The `secret:` reference the password is read from, or null when a literal is stored.",
         },
         {
           name: "port",
@@ -8163,6 +15767,8 @@ export const CLI_HELP_COMMANDS = {
         "host",
         "id",
         "name",
+        "object",
+        "passwordReference",
         "port",
         "protocol",
         "subaccountId",
@@ -8200,17 +15806,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.get",
-      usage: "bctrl help --topic proxies.get",
+      command: "bctrl proxies get",
+      usage: "bctrl proxies get <proxyId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_get",
+      toolName: "proxies_get",
       operationResource: "operations://proxies.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.get",
+        command: "bctrl proxies get --help",
       },
     ],
   },
@@ -8228,12 +15834,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -8248,6 +15876,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -8271,7 +15904,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies",
       operationId: "proxies.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -8281,17 +15914,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.list",
-      usage: "bctrl help --topic proxies.list",
+      command: "bctrl proxies list",
+      usage: "bctrl proxies list",
     },
     mcp: {
-      toolName: "bctrl_proxies_list",
+      toolName: "proxies_list",
       operationResource: "operations://proxies.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.list",
+        command: "bctrl proxies list --help",
       },
     ],
   },
@@ -8308,6 +15941,13 @@ export const CLI_HELP_COMMANDS = {
           name: "cursor",
           type: "string",
           required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
         },
         {
           name: "limit",
@@ -8342,12 +15982,34 @@ export const CLI_HELP_COMMANDS = {
           values: ["pool1", "pool2"],
         },
       ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
     },
     output: {
       fields: [
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -8371,7 +16033,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies/locations",
       operationId: "proxies.locations.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -8381,17 +16043,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.locations.list",
-      usage: "bctrl help --topic proxies.locations.list",
+      command: "bctrl proxies locations list",
+      usage: "bctrl proxies locations list",
     },
     mcp: {
-      toolName: "bctrl_proxies_locations_list",
+      toolName: "proxies_locations_list",
       operationResource: "operations://proxies.locations.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.locations.list",
+        command: "bctrl proxies locations list --help",
       },
     ],
   },
@@ -8408,6 +16070,23 @@ export const CLI_HELP_COMMANDS = {
           name: "poolId",
           type: "string",
           required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
       ],
     },
@@ -8453,6 +16132,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "proxy_pool",
+          required: true,
+          values: ["proxy_pool"],
+        },
+        {
           name: "priceCredits",
           type: "integer",
           required: true,
@@ -8485,6 +16170,7 @@ export const CLI_HELP_COMMANDS = {
         "country",
         "id",
         "label",
+        "object",
         "priceCredits",
         "termDays",
       ],
@@ -8497,17 +16183,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.pools.get",
-      usage: "bctrl help --topic proxies.pools.get",
+      command: "bctrl proxies pools get",
+      usage: "bctrl proxies pools get <poolId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_pools_get",
+      toolName: "proxies_pools_get",
       operationResource: "operations://proxies.pools.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.pools.get",
+        command: "bctrl proxies pools get --help",
       },
     ],
   },
@@ -8524,6 +16210,13 @@ export const CLI_HELP_COMMANDS = {
           name: "cursor",
           type: "string",
           required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
         },
         {
           name: "limit",
@@ -8555,12 +16248,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
       ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
     },
     output: {
       fields: [
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -8584,7 +16299,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/proxies/pools",
       operationId: "proxies.pools.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -8594,17 +16309,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.pools.list",
-      usage: "bctrl help --topic proxies.pools.list",
+      command: "bctrl proxies pools list",
+      usage: "bctrl proxies pools list",
     },
     mcp: {
-      toolName: "bctrl_proxies_pools_list",
+      toolName: "proxies_pools_list",
       operationResource: "operations://proxies.pools.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.pools.list",
+        command: "bctrl proxies pools list --help",
       },
     ],
   },
@@ -8619,11 +16334,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "proxyId",
-          type: "uuid",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -8668,6 +16400,12 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "object",
+          type: "test.result",
+          required: true,
+          values: ["test.result"],
+        },
+        {
           name: "ok",
           type: "boolean",
           required: true,
@@ -8694,6 +16432,7 @@ export const CLI_HELP_COMMANDS = {
         "exitIp",
         "httpStatus",
         "latencySeconds",
+        "object",
         "ok",
       ],
     },
@@ -8705,17 +16444,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.test",
-      usage: "bctrl help --topic proxies.test",
+      command: "bctrl proxies test",
+      usage: "bctrl proxies test <proxyId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_test",
+      toolName: "proxies_test",
       operationResource: "operations://proxies.test",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.test",
+        command: "bctrl proxies test --help",
       },
     ],
   },
@@ -8730,11 +16469,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "proxyId",
-          type: "uuid",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -8758,6 +16514,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "url",
@@ -8907,6 +16664,20 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "proxy",
+          required: true,
+          values: ["proxy"],
+        },
+        {
+          name: "passwordReference",
+          type: "string | null",
+          required: false,
+          description:
+            "The `secret:` reference the password is read from, or null when a literal is stored.",
         },
         {
           name: "port",
@@ -9106,6 +16877,8 @@ export const CLI_HELP_COMMANDS = {
         "host",
         "id",
         "name",
+        "object",
+        "passwordReference",
         "port",
         "protocol",
         "subaccountId",
@@ -9143,27 +16916,28 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic proxies.update",
-      usage: "bctrl help --topic proxies.update",
+      command: "bctrl proxies update",
+      usage: "bctrl proxies update <proxyId>",
     },
     mcp: {
-      toolName: "bctrl_proxies_update",
+      toolName: "proxies_update",
       operationResource: "operations://proxies.update",
       schemaResources: ["schemas://ProxyUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic proxies.update",
+        command: "bctrl proxies update --help",
       },
     ],
   },
-  "runs.events.list": {
+  "runs.delete": {
     type: "topic",
-    topic: "runs.events.list",
-    aliases: ["runs events list"],
-    title: "List run events",
-    summary: "List raw machine-readable runtime events for a run.",
+    topic: "runs.delete",
+    aliases: ["runs delete"],
+    title: "Purge artifacts of an ended Run",
+    summary:
+      "Purge the artifacts of an ended Run while retaining its lifecycle and usage record. Active Runs must be stopped and their native execution retired before purging.",
     inputs: {
       path: [
         {
@@ -9173,45 +16947,22 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique run identifier generated by BCTRL.",
         },
       ],
-      query: [
-        {
-          name: "type",
-          type: "string[]",
-          required: false,
-          description:
-            "Filter by one or more namespaced event types. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "source",
-          type: "browser | network | runtime | agent | tool | system[]",
-          required: false,
-          description:
-            "Filter by one or more event sources. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "spanId",
-          type: "string",
-          required: false,
-          description: "Unique traceSpan identifier generated by BCTRL.",
-        },
-        {
-          name: "pageId",
-          type: "string",
-          required: false,
-          description: "Unique page identifier generated by BCTRL.",
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9219,19 +16970,28 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
     },
     output: {
       fields: [
         {
-          name: "data",
-          type: "object[]",
+          name: "deleted",
+          type: "true",
           required: true,
+          values: ["true"],
         },
         {
-          name: "nextCursor",
-          type: "string | null",
+          name: "id",
+          type: "string",
           required: true,
+          description: "Unique run identifier generated by BCTRL.",
         },
       ],
     },
@@ -9245,30 +17005,571 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     api: {
-      method: "GET",
-      path: "/v1/runs/{runId}/events",
-      operationId: "runs.events.list",
-      responseFields: ["data", "nextCursor"],
+      method: "DELETE",
+      path: "/v1/runs/{runId}",
+      operationId: "runs.delete",
+      responseFields: ["deleted", "id"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "runs.events.list",
+        method: "runs.delete",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.events.list",
-      usage: "bctrl help --topic runs.events.list",
+      command: "bctrl runs delete",
+      usage: "bctrl runs delete <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_events_list",
-      operationResource: "operations://runs.events.list",
+      toolName: "runs_delete",
+      operationResource: "operations://runs.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.events.list",
+        command: "bctrl runs delete --help",
+      },
+    ],
+  },
+  "runs.files.add": {
+    type: "topic",
+    topic: "runs.files.add",
+    aliases: ["runs files add"],
+    title: "Add a Space File to a Run",
+    summary:
+      "Bind an existing Space File to the Run. The Run's cell keeps a copy at the returned runtimePath.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "RunFileAddRequest",
+        schemaResource: "schemas://RunFileAddRequest",
+        fields: [
+          {
+            name: "fileId",
+            type: "string",
+            required: true,
+            description: "Unique file identifier generated by BCTRL.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "binding",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "fileId",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
+        },
+        {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
+        },
+        {
+          name: "role",
+          type: "input | output",
+          required: true,
+          values: ["input", "output"],
+        },
+        {
+          name: "runtimePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "size",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sourcePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spacePath",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Files",
+        url: "https://platform.bctrl.ai/sdk/files",
+        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
+        description:
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
+      },
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/runs/{runId}/files",
+      operationId: "runs.files.add",
+      requestFields: ["fileId"],
+      responseFields: [
+        "binding",
+        "createdAt",
+        "fileId",
+        "filename",
+        "object",
+        "role",
+        "runtimePath",
+        "size",
+        "sourcePath",
+        "spacePath",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.files.add",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl runs files add",
+      usage: "bctrl runs files add <runId>",
+    },
+    mcp: {
+      toolName: "runs_files_add",
+      operationResource: "operations://runs.files.add",
+      schemaResources: ["schemas://RunFileAddRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl runs files add --help",
+      },
+    ],
+  },
+  "runs.files.collect": {
+    type: "topic",
+    topic: "runs.files.collect",
+    aliases: ["runs files collect"],
+    title: "Save a file from a Run's workspace",
+    summary: "Save a file from the Run's workspace as an output File.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "RunFileCollectRequest",
+        schemaResource: "schemas://RunFileCollectRequest",
+        fields: [
+          {
+            name: "runtimePath",
+            type: "string",
+            required: true,
+          },
+          {
+            name: "path",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "filename",
+            type: "string",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "binding",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "fileId",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
+        },
+        {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
+        },
+        {
+          name: "role",
+          type: "input | output",
+          required: true,
+          values: ["input", "output"],
+        },
+        {
+          name: "runtimePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "size",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sourcePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spacePath",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Files",
+        url: "https://platform.bctrl.ai/sdk/files",
+        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
+        description:
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
+      },
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/runs/{runId}/files/collect",
+      operationId: "runs.files.collect",
+      requestFields: ["runtimePath", "path", "filename"],
+      responseFields: [
+        "binding",
+        "createdAt",
+        "fileId",
+        "filename",
+        "object",
+        "role",
+        "runtimePath",
+        "size",
+        "sourcePath",
+        "spacePath",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.files.collect",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl runs files collect",
+      usage: "bctrl runs files collect <runId>",
+    },
+    mcp: {
+      toolName: "runs_files_collect",
+      operationResource: "operations://runs.files.collect",
+      schemaResources: ["schemas://RunFileCollectRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl runs files collect --help",
+      },
+    ],
+  },
+  "runs.files.get": {
+    type: "topic",
+    topic: "runs.files.get",
+    aliases: ["runs files get"],
+    title: "Get a Run file",
+    summary: "Get one Run file.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+        {
+          name: "fileId",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "binding",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "fileId",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
+        },
+        {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
+        },
+        {
+          name: "role",
+          type: "input | output",
+          required: true,
+          values: ["input", "output"],
+        },
+        {
+          name: "runtimePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "size",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sourcePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spacePath",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Files",
+        url: "https://platform.bctrl.ai/sdk/files",
+        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
+        description:
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
+      },
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/runs/{runId}/files/{fileId}",
+      operationId: "runs.files.get",
+      responseFields: [
+        "binding",
+        "createdAt",
+        "fileId",
+        "filename",
+        "object",
+        "role",
+        "runtimePath",
+        "size",
+        "sourcePath",
+        "spacePath",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.files.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl runs files get",
+      usage: "bctrl runs files get <runId> <fileId>",
+    },
+    mcp: {
+      toolName: "runs_files_get",
+      operationResource: "operations://runs.files.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl runs files get --help",
       },
     ],
   },
@@ -9276,8 +17577,9 @@ export const CLI_HELP_COMMANDS = {
     type: "topic",
     topic: "runs.files.list",
     aliases: ["runs files list"],
-    title: "List files attached to a run",
-    summary: "List durable files attached to a run.",
+    title: "List Run files",
+    summary:
+      "List a Run's files: inputs bound to the Run with their copy state in its cell, and outputs the Run produced.",
     inputs: {
       path: [
         {
@@ -9294,12 +17596,40 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
+        {
+          name: "role",
+          type: "input | output",
+          required: false,
+          values: ["input", "output"],
+        },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9314,6 +17644,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -9344,7 +17679,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runs/{runId}/files",
       operationId: "runs.files.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -9354,17 +17689,534 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.files.list",
-      usage: "bctrl help --topic runs.files.list",
+      command: "bctrl runs files list",
+      usage: "bctrl runs files list <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_files_list",
+      toolName: "runs_files_list",
       operationResource: "operations://runs.files.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.files.list",
+        command: "bctrl runs files list --help",
+      },
+    ],
+  },
+  "runs.files.remove": {
+    type: "topic",
+    topic: "runs.files.remove",
+    aliases: ["runs files remove"],
+    title: "Remove a Run input",
+    summary: "Remove a Run input from the Run's cell. The Space File is kept.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+        {
+          name: "fileId",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "binding",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "fileId",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
+        },
+        {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
+        },
+        {
+          name: "role",
+          type: "input | output",
+          required: true,
+          values: ["input", "output"],
+        },
+        {
+          name: "runtimePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "size",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sourcePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spacePath",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Files",
+        url: "https://platform.bctrl.ai/sdk/files",
+        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
+        description:
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
+      },
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "DELETE",
+      path: "/v1/runs/{runId}/files/{fileId}",
+      operationId: "runs.files.remove",
+      responseFields: [
+        "binding",
+        "createdAt",
+        "fileId",
+        "filename",
+        "object",
+        "role",
+        "runtimePath",
+        "size",
+        "sourcePath",
+        "spacePath",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.files.remove",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl runs files remove",
+      usage: "bctrl runs files remove <runId> <fileId>",
+    },
+    mcp: {
+      toolName: "runs_files_remove",
+      operationResource: "operations://runs.files.remove",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl runs files remove --help",
+      },
+    ],
+  },
+  "runs.files.retry": {
+    type: "topic",
+    topic: "runs.files.retry",
+    aliases: ["runs files retry"],
+    title: "Retry copying a Run input",
+    summary: "Copy a failed Run input into the cell again.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+        {
+          name: "fileId",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "binding",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "fileId",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
+        },
+        {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
+        },
+        {
+          name: "role",
+          type: "input | output",
+          required: true,
+          values: ["input", "output"],
+        },
+        {
+          name: "runtimePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "size",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sourcePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spacePath",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Files",
+        url: "https://platform.bctrl.ai/sdk/files",
+        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
+        description:
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
+      },
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/runs/{runId}/files/{fileId}/retry",
+      operationId: "runs.files.retry",
+      responseFields: [
+        "binding",
+        "createdAt",
+        "fileId",
+        "filename",
+        "object",
+        "role",
+        "runtimePath",
+        "size",
+        "sourcePath",
+        "spacePath",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.files.retry",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl runs files retry",
+      usage: "bctrl runs files retry <runId> <fileId>",
+    },
+    mcp: {
+      toolName: "runs_files_retry",
+      operationResource: "operations://runs.files.retry",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl runs files retry --help",
+      },
+    ],
+  },
+  "runs.files.upload": {
+    type: "topic",
+    topic: "runs.files.upload",
+    aliases: ["runs files upload"],
+    title: "Upload a file into a Run",
+    summary:
+      "Upload one durable Space File (at path, default uploads/<filename>) and bind it to this Run. The Run's cell keeps a copy at the returned runtimePath; binding.state reports when it is ready.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "binding",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "fileId",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
+        },
+        {
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "run.file",
+          required: true,
+          values: ["run.file"],
+        },
+        {
+          name: "role",
+          type: "input | output",
+          required: true,
+          values: ["input", "output"],
+        },
+        {
+          name: "runtimePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "size",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sourcePath",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "spacePath",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Files",
+        url: "https://platform.bctrl.ai/sdk/files",
+        markdownUrl: "https://platform.bctrl.ai/sdk/files.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/files.md",
+        description:
+          "Store, transfer, and inspect durable files across Spaces, Runtimes, and Runs.",
+      },
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "POST",
+      path: "/v1/runs/{runId}/files/upload",
+      operationId: "runs.files.upload",
+      responseFields: [
+        "binding",
+        "createdAt",
+        "fileId",
+        "filename",
+        "object",
+        "role",
+        "runtimePath",
+        "size",
+        "sourcePath",
+        "spacePath",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.files.upload",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl runs files upload",
+      usage: "bctrl runs files upload <runId>",
+    },
+    mcp: {
+      toolName: "runs_files_upload",
+      operationResource: "operations://runs.files.upload",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl runs files upload --help",
       },
     ],
   },
@@ -9386,12 +18238,33 @@ export const CLI_HELP_COMMANDS = {
       query: [
         {
           name: "include",
-          type: "connection",
+          type: "usage | machineAccess",
           required: false,
-          values: ["connection"],
+          description:
+            "usage: the Run’s usage; machineAccess: whether BCTRL machine channels or programs outside the browser were used (preview).",
+        },
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9404,12 +18277,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "connection",
-          type: "object",
-          required: false,
+          name: "connections",
+          type: "object | null",
+          required: true,
         },
         {
-          name: "counts",
+          name: "control",
           type: "object",
           required: true,
         },
@@ -9420,18 +18293,13 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
-          name: "durationSeconds",
-          type: "number | null",
-          required: true,
-        },
-        {
-          name: "failure",
-          type: "object | null",
-          required: true,
-        },
-        {
-          name: "finishedAt",
+          name: "endedAt",
           type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "endReason",
+          type: "string | null",
           required: true,
         },
         {
@@ -9441,21 +18309,40 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique run identifier generated by BCTRL.",
         },
         {
+          name: "location",
+          type: "us-east",
+          required: true,
+          values: ["us-east"],
+        },
+        {
+          name: "machineAccess",
+          type: "object | null",
+          required: false,
+          description:
+            "Preview, with include=machineAccess. null when the Run’s log is not complete enough to tell.",
+        },
+        {
+          name: "object",
+          type: "run",
+          required: true,
+          values: ["run"],
+        },
+        {
           name: "recording",
           type: "object",
           required: true,
         },
         {
-          name: "runtimeId",
+          name: "resourceId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
-          name: "runtimeType",
-          type: "browser | desktop | spreadsheet",
+          name: "resourceType",
+          type: "browser",
           required: true,
-          values: ["browser", "desktop", "spreadsheet"],
+          values: ["browser"],
         },
         {
           name: "spaceId",
@@ -9465,19 +18352,48 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "starting | active | standby | stopping | ended | failed",
+          required: true,
+          values: [
+            "starting",
+            "active",
+            "standby",
+            "stopping",
+            "ended",
+            "failed",
+          ],
+        },
+        {
+          name: "taskId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "traceId",
+          type: "string | null",
+          required: true,
+          description:
+            "W3C trace ID: GET /traces/{traceId} returns the span tree.",
+        },
+        {
+          name: "updatedAt",
           type: "datetime",
           required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
-          name: "status",
-          type: "active | stopped | failed",
-          required: true,
-          values: ["active", "stopped", "failed"],
-        },
-        {
           name: "usage",
           type: "object",
+          required: false,
+        },
+        {
+          name: "warnings",
+          type: "object[]",
           required: false,
         },
       ],
@@ -9496,20 +18412,26 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/runs/{runId}",
       operationId: "runs.get",
       responseFields: [
-        "connection",
-        "counts",
+        "connections",
+        "control",
         "createdAt",
-        "durationSeconds",
-        "failure",
-        "finishedAt",
+        "endedAt",
+        "endReason",
         "id",
+        "location",
+        "machineAccess",
+        "object",
         "recording",
-        "runtimeId",
-        "runtimeType",
+        "resourceId",
+        "resourceType",
         "spaceId",
         "startedAt",
         "status",
+        "taskId",
+        "traceId",
+        "updatedAt",
         "usage",
+        "warnings",
       ],
     },
     sdk: [
@@ -9520,17 +18442,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.get",
-      usage: "bctrl help --topic runs.get",
+      command: "bctrl runs get",
+      usage: "bctrl runs get <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_get",
+      toolName: "runs_get",
       operationResource: "operations://runs.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.get",
+        command: "bctrl runs get --help",
       },
     ],
   },
@@ -9544,8 +18466,25 @@ export const CLI_HELP_COMMANDS = {
     inputs: {
       query: [
         {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
           name: "status",
-          type: "active | stopped | failed[]",
+          type: "starting | active | standby | stopping | ended | failed[]",
           required: false,
           description:
             "Filter by one or more run statuses. Repeat the query parameter for multiple values.",
@@ -9554,26 +18493,56 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceId",
           type: "string",
           required: false,
-          description: "Unique space identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
         {
-          name: "runtimeId",
+          name: "resourceId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
-          name: "cursor",
-          type: "string",
+          name: "resourceType",
+          type: "browser",
           required: false,
+          values: ["browser"],
         },
         {
-          name: "limit",
-          type: "integer",
+          name: "from",
+          type: "datetime",
           required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "include",
+          type: "usage",
+          required: false,
+          values: ["usage"],
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9588,6 +18557,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -9610,7 +18584,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runs",
       operationId: "runs.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -9620,17 +18594,324 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.list",
-      usage: "bctrl help --topic runs.list",
+      command: "bctrl runs list",
+      usage: "bctrl runs list",
     },
     mcp: {
-      toolName: "bctrl_runs_list",
+      toolName: "runs_list",
       operationResource: "operations://runs.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.list",
+        command: "bctrl runs list --help",
+      },
+    ],
+  },
+  "runs.recordings.get": {
+    type: "topic",
+    topic: "runs.recordings.get",
+    aliases: ["runs recordings get"],
+    title: "Get a whole-Run recording",
+    summary:
+      "Read one recording belonging to this Run. A succeeded recording includes a direct standalone MP4 download URL, expiry, SHA-256 and byte size. Partial capture is reported explicitly. Download URLs expire within five minutes and never outlive a View.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+        {
+          name: "recordingId",
+          type: "string",
+          required: true,
+          description: "Unique recording identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "downloadExpiresAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "downloadUrl",
+          type: "string | null",
+          required: true,
+          description:
+            "A short-lived direct download of the standalone MP4. Available only when status is succeeded.",
+        },
+        {
+          name: "durationMs",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "endedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique recording identifier generated by BCTRL.",
+        },
+        {
+          name: "kind",
+          type: "whole_run",
+          required: true,
+          values: ["whole_run"],
+        },
+        {
+          name: "object",
+          type: "recording",
+          required: true,
+          values: ["recording"],
+        },
+        {
+          name: "partial",
+          type: "boolean | null",
+          required: true,
+          description:
+            "Whether the completed capture is missing media. Null until capture completes.",
+        },
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+        {
+          name: "sha256",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "sizeBytes",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "awaiting_input",
+            "succeeded",
+            "failed",
+            "canceled",
+            "unknown",
+          ],
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/runs/{runId}/recordings/{recordingId}",
+      operationId: "runs.recordings.get",
+      responseFields: [
+        "createdAt",
+        "downloadExpiresAt",
+        "downloadUrl",
+        "durationMs",
+        "endedAt",
+        "id",
+        "kind",
+        "object",
+        "partial",
+        "runId",
+        "sha256",
+        "sizeBytes",
+        "startedAt",
+        "status",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.recordings.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl runs recordings get",
+      usage: "bctrl runs recordings get <runId> <recordingId>",
+    },
+    mcp: {
+      toolName: "runs_recordings_get",
+      operationResource: "operations://runs.recordings.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl runs recordings get --help",
+      },
+    ],
+  },
+  "runs.recordings.list": {
+    type: "topic",
+    topic: "runs.recordings.list",
+    aliases: ["runs recordings list"],
+    title: "List whole-Run recordings",
+    summary:
+      "Read the whole-Run recording, including export progress and a direct standalone MP4 download with its SHA-256 when succeeded. Preserves historical Run access after Browser deletion. Purged artifacts are excluded. Download URLs expire within five minutes and never outlive a View.",
+    inputs: {
+      path: [
+        {
+          name: "runId",
+          type: "string",
+          required: true,
+          description: "Unique run identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Runs",
+        url: "https://platform.bctrl.ai/sdk/runs",
+        markdownUrl: "https://platform.bctrl.ai/sdk/runs.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/runs.md",
+        description: "The session record created when a runtime starts.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/runs/{runId}/recordings",
+      operationId: "runs.recordings.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "runs.recordings.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl runs recordings list",
+      usage: "bctrl runs recordings list <runId>",
+    },
+    mcp: {
+      toolName: "runs_recordings_list",
+      operationResource: "operations://runs.recordings.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl runs recordings list --help",
       },
     ],
   },
@@ -9662,6 +18943,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9700,17 +18996,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.stream",
-      usage: "bctrl help --topic runs.stream",
+      command: "bctrl runs stream",
+      usage: "bctrl runs stream <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_stream",
+      toolName: "runs_stream",
       operationResource: "operations://runs.stream",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.stream",
+        command: "bctrl runs stream --help",
       },
     ],
   },
@@ -9745,7 +19041,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "queued | running | requires_input | suspended | succeeded | failed | cancelled | timed_out[]",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown[]",
           required: false,
           description:
             "Filter by one or more trace span statuses. Repeat the query parameter for multiple values.",
@@ -9771,12 +19067,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9791,6 +19109,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -9813,7 +19136,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/runs/{runId}/trace",
       operationId: "runs.trace.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -9823,29 +19146,52 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic runs.trace.list",
-      usage: "bctrl help --topic runs.trace.list",
+      command: "bctrl runs trace list",
+      usage: "bctrl runs trace list <runId>",
     },
     mcp: {
-      toolName: "bctrl_runs_trace_list",
+      toolName: "runs_trace_list",
       operationResource: "operations://runs.trace.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runs.trace.list",
+        command: "bctrl runs trace list --help",
       },
     ],
   },
-  "runtimes.create": {
+  "sandboxes.browser.attach": {
     type: "topic",
-    topic: "runtimes.create",
-    aliases: ["runtimes create"],
-    title: "Create a runtime or session",
-    summary:
-      "Create a browser runtime. Ephemeral runtimes (profile omitted or false) are single-session: by default they start in the same call and the response includes a `connection` with the run-scoped connect endpoint; pass start:false to defer startup (for example, to mint a share view first), then POST /start. They archive when their run finishes and never restart. Profile-backed runtimes (profile true) retain browser identity, remain reusable, and are created stopped by default; pass start:true for one-call create-and-start. Omit spaceId to use the caller's default space.",
+    topic: "sandboxes.browser.attach",
+    aliases: ["sandboxes browser attach"],
+    title: "Attach a browser to a sandbox",
+    summary: "Attach one browser from the same Space to a sandbox.",
     inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -9862,49 +19208,14 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       body: {
-        schema: "RuntimeCreateRequest",
-        schemaResource: "schemas://RuntimeCreateRequest",
+        schema: "SandboxBrowserAttachRequest",
+        schemaResource: "schemas://SandboxBrowserAttachRequest",
         fields: [
           {
-            name: "spaceId",
-            type: "string | default",
-            required: false,
-          },
-          {
-            name: "type",
-            type: "browser",
-            required: false,
-            values: ["browser"],
-          },
-          {
-            name: "name",
+            name: "browserId",
             type: "string",
-            required: false,
-          },
-          {
-            name: "profile",
-            type: "boolean",
-            required: false,
-          },
-          {
-            name: "config",
-            type: "object",
-            required: false,
-          },
-          {
-            name: "metadata",
-            type: "object",
-            required: false,
-          },
-          {
-            name: "start",
-            type: "boolean",
-            required: false,
-          },
-          {
-            name: "recording",
-            type: "boolean",
-            required: false,
+            required: true,
+            description: "Unique browser identifier generated by BCTRL.",
           },
         ],
       },
@@ -9912,30 +19223,26 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "activeRunId",
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "browserId",
           type: "string | null",
           required: true,
         },
         {
-          name: "archivedAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
+          name: "capabilities",
+          type: "object",
+          required: true,
+          description:
+            "Capabilities qualified for this sandbox. false means not available.",
         },
         {
-          name: "benchmarkProvenance",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "config",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "connection",
-          type: "object",
-          required: false,
+          name: "conversationId",
+          type: "string | null",
+          required: true,
         },
         {
           name: "createdAt",
@@ -9944,35 +19251,41 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique sandbox identifier generated by BCTRL.",
         },
         {
-          name: "lastActivityAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "name",
+          name: "image",
           type: "string",
           required: true,
         },
         {
-          name: "needsInput",
-          type: "boolean",
-          required: false,
+          name: "name",
+          type: "string | null",
+          required: true,
         },
         {
-          name: "profile",
-          type: "boolean",
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
+          name: "snapshotSchedule",
+          type: "object | null",
           required: true,
         },
         {
@@ -9983,15 +19296,16 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "active | stopped | failed",
+          type: "provisioning | ready | stopping | stopped | failed | deleting",
           required: true,
-          values: ["active", "stopped", "failed"],
-        },
-        {
-          name: "type",
-          type: "browser",
-          required: true,
-          values: ["browser"],
+          values: [
+            "provisioning",
+            "ready",
+            "stopping",
+            "stopped",
+            "failed",
+            "deleting",
+          ],
         },
         {
           name: "updatedAt",
@@ -10001,88 +19315,829 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
     api: {
       method: "POST",
-      path: "/v1/runtimes",
-      operationId: "runtimes.create",
-      requestFields: [
-        "spaceId",
-        "type",
-        "name",
-        "profile",
-        "config",
-        "metadata",
-        "start",
-        "recording",
-      ],
+      path: "/v1/sandboxes/{sandboxId}/browser",
+      operationId: "sandboxes.browser.attach",
+      requestFields: ["browserId"],
       responseFields: [
-        "activeRunId",
-        "archivedAt",
-        "benchmarkProvenance",
-        "config",
-        "connection",
+        "audit",
+        "browserId",
+        "capabilities",
+        "conversationId",
         "createdAt",
+        "errorCode",
         "id",
-        "lastActivityAt",
-        "metadata",
+        "image",
         "name",
-        "needsInput",
-        "profile",
+        "object",
+        "secretEnv",
+        "snapshotSchedule",
         "spaceId",
         "status",
-        "type",
         "updatedAt",
       ],
     },
     sdk: [
       {
         language: "typescript",
-        method: "runtimes.create",
+        method: "sandboxes.browser.attach",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic runtimes.create",
-      usage: "bctrl help --topic runtimes.create",
+      command: "bctrl sandboxes browser attach",
+      usage: "bctrl sandboxes browser attach <sandboxId>",
     },
     mcp: {
-      toolName: "bctrl_runtimes_create",
-      operationResource: "operations://runtimes.create",
-      schemaResources: ["schemas://RuntimeCreateRequest"],
+      toolName: "sandboxes_browser_attach",
+      operationResource: "operations://sandboxes.browser.attach",
+      schemaResources: ["schemas://SandboxBrowserAttachRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runtimes.create",
+        command: "bctrl sandboxes browser attach --help",
       },
     ],
   },
-  "runtimes.delete": {
+  "sandboxes.connections.create": {
     type: "topic",
-    topic: "runtimes.delete",
-    aliases: ["runtimes delete"],
-    title: "Delete a runtime",
+    topic: "sandboxes.connections.create",
+    aliases: ["sandboxes connections create"],
+    title: "Open a terminal connection to a sandbox",
     summary:
-      "Delete a stopped runtime and its browser state. Active runtimes must be stopped first.",
+      "Open an interactive terminal (PTY) to a ready sandbox. Returns a WebSocket URL and a one-time ticket. Refused while a Task is using the sandbox.",
     inputs: {
       path: [
         {
-          name: "runtimeId",
+          name: "sandboxId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxConnectionCreateRequest",
+        schemaResource: "schemas://SandboxConnectionCreateRequest",
+        description:
+          "fields is the union-wide field superset. For valid bodies, use discriminator.variants and each variant required/example as authoritative.",
+        fields: [
+          {
+            name: "protocol",
+            type: "terminal",
+            required: true,
+            values: ["terminal"],
+          },
+          {
+            name: "expiresInSeconds",
+            type: "integer",
+            required: false,
+            description:
+              "Connection lifetime. An open terminal is closed when it ends.",
+          },
+        ],
+        discriminator: {
+          property: "protocol",
+          variants: [
+            {
+              value: "terminal",
+              schema: "SandboxTerminalConnectionRequest",
+              schemaResource: "schemas://SandboxTerminalConnectionRequest",
+              required: ["protocol"],
+            },
+          ],
+        },
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "expiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Unique sandboxConnection identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "sandbox_connection",
+          required: true,
+          values: ["sandbox_connection"],
+        },
+        {
+          name: "port",
+          type: "integer | null",
+          required: true,
+          description: "The sandbox port, for a port preview.",
+        },
+        {
+          name: "protocol",
+          type: "terminal | ssh | port",
+          required: true,
+          values: ["terminal", "ssh", "port"],
+        },
+        {
+          name: "revokedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "subprotocol",
+          type: "bctrl.terminal.v1",
+          required: true,
+          description: "WebSocket subprotocol the client must offer.",
+          values: ["bctrl.terminal.v1"],
+        },
+        {
+          name: "ticket",
+          type: "string",
+          required: true,
+          description:
+            "One-time credential for opening the WebSocket, valid for one minute. Send it as `Authorization: Bearer <ticket>`, or from a browser as the subprotocol `bctrl.ticket.<ticket>` alongside `bctrl.terminal.v1`.",
+        },
+        {
+          name: "ticketExpiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "url",
+          type: "string",
+          required: true,
+          description: "WebSocket URL to open. It carries no credential.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/connections",
+      operationId: "sandboxes.connections.create",
+      requestFields: ["protocol", "expiresInSeconds"],
+      responseFields: [
+        "createdAt",
+        "expiresAt",
+        "id",
+        "object",
+        "port",
+        "protocol",
+        "revokedAt",
+        "sandboxId",
+        "subprotocol",
+        "ticket",
+        "ticketExpiresAt",
+        "updatedAt",
+        "url",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.connections.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes connections create",
+      usage: "bctrl sandboxes connections create <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_connections_create",
+      operationResource: "operations://sandboxes.connections.create",
+      schemaResources: ["schemas://SandboxConnectionCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes connections create --help",
+      },
+    ],
+  },
+  "sandboxes.connections.delete": {
+    type: "topic",
+    topic: "sandboxes.connections.delete",
+    aliases: ["sandboxes connections delete"],
+    title: "Revoke a sandbox connection",
+    summary:
+      "Revoke a sandbox connection. An open terminal is closed within seconds.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "connectionId",
+          type: "string",
+          required: true,
+          description:
+            "Unique sandboxConnection identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "expiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Unique sandboxConnection identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "sandbox_connection",
+          required: true,
+          values: ["sandbox_connection"],
+        },
+        {
+          name: "port",
+          type: "integer | null",
+          required: true,
+          description: "The sandbox port, for a port preview.",
+        },
+        {
+          name: "protocol",
+          type: "terminal | ssh | port",
+          required: true,
+          values: ["terminal", "ssh", "port"],
+        },
+        {
+          name: "revokedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/sandboxes/{sandboxId}/connections/{connectionId}",
+      operationId: "sandboxes.connections.delete",
+      responseFields: [
+        "createdAt",
+        "expiresAt",
+        "id",
+        "object",
+        "port",
+        "protocol",
+        "revokedAt",
+        "sandboxId",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.connections.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes connections delete",
+      usage: "bctrl sandboxes connections delete <sandboxId> <connectionId>",
+    },
+    mcp: {
+      toolName: "sandboxes_connections_delete",
+      operationResource: "operations://sandboxes.connections.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes connections delete --help",
+      },
+    ],
+  },
+  "sandboxes.connections.get": {
+    type: "topic",
+    topic: "sandboxes.connections.get",
+    aliases: ["sandboxes connections get"],
+    title: "Get a sandbox connection",
+    summary: "Get a sandbox connection and whether it has been revoked.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "connectionId",
+          type: "string",
+          required: true,
+          description:
+            "Unique sandboxConnection identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "expiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Unique sandboxConnection identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "sandbox_connection",
+          required: true,
+          values: ["sandbox_connection"],
+        },
+        {
+          name: "port",
+          type: "integer | null",
+          required: true,
+          description: "The sandbox port, for a port preview.",
+        },
+        {
+          name: "protocol",
+          type: "terminal | ssh | port",
+          required: true,
+          values: ["terminal", "ssh", "port"],
+        },
+        {
+          name: "revokedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/sandboxes/{sandboxId}/connections/{connectionId}",
+      operationId: "sandboxes.connections.get",
+      responseFields: [
+        "createdAt",
+        "expiresAt",
+        "id",
+        "object",
+        "port",
+        "protocol",
+        "revokedAt",
+        "sandboxId",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.connections.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes connections get",
+      usage: "bctrl sandboxes connections get <sandboxId> <connectionId>",
+    },
+    mcp: {
+      toolName: "sandboxes_connections_get",
+      operationResource: "operations://sandboxes.connections.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes connections get --help",
+      },
+    ],
+  },
+  "sandboxes.create": {
+    type: "topic",
+    topic: "sandboxes.create",
+    aliases: ["sandboxes create"],
+    title: "Create a sandbox",
+    summary:
+      "Create a sandbox from an approved image. Returns while it is provisioning.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxCreateRequest",
+        schemaResource: "schemas://SandboxCreateRequest",
+        fields: [
+          {
+            name: "spaceId",
+            type: "string",
+            required: false,
+            description:
+              "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          },
+          {
+            name: "image",
+            type: "string",
+            required: false,
+            description:
+              "An approved image identifier such as `bctrl-pi-stable`, or any OCI image reference such as `python:3.12` or `ghcr.io/acme/tools@sha256:…`.",
+          },
+          {
+            name: "name",
+            type: "string",
+            required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
+          },
+          {
+            name: "snapshotSchedule",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "secretEnv",
+            type: "object",
+            required: false,
+            description:
+              "Environment variable names (letters, digits, underscore; not PATH, HOME, *_PROXY, BCTRL_* and other reserved names) to the Secret written for them.",
+          },
+          {
+            name: "audit",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "fromSnapshot",
+            type: "string",
+            required: false,
+            description:
+              "Start as a fork of this snapshot (memory and disk), on the node that holds it. The image comes from the snapshot.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "browserId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+          description:
+            "Capabilities qualified for this sandbox. false means not available.",
+        },
+        {
+          name: "conversationId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "image",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "provisioning | ready | stopping | stopped | failed | deleting",
+          required: true,
+          values: [
+            "provisioning",
+            "ready",
+            "stopping",
+            "stopped",
+            "failed",
+            "deleting",
+          ],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes",
+      operationId: "sandboxes.create",
+      requestFields: [
+        "spaceId",
+        "image",
+        "name",
+        "snapshotSchedule",
+        "secretEnv",
+        "audit",
+        "fromSnapshot",
+      ],
+      responseFields: [
+        "audit",
+        "browserId",
+        "capabilities",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "id",
+        "image",
+        "name",
+        "object",
+        "secretEnv",
+        "snapshotSchedule",
+        "spaceId",
+        "status",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes create",
+      usage: "bctrl sandboxes create",
+    },
+    mcp: {
+      toolName: "sandboxes_create",
+      operationResource: "operations://sandboxes.create",
+      schemaResources: ["schemas://SandboxCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes create --help",
+      },
+    ],
+  },
+  "sandboxes.delete": {
+    type: "topic",
+    topic: "sandboxes.delete",
+    aliases: ["sandboxes delete"],
+    title: "Delete an sandbox",
+    summary:
+      "Permanently delete a sandbox that is not bound to a conversation.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10111,71 +20166,77 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
     api: {
       method: "DELETE",
-      path: "/v1/runtimes/{runtimeId}",
-      operationId: "runtimes.delete",
-      responseFields: ["deleted", "id"],
+      path: "/v1/sandboxes/{sandboxId}",
+      operationId: "sandboxes.delete",
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "runtimes.delete",
+        method: "sandboxes.delete",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic runtimes.delete",
-      usage: "bctrl help --topic runtimes.delete",
+      command: "bctrl sandboxes delete",
+      usage: "bctrl sandboxes delete <sandboxId>",
     },
     mcp: {
-      toolName: "bctrl_runtimes_delete",
-      operationResource: "operations://runtimes.delete",
+      toolName: "sandboxes_delete",
+      operationResource: "operations://sandboxes.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runtimes.delete",
+        command: "bctrl sandboxes delete --help",
       },
     ],
   },
-  "runtimes.get": {
+  "sandboxes.files.collect": {
     type: "topic",
-    topic: "runtimes.get",
-    aliases: ["runtimes get"],
-    title: "Get a runtime",
-    summary: "Get one runtime using the simplified runtime detail resource.",
+    topic: "sandboxes.files.collect",
+    aliases: ["sandboxes files collect"],
+    title: "Publish a sandbox file as a File",
+    summary:
+      "Publish a file from the sandbox working directory as a durable File.",
     inputs: {
       path: [
         {
-          name: "runtimeId",
+          name: "sandboxId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-      ],
-      query: [
-        {
-          name: "include",
-          type: "connection",
-          required: false,
-          values: ["connection"],
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10183,30 +20244,42 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
       ],
+      body: {
+        schema: "SandboxFileCollectRequest",
+        schemaResource: "schemas://SandboxFileCollectRequest",
+        fields: [
+          {
+            name: "path",
+            type: "string",
+            required: true,
+          },
+          {
+            name: "name",
+            type: "string",
+            required: false,
+          },
+        ],
+      },
     },
     output: {
       fields: [
         {
-          name: "activeRunId",
-          type: "string | null",
+          name: "canDelete",
+          type: "boolean",
+          required: false,
+        },
+        {
+          name: "contentType",
+          type: "string",
           required: true,
-        },
-        {
-          name: "archivedAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "config",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "connection",
-          type: "object",
-          required: false,
         },
         {
           name: "createdAt",
@@ -10215,23 +20288,26 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
-          name: "id",
+          name: "downloadUrl",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
-          name: "lastActivityAt",
+          name: "expiresAt",
           type: "datetime",
           required: false,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
-          name: "latestRun",
-          type: "object | null",
-          required: false,
-          description:
-            "Most recent run of this runtime (the active one when a run is open). Null when the runtime has never run.",
+          name: "filename",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique file identifier generated by BCTRL.",
         },
         {
           name: "metadata",
@@ -10239,19 +20315,39 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
-          name: "name",
+          name: "object",
+          type: "file",
+          required: true,
+          values: ["file"],
+        },
+        {
+          name: "path",
           type: "string",
           required: true,
         },
         {
-          name: "needsInput",
-          type: "boolean",
+          name: "runId",
+          type: "string",
           required: false,
+          description: "Unique run identifier generated by BCTRL.",
         },
         {
-          name: "profile",
-          type: "boolean",
+          name: "runtimeId",
+          type: "string",
+          required: false,
+          description: "Unique browser identifier generated by BCTRL.",
+        },
+        {
+          name: "sizeBytes",
+          type: "integer",
           required: true,
+          description: "Non-negative number of bytes.",
+        },
+        {
+          name: "source",
+          type: "upload | runtime",
+          required: true,
+          values: ["upload", "runtime"],
         },
         {
           name: "spaceId",
@@ -10260,16 +20356,9 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique space identifier generated by BCTRL.",
         },
         {
-          name: "status",
-          type: "active | stopped | failed",
-          required: true,
-          values: ["active", "stopped", "failed"],
-        },
-        {
           name: "type",
-          type: "browser",
-          required: true,
-          values: ["browser"],
+          type: "string",
+          required: false,
         },
         {
           name: "updatedAt",
@@ -10279,34 +20368,27 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
     api: {
-      method: "GET",
-      path: "/v1/runtimes/{runtimeId}",
-      operationId: "runtimes.get",
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/files/collect",
+      operationId: "sandboxes.files.collect",
+      requestFields: ["path", "name"],
       responseFields: [
-        "activeRunId",
-        "archivedAt",
-        "config",
-        "connection",
+        "canDelete",
+        "contentType",
         "createdAt",
+        "downloadUrl",
+        "expiresAt",
+        "filename",
         "id",
-        "lastActivityAt",
-        "latestRun",
         "metadata",
-        "name",
-        "needsInput",
-        "profile",
+        "object",
+        "path",
+        "runId",
+        "runtimeId",
+        "sizeBytes",
+        "source",
         "spaceId",
-        "status",
         "type",
         "updatedAt",
       ],
@@ -10314,72 +20396,65 @@ export const CLI_HELP_COMMANDS = {
     sdk: [
       {
         language: "typescript",
-        method: "runtimes.get",
+        method: "sandboxes.files.collect",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic runtimes.get",
-      usage: "bctrl help --topic runtimes.get",
+      command: "bctrl sandboxes files collect",
+      usage: "bctrl sandboxes files collect <sandboxId>",
     },
     mcp: {
-      toolName: "bctrl_runtimes_get",
-      operationResource: "operations://runtimes.get",
+      toolName: "sandboxes_files_collect",
+      operationResource: "operations://sandboxes.files.collect",
+      schemaResources: ["schemas://SandboxFileCollectRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runtimes.get",
+        command: "bctrl sandboxes files collect --help",
       },
     ],
   },
-  "runtimes.list": {
+  "sandboxes.files.list": {
     type: "topic",
-    topic: "runtimes.list",
-    aliases: ["runtimes list"],
-    title: "List runtimes",
-    summary:
-      "List runtimes using compact runtime summaries. Omit spaceId to list runtimes across all spaces visible to the caller; pass spaceId to narrow to one space.",
+    topic: "sandboxes.files.list",
+    aliases: ["sandboxes files list"],
+    title: "List sandbox files",
+    summary: "List files in the sandbox working directory.",
     inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
       query: [
         {
-          name: "spaceId",
+          name: "path",
           type: "string",
-          required: false,
-          description:
-            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
-        },
-        {
-          name: "q",
-          type: "string",
-          required: false,
-          description: "Case-insensitive search across runtime name and id.",
-        },
-        {
-          name: "status",
-          type: "active | stopped | failed[]",
-          required: false,
-          description:
-            "Filter by one or more runtime statuses. Repeat the query parameter for multiple values.",
-        },
-        {
-          name: "include",
-          type: "archived",
-          required: false,
-          values: ["archived"],
-        },
-        {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10397,66 +20472,83 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "nextCursor",
-          type: "string | null",
+          name: "object",
+          type: "files.result",
+          required: true,
+          values: ["files.result"],
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "truncated",
+          type: "boolean",
           required: true,
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
     api: {
       method: "GET",
-      path: "/v1/runtimes",
-      operationId: "runtimes.list",
-      responseFields: ["data", "nextCursor"],
+      path: "/v1/sandboxes/{sandboxId}/files",
+      operationId: "sandboxes.files.list",
+      responseFields: ["data", "object", "path", "truncated"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "runtimes.list",
+        method: "sandboxes.files.list",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic runtimes.list",
-      usage: "bctrl help --topic runtimes.list",
+      command: "bctrl sandboxes files list",
+      usage: "bctrl sandboxes files list <sandboxId>",
     },
     mcp: {
-      toolName: "bctrl_runtimes_list",
-      operationResource: "operations://runtimes.list",
+      toolName: "sandboxes_files_list",
+      operationResource: "operations://sandboxes.files.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runtimes.list",
+        command: "bctrl sandboxes files list --help",
       },
     ],
   },
-  "runtimes.start": {
+  "sandboxes.files.stage": {
     type: "topic",
-    topic: "runtimes.start",
-    aliases: ["runtimes start"],
-    title: "Start a runtime",
-    summary:
-      "Start a profile-backed runtime and open its active run. Ephemeral runtimes cannot be restarted after their session ends — create a new runtime instead.",
+    topic: "sandboxes.files.stage",
+    aliases: ["sandboxes files stage"],
+    title: "Copy a File into a sandbox",
+    summary: "Copy a durable File into the sandbox working directory.",
     inputs: {
       path: [
         {
-          name: "runtimeId",
+          name: "sandboxId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10473,11 +20565,22 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       body: {
-        schema: "RuntimeStartRequest",
-        schemaResource: "schemas://RuntimeStartRequest",
+        schema: "SandboxFileStageRequest",
+        schemaResource: "schemas://SandboxFileStageRequest",
         fields: [
           {
-            name: "recording",
+            name: "fileId",
+            type: "string",
+            required: true,
+            description: "Unique file identifier generated by BCTRL.",
+          },
+          {
+            name: "path",
+            type: "string",
+            required: true,
+          },
+          {
+            name: "overwrite",
             type: "boolean",
             required: false,
           },
@@ -10487,102 +20590,90 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "benchmarkProvenance",
-          type: "object",
-          required: false,
-        },
-        {
-          name: "connection",
-          type: "object",
+          name: "object",
+          type: "files.stage_result",
           required: true,
+          values: ["files.stage_result"],
         },
         {
-          name: "runId",
+          name: "path",
           type: "string",
           required: true,
-          description: "Unique run identifier generated by BCTRL.",
         },
         {
-          name: "runtimeId",
+          name: "sha256",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
         },
         {
-          name: "started",
-          type: "boolean",
+          name: "sizeBytes",
+          type: "integer",
           required: true,
-        },
-        {
-          name: "status",
-          type: "active | stopped | failed",
-          required: true,
-          values: ["active", "stopped", "failed"],
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
     api: {
       method: "POST",
-      path: "/v1/runtimes/{runtimeId}/start",
-      operationId: "runtimes.start",
-      requestFields: ["recording"],
-      responseFields: [
-        "benchmarkProvenance",
-        "connection",
-        "runId",
-        "runtimeId",
-        "started",
-        "status",
-      ],
+      path: "/v1/sandboxes/{sandboxId}/files/stage",
+      operationId: "sandboxes.files.stage",
+      requestFields: ["fileId", "path", "overwrite"],
+      responseFields: ["object", "path", "sha256", "sizeBytes"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "runtimes.start",
+        method: "sandboxes.files.stage",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic runtimes.start",
-      usage: "bctrl help --topic runtimes.start",
+      command: "bctrl sandboxes files stage",
+      usage: "bctrl sandboxes files stage <sandboxId>",
     },
     mcp: {
-      toolName: "bctrl_runtimes_start",
-      operationResource: "operations://runtimes.start",
-      schemaResources: ["schemas://RuntimeStartRequest"],
+      toolName: "sandboxes_files_stage",
+      operationResource: "operations://sandboxes.files.stage",
+      schemaResources: ["schemas://SandboxFileStageRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runtimes.start",
+        command: "bctrl sandboxes files stage --help",
       },
     ],
   },
-  "runtimes.stop": {
+  "sandboxes.get": {
     type: "topic",
-    topic: "runtimes.stop",
-    aliases: ["runtimes stop"],
-    title: "Stop a runtime",
-    summary: "Stop one runtime and return a flat teardown acknowledgement.",
+    topic: "sandboxes.get",
+    aliases: ["sandboxes get"],
+    title: "Get an sandbox",
+    summary: "Get one sandbox with its status and qualified capabilities.",
     inputs: {
       path: [
         {
-          name: "runtimeId",
+          name: "sandboxId",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10590,149 +20681,31 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
         },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
       ],
     },
     output: {
       fields: [
         {
-          name: "runId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-        {
-          name: "status",
-          type: "active | stopped | failed",
-          required: true,
-          values: ["active", "stopped", "failed"],
-        },
-        {
-          name: "stopped",
-          type: "boolean",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/runtimes/{runtimeId}/stop",
-      operationId: "runtimes.stop",
-      responseFields: ["runId", "runtimeId", "status", "stopped"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "runtimes.stop",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic runtimes.stop",
-      usage: "bctrl help --topic runtimes.stop",
-    },
-    mcp: {
-      toolName: "bctrl_runtimes_stop",
-      operationResource: "operations://runtimes.stop",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic runtimes.stop",
-      },
-    ],
-  },
-  "runtimes.update": {
-    type: "topic",
-    topic: "runtimes.update",
-    aliases: ["runtimes update"],
-    title: "Update a runtime",
-    summary:
-      "Update a runtime: name and idleTimeoutSeconds any time, launch config only while the runtime is stopped.",
-    inputs: {
-      path: [
-        {
-          name: "runtimeId",
-          type: "string",
-          required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "RuntimeUpdateRequest",
-        schemaResource: "schemas://RuntimeUpdateRequest",
-        fields: [
-          {
-            name: "name",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "idleTimeoutSeconds",
-            type: "integer",
-            required: false,
-          },
-          {
-            name: "config",
-            type: "object",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "activeRunId",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "archivedAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "config",
+          name: "audit",
           type: "object",
-          required: false,
+          required: true,
+        },
+        {
+          name: "browserId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+          description:
+            "Capabilities qualified for this sandbox. false means not available.",
+        },
+        {
+          name: "conversationId",
+          type: "string | null",
+          required: true,
         },
         {
           name: "createdAt",
@@ -10741,35 +20714,41 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
           name: "id",
           type: "string",
           required: true,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique sandbox identifier generated by BCTRL.",
         },
         {
-          name: "lastActivityAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "metadata",
-          type: "object | null",
-          required: false,
-        },
-        {
-          name: "name",
+          name: "image",
           type: "string",
           required: true,
         },
         {
-          name: "needsInput",
-          type: "boolean",
-          required: false,
+          name: "name",
+          type: "string | null",
+          required: true,
         },
         {
-          name: "profile",
-          type: "boolean",
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
+          name: "snapshotSchedule",
+          type: "object | null",
           required: true,
         },
         {
@@ -10780,15 +20759,16 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "active | stopped | failed",
+          type: "provisioning | ready | stopping | stopped | failed | deleting",
           required: true,
-          values: ["active", "stopped", "failed"],
-        },
-        {
-          name: "type",
-          type: "browser",
-          required: true,
-          values: ["browser"],
+          values: [
+            "provisioning",
+            "ready",
+            "stopping",
+            "stopped",
+            "failed",
+            "deleting",
+          ],
         },
         {
           name: "updatedAt",
@@ -10798,57 +20778,3862 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
     },
-    docs: [
-      {
-        title: "Runtimes",
-        url: "https://platform.bctrl.ai/sdk/runtimes",
-        markdownUrl: "https://platform.bctrl.ai/sdk/runtimes.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/runtimes.md",
-        description: "Create and control durable resources for automation.",
-      },
-    ],
     api: {
-      method: "PATCH",
-      path: "/v1/runtimes/{runtimeId}",
-      operationId: "runtimes.update",
-      requestFields: ["name", "idleTimeoutSeconds", "config"],
+      method: "GET",
+      path: "/v1/sandboxes/{sandboxId}",
+      operationId: "sandboxes.get",
       responseFields: [
-        "activeRunId",
-        "archivedAt",
-        "config",
+        "audit",
+        "browserId",
+        "capabilities",
+        "conversationId",
         "createdAt",
+        "errorCode",
         "id",
-        "lastActivityAt",
-        "metadata",
+        "image",
         "name",
-        "needsInput",
-        "profile",
+        "object",
+        "secretEnv",
+        "snapshotSchedule",
         "spaceId",
         "status",
-        "type",
         "updatedAt",
       ],
     },
     sdk: [
       {
         language: "typescript",
-        method: "runtimes.update",
+        method: "sandboxes.get",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic runtimes.update",
-      usage: "bctrl help --topic runtimes.update",
+      command: "bctrl sandboxes get",
+      usage: "bctrl sandboxes get <sandboxId>",
     },
     mcp: {
-      toolName: "bctrl_runtimes_update",
-      operationResource: "operations://runtimes.update",
-      schemaResources: ["schemas://RuntimeUpdateRequest"],
+      toolName: "sandboxes_get",
+      operationResource: "operations://sandboxes.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic runtimes.update",
+        command: "bctrl sandboxes get --help",
+      },
+    ],
+  },
+  "sandboxes.list": {
+    type: "topic",
+    topic: "sandboxes.list",
+    aliases: ["sandboxes list"],
+    title: "List sandboxes",
+    summary: "List sandboxes visible to the caller.",
+    inputs: {
+      query: [
+        {
+          name: "spaceId",
+          type: "string",
+          required: false,
+          description:
+            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
+        },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/sandboxes",
+      operationId: "sandboxes.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes list",
+      usage: "bctrl sandboxes list",
+    },
+    mcp: {
+      toolName: "sandboxes_list",
+      operationResource: "operations://sandboxes.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes list --help",
+      },
+    ],
+  },
+  "sandboxes.ports.create": {
+    type: "topic",
+    topic: "sandboxes.ports.create",
+    aliases: ["sandboxes ports create"],
+    title: "Expose a sandbox port as a preview URL",
+    summary:
+      "An authenticated HTTPS URL that forwards to a TCP port inside the sandbox until it expires or is deleted.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxPortCreateRequest",
+        schemaResource: "schemas://SandboxPortCreateRequest",
+        fields: [
+          {
+            name: "port",
+            type: "integer",
+            required: true,
+            description:
+              "A TCP port a process in the sandbox listens on (127.0.0.1).",
+          },
+          {
+            name: "expiresInSeconds",
+            type: "integer",
+            required: false,
+            description: "How long the preview URL works.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "expiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Unique sandboxConnection identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "sandbox_port",
+          required: true,
+          values: ["sandbox_port"],
+        },
+        {
+          name: "port",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "url",
+          type: "string",
+          required: true,
+          description:
+            "Authenticated preview URL. It carries its credential: share it only with whoever may use the port.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/ports",
+      operationId: "sandboxes.ports.create",
+      requestFields: ["port", "expiresInSeconds"],
+      responseFields: [
+        "createdAt",
+        "expiresAt",
+        "id",
+        "object",
+        "port",
+        "sandboxId",
+        "url",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.ports.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes ports create",
+      usage: "bctrl sandboxes ports create <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_ports_create",
+      operationResource: "operations://sandboxes.ports.create",
+      schemaResources: ["schemas://SandboxPortCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes ports create --help",
+      },
+    ],
+  },
+  "sandboxes.ports.delete": {
+    type: "topic",
+    topic: "sandboxes.ports.delete",
+    aliases: ["sandboxes ports delete"],
+    title: "Close the previews of a sandbox port",
+    summary:
+      "Revokes every open preview of the port; their URLs stop working at once.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "port",
+          type: "integer",
+          required: true,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "closed",
+          type: "integer",
+          required: true,
+          description: "Previews of this port that were closed.",
+        },
+        {
+          name: "object",
+          type: "sandbox_port.deleted",
+          required: true,
+          values: ["sandbox_port.deleted"],
+        },
+        {
+          name: "port",
+          type: "integer",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/sandboxes/{sandboxId}/ports/{port}",
+      operationId: "sandboxes.ports.delete",
+      responseFields: ["closed", "object", "port"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.ports.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes ports delete",
+      usage: "bctrl sandboxes ports delete <sandboxId> <port>",
+    },
+    mcp: {
+      toolName: "sandboxes_ports_delete",
+      operationResource: "operations://sandboxes.ports.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes ports delete --help",
+      },
+    ],
+  },
+  "sandboxes.ports.list": {
+    type: "topic",
+    topic: "sandboxes.ports.list",
+    aliases: ["sandboxes ports list"],
+    title: "List open port previews of a sandbox",
+    summary:
+      "The ports of the sandbox that have an open, unexpired preview, with the preview connections of each.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/sandboxes/{sandboxId}/ports",
+      operationId: "sandboxes.ports.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.ports.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes ports list",
+      usage: "bctrl sandboxes ports list <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_ports_list",
+      operationResource: "operations://sandboxes.ports.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes ports list --help",
+      },
+    ],
+  },
+  "sandboxes.processes.cancel": {
+    type: "topic",
+    topic: "sandboxes.processes.cancel",
+    aliases: ["sandboxes processes cancel"],
+    title: "Cancel an sandbox process",
+    summary: "Cancel one sandbox process.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "processId",
+          type: "string",
+          required: true,
+          description: "Unique sandboxProcess identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "exitCode",
+          type: "integer | null",
+          required: true,
+          description:
+            "Process exit code; null until known. A non-zero code is still a completed execution.",
+        },
+        {
+          name: "finishedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandboxProcess identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "process",
+          required: true,
+          values: ["process"],
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | succeeded | failed | cancelled | timed_out",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "timed_out",
+          ],
+        },
+        {
+          name: "stderr",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "stderrTruncated",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "stdout",
+          type: "string",
+          required: true,
+          description:
+            "Captured standard output, decoded as UTF-8 with replacement.",
+        },
+        {
+          name: "stdoutTruncated",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/processes/{processId}/cancel",
+      operationId: "sandboxes.processes.cancel",
+      responseFields: [
+        "createdAt",
+        "errorCode",
+        "exitCode",
+        "finishedAt",
+        "id",
+        "object",
+        "sandboxId",
+        "startedAt",
+        "status",
+        "stderr",
+        "stderrTruncated",
+        "stdout",
+        "stdoutTruncated",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.processes.cancel",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes processes cancel",
+      usage: "bctrl sandboxes processes cancel <sandboxId> <processId>",
+    },
+    mcp: {
+      toolName: "sandboxes_processes_cancel",
+      operationResource: "operations://sandboxes.processes.cancel",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes processes cancel --help",
+      },
+    ],
+  },
+  "sandboxes.processes.create": {
+    type: "topic",
+    topic: "sandboxes.processes.create",
+    aliases: ["sandboxes processes create"],
+    title: "Start a process in a sandbox",
+    summary:
+      "Start a bounded process in a sandbox. The command is an argument array, never a shell string. For an interactive PTY, open a terminal connection.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxProcessCreateRequest",
+        schemaResource: "schemas://SandboxProcessCreateRequest",
+        fields: [
+          {
+            name: "command",
+            type: "string[]",
+            required: true,
+            description:
+              "Program and arguments. Never interpreted by a host shell.",
+          },
+          {
+            name: "cwd",
+            type: "string",
+            required: false,
+          },
+          {
+            name: "timeoutSeconds",
+            type: "integer",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandboxProcess identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "process",
+          required: true,
+          values: ["process"],
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "queued",
+          required: true,
+          values: ["queued"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/processes",
+      operationId: "sandboxes.processes.create",
+      requestFields: ["command", "cwd", "timeoutSeconds"],
+      responseFields: [
+        "createdAt",
+        "id",
+        "object",
+        "sandboxId",
+        "status",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.processes.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes processes create",
+      usage: "bctrl sandboxes processes create <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_processes_create",
+      operationResource: "operations://sandboxes.processes.create",
+      schemaResources: ["schemas://SandboxProcessCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes processes create --help",
+      },
+    ],
+  },
+  "sandboxes.processes.get": {
+    type: "topic",
+    topic: "sandboxes.processes.get",
+    aliases: ["sandboxes processes get"],
+    title: "Get an sandbox process",
+    summary: "Get a sandbox process with its exit code and captured output.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "processId",
+          type: "string",
+          required: true,
+          description: "Unique sandboxProcess identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "exitCode",
+          type: "integer | null",
+          required: true,
+          description:
+            "Process exit code; null until known. A non-zero code is still a completed execution.",
+        },
+        {
+          name: "finishedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandboxProcess identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "process",
+          required: true,
+          values: ["process"],
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | succeeded | failed | cancelled | timed_out",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "succeeded",
+            "failed",
+            "cancelled",
+            "timed_out",
+          ],
+        },
+        {
+          name: "stderr",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "stderrTruncated",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "stdout",
+          type: "string",
+          required: true,
+          description:
+            "Captured standard output, decoded as UTF-8 with replacement.",
+        },
+        {
+          name: "stdoutTruncated",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/sandboxes/{sandboxId}/processes/{processId}",
+      operationId: "sandboxes.processes.get",
+      responseFields: [
+        "createdAt",
+        "errorCode",
+        "exitCode",
+        "finishedAt",
+        "id",
+        "object",
+        "sandboxId",
+        "startedAt",
+        "status",
+        "stderr",
+        "stderrTruncated",
+        "stdout",
+        "stdoutTruncated",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.processes.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes processes get",
+      usage: "bctrl sandboxes processes get <sandboxId> <processId>",
+    },
+    mcp: {
+      toolName: "sandboxes_processes_get",
+      operationResource: "operations://sandboxes.processes.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes processes get --help",
+      },
+    ],
+  },
+  "sandboxes.processes.stream": {
+    type: "topic",
+    topic: "sandboxes.processes.stream",
+    aliases: ["sandboxes processes stream"],
+    title: "Stream an sandbox process",
+    summary: "Stream sandbox process output and completion.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "processId",
+          type: "string",
+          required: true,
+          description: "Unique sandboxProcess identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "after",
+          type: "string",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Last-Event-ID",
+          type: "string",
+          required: false,
+          description:
+            "Optional last delivered event identifier used to resume an SSE stream.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/sandboxes/{sandboxId}/processes/{processId}/stream",
+      operationId: "sandboxes.processes.stream",
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.processes.stream",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes processes stream",
+      usage: "bctrl sandboxes processes stream <sandboxId> <processId>",
+    },
+    mcp: {
+      toolName: "sandboxes_processes_stream",
+      operationResource: "operations://sandboxes.processes.stream",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes processes stream --help",
+      },
+    ],
+  },
+  "sandboxes.snapshot-schedule.delete": {
+    type: "topic",
+    topic: "sandboxes.snapshot-schedule.delete",
+    aliases: ["sandboxes snapshot-schedule delete"],
+    title: "Remove a sandbox snapshot schedule",
+    summary:
+      "Stop snapshotting a sandbox on a schedule. Scheduled snapshots already taken are kept until deleted.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "browserId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+          description:
+            "Capabilities qualified for this sandbox. false means not available.",
+        },
+        {
+          name: "conversationId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "image",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "provisioning | ready | stopping | stopped | failed | deleting",
+          required: true,
+          values: [
+            "provisioning",
+            "ready",
+            "stopping",
+            "stopped",
+            "failed",
+            "deleting",
+          ],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/sandboxes/{sandboxId}/snapshot-schedule",
+      operationId: "sandboxes.snapshot-schedule.delete",
+      responseFields: [
+        "audit",
+        "browserId",
+        "capabilities",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "id",
+        "image",
+        "name",
+        "object",
+        "secretEnv",
+        "snapshotSchedule",
+        "spaceId",
+        "status",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.snapshot-schedule.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes snapshot-schedule delete",
+      usage: "bctrl sandboxes snapshot-schedule delete <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_snapshot-schedule_delete",
+      operationResource: "operations://sandboxes.snapshot-schedule.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes snapshot-schedule delete --help",
+      },
+    ],
+  },
+  "sandboxes.snapshot-schedule.set": {
+    type: "topic",
+    topic: "sandboxes.snapshot-schedule.set",
+    aliases: ["sandboxes snapshot-schedule set"],
+    title: "Set a sandbox snapshot schedule",
+    summary:
+      "Snapshot a sandbox on a schedule (it applies at once to a running sandbox and on every start). Scheduled snapshots are listed with its snapshots (scheduled: true) and deleted by the retention.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxSnapshotSchedule",
+        schemaResource: "schemas://SandboxSnapshotSchedule",
+        fields: [
+          {
+            name: "intervalSeconds",
+            type: "integer",
+            required: true,
+            description: "Take a snapshot this often (at least a minute).",
+          },
+          {
+            name: "keepCount",
+            type: "integer",
+            required: false,
+            description: "Keep at most this many scheduled snapshots.",
+          },
+          {
+            name: "keepMaxAgeSeconds",
+            type: "integer",
+            required: false,
+            description: "Delete scheduled snapshots older than this.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "browserId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+          description:
+            "Capabilities qualified for this sandbox. false means not available.",
+        },
+        {
+          name: "conversationId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "image",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "provisioning | ready | stopping | stopped | failed | deleting",
+          required: true,
+          values: [
+            "provisioning",
+            "ready",
+            "stopping",
+            "stopped",
+            "failed",
+            "deleting",
+          ],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "PUT",
+      path: "/v1/sandboxes/{sandboxId}/snapshot-schedule",
+      operationId: "sandboxes.snapshot-schedule.set",
+      requestFields: ["intervalSeconds", "keepCount", "keepMaxAgeSeconds"],
+      responseFields: [
+        "audit",
+        "browserId",
+        "capabilities",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "id",
+        "image",
+        "name",
+        "object",
+        "secretEnv",
+        "snapshotSchedule",
+        "spaceId",
+        "status",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.snapshot-schedule.set",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes snapshot-schedule set",
+      usage: "bctrl sandboxes snapshot-schedule set <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_snapshot-schedule_set",
+      operationResource: "operations://sandboxes.snapshot-schedule.set",
+      schemaResources: ["schemas://SandboxSnapshotSchedule"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes snapshot-schedule set --help",
+      },
+    ],
+  },
+  "sandboxes.snapshots.create": {
+    type: "topic",
+    topic: "sandboxes.snapshots.create",
+    aliases: ["sandboxes snapshots create"],
+    title: "Snapshot a sandbox",
+    summary:
+      "Snapshot a running sandbox with its memory and disk; it keeps running. The snapshot stays on the node that runs the sandbox, and `POST /sandboxes` with `fromSnapshot` forks it there.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxSnapshotCreateRequest",
+        schemaResource: "schemas://SandboxSnapshotCreateRequest",
+        fields: [
+          {
+            name: "name",
+            type: "string",
+            required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandboxSnapshot identifier generated by BCTRL.",
+        },
+        {
+          name: "image",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "sandbox_snapshot",
+          required: true,
+          values: ["sandbox_snapshot"],
+        },
+        {
+          name: "sandboxId",
+          type: "string | null",
+          required: true,
+          description:
+            "The sandbox it was taken from; null once that sandbox is deleted.",
+        },
+        {
+          name: "scheduled",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "sizeBytes",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/snapshots",
+      operationId: "sandboxes.snapshots.create",
+      requestFields: ["name"],
+      responseFields: [
+        "createdAt",
+        "id",
+        "image",
+        "name",
+        "object",
+        "sandboxId",
+        "scheduled",
+        "sizeBytes",
+        "spaceId",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.snapshots.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes snapshots create",
+      usage: "bctrl sandboxes snapshots create <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_snapshots_create",
+      operationResource: "operations://sandboxes.snapshots.create",
+      schemaResources: ["schemas://SandboxSnapshotCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes snapshots create --help",
+      },
+    ],
+  },
+  "sandboxes.snapshots.delete": {
+    type: "topic",
+    topic: "sandboxes.snapshots.delete",
+    aliases: ["sandboxes snapshots delete"],
+    title: "Delete a sandbox snapshot",
+    summary:
+      "Delete a sandbox snapshot from its node. Sandboxes already forked from it keep running.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "snapshotId",
+          type: "string",
+          required: true,
+          description: "Unique sandboxSnapshot identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "deleted",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandboxSnapshot identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "sandbox_snapshot",
+          required: true,
+          values: ["sandbox_snapshot"],
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/sandboxes/{sandboxId}/snapshots/{snapshotId}",
+      operationId: "sandboxes.snapshots.delete",
+      responseFields: ["deleted", "id", "object"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.snapshots.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes snapshots delete",
+      usage: "bctrl sandboxes snapshots delete <sandboxId> <snapshotId>",
+    },
+    mcp: {
+      toolName: "sandboxes_snapshots_delete",
+      operationResource: "operations://sandboxes.snapshots.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes snapshots delete --help",
+      },
+    ],
+  },
+  "sandboxes.snapshots.get": {
+    type: "topic",
+    topic: "sandboxes.snapshots.get",
+    aliases: ["sandboxes snapshots get"],
+    title: "Get a sandbox snapshot",
+    summary: "Get a sandbox snapshot.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "snapshotId",
+          type: "string",
+          required: true,
+          description: "Unique sandboxSnapshot identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandboxSnapshot identifier generated by BCTRL.",
+        },
+        {
+          name: "image",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "sandbox_snapshot",
+          required: true,
+          values: ["sandbox_snapshot"],
+        },
+        {
+          name: "sandboxId",
+          type: "string | null",
+          required: true,
+          description:
+            "The sandbox it was taken from; null once that sandbox is deleted.",
+        },
+        {
+          name: "scheduled",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "sizeBytes",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/sandboxes/{sandboxId}/snapshots/{snapshotId}",
+      operationId: "sandboxes.snapshots.get",
+      responseFields: [
+        "createdAt",
+        "id",
+        "image",
+        "name",
+        "object",
+        "sandboxId",
+        "scheduled",
+        "sizeBytes",
+        "spaceId",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.snapshots.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes snapshots get",
+      usage: "bctrl sandboxes snapshots get <sandboxId> <snapshotId>",
+    },
+    mcp: {
+      toolName: "sandboxes_snapshots_get",
+      operationResource: "operations://sandboxes.snapshots.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes snapshots get --help",
+      },
+    ],
+  },
+  "sandboxes.snapshots.list": {
+    type: "topic",
+    topic: "sandboxes.snapshots.list",
+    aliases: ["sandboxes snapshots list"],
+    title: "List snapshots of a sandbox",
+    summary: "List the snapshots taken of a sandbox, newest first.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/sandboxes/{sandboxId}/snapshots",
+      operationId: "sandboxes.snapshots.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.snapshots.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes snapshots list",
+      usage: "bctrl sandboxes snapshots list <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_snapshots_list",
+      operationResource: "operations://sandboxes.snapshots.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes snapshots list --help",
+      },
+    ],
+  },
+  "sandboxes.sshSessions.create": {
+    type: "topic",
+    topic: "sandboxes.sshSessions.create",
+    aliases: ["sandboxes sshSessions create"],
+    title: "Open an SSH session to a sandbox",
+    summary:
+      "Short-lived SSH credentials (host, port, one-time password) for a shell or commands in the sandbox. Revoke with DELETE /v1/sandboxes/{sandboxId}/connections/{id}.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxSshSessionCreateRequest",
+        schemaResource: "schemas://SandboxSshSessionCreateRequest",
+        fields: [
+          {
+            name: "expiresInSeconds",
+            type: "integer",
+            required: false,
+            description: "How long the session may stay open.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "command",
+          type: "string",
+          required: true,
+          description: "A ready-to-run OpenSSH command.",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "expiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "host",
+          type: "string",
+          required: true,
+          description: "SSH host to connect to.",
+        },
+        {
+          name: "hostKeyFingerprint",
+          type: "string | null",
+          required: true,
+          description:
+            "SHA-256 fingerprint of the SSH host key, when published.",
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description:
+            "Unique sandboxConnection identifier generated by BCTRL.",
+        },
+        {
+          name: "object",
+          type: "sandbox_ssh_session",
+          required: true,
+          values: ["sandbox_ssh_session"],
+        },
+        {
+          name: "password",
+          type: "string",
+          required: true,
+          description:
+            "One-time password, valid for one minute: log in once; the session then lasts until `expiresAt`.",
+        },
+        {
+          name: "passwordExpiresAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "port",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "username",
+          type: "string",
+          required: true,
+          description: "SSH user name (the session ID).",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/ssh-sessions",
+      operationId: "sandboxes.sshSessions.create",
+      requestFields: ["expiresInSeconds"],
+      responseFields: [
+        "command",
+        "createdAt",
+        "expiresAt",
+        "host",
+        "hostKeyFingerprint",
+        "id",
+        "object",
+        "password",
+        "passwordExpiresAt",
+        "port",
+        "sandboxId",
+        "username",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.sshSessions.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes sshSessions create",
+      usage: "bctrl sandboxes sshSessions create <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_sshSessions_create",
+      operationResource: "operations://sandboxes.sshSessions.create",
+      schemaResources: ["schemas://SandboxSshSessionCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes sshSessions create --help",
+      },
+    ],
+  },
+  "sandboxes.start": {
+    type: "topic",
+    topic: "sandboxes.start",
+    aliases: ["sandboxes start"],
+    title: "Start an sandbox",
+    summary: "Ensure a sandbox has running compute, keeping its disk.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "browserId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+          description:
+            "Capabilities qualified for this sandbox. false means not available.",
+        },
+        {
+          name: "conversationId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "image",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "provisioning | ready | stopping | stopped | failed | deleting",
+          required: true,
+          values: [
+            "provisioning",
+            "ready",
+            "stopping",
+            "stopped",
+            "failed",
+            "deleting",
+          ],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/start",
+      operationId: "sandboxes.start",
+      responseFields: [
+        "audit",
+        "browserId",
+        "capabilities",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "id",
+        "image",
+        "name",
+        "object",
+        "secretEnv",
+        "snapshotSchedule",
+        "spaceId",
+        "status",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.start",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes start",
+      usage: "bctrl sandboxes start <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_start",
+      operationResource: "operations://sandboxes.start",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes start --help",
+      },
+    ],
+  },
+  "sandboxes.stop": {
+    type: "topic",
+    topic: "sandboxes.stop",
+    aliases: ["sandboxes stop"],
+    title: "Stop an sandbox",
+    summary:
+      "Stop sandbox compute. Active processes are a conflict unless force is set. The disk stays on the host while stopped and is not replicated: if that host is lost, the sandbox fails with `environment.host_lost` and its files may be lost.",
+    inputs: {
+      path: [
+        {
+          name: "sandboxId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SandboxStopRequest",
+        schemaResource: "schemas://SandboxStopRequest",
+        fields: [
+          {
+            name: "force",
+            type: "boolean",
+            required: false,
+            description:
+              "Cancel active executions before stopping. Without it, active work is a conflict.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "audit",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "browserId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "capabilities",
+          type: "object",
+          required: true,
+          description:
+            "Capabilities qualified for this sandbox. false means not available.",
+        },
+        {
+          name: "conversationId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique sandbox identifier generated by BCTRL.",
+        },
+        {
+          name: "image",
+          type: "string",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "sandbox",
+          required: true,
+          values: ["sandbox"],
+        },
+        {
+          name: "secretEnv",
+          type: "object | null",
+          required: true,
+          description: "Secret substitution: references only, never values.",
+        },
+        {
+          name: "snapshotSchedule",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "provisioning | ready | stopping | stopped | failed | deleting",
+          required: true,
+          values: [
+            "provisioning",
+            "ready",
+            "stopping",
+            "stopped",
+            "failed",
+            "deleting",
+          ],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/sandboxes/{sandboxId}/stop",
+      operationId: "sandboxes.stop",
+      requestFields: ["force"],
+      responseFields: [
+        "audit",
+        "browserId",
+        "capabilities",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "id",
+        "image",
+        "name",
+        "object",
+        "secretEnv",
+        "snapshotSchedule",
+        "spaceId",
+        "status",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "sandboxes.stop",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl sandboxes stop",
+      usage: "bctrl sandboxes stop <sandboxId>",
+    },
+    mcp: {
+      toolName: "sandboxes_stop",
+      operationResource: "operations://sandboxes.stop",
+      schemaResources: ["schemas://SandboxStopRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl sandboxes stop --help",
+      },
+    ],
+  },
+  "secrets.create": {
+    type: "topic",
+    topic: "secrets.create",
+    aliases: ["secrets create"],
+    title: "Create a secret",
+    summary:
+      "Create a Secret at a new path. The returned ID addresses it; paths remain reference keys.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SecretCreateRequest",
+        schemaResource: "schemas://SecretCreateRequest",
+        fields: [
+          {
+            name: "path",
+            type: "string",
+            required: true,
+            description:
+              "Secret path, for example `prod/github/bot`. May contain `/`.",
+          },
+          {
+            name: "type",
+            type: "login | value",
+            required: true,
+            description:
+              "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+            values: ["login", "value"],
+          },
+          {
+            name: "label",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "username",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "origins",
+            type: "string[]",
+            required: false,
+            description:
+              "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+          },
+          {
+            name: "password",
+            type: "string",
+            required: false,
+            description: "Password of a `login`. Write-only.",
+          },
+          {
+            name: "totp",
+            type: "string",
+            required: false,
+            description: "TOTP seed (base32) of a `login`. Write-only.",
+          },
+          {
+            name: "value",
+            type: "string",
+            required: false,
+            description: "The value of a `value` secret. Write-only.",
+          },
+          {
+            name: "notes",
+            type: "string",
+            required: false,
+            description: "Free-form notes. Write-only.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "hasNotes",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasPassword",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasTotp",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasValue",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+        {
+          name: "label",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "secret",
+          required: true,
+          values: ["secret"],
+        },
+        {
+          name: "origins",
+          type: "string[]",
+          required: true,
+          description:
+            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+          description:
+            "The owning subaccount, or null for an organization-wide secret.",
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: true,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+          description: "Not secret; readable.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+          description: "Current version; the ETag of the secret.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/secrets",
+      operationId: "secrets.create",
+      requestFields: [
+        "path",
+        "type",
+        "label",
+        "username",
+        "origins",
+        "password",
+        "totp",
+        "value",
+        "notes",
+      ],
+      responseFields: [
+        "createdAt",
+        "hasNotes",
+        "hasPassword",
+        "hasTotp",
+        "hasValue",
+        "id",
+        "label",
+        "lastUsedAt",
+        "object",
+        "origins",
+        "path",
+        "subaccountId",
+        "type",
+        "updatedAt",
+        "username",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl secrets create",
+      usage: "bctrl secrets create",
+    },
+    mcp: {
+      toolName: "secrets_create",
+      operationResource: "operations://secrets.create",
+      schemaResources: ["schemas://SecretCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl secrets create --help",
+      },
+    ],
+  },
+  "secrets.delete": {
+    type: "topic",
+    topic: "secrets.delete",
+    aliases: ["secrets delete"],
+    title: "Delete a secret",
+    summary:
+      "Delete a Secret and all its versions. Supports `If-Match`. The audit trail is kept.",
+    inputs: {
+      path: [
+        {
+          name: "secret",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "If-Match",
+          type: "string",
+          required: false,
+          description:
+            'Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.',
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "deleted",
+          type: "true",
+          required: true,
+          values: ["true"],
+        },
+        {
+          name: "hasNotes",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasPassword",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasTotp",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasValue",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+        {
+          name: "label",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "secret",
+          required: true,
+          values: ["secret"],
+        },
+        {
+          name: "origins",
+          type: "string[]",
+          required: true,
+          description:
+            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+          description:
+            "The owning subaccount, or null for an organization-wide secret.",
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: true,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+          description: "Not secret; readable.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+          description: "Current version; the ETag of the secret.",
+        },
+      ],
+    },
+    api: {
+      method: "DELETE",
+      path: "/v1/secrets/{secret}",
+      operationId: "secrets.delete",
+      responseFields: [
+        "createdAt",
+        "deleted",
+        "hasNotes",
+        "hasPassword",
+        "hasTotp",
+        "hasValue",
+        "id",
+        "label",
+        "lastUsedAt",
+        "object",
+        "origins",
+        "path",
+        "subaccountId",
+        "type",
+        "updatedAt",
+        "username",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl secrets delete",
+      usage: "bctrl secrets delete <secret>",
+    },
+    mcp: {
+      toolName: "secrets_delete",
+      operationResource: "operations://secrets.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl secrets delete --help",
+      },
+    ],
+  },
+  "secrets.get": {
+    type: "topic",
+    topic: "secrets.get",
+    aliases: ["secrets get"],
+    title: "Get a secret",
+    summary:
+      "Read one Secret: its metadata and which fields are set. Secret fields are write-only; use `POST /v1/secrets/{secret}/reveal` to read values.",
+    inputs: {
+      path: [
+        {
+          name: "secret",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "hasNotes",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasPassword",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasTotp",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasValue",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+        {
+          name: "label",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "secret",
+          required: true,
+          values: ["secret"],
+        },
+        {
+          name: "origins",
+          type: "string[]",
+          required: true,
+          description:
+            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+          description:
+            "The owning subaccount, or null for an organization-wide secret.",
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: true,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+          description: "Not secret; readable.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+          description: "Current version; the ETag of the secret.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/secrets/{secret}",
+      operationId: "secrets.get",
+      responseFields: [
+        "createdAt",
+        "hasNotes",
+        "hasPassword",
+        "hasTotp",
+        "hasValue",
+        "id",
+        "label",
+        "lastUsedAt",
+        "object",
+        "origins",
+        "path",
+        "subaccountId",
+        "type",
+        "updatedAt",
+        "username",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl secrets get",
+      usage: "bctrl secrets get <secret>",
+    },
+    mcp: {
+      toolName: "secrets_get",
+      operationResource: "operations://secrets.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl secrets get --help",
+      },
+    ],
+  },
+  "secrets.list": {
+    type: "topic",
+    topic: "secrets.list",
+    aliases: ["secrets list"],
+    title: "List secrets",
+    summary:
+      "List Secrets by path. `prefix` narrows to paths starting with it; `delimiter=/` groups deeper paths into `folders`, like S3. Secret values are never listed.",
+    inputs: {
+      query: [
+        {
+          name: "prefix",
+          type: "string",
+          required: false,
+          description: "Only paths starting with this prefix.",
+        },
+        {
+          name: "delimiter",
+          type: "/",
+          required: false,
+          description:
+            "Group paths below the next `/` after the prefix into `folders`.",
+          values: ["/"],
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: false,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "folders",
+          type: "string[]",
+          required: true,
+          description:
+            "With `delimiter`: common prefixes, each ending in `/`. They count toward `limit`.",
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/secrets",
+      operationId: "secrets.list",
+      responseFields: ["data", "folders", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl secrets list",
+      usage: "bctrl secrets list",
+    },
+    mcp: {
+      toolName: "secrets_list",
+      operationResource: "operations://secrets.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl secrets list --help",
+      },
+    ],
+  },
+  "secrets.reveal": {
+    type: "topic",
+    topic: "secrets.reveal",
+    aliases: ["secrets reveal"],
+    title: "Reveal secret values",
+    summary:
+      "Return the values of a Secret version. Only people may reveal: organization or subaccount API keys and dashboard sessions. Task agents, delegated code and View tokens get 403 `secrets.reveal_forbidden`. Every reveal is audited.",
+    inputs: {
+      path: [
+        {
+          name: "secret",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SecretRevealRequest",
+        schemaResource: "schemas://SecretRevealRequest",
+        fields: [
+          {
+            name: "version",
+            type: "integer",
+            required: false,
+            description: "Defaults to the current version.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+        {
+          name: "notes",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "object",
+          type: "secret.reveal_result",
+          required: true,
+          values: ["secret.reveal_result"],
+        },
+        {
+          name: "password",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "totp",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "value",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/secrets/{secret}/reveal",
+      operationId: "secrets.reveal",
+      requestFields: ["version"],
+      responseFields: [
+        "id",
+        "notes",
+        "object",
+        "password",
+        "path",
+        "totp",
+        "username",
+        "value",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.reveal",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl secrets reveal",
+      usage: "bctrl secrets reveal <secret>",
+    },
+    mcp: {
+      toolName: "secrets_reveal",
+      operationResource: "operations://secrets.reveal",
+      schemaResources: ["schemas://SecretRevealRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl secrets reveal --help",
+      },
+    ],
+  },
+  "secrets.update": {
+    type: "topic",
+    topic: "secrets.update",
+    aliases: ["secrets update"],
+    title: "Update a secret",
+    summary:
+      "Change some fields of a Secret; `null` clears one. Creates a new version. Supports `If-Match`.",
+    inputs: {
+      path: [
+        {
+          name: "secret",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "If-Match",
+          type: "string",
+          required: false,
+          description:
+            'Apply the write only if the current version (the ETag) is this one, for example `"3"`. Returns 412 otherwise.',
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SecretPatchRequest",
+        schemaResource: "schemas://SecretPatchRequest",
+        fields: [
+          {
+            name: "label",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "username",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "origins",
+            type: "string[]",
+            required: false,
+            description:
+              "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+          },
+          {
+            name: "password",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "totp",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "value",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "notes",
+            type: "string | null",
+            required: false,
+          },
+          {
+            name: "fromVersion",
+            type: "integer",
+            required: false,
+            description: "Restore values of this version; send alone.",
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "hasNotes",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasPassword",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasTotp",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "hasValue",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+        {
+          name: "label",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "lastUsedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "secret",
+          required: true,
+          values: ["secret"],
+        },
+        {
+          name: "origins",
+          type: "string[]",
+          required: true,
+          description:
+            "Origins a `login` may be filled into: `https://host[:port]`, or `https://*.host` for any subdomain.",
+        },
+        {
+          name: "path",
+          type: "string",
+          required: true,
+          description:
+            "Secret path, for example `prod/github/bot`. May contain `/`.",
+        },
+        {
+          name: "subaccountId",
+          type: "string | null",
+          required: true,
+          description:
+            "The owning subaccount, or null for an organization-wide secret.",
+        },
+        {
+          name: "type",
+          type: "login | value",
+          required: true,
+          description:
+            "`login`: username, password and TOTP seed for a site. `value`: one opaque value.",
+          values: ["login", "value"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "username",
+          type: "string | null",
+          required: true,
+          description: "Not secret; readable.",
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+          description: "Current version; the ETag of the secret.",
+        },
+      ],
+    },
+    api: {
+      method: "PATCH",
+      path: "/v1/secrets/{secret}",
+      operationId: "secrets.update",
+      requestFields: [
+        "label",
+        "username",
+        "origins",
+        "password",
+        "totp",
+        "value",
+        "notes",
+        "fromVersion",
+      ],
+      responseFields: [
+        "createdAt",
+        "hasNotes",
+        "hasPassword",
+        "hasTotp",
+        "hasValue",
+        "id",
+        "label",
+        "lastUsedAt",
+        "object",
+        "origins",
+        "path",
+        "subaccountId",
+        "type",
+        "updatedAt",
+        "username",
+        "version",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl secrets update",
+      usage: "bctrl secrets update <secret>",
+    },
+    mcp: {
+      toolName: "secrets_update",
+      operationResource: "operations://secrets.update",
+      schemaResources: ["schemas://SecretPatchRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl secrets update --help",
+      },
+    ],
+  },
+  "secrets.versions": {
+    type: "topic",
+    topic: "secrets.versions",
+    aliases: ["secrets versions"],
+    title: "List secret versions",
+    summary:
+      "List version metadata by secret ID. Values and ciphertext are never returned.",
+    inputs: {
+      path: [
+        {
+          name: "secret",
+          type: "string",
+          required: true,
+          description: "Unique secret identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/secrets/{secret}/versions",
+      operationId: "secrets.versions",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "secrets.versions",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl secrets versions",
+      usage: "bctrl secrets versions <secret>",
+    },
+    mcp: {
+      toolName: "secrets_versions",
+      operationResource: "operations://secrets.versions",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl secrets versions --help",
       },
     ],
   },
@@ -10861,6 +24646,21 @@ export const CLI_HELP_COMMANDS = {
       "Create a space. Name, region, and environment are optional; omitted values use server defaults.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -10884,6 +24684,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "region",
@@ -10896,11 +24697,26 @@ export const CLI_HELP_COMMANDS = {
             type: "object",
             required: false,
           },
+          {
+            name: "expireAfterIdleDays",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "capabilityScopes",
+            type: "string[]",
+            required: false,
+          },
         ],
       },
     },
     output: {
       fields: [
+        {
+          name: "capabilityScopes",
+          type: "string[]",
+          required: true,
+        },
         {
           name: "createdAt",
           type: "datetime",
@@ -10908,8 +24724,20 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "deletionError",
+          type: "string | null",
+          required: true,
+          description:
+            "Why the deletion is not finished yet; it is retried. Null otherwise.",
+        },
+        {
           name: "environment",
           type: "object",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
           required: true,
         },
         {
@@ -10927,12 +24755,27 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "space",
+          required: true,
+          values: ["space"],
         },
         {
           name: "region",
           type: "us-east-1",
           required: true,
           values: ["us-east-1"],
+        },
+        {
+          name: "status",
+          type: "active | deleting | deleted",
+          required: true,
+          description:
+            "`deleting` once DELETE is accepted: its browsers, sandboxes, agents, Tasks, Conversations, files and views are being stopped and removed. `deleted` appears only in the DELETE response when the deletion finished within `wait`; the Space is then gone.",
+          values: ["active", "deleting", "deleted"],
         },
         {
           name: "updatedAt",
@@ -10956,14 +24799,25 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/spaces",
       operationId: "spaces.create",
-      requestFields: ["name", "region", "environment"],
-      responseFields: [
-        "createdAt",
+      requestFields: [
+        "name",
+        "region",
         "environment",
+        "expireAfterIdleDays",
+        "capabilityScopes",
+      ],
+      responseFields: [
+        "capabilityScopes",
+        "createdAt",
+        "deletionError",
+        "environment",
+        "expireAfterIdleDays",
         "id",
         "isDefault",
         "name",
+        "object",
         "region",
+        "status",
         "updatedAt",
       ],
     },
@@ -10975,18 +24829,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic spaces.create",
-      usage: "bctrl help --topic spaces.create",
+      command: "bctrl spaces create",
+      usage: "bctrl spaces create",
     },
     mcp: {
-      toolName: "bctrl_spaces_create",
+      toolName: "spaces_create",
       operationResource: "operations://spaces.create",
       schemaResources: ["schemas://SpaceCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic spaces.create",
+        command: "bctrl spaces create --help",
       },
     ],
   },
@@ -10995,16 +24849,43 @@ export const CLI_HELP_COMMANDS = {
     topic: "spaces.delete",
     aliases: ["spaces delete"],
     title: "Delete a space",
-    summary: "Delete a space after its active runtimes have been stopped.",
+    summary:
+      "Delete a Space and everything in it: its browsers and sandboxes are stopped and destroyed, and its agents, Tasks, Conversations, files and views deleted. Run records, usage and Events stay with the organization. The deletion runs in the background; the Space shows status deleting until it is gone. Pass wait to block until then.",
     inputs: {
       path: [
         {
           name: "spaceId",
-          type: "string | default",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+          description:
+            "Seconds to wait for the deletion to finish before answering.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -11024,83 +24905,10 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "deleted",
-          type: "true",
-          required: true,
-          values: ["true"],
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Spaces",
-        url: "https://platform.bctrl.ai/sdk/spaces",
-        markdownUrl: "https://platform.bctrl.ai/sdk/spaces.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/spaces.md",
-        description:
-          "The boundary that scopes which storage, secrets, and AI credentials a runtime can use.",
-      },
-    ],
-    api: {
-      method: "DELETE",
-      path: "/v1/spaces/{spaceId}",
-      operationId: "spaces.delete",
-      responseFields: ["deleted", "id"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "spaces.delete",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic spaces.delete",
-      usage: "bctrl help --topic spaces.delete",
-    },
-    mcp: {
-      toolName: "bctrl_spaces_delete",
-      operationResource: "operations://spaces.delete",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic spaces.delete",
-      },
-    ],
-  },
-  "spaces.get": {
-    type: "topic",
-    topic: "spaces.get",
-    aliases: ["spaces get"],
-    title: "Get a space",
-    summary: "Get one complete space, including its environment.",
-    inputs: {
-      path: [
-        {
-          name: "spaceId",
-          type: "string | default",
+          name: "capabilityScopes",
+          type: "string[]",
           required: true,
         },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
         {
           name: "createdAt",
           type: "datetime",
@@ -11108,8 +24916,20 @@ export const CLI_HELP_COMMANDS = {
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "deletionError",
+          type: "string | null",
+          required: true,
+          description:
+            "Why the deletion is not finished yet; it is retried. Null otherwise.",
+        },
+        {
           name: "environment",
           type: "object",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
           required: true,
         },
         {
@@ -11127,12 +24947,194 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "space",
+          required: true,
+          values: ["space"],
         },
         {
           name: "region",
           type: "us-east-1",
           required: true,
           values: ["us-east-1"],
+        },
+        {
+          name: "status",
+          type: "active | deleting | deleted",
+          required: true,
+          description:
+            "`deleting` once DELETE is accepted: its browsers, sandboxes, agents, Tasks, Conversations, files and views are being stopped and removed. `deleted` appears only in the DELETE response when the deletion finished within `wait`; the Space is then gone.",
+          values: ["active", "deleting", "deleted"],
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Spaces",
+        url: "https://platform.bctrl.ai/sdk/spaces",
+        markdownUrl: "https://platform.bctrl.ai/sdk/spaces.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/spaces.md",
+        description:
+          "The boundary that scopes which storage, secrets, and AI credentials a runtime can use.",
+      },
+    ],
+    api: {
+      method: "DELETE",
+      path: "/v1/spaces/{spaceId}",
+      operationId: "spaces.delete",
+      responseFields: [
+        "capabilityScopes",
+        "createdAt",
+        "deletionError",
+        "environment",
+        "expireAfterIdleDays",
+        "id",
+        "isDefault",
+        "name",
+        "object",
+        "region",
+        "status",
+        "updatedAt",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "spaces.delete",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl spaces delete",
+      usage: "bctrl spaces delete <spaceId>",
+    },
+    mcp: {
+      toolName: "spaces_delete",
+      operationResource: "operations://spaces.delete",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl spaces delete --help",
+      },
+    ],
+  },
+  "spaces.get": {
+    type: "topic",
+    topic: "spaces.get",
+    aliases: ["spaces get"],
+    title: "Get a space",
+    summary: "Get one complete space, including its environment.",
+    inputs: {
+      path: [
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "capabilityScopes",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "deletionError",
+          type: "string | null",
+          required: true,
+          description:
+            "Why the deletion is not finished yet; it is retried. Null otherwise.",
+        },
+        {
+          name: "environment",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "isDefault",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "name",
+          type: "string",
+          required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "space",
+          required: true,
+          values: ["space"],
+        },
+        {
+          name: "region",
+          type: "us-east-1",
+          required: true,
+          values: ["us-east-1"],
+        },
+        {
+          name: "status",
+          type: "active | deleting | deleted",
+          required: true,
+          description:
+            "`deleting` once DELETE is accepted: its browsers, sandboxes, agents, Tasks, Conversations, files and views are being stopped and removed. `deleted` appears only in the DELETE response when the deletion finished within `wait`; the Space is then gone.",
+          values: ["active", "deleting", "deleted"],
         },
         {
           name: "updatedAt",
@@ -11157,12 +25159,17 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/spaces/{spaceId}",
       operationId: "spaces.get",
       responseFields: [
+        "capabilityScopes",
         "createdAt",
+        "deletionError",
         "environment",
+        "expireAfterIdleDays",
         "id",
         "isDefault",
         "name",
+        "object",
         "region",
+        "status",
         "updatedAt",
       ],
     },
@@ -11174,17 +25181,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic spaces.get",
-      usage: "bctrl help --topic spaces.get",
+      command: "bctrl spaces get",
+      usage: "bctrl spaces get <spaceId>",
     },
     mcp: {
-      toolName: "bctrl_spaces_get",
+      toolName: "spaces_get",
       operationResource: "operations://spaces.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic spaces.get",
+        command: "bctrl spaces get --help",
       },
     ],
   },
@@ -11202,12 +25209,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -11222,6 +25251,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -11245,7 +25279,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/spaces",
       operationId: "spaces.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -11255,17 +25289,331 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic spaces.list",
-      usage: "bctrl help --topic spaces.list",
+      command: "bctrl spaces list",
+      usage: "bctrl spaces list",
     },
     mcp: {
-      toolName: "bctrl_spaces_list",
+      toolName: "spaces_list",
       operationResource: "operations://spaces.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic spaces.list",
+        command: "bctrl spaces list --help",
+      },
+    ],
+  },
+  "spaces.spendingCap.get": {
+    type: "topic",
+    topic: "spaces.spendingCap.get",
+    aliases: ["spaces spendingCap get"],
+    title: "Get a Space monthly spending cap",
+    summary:
+      "Read this Space’s UTC calendar-month limit and accrued usage in USD cents. Both the organization and Space limits apply. Warning occurs once per month at 80%; at 100%, running work is stopped within at most one minute of additional usage.",
+    inputs: {
+      path: [
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "amount",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "currency",
+          type: "USD",
+          required: true,
+          values: ["USD"],
+        },
+        {
+          name: "object",
+          type: "spending_cap",
+          required: true,
+          values: ["spending_cap"],
+        },
+        {
+          name: "period",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "scope",
+          type: "organization | space",
+          required: true,
+          values: ["organization", "space"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "disabled | ok | warning | reached",
+          required: true,
+          values: ["disabled", "ok", "warning", "reached"],
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnAtPercent",
+          type: "80",
+          required: true,
+          values: ["80"],
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Spaces",
+        url: "https://platform.bctrl.ai/sdk/spaces",
+        markdownUrl: "https://platform.bctrl.ai/sdk/spaces.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/spaces.md",
+        description:
+          "The boundary that scopes which storage, secrets, and AI credentials a runtime can use.",
+      },
+    ],
+    api: {
+      method: "GET",
+      path: "/v1/spaces/{spaceId}/spending-cap",
+      operationId: "spaces.spendingCap.get",
+      responseFields: [
+        "amount",
+        "currency",
+        "object",
+        "period",
+        "scope",
+        "spaceId",
+        "status",
+        "usage",
+        "warnAtPercent",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "spaces.spendingCap.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl spaces spendingCap get",
+      usage: "bctrl spaces spendingCap get <spaceId>",
+    },
+    mcp: {
+      toolName: "spaces_spendingCap_get",
+      operationResource: "operations://spaces.spendingCap.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl spaces spendingCap get --help",
+      },
+    ],
+  },
+  "spaces.spendingCap.update": {
+    type: "topic",
+    topic: "spaces.spendingCap.update",
+    aliases: ["spaces spendingCap update"],
+    title: "Set or disable a Space monthly spending cap",
+    summary:
+      "People may set this Space’s whole-cent USD limit; null disables it and zero refuses new billable starts here. Other Spaces are unaffected. Raising it allows starts when both this limit and the organization limit exceed current usage.",
+    inputs: {
+      path: [
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "SpendingCapPatchRequest",
+        schemaResource: "schemas://SpendingCapPatchRequest",
+        fields: [
+          {
+            name: "amount",
+            type: "integer | null",
+            required: true,
+          },
+          {
+            name: "currency",
+            type: "USD",
+            required: true,
+            values: ["USD"],
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "amount",
+          type: "integer | null",
+          required: true,
+        },
+        {
+          name: "currency",
+          type: "USD",
+          required: true,
+          values: ["USD"],
+        },
+        {
+          name: "object",
+          type: "spending_cap",
+          required: true,
+          values: ["spending_cap"],
+        },
+        {
+          name: "period",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "scope",
+          type: "organization | space",
+          required: true,
+          values: ["organization", "space"],
+        },
+        {
+          name: "spaceId",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "disabled | ok | warning | reached",
+          required: true,
+          values: ["disabled", "ok", "warning", "reached"],
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "warnAtPercent",
+          type: "80",
+          required: true,
+          values: ["80"],
+        },
+      ],
+    },
+    docs: [
+      {
+        title: "Spaces",
+        url: "https://platform.bctrl.ai/sdk/spaces",
+        markdownUrl: "https://platform.bctrl.ai/sdk/spaces.md",
+        mcpResource: "docs://platform.bctrl.ai/sdk/spaces.md",
+        description:
+          "The boundary that scopes which storage, secrets, and AI credentials a runtime can use.",
+      },
+    ],
+    api: {
+      method: "PATCH",
+      path: "/v1/spaces/{spaceId}/spending-cap",
+      operationId: "spaces.spendingCap.update",
+      requestFields: ["amount", "currency"],
+      responseFields: [
+        "amount",
+        "currency",
+        "object",
+        "period",
+        "scope",
+        "spaceId",
+        "status",
+        "usage",
+        "warnAtPercent",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "spaces.spendingCap.update",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl spaces spendingCap update",
+      usage: "bctrl spaces spendingCap update <spaceId>",
+    },
+    mcp: {
+      toolName: "spaces_spendingCap_update",
+      operationResource: "operations://spaces.spendingCap.update",
+      schemaResources: ["schemas://SpendingCapPatchRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl spaces spendingCap update --help",
       },
     ],
   },
@@ -11279,11 +25627,28 @@ export const CLI_HELP_COMMANDS = {
       path: [
         {
           name: "spaceId",
-          type: "string | default",
+          type: "string",
           required: true,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -11307,10 +25672,21 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "environment",
             type: "object",
+            required: false,
+          },
+          {
+            name: "expireAfterIdleDays",
+            type: "integer",
+            required: false,
+          },
+          {
+            name: "capabilityScopes",
+            type: "string[]",
             required: false,
           },
         ],
@@ -11319,14 +25695,31 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "capabilityScopes",
+          type: "string[]",
+          required: true,
+        },
+        {
           name: "createdAt",
           type: "datetime",
           required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
+          name: "deletionError",
+          type: "string | null",
+          required: true,
+          description:
+            "Why the deletion is not finished yet; it is retried. Null otherwise.",
+        },
+        {
           name: "environment",
           type: "object",
+          required: true,
+        },
+        {
+          name: "expireAfterIdleDays",
+          type: "integer",
           required: true,
         },
         {
@@ -11344,12 +25737,27 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string",
           required: true,
+          description: "Customer-facing resource name. 1–200 characters.",
+        },
+        {
+          name: "object",
+          type: "space",
+          required: true,
+          values: ["space"],
         },
         {
           name: "region",
           type: "us-east-1",
           required: true,
           values: ["us-east-1"],
+        },
+        {
+          name: "status",
+          type: "active | deleting | deleted",
+          required: true,
+          description:
+            "`deleting` once DELETE is accepted: its browsers, sandboxes, agents, Tasks, Conversations, files and views are being stopped and removed. `deleted` appears only in the DELETE response when the deletion finished within `wait`; the Space is then gone.",
+          values: ["active", "deleting", "deleted"],
         },
         {
           name: "updatedAt",
@@ -11373,14 +25781,24 @@ export const CLI_HELP_COMMANDS = {
       method: "PATCH",
       path: "/v1/spaces/{spaceId}",
       operationId: "spaces.update",
-      requestFields: ["name", "environment"],
-      responseFields: [
-        "createdAt",
+      requestFields: [
+        "name",
         "environment",
+        "expireAfterIdleDays",
+        "capabilityScopes",
+      ],
+      responseFields: [
+        "capabilityScopes",
+        "createdAt",
+        "deletionError",
+        "environment",
+        "expireAfterIdleDays",
         "id",
         "isDefault",
         "name",
+        "object",
         "region",
+        "status",
         "updatedAt",
       ],
     },
@@ -11392,18 +25810,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic spaces.update",
-      usage: "bctrl help --topic spaces.update",
+      command: "bctrl spaces update",
+      usage: "bctrl spaces update <spaceId>",
     },
     mcp: {
-      toolName: "bctrl_spaces_update",
+      toolName: "spaces_update",
       operationResource: "operations://spaces.update",
       schemaResources: ["schemas://SpaceUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic spaces.update",
+        command: "bctrl spaces update --help",
       },
     ],
   },
@@ -11419,10 +25837,24 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: true,
-          description: "Opaque identifier for a BCTRL subaccount.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "Idempotency-Key",
           type: "string",
@@ -11446,6 +25878,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Opaque identifier for a BCTRL subaccount.",
         },
+        {
+          name: "object",
+          type: "subaccount",
+          required: true,
+          values: ["subaccount"],
+        },
       ],
     },
     docs: [
@@ -11462,7 +25900,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/subaccounts/{subaccountId}/archive",
       operationId: "subaccounts.archive",
-      responseFields: ["archived", "id"],
+      responseFields: ["archived", "id", "object"],
     },
     sdk: [
       {
@@ -11472,17 +25910,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.archive",
-      usage: "bctrl help --topic subaccounts.archive",
+      command: "bctrl subaccounts archive",
+      usage: "bctrl subaccounts archive <subaccountId>",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_archive",
+      toolName: "subaccounts_archive",
       operationResource: "operations://subaccounts.archive",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.archive",
+        command: "bctrl subaccounts archive --help",
       },
     ],
   },
@@ -11495,6 +25933,21 @@ export const CLI_HELP_COMMANDS = {
       "Create a subaccount for a tenant, customer, environment, or team. Optional limits can be provided inline.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "Idempotency-Key",
           type: "string",
@@ -11511,6 +25964,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: true,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "externalId",
@@ -11575,6 +26029,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "subaccount",
+          required: true,
+          values: ["subaccount"],
+        },
+        {
           name: "status",
           type: "active | archived",
           required: true,
@@ -11616,6 +26076,7 @@ export const CLI_HELP_COMMANDS = {
         "limits",
         "metadata",
         "name",
+        "object",
         "status",
         "updatedAt",
         "usage",
@@ -11629,18 +26090,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.create",
-      usage: "bctrl help --topic subaccounts.create",
+      command: "bctrl subaccounts create",
+      usage: "bctrl subaccounts create",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_create",
+      toolName: "subaccounts_create",
       operationResource: "operations://subaccounts.create",
       schemaResources: ["schemas://SubaccountCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.create",
+        command: "bctrl subaccounts create --help",
       },
     ],
   },
@@ -11657,7 +26118,6 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: true,
-          description: "Opaque identifier for a BCTRL subaccount.",
         },
       ],
       query: [
@@ -11667,6 +26127,23 @@ export const CLI_HELP_COMMANDS = {
           required: false,
           description:
             "Include optional subaccount expansions. Repeat the query parameter for multiple values.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
       ],
     },
@@ -11715,6 +26192,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "subaccount",
+          required: true,
+          values: ["subaccount"],
+        },
+        {
           name: "status",
           type: "active | archived",
           required: true,
@@ -11755,6 +26238,7 @@ export const CLI_HELP_COMMANDS = {
         "limits",
         "metadata",
         "name",
+        "object",
         "status",
         "updatedAt",
         "usage",
@@ -11768,17 +26252,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.get",
-      usage: "bctrl help --topic subaccounts.get",
+      command: "bctrl subaccounts get",
+      usage: "bctrl subaccounts get <subaccountId>",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_get",
+      toolName: "subaccounts_get",
       operationResource: "operations://subaccounts.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.get",
+        command: "bctrl subaccounts get --help",
       },
     ],
   },
@@ -11795,6 +26279,13 @@ export const CLI_HELP_COMMANDS = {
           name: "cursor",
           type: "string",
           required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
         },
         {
           name: "limit",
@@ -11826,12 +26317,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
       ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
     },
     output: {
       fields: [
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -11855,7 +26368,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/subaccounts",
       operationId: "subaccounts.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -11865,17 +26378,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.list",
-      usage: "bctrl help --topic subaccounts.list",
+      command: "bctrl subaccounts list",
+      usage: "bctrl subaccounts list",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_list",
+      toolName: "subaccounts_list",
       operationResource: "operations://subaccounts.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.list",
+        command: "bctrl subaccounts list --help",
       },
     ],
   },
@@ -11892,10 +26405,24 @@ export const CLI_HELP_COMMANDS = {
           name: "subaccountId",
           type: "string",
           required: true,
-          description: "Opaque identifier for a BCTRL subaccount.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "Idempotency-Key",
           type: "string",
@@ -11912,6 +26439,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "externalId",
@@ -11976,6 +26504,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Customer-facing resource name. 1–200 characters.",
         },
         {
+          name: "object",
+          type: "subaccount",
+          required: true,
+          values: ["subaccount"],
+        },
+        {
           name: "status",
           type: "active | archived",
           required: true,
@@ -12017,6 +26551,7 @@ export const CLI_HELP_COMMANDS = {
         "limits",
         "metadata",
         "name",
+        "object",
         "status",
         "updatedAt",
         "usage",
@@ -12030,18 +26565,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.update",
-      usage: "bctrl help --topic subaccounts.update",
+      command: "bctrl subaccounts update",
+      usage: "bctrl subaccounts update <subaccountId>",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_update",
+      toolName: "subaccounts_update",
       operationResource: "operations://subaccounts.update",
       schemaResources: ["schemas://SubaccountUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.update",
+        command: "bctrl subaccounts update --help",
       },
     ],
   },
@@ -12060,9 +26595,33 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
       ],
     },
@@ -12071,6 +26630,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -12094,7 +26658,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/subaccounts/usage",
       operationId: "subaccounts.usage.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -12104,17 +26668,1188 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic subaccounts.usage.list",
-      usage: "bctrl help --topic subaccounts.usage.list",
+      command: "bctrl subaccounts usage list",
+      usage: "bctrl subaccounts usage list",
     },
     mcp: {
-      toolName: "bctrl_subaccounts_usage_list",
+      toolName: "subaccounts_usage_list",
       operationResource: "operations://subaccounts.usage.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic subaccounts.usage.list",
+        command: "bctrl subaccounts usage list --help",
+      },
+    ],
+  },
+  "tasks.cancel": {
+    type: "topic",
+    topic: "tasks.cancel",
+    aliases: ["tasks cancel"],
+    title: "Cancel a task",
+    summary:
+      "Cancel the Task and revoke its delegated credential. Its Conversation remains busy until native cleanup is acknowledged.",
+    inputs: {
+      path: [
+        {
+          name: "taskId",
+          type: "string",
+          required: true,
+          description: "Unique task identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "TaskCancelRequest",
+        schemaResource: "schemas://TaskCancelRequest",
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+        {
+          name: "artifacts",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "errorMessage",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "finishedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique task identifier generated by BCTRL.",
+        },
+        {
+          name: "input",
+          type: "unknown",
+          required: true,
+          description:
+            "Any valid JSON value: object, array, string, number, boolean, or null.",
+        },
+        {
+          name: "inputRequest",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "task",
+          required: true,
+          values: ["task"],
+        },
+        {
+          name: "output",
+          type: "unknown | null",
+          required: true,
+        },
+        {
+          name: "outputSchema",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "runs",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "awaiting_input",
+            "succeeded",
+            "failed",
+            "canceled",
+            "unknown",
+          ],
+        },
+        {
+          name: "traceId",
+          type: "string | null",
+          required: true,
+          description:
+            "W3C trace ID: GET /traces/{traceId} returns the span tree.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "versionId",
+          type: "string",
+          required: true,
+          description: "Unique agentVersion identifier generated by BCTRL.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/tasks/{taskId}/cancel",
+      operationId: "tasks.cancel",
+      responseFields: [
+        "agentId",
+        "artifacts",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "errorMessage",
+        "finishedAt",
+        "id",
+        "input",
+        "inputRequest",
+        "metadata",
+        "object",
+        "output",
+        "outputSchema",
+        "runs",
+        "spaceId",
+        "startedAt",
+        "status",
+        "traceId",
+        "updatedAt",
+        "usage",
+        "version",
+        "versionId",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tasks.cancel",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl tasks cancel",
+      usage: "bctrl tasks cancel <taskId>",
+    },
+    mcp: {
+      toolName: "tasks_cancel",
+      operationResource: "operations://tasks.cancel",
+      schemaResources: ["schemas://TaskCancelRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl tasks cancel --help",
+      },
+    ],
+  },
+  "tasks.create": {
+    type: "topic",
+    topic: "tasks.create",
+    aliases: ["tasks create"],
+    title: "Start a task",
+    summary:
+      "Run an Agent on the input in a new or existing idle Conversation. The Task starts queued; read or wait on it with GET /v1/tasks/{taskId}.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "TaskCreateRequest",
+        schemaResource: "schemas://TaskCreateRequest",
+        fields: [
+          {
+            name: "agent",
+            type: "string",
+            required: true,
+            description:
+              "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          },
+          {
+            name: "conversation",
+            type: "string",
+            required: false,
+            description: "Unique conversation identifier generated by BCTRL.",
+          },
+          {
+            name: "input",
+            type: "string | object[]",
+            required: true,
+          },
+          {
+            name: "metadata",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "outputSchema",
+            type: "object",
+            required: false,
+          },
+          {
+            name: "spaceId",
+            type: "string",
+            required: false,
+            description:
+              "Opaque resource ID or unique resource name in the selected Space or tenant.",
+          },
+          {
+            name: "version",
+            type: "integer",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+        {
+          name: "artifacts",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "errorMessage",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "finishedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique task identifier generated by BCTRL.",
+        },
+        {
+          name: "input",
+          type: "unknown",
+          required: true,
+          description:
+            "Any valid JSON value: object, array, string, number, boolean, or null.",
+        },
+        {
+          name: "inputRequest",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "task",
+          required: true,
+          values: ["task"],
+        },
+        {
+          name: "output",
+          type: "unknown | null",
+          required: true,
+        },
+        {
+          name: "outputSchema",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "runs",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "awaiting_input",
+            "succeeded",
+            "failed",
+            "canceled",
+            "unknown",
+          ],
+        },
+        {
+          name: "traceId",
+          type: "string | null",
+          required: true,
+          description:
+            "W3C trace ID: GET /traces/{traceId} returns the span tree.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "versionId",
+          type: "string",
+          required: true,
+          description: "Unique agentVersion identifier generated by BCTRL.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/tasks",
+      operationId: "tasks.create",
+      requestFields: [
+        "agent",
+        "conversation",
+        "input",
+        "metadata",
+        "outputSchema",
+        "spaceId",
+        "version",
+      ],
+      responseFields: [
+        "agentId",
+        "artifacts",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "errorMessage",
+        "finishedAt",
+        "id",
+        "input",
+        "inputRequest",
+        "metadata",
+        "object",
+        "output",
+        "outputSchema",
+        "runs",
+        "spaceId",
+        "startedAt",
+        "status",
+        "traceId",
+        "updatedAt",
+        "usage",
+        "version",
+        "versionId",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tasks.create",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl tasks create",
+      usage: "bctrl tasks create",
+    },
+    mcp: {
+      toolName: "tasks_create",
+      operationResource: "operations://tasks.create",
+      schemaResources: ["schemas://TaskCreateRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl tasks create --help",
+      },
+    ],
+  },
+  "tasks.get": {
+    type: "topic",
+    topic: "tasks.get",
+    aliases: ["tasks get"],
+    title: "Get a task",
+    summary:
+      "Read Task status, structured output, artifacts, input request, Browser Runs and usage. Wait ends when the Task finishes or requests input.",
+    inputs: {
+      path: [
+        {
+          name: "taskId",
+          type: "string",
+          required: true,
+          description: "Unique task identifier generated by BCTRL.",
+        },
+      ],
+      query: [
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+        {
+          name: "artifacts",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "errorMessage",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "finishedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique task identifier generated by BCTRL.",
+        },
+        {
+          name: "input",
+          type: "unknown",
+          required: true,
+          description:
+            "Any valid JSON value: object, array, string, number, boolean, or null.",
+        },
+        {
+          name: "inputRequest",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "task",
+          required: true,
+          values: ["task"],
+        },
+        {
+          name: "output",
+          type: "unknown | null",
+          required: true,
+        },
+        {
+          name: "outputSchema",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "runs",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "awaiting_input",
+            "succeeded",
+            "failed",
+            "canceled",
+            "unknown",
+          ],
+        },
+        {
+          name: "traceId",
+          type: "string | null",
+          required: true,
+          description:
+            "W3C trace ID: GET /traces/{traceId} returns the span tree.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "versionId",
+          type: "string",
+          required: true,
+          description: "Unique agentVersion identifier generated by BCTRL.",
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/tasks/{taskId}",
+      operationId: "tasks.get",
+      responseFields: [
+        "agentId",
+        "artifacts",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "errorMessage",
+        "finishedAt",
+        "id",
+        "input",
+        "inputRequest",
+        "metadata",
+        "object",
+        "output",
+        "outputSchema",
+        "runs",
+        "spaceId",
+        "startedAt",
+        "status",
+        "traceId",
+        "updatedAt",
+        "usage",
+        "version",
+        "versionId",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tasks.get",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl tasks get",
+      usage: "bctrl tasks get <taskId>",
+    },
+    mcp: {
+      toolName: "tasks_get",
+      operationResource: "operations://tasks.get",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl tasks get --help",
+      },
+    ],
+  },
+  "tasks.input": {
+    type: "topic",
+    topic: "tasks.input",
+    aliases: ["tasks input"],
+    title: "Give input to a task",
+    summary:
+      "Answer its current input request by requestId, or steer a running Task. Approval applies only its immutable stored proposal.",
+    inputs: {
+      path: [
+        {
+          name: "taskId",
+          type: "string",
+          required: true,
+          description: "Unique task identifier generated by BCTRL.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+        {
+          name: "Idempotency-Key",
+          type: "string",
+          required: false,
+          description:
+            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
+        },
+      ],
+      body: {
+        schema: "TaskInputRequest",
+        schemaResource: "schemas://TaskInputRequest",
+        fields: [
+          {
+            name: "input",
+            type: "unknown",
+            required: true,
+            description:
+              "Any valid JSON value: object, array, string, number, boolean, or null.",
+          },
+          {
+            name: "requestId",
+            type: "string",
+            required: false,
+          },
+        ],
+      },
+    },
+    output: {
+      fields: [
+        {
+          name: "agentId",
+          type: "string",
+          required: true,
+          description: "Unique agent identifier generated by BCTRL.",
+        },
+        {
+          name: "artifacts",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "conversationId",
+          type: "string",
+          required: true,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "errorCode",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "errorMessage",
+          type: "string | null",
+          required: true,
+        },
+        {
+          name: "finishedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "id",
+          type: "string",
+          required: true,
+          description: "Unique task identifier generated by BCTRL.",
+        },
+        {
+          name: "input",
+          type: "unknown",
+          required: true,
+          description:
+            "Any valid JSON value: object, array, string, number, boolean, or null.",
+        },
+        {
+          name: "inputRequest",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "metadata",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "object",
+          type: "task",
+          required: true,
+          values: ["task"],
+        },
+        {
+          name: "output",
+          type: "unknown | null",
+          required: true,
+        },
+        {
+          name: "outputSchema",
+          type: "object | null",
+          required: true,
+        },
+        {
+          name: "runs",
+          type: "string[]",
+          required: true,
+        },
+        {
+          name: "spaceId",
+          type: "string",
+          required: true,
+          description: "Unique space identifier generated by BCTRL.",
+        },
+        {
+          name: "startedAt",
+          type: "datetime | null",
+          required: true,
+        },
+        {
+          name: "status",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
+          required: true,
+          values: [
+            "queued",
+            "running",
+            "awaiting_input",
+            "succeeded",
+            "failed",
+            "canceled",
+            "unknown",
+          ],
+        },
+        {
+          name: "traceId",
+          type: "string | null",
+          required: true,
+          description:
+            "W3C trace ID: GET /traces/{traceId} returns the span tree.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "usage",
+          type: "object",
+          required: true,
+        },
+        {
+          name: "version",
+          type: "integer",
+          required: true,
+        },
+        {
+          name: "versionId",
+          type: "string",
+          required: true,
+          description: "Unique agentVersion identifier generated by BCTRL.",
+        },
+      ],
+    },
+    api: {
+      method: "POST",
+      path: "/v1/tasks/{taskId}/input",
+      operationId: "tasks.input",
+      requestFields: ["input", "requestId"],
+      responseFields: [
+        "agentId",
+        "artifacts",
+        "conversationId",
+        "createdAt",
+        "errorCode",
+        "errorMessage",
+        "finishedAt",
+        "id",
+        "input",
+        "inputRequest",
+        "metadata",
+        "object",
+        "output",
+        "outputSchema",
+        "runs",
+        "spaceId",
+        "startedAt",
+        "status",
+        "traceId",
+        "updatedAt",
+        "usage",
+        "version",
+        "versionId",
+      ],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tasks.input",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl tasks input",
+      usage: "bctrl tasks input <taskId>",
+    },
+    mcp: {
+      toolName: "tasks_input",
+      operationResource: "operations://tasks.input",
+      schemaResources: ["schemas://TaskInputRequest"],
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl tasks input --help",
+      },
+    ],
+  },
+  "tasks.list": {
+    type: "topic",
+    topic: "tasks.list",
+    aliases: ["tasks list"],
+    title: "List tasks",
+    summary:
+      "List Tasks by Agent, Conversation, status and time in the selected tenant or Space.",
+    inputs: {
+      query: [
+        {
+          name: "cursor",
+          type: "string",
+          required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
+          name: "limit",
+          type: "integer",
+          required: false,
+        },
+        {
+          name: "agent",
+          type: "string",
+          required: false,
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+        {
+          name: "conversation",
+          type: "string",
+          required: false,
+          description: "Unique conversation identifier generated by BCTRL.",
+        },
+        {
+          name: "status",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
+          required: false,
+          values: [
+            "queued",
+            "running",
+            "awaiting_input",
+            "succeeded",
+            "failed",
+            "canceled",
+            "unknown",
+          ],
+        },
+        {
+          name: "from",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
+          name: "to",
+          type: "datetime",
+          required: false,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+      ],
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
+          name: "BCTRL-Subaccount-Id",
+          type: "string",
+          required: false,
+          description:
+            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+        },
+      ],
+    },
+    output: {
+      fields: [
+        {
+          name: "data",
+          type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
+          required: true,
+        },
+        {
+          name: "nextCursor",
+          type: "string | null",
+          required: true,
+        },
+      ],
+    },
+    api: {
+      method: "GET",
+      path: "/v1/tasks",
+      operationId: "tasks.list",
+      responseFields: ["data", "hasMore", "nextCursor"],
+    },
+    sdk: [
+      {
+        language: "typescript",
+        method: "tasks.list",
+        package: "@bctrl/sdk",
+      },
+    ],
+    cli: {
+      command: "bctrl tasks list",
+      usage: "bctrl tasks list",
+    },
+    mcp: {
+      toolName: "tasks_list",
+      operationResource: "operations://tasks.list",
+    },
+    examples: [
+      {
+        audience: "cli",
+        command: "bctrl tasks list --help",
       },
     ],
   },
@@ -12134,6 +27869,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -12187,6 +27937,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "tool_call",
+          required: true,
+          values: ["tool_call"],
+        },
+        {
           name: "parentId",
           type: "string | null",
           required: true,
@@ -12219,27 +27975,33 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
           required: true,
           values: [
             "queued",
             "running",
-            "requires_input",
+            "awaiting_input",
             "succeeded",
             "failed",
-            "cancelled",
-            "timed_out",
+            "canceled",
+            "unknown",
           ],
         },
         {
-          name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          name: "taskId",
+          type: "string | null",
           required: true,
         },
         {
-          name: "turnId",
-          type: "string | null",
+          name: "tool",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -12264,6 +28026,7 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "inputRequest",
+        "object",
         "parentId",
         "resultAvailable",
         "runId",
@@ -12271,8 +28034,9 @@ export const CLI_HELP_COMMANDS = {
         "spanId",
         "startedAt",
         "status",
+        "taskId",
         "tool",
-        "turnId",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -12283,17 +28047,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.cancel",
-      usage: "bctrl help --topic tool-calls.cancel",
+      command: "bctrl tool-calls cancel",
+      usage: "bctrl tool-calls cancel <toolCallId>",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_cancel",
+      toolName: "tool-calls_cancel",
       operationResource: "operations://tool-calls.cancel",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.cancel",
+        command: "bctrl tool-calls cancel --help",
       },
     ],
   },
@@ -12313,7 +28077,29 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique toolCall identifier generated by BCTRL.",
         },
       ],
+      query: [
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
+        },
+      ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -12360,6 +28146,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "tool_call",
+          required: true,
+          values: ["tool_call"],
+        },
+        {
           name: "parentId",
           type: "string | null",
           required: true,
@@ -12392,27 +28184,33 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
           required: true,
           values: [
             "queued",
             "running",
-            "requires_input",
+            "awaiting_input",
             "succeeded",
             "failed",
-            "cancelled",
-            "timed_out",
+            "canceled",
+            "unknown",
           ],
         },
         {
-          name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          name: "taskId",
+          type: "string | null",
           required: true,
         },
         {
-          name: "turnId",
-          type: "string | null",
+          name: "tool",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -12437,6 +28235,7 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "inputRequest",
+        "object",
         "parentId",
         "resultAvailable",
         "runId",
@@ -12444,8 +28243,9 @@ export const CLI_HELP_COMMANDS = {
         "spanId",
         "startedAt",
         "status",
+        "taskId",
         "tool",
-        "turnId",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -12456,17 +28256,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.get",
-      usage: "bctrl help --topic tool-calls.get",
+      command: "bctrl tool-calls get",
+      usage: "bctrl tool-calls get <toolCallId>",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_get",
+      toolName: "tool-calls_get",
       operationResource: "operations://tool-calls.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.get",
+        command: "bctrl tool-calls get --help",
       },
     ],
   },
@@ -12482,7 +28282,7 @@ export const CLI_HELP_COMMANDS = {
           name: "runtimeId",
           type: "string",
           required: false,
-          description: "Unique runtime identifier generated by BCTRL.",
+          description: "Unique browser identifier generated by BCTRL.",
         },
         {
           name: "runId",
@@ -12491,9 +28291,10 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique run identifier generated by BCTRL.",
         },
         {
-          name: "turnId",
+          name: "taskId",
           type: "string",
           required: false,
+          description: "Unique task identifier generated by BCTRL.",
         },
         {
           name: "tool",
@@ -12502,22 +28303,29 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
           required: false,
           values: [
             "queued",
             "running",
-            "requires_input",
+            "awaiting_input",
             "succeeded",
             "failed",
-            "cancelled",
-            "timed_out",
+            "canceled",
+            "unknown",
           ],
         },
         {
           name: "cursor",
           type: "string",
           required: false,
+        },
+        {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
         },
         {
           name: "limit",
@@ -12534,6 +28342,21 @@ export const CLI_HELP_COMMANDS = {
       ],
       headers: [
         {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+        {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
@@ -12547,6 +28370,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -12570,7 +28398,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/tool-calls",
       operationId: "tool-calls.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -12580,17 +28408,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.list",
-      usage: "bctrl help --topic tool-calls.list",
+      command: "bctrl tool-calls list",
+      usage: "bctrl tool-calls list",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_list",
+      toolName: "tool-calls_list",
       operationResource: "operations://tool-calls.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.list",
+        command: "bctrl tool-calls list --help",
       },
     ],
   },
@@ -12610,6 +28438,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -12674,6 +28517,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "tool_call",
+          required: true,
+          values: ["tool_call"],
+        },
+        {
           name: "parentId",
           type: "string | null",
           required: true,
@@ -12706,27 +28555,33 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
           required: true,
           values: [
             "queued",
             "running",
-            "requires_input",
+            "awaiting_input",
             "succeeded",
             "failed",
-            "cancelled",
-            "timed_out",
+            "canceled",
+            "unknown",
           ],
         },
         {
-          name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          name: "taskId",
+          type: "string | null",
           required: true,
         },
         {
-          name: "turnId",
-          type: "string | null",
+          name: "tool",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -12752,6 +28607,7 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "inputRequest",
+        "object",
         "parentId",
         "resultAvailable",
         "runId",
@@ -12759,8 +28615,9 @@ export const CLI_HELP_COMMANDS = {
         "spanId",
         "startedAt",
         "status",
+        "taskId",
         "tool",
-        "turnId",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -12771,18 +28628,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.respond",
-      usage: "bctrl help --topic tool-calls.respond",
+      command: "bctrl tool-calls respond",
+      usage: "bctrl tool-calls respond <toolCallId>",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_respond",
+      toolName: "tool-calls_respond",
       operationResource: "operations://tool-calls.respond",
       schemaResources: ["schemas://JsonValue"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.respond",
+        command: "bctrl tool-calls respond --help",
       },
     ],
   },
@@ -12804,12 +28661,27 @@ export const CLI_HELP_COMMANDS = {
       ],
       query: [
         {
-          name: "waitSeconds",
+          name: "wait",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -12852,109 +28724,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tool-calls.result",
-      usage: "bctrl help --topic tool-calls.result",
+      command: "bctrl tool-calls result",
+      usage: "bctrl tool-calls result <toolCallId>",
     },
     mcp: {
-      toolName: "bctrl_tool_calls_result",
+      toolName: "tool-calls_result",
       operationResource: "operations://tool-calls.result",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tool-calls.result",
-      },
-    ],
-  },
-  "tools.call": {
-    type: "topic",
-    topic: "tools.call",
-    aliases: ["tools call"],
-    title: "Call a synchronous tool and wait for its result",
-    summary: "Call a synchronous tool and wait for its validated result.",
-    inputs: {
-      path: [
-        {
-          name: "toolRef",
-          type: "string",
-          required: true,
-          description:
-            "Built-in Tool name or generated custom Tool identifier.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "BCTRL-Runtime-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "JsonObject",
-        schemaResource: "schemas://JsonObject",
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "body",
-          type: "unknown",
-          required: true,
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Tools",
-        url: "https://platform.bctrl.ai/sdk/tools",
-        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Give applications and Agents typed capabilities to perform work.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/tools/{toolRef}/call",
-      operationId: "tools.call",
-      responseFields: ["body"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "tools.call",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic tools.call",
-      usage: "bctrl help --topic tools.call",
-    },
-    mcp: {
-      toolName: "bctrl_tools_call",
-      operationResource: "operations://tools.call",
-      schemaResources: ["schemas://JsonObject"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic tools.call",
+        command: "bctrl tool-calls result --help",
       },
     ],
   },
@@ -12962,8 +28742,8 @@ export const CLI_HELP_COMMANDS = {
     type: "topic",
     topic: "tools.calls.create",
     aliases: ["tools calls create"],
-    title: "Start a durable asynchronous tool call",
-    summary: "Start one durable asynchronous tool call.",
+    title: "Start a durable tool call and optionally wait for its status",
+    summary: "Create a durable ToolCall and optionally wait for its status.",
     inputs: {
       path: [
         {
@@ -12971,23 +28751,38 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Built-in Tool name or generated custom Tool identifier.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
+        },
+      ],
+      query: [
+        {
+          name: "wait",
+          type: "integer",
+          required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
           required: false,
           description:
             "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "BCTRL-Runtime-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional Runtime selector for direct Runtime-bound Tool calls. The Control Plane resolves the active Run atomically; callers cannot select a Run directly.",
         },
         {
           name: "Idempotency-Key",
@@ -12998,8 +28793,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       body: {
-        schema: "JsonObject",
-        schemaResource: "schemas://JsonObject",
+        schema: "ToolCallRequest",
+        schemaResource: "schemas://ToolCallRequest",
+        fields: [
+          {
+            name: "input",
+            type: "object",
+            required: true,
+          },
+          {
+            name: "runtimeId",
+            type: "string",
+            required: false,
+            description: "Unique browser identifier generated by BCTRL.",
+          },
+        ],
       },
     },
     output: {
@@ -13039,6 +28847,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "tool_call",
+          required: true,
+          values: ["tool_call"],
+        },
+        {
           name: "parentId",
           type: "string | null",
           required: true,
@@ -13071,27 +28885,33 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "status",
-          type: "queued | running | requires_input | succeeded | failed | cancelled | timed_out",
+          type: "queued | running | awaiting_input | succeeded | failed | canceled | unknown",
           required: true,
           values: [
             "queued",
             "running",
-            "requires_input",
+            "awaiting_input",
             "succeeded",
             "failed",
-            "cancelled",
-            "timed_out",
+            "canceled",
+            "unknown",
           ],
         },
         {
-          name: "tool",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          name: "taskId",
+          type: "string | null",
           required: true,
         },
         {
-          name: "turnId",
-          type: "string | null",
+          name: "tool",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -13109,6 +28929,7 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/tools/{toolRef}/calls",
       operationId: "tools.calls.create",
+      requestFields: ["input", "runtimeId"],
       responseFields: [
         "callerType",
         "createdAt",
@@ -13116,6 +28937,7 @@ export const CLI_HELP_COMMANDS = {
         "finishedAt",
         "id",
         "inputRequest",
+        "object",
         "parentId",
         "resultAvailable",
         "runId",
@@ -13123,8 +28945,9 @@ export const CLI_HELP_COMMANDS = {
         "spanId",
         "startedAt",
         "status",
+        "taskId",
         "tool",
-        "turnId",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -13135,18 +28958,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.calls.create",
-      usage: "bctrl help --topic tools.calls.create",
+      command: "bctrl tools calls create",
+      usage: "bctrl tools calls create <toolRef>",
     },
     mcp: {
-      toolName: "bctrl_tools_calls_create",
+      toolName: "tools_calls_create",
       operationResource: "operations://tools.calls.create",
-      schemaResources: ["schemas://JsonObject"],
+      schemaResources: ["schemas://ToolCallRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.calls.create",
+        command: "bctrl tools calls create --help",
       },
     ],
   },
@@ -13156,9 +28979,24 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["tools create"],
     title: "Create a tool",
     summary:
-      "Create an organization custom callable tool. Agents can use these tools through space toolsets during hosted work.",
+      "Create an organization custom callable tool. Agents select these tools in their immutable version definitions.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -13195,12 +29033,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "runtimeTypes",
-            type: "browser | desktop | spreadsheet[]",
-            required: false,
-          },
-          {
-            name: "modes",
-            type: "sync | async[]",
+            type: "browser | desktop[]",
             required: false,
           },
           {
@@ -13224,6 +29057,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
           name: "currentRevisionId",
           type: "null | string",
           required: true,
@@ -13236,7 +29075,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
           values: [
@@ -13252,20 +29091,19 @@ export const CLI_HELP_COMMANDS = {
             "browser.pages.get",
             "browser.pages.activate",
             "browser.pages.close",
+            "browser.setInputFiles",
             "runtime.files.list",
-            "runtime.files.stage",
-            "runtime.files.collect",
+            "run.files.list",
+            "run.files.add",
+            "run.files.collect",
             "run.files.export",
             "files.list",
             "files.read_text",
-            "vault.secrets.list",
-            "vault.secrets.get",
-            "vault.secrets.set",
-            "vault.secrets.update",
-            "vault.secrets.delete",
-            "vault.secrets.value",
-            "vault.totp.generate",
+            "secrets.list",
+            "secrets.fill",
+            "secrets.request",
             "code.execute",
+            "computer.use",
           ],
         },
         {
@@ -13279,13 +29117,8 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "modes",
-          type: "sync | async[]",
-          required: true,
-        },
-        {
           name: "name",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
           values: [
             "stagehand.act",
@@ -13300,21 +29133,26 @@ export const CLI_HELP_COMMANDS = {
             "browser.pages.get",
             "browser.pages.activate",
             "browser.pages.close",
+            "browser.setInputFiles",
             "runtime.files.list",
-            "runtime.files.stage",
-            "runtime.files.collect",
+            "run.files.list",
+            "run.files.add",
+            "run.files.collect",
             "run.files.export",
             "files.list",
             "files.read_text",
-            "vault.secrets.list",
-            "vault.secrets.get",
-            "vault.secrets.set",
-            "vault.secrets.update",
-            "vault.secrets.delete",
-            "vault.secrets.value",
-            "vault.totp.generate",
+            "secrets.list",
+            "secrets.fill",
+            "secrets.request",
             "code.execute",
+            "computer.use",
           ],
+        },
+        {
+          name: "object",
+          type: "tool",
+          required: true,
+          values: ["tool"],
         },
         {
           name: "outputSchema",
@@ -13323,7 +29161,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runtimeTypes",
-          type: "browser | desktop | spreadsheet[]",
+          type: "browser | desktop[]",
           required: true,
         },
         {
@@ -13333,15 +29171,9 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique space identifier generated by BCTRL.",
         },
         {
-          name: "createdAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
           name: "updatedAt",
           type: "datetime",
-          required: false,
+          required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
@@ -13365,23 +29197,22 @@ export const CLI_HELP_COMMANDS = {
         "name",
         "description",
         "runtimeTypes",
-        "modes",
         "inputSchema",
         "outputSchema",
         "implementation",
       ],
       responseFields: [
+        "createdAt",
         "currentRevisionId",
         "description",
         "id",
         "implementation",
         "inputSchema",
-        "modes",
         "name",
+        "object",
         "outputSchema",
         "runtimeTypes",
         "spaceId",
-        "createdAt",
         "updatedAt",
       ],
     },
@@ -13393,18 +29224,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.create",
-      usage: "bctrl help --topic tools.create",
+      command: "bctrl tools create",
+      usage: "bctrl tools create",
     },
     mcp: {
-      toolName: "bctrl_tools_create",
+      toolName: "tools_create",
       operationResource: "operations://tools.create",
       schemaResources: ["schemas://ToolCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.create",
+        command: "bctrl tools create --help",
       },
     ],
   },
@@ -13422,10 +29253,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Built-in Tool name or generated custom Tool identifier.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -13456,6 +29302,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "tool",
+          required: true,
+          values: ["tool"],
+        },
       ],
     },
     docs: [
@@ -13472,7 +29324,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/tools/{toolRef}",
       operationId: "tools.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -13482,17 +29334,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.delete",
-      usage: "bctrl help --topic tools.delete",
+      command: "bctrl tools delete",
+      usage: "bctrl tools delete <toolRef>",
     },
     mcp: {
-      toolName: "bctrl_tools_delete",
+      toolName: "tools_delete",
       operationResource: "operations://tools.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.delete",
+        command: "bctrl tools delete --help",
       },
     ],
   },
@@ -13510,10 +29362,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Built-in Tool name or generated custom Tool identifier.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -13525,6 +29392,12 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
         {
           name: "currentRevisionId",
           type: "null | string",
@@ -13538,7 +29411,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
           values: [
@@ -13554,20 +29427,19 @@ export const CLI_HELP_COMMANDS = {
             "browser.pages.get",
             "browser.pages.activate",
             "browser.pages.close",
+            "browser.setInputFiles",
             "runtime.files.list",
-            "runtime.files.stage",
-            "runtime.files.collect",
+            "run.files.list",
+            "run.files.add",
+            "run.files.collect",
             "run.files.export",
             "files.list",
             "files.read_text",
-            "vault.secrets.list",
-            "vault.secrets.get",
-            "vault.secrets.set",
-            "vault.secrets.update",
-            "vault.secrets.delete",
-            "vault.secrets.value",
-            "vault.totp.generate",
+            "secrets.list",
+            "secrets.fill",
+            "secrets.request",
             "code.execute",
+            "computer.use",
           ],
         },
         {
@@ -13581,13 +29453,8 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "modes",
-          type: "sync | async[]",
-          required: true,
-        },
-        {
           name: "name",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
           values: [
             "stagehand.act",
@@ -13602,21 +29469,26 @@ export const CLI_HELP_COMMANDS = {
             "browser.pages.get",
             "browser.pages.activate",
             "browser.pages.close",
+            "browser.setInputFiles",
             "runtime.files.list",
-            "runtime.files.stage",
-            "runtime.files.collect",
+            "run.files.list",
+            "run.files.add",
+            "run.files.collect",
             "run.files.export",
             "files.list",
             "files.read_text",
-            "vault.secrets.list",
-            "vault.secrets.get",
-            "vault.secrets.set",
-            "vault.secrets.update",
-            "vault.secrets.delete",
-            "vault.secrets.value",
-            "vault.totp.generate",
+            "secrets.list",
+            "secrets.fill",
+            "secrets.request",
             "code.execute",
+            "computer.use",
           ],
+        },
+        {
+          name: "object",
+          type: "tool",
+          required: true,
+          values: ["tool"],
         },
         {
           name: "outputSchema",
@@ -13625,7 +29497,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runtimeTypes",
-          type: "browser | desktop | spreadsheet[]",
+          type: "browser | desktop[]",
           required: true,
         },
         {
@@ -13635,15 +29507,9 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique space identifier generated by BCTRL.",
         },
         {
-          name: "createdAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
           name: "updatedAt",
           type: "datetime",
-          required: false,
+          required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
@@ -13663,17 +29529,17 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/tools/{toolRef}",
       operationId: "tools.get",
       responseFields: [
+        "createdAt",
         "currentRevisionId",
         "description",
         "id",
         "implementation",
         "inputSchema",
-        "modes",
         "name",
+        "object",
         "outputSchema",
         "runtimeTypes",
         "spaceId",
-        "createdAt",
         "updatedAt",
       ],
     },
@@ -13685,17 +29551,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.get",
-      usage: "bctrl help --topic tools.get",
+      command: "bctrl tools get",
+      usage: "bctrl tools get <toolRef>",
     },
     mcp: {
-      toolName: "bctrl_tools_get",
+      toolName: "tools_get",
       operationResource: "operations://tools.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.get",
+        command: "bctrl tools get --help",
       },
     ],
   },
@@ -13720,12 +29586,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -13740,6 +29628,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -13763,7 +29656,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/tools",
       operationId: "tools.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -13773,17 +29666,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.list",
-      usage: "bctrl help --topic tools.list",
+      command: "bctrl tools list",
+      usage: "bctrl tools list",
     },
     mcp: {
-      toolName: "bctrl_tools_list",
+      toolName: "tools_list",
       operationResource: "operations://tools.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.list",
+        command: "bctrl tools list --help",
       },
     ],
   },
@@ -13801,10 +29694,25 @@ export const CLI_HELP_COMMANDS = {
           type: "string",
           required: true,
           description:
-            "Built-in Tool name or generated custom Tool identifier.",
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -13837,12 +29745,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "runtimeTypes",
-            type: "browser | desktop | spreadsheet[]",
-            required: false,
-          },
-          {
-            name: "modes",
-            type: "sync | async[]",
+            type: "browser | desktop[]",
             required: false,
           },
           {
@@ -13866,6 +29769,12 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "createdAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
+        },
+        {
           name: "currentRevisionId",
           type: "null | string",
           required: true,
@@ -13878,7 +29787,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "id",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
           description: "Unique tool identifier generated by BCTRL.",
           values: [
@@ -13894,20 +29803,19 @@ export const CLI_HELP_COMMANDS = {
             "browser.pages.get",
             "browser.pages.activate",
             "browser.pages.close",
+            "browser.setInputFiles",
             "runtime.files.list",
-            "runtime.files.stage",
-            "runtime.files.collect",
+            "run.files.list",
+            "run.files.add",
+            "run.files.collect",
             "run.files.export",
             "files.list",
             "files.read_text",
-            "vault.secrets.list",
-            "vault.secrets.get",
-            "vault.secrets.set",
-            "vault.secrets.update",
-            "vault.secrets.delete",
-            "vault.secrets.value",
-            "vault.totp.generate",
+            "secrets.list",
+            "secrets.fill",
+            "secrets.request",
             "code.execute",
+            "computer.use",
           ],
         },
         {
@@ -13921,13 +29829,8 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
-          name: "modes",
-          type: "sync | async[]",
-          required: true,
-        },
-        {
           name: "name",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | code.execute | string",
+          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | browser.setInputFiles | runtime.files.list | run.files.list | run.files.add | run.files.collect | run.files.export | files.list | files.read_text | secrets.list | secrets.fill | secrets.request | code.execute | computer.use | string",
           required: true,
           values: [
             "stagehand.act",
@@ -13942,21 +29845,26 @@ export const CLI_HELP_COMMANDS = {
             "browser.pages.get",
             "browser.pages.activate",
             "browser.pages.close",
+            "browser.setInputFiles",
             "runtime.files.list",
-            "runtime.files.stage",
-            "runtime.files.collect",
+            "run.files.list",
+            "run.files.add",
+            "run.files.collect",
             "run.files.export",
             "files.list",
             "files.read_text",
-            "vault.secrets.list",
-            "vault.secrets.get",
-            "vault.secrets.set",
-            "vault.secrets.update",
-            "vault.secrets.delete",
-            "vault.secrets.value",
-            "vault.totp.generate",
+            "secrets.list",
+            "secrets.fill",
+            "secrets.request",
             "code.execute",
+            "computer.use",
           ],
+        },
+        {
+          name: "object",
+          type: "tool",
+          required: true,
+          values: ["tool"],
         },
         {
           name: "outputSchema",
@@ -13965,7 +29873,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "runtimeTypes",
-          type: "browser | desktop | spreadsheet[]",
+          type: "browser | desktop[]",
           required: true,
         },
         {
@@ -13975,15 +29883,9 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique space identifier generated by BCTRL.",
         },
         {
-          name: "createdAt",
-          type: "datetime",
-          required: false,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
           name: "updatedAt",
           type: "datetime",
-          required: false,
+          required: true,
           description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
@@ -14006,23 +29908,22 @@ export const CLI_HELP_COMMANDS = {
         "currentRevisionId",
         "description",
         "runtimeTypes",
-        "modes",
         "inputSchema",
         "outputSchema",
         "implementation",
       ],
       responseFields: [
+        "createdAt",
         "currentRevisionId",
         "description",
         "id",
         "implementation",
         "inputSchema",
-        "modes",
         "name",
+        "object",
         "outputSchema",
         "runtimeTypes",
         "spaceId",
-        "createdAt",
         "updatedAt",
       ],
     },
@@ -14034,265 +29935,52 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic tools.update",
-      usage: "bctrl help --topic tools.update",
+      command: "bctrl tools update",
+      usage: "bctrl tools update <toolRef>",
     },
     mcp: {
-      toolName: "bctrl_tools_update",
+      toolName: "tools_update",
       operationResource: "operations://tools.update",
       schemaResources: ["schemas://ToolUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic tools.update",
+        command: "bctrl tools update --help",
       },
     ],
   },
-  "toolsets.create": {
+  "traces.get": {
     type: "topic",
-    topic: "toolsets.create",
-    aliases: ["toolsets create"],
-    title: "Create a toolset",
-    summary: "Create an ordered reusable bundle of built-in and custom tools.",
-    inputs: {
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "ToolsetCreateRequest",
-        schemaResource: "schemas://ToolsetCreateRequest",
-        fields: [
-          {
-            name: "spaceId",
-            type: "string | default",
-            required: false,
-          },
-          {
-            name: "name",
-            type: "string",
-            required: true,
-          },
-          {
-            name: "description",
-            type: "string | null",
-            required: false,
-          },
-          {
-            name: "tools",
-            type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "description",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "tools",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
-          required: true,
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Tools",
-        url: "https://platform.bctrl.ai/sdk/tools",
-        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Give applications and Agents typed capabilities to perform work.",
-      },
-    ],
-    api: {
-      method: "POST",
-      path: "/v1/toolsets",
-      operationId: "toolsets.create",
-      requestFields: ["spaceId", "name", "description", "tools"],
-      responseFields: [
-        "createdAt",
-        "description",
-        "id",
-        "name",
-        "spaceId",
-        "tools",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "toolsets.create",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic toolsets.create",
-      usage: "bctrl help --topic toolsets.create",
-    },
-    mcp: {
-      toolName: "bctrl_toolsets_create",
-      operationResource: "operations://toolsets.create",
-      schemaResources: ["schemas://ToolsetCreateRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic toolsets.create",
-      },
-    ],
-  },
-  "toolsets.delete": {
-    type: "topic",
-    topic: "toolsets.delete",
-    aliases: ["toolsets delete"],
-    title: "Delete a toolset",
-    summary: "Delete a toolset when it should no longer be used for new work.",
+    topic: "traces.get",
+    aliases: ["traces get"],
+    title: "Get a trace",
+    summary:
+      "Read a trace as OpenTelemetry spans built from its Events: every API request is a server span, a Task an invoke_agent span with its LLM calls (chat) and tool uses beneath it, following the GenAI semantic conventions (pinned, named in semconv). Send a W3C traceparent on any request to continue your own trace into BCTRL; Runs and Tasks carry their traceId.",
     inputs: {
       path: [
         {
-          name: "toolsetId",
+          name: "traceId",
           type: "string",
           required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
         },
       ],
       headers: [
         {
-          name: "BCTRL-Subaccount-Id",
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
           type: "string",
           required: false,
           description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
         },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "deleted",
-          type: "true",
-          required: true,
-          values: ["true"],
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Tools",
-        url: "https://platform.bctrl.ai/sdk/tools",
-        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Give applications and Agents typed capabilities to perform work.",
-      },
-    ],
-    api: {
-      method: "DELETE",
-      path: "/v1/toolsets/{toolsetId}",
-      operationId: "toolsets.delete",
-      responseFields: ["deleted", "id"],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "toolsets.delete",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic toolsets.delete",
-      usage: "bctrl help --topic toolsets.delete",
-    },
-    mcp: {
-      toolName: "bctrl_toolsets_delete",
-      operationResource: "operations://toolsets.delete",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic toolsets.delete",
-      },
-    ],
-  },
-  "toolsets.get": {
-    type: "topic",
-    topic: "toolsets.get",
-    aliases: ["toolsets get"],
-    title: "Get a toolset",
-    summary:
-      "Get one toolset, including enabled built-in capabilities, custom tool IDs, and metadata.",
-    inputs: {
-      path: [
-        {
-          name: "toolsetId",
-          type: "string",
-          required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -14305,323 +29993,56 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
-          name: "createdAt",
-          type: "datetime",
+          name: "object",
+          type: "trace",
           required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
+          values: ["trace"],
         },
         {
-          name: "description",
-          type: "string | null",
+          name: "semconv",
+          type: "object",
           required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "tools",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
-          required: true,
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Tools",
-        url: "https://platform.bctrl.ai/sdk/tools",
-        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Give applications and Agents typed capabilities to perform work.",
-      },
-    ],
-    api: {
-      method: "GET",
-      path: "/v1/toolsets/{toolsetId}",
-      operationId: "toolsets.get",
-      responseFields: [
-        "createdAt",
-        "description",
-        "id",
-        "name",
-        "spaceId",
-        "tools",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "toolsets.get",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic toolsets.get",
-      usage: "bctrl help --topic toolsets.get",
-    },
-    mcp: {
-      toolName: "bctrl_toolsets_get",
-      operationResource: "operations://toolsets.get",
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic toolsets.get",
-      },
-    ],
-  },
-  "toolsets.list": {
-    type: "topic",
-    topic: "toolsets.list",
-    aliases: ["toolsets list"],
-    title: "List toolsets",
-    summary:
-      "List reusable tool bundles in a space using the simplified response envelope.",
-    inputs: {
-      query: [
-        {
-          name: "spaceId",
-          type: "string",
-          required: false,
           description:
-            "Filter by a prefixed space ID, or pass `default` to use the caller default space.",
+            "The pinned OpenTelemetry GenAI semantic conventions version.",
         },
         {
-          name: "cursor",
-          type: "string",
-          required: false,
-        },
-        {
-          name: "limit",
-          type: "integer",
-          required: false,
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-      ],
-    },
-    output: {
-      fields: [
-        {
-          name: "data",
+          name: "spans",
           type: "object[]",
           required: true,
+          description: "Ordered by start time; parents before their children.",
         },
         {
-          name: "nextCursor",
-          type: "string | null",
+          name: "traceId",
+          type: "string",
           required: true,
         },
       ],
     },
-    docs: [
-      {
-        title: "Tools",
-        url: "https://platform.bctrl.ai/sdk/tools",
-        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Give applications and Agents typed capabilities to perform work.",
-      },
-    ],
     api: {
       method: "GET",
-      path: "/v1/toolsets",
-      operationId: "toolsets.list",
-      responseFields: ["data", "nextCursor"],
+      path: "/v1/traces/{traceId}",
+      operationId: "traces.get",
+      responseFields: ["object", "semconv", "spans", "traceId"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "toolsets.list",
+        method: "traces.get",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic toolsets.list",
-      usage: "bctrl help --topic toolsets.list",
+      command: "bctrl traces get",
+      usage: "bctrl traces get <traceId>",
     },
     mcp: {
-      toolName: "bctrl_toolsets_list",
-      operationResource: "operations://toolsets.list",
+      toolName: "traces_get",
+      operationResource: "operations://traces.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic toolsets.list",
-      },
-    ],
-  },
-  "toolsets.update": {
-    type: "topic",
-    topic: "toolsets.update",
-    aliases: ["toolsets update"],
-    title: "Update a toolset",
-    summary:
-      "Update a reusable tool bundle by changing its name, built-in capabilities, custom tools, or metadata.",
-    inputs: {
-      path: [
-        {
-          name: "toolsetId",
-          type: "string",
-          required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
-        },
-      ],
-      headers: [
-        {
-          name: "BCTRL-Subaccount-Id",
-          type: "string",
-          required: false,
-          description:
-            "Optional effective subaccount context for organization API keys. Subaccount API keys are already scoped and cannot use this header to act as another subaccount.",
-        },
-        {
-          name: "Idempotency-Key",
-          type: "string",
-          required: false,
-          description:
-            "Optional retry key for this billable operation. Reusing the same key with the same request replays its stable outcome; credential-bearing results may be freshly issued for the same principal. Reusing it with a different request returns 409.",
-        },
-      ],
-      body: {
-        schema: "ToolsetUpdateRequest",
-        schemaResource: "schemas://ToolsetUpdateRequest",
-        fields: [
-          {
-            name: "name",
-            type: "string",
-            required: false,
-          },
-          {
-            name: "description",
-            type: "string | null",
-            required: false,
-          },
-          {
-            name: "tools",
-            type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
-            required: false,
-          },
-        ],
-      },
-    },
-    output: {
-      fields: [
-        {
-          name: "createdAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-        {
-          name: "description",
-          type: "string | null",
-          required: true,
-        },
-        {
-          name: "id",
-          type: "string",
-          required: true,
-          description: "Unique toolset identifier generated by BCTRL.",
-        },
-        {
-          name: "name",
-          type: "string",
-          required: true,
-        },
-        {
-          name: "spaceId",
-          type: "string",
-          required: true,
-          description: "Unique space identifier generated by BCTRL.",
-        },
-        {
-          name: "tools",
-          type: "stagehand.act | stagehand.observe | stagehand.extract | captcha.solve | captcha.status | captcha.wait | human.request | browser.pages.list | browser.pages.open | browser.pages.get | browser.pages.activate | browser.pages.close | runtime.files.list | runtime.files.stage | runtime.files.collect | run.files.export | files.list | files.read_text | vault.secrets.list | vault.secrets.get | vault.secrets.set | vault.secrets.update | vault.secrets.delete | vault.secrets.value | vault.totp.generate | string[]",
-          required: true,
-        },
-        {
-          name: "updatedAt",
-          type: "datetime",
-          required: true,
-          description: "RFC 3339 timestamp with a UTC offset.",
-        },
-      ],
-    },
-    docs: [
-      {
-        title: "Tools",
-        url: "https://platform.bctrl.ai/sdk/tools",
-        markdownUrl: "https://platform.bctrl.ai/sdk/tools.md",
-        mcpResource: "docs://platform.bctrl.ai/sdk/tools.md",
-        description:
-          "Give applications and Agents typed capabilities to perform work.",
-      },
-    ],
-    api: {
-      method: "PATCH",
-      path: "/v1/toolsets/{toolsetId}",
-      operationId: "toolsets.update",
-      requestFields: ["name", "description", "tools"],
-      responseFields: [
-        "createdAt",
-        "description",
-        "id",
-        "name",
-        "spaceId",
-        "tools",
-        "updatedAt",
-      ],
-    },
-    sdk: [
-      {
-        language: "typescript",
-        method: "toolsets.update",
-        package: "@bctrl/sdk",
-      },
-    ],
-    cli: {
-      command: "bctrl help --topic toolsets.update",
-      usage: "bctrl help --topic toolsets.update",
-    },
-    mcp: {
-      toolName: "bctrl_toolsets_update",
-      operationResource: "operations://toolsets.update",
-      schemaResources: ["schemas://ToolsetUpdateRequest"],
-    },
-    examples: [
-      {
-        audience: "cli",
-        command: "bctrl help --topic toolsets.update",
+        command: "bctrl traces get --help",
       },
     ],
   },
@@ -14631,6 +30052,25 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["usage get"],
     title: "Get organization usage",
     summary: "Get current organization credit usage and balance.",
+    inputs: {
+      headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
+      ],
+    },
     output: {
       fields: [
         {
@@ -14660,6 +30100,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "account.usage",
+          required: true,
+          values: ["account.usage"],
+        },
+        {
           name: "organizationId",
           type: "string",
           required: true,
@@ -14686,6 +30132,7 @@ export const CLI_HELP_COMMANDS = {
         "credits",
         "cycle",
         "isBlocked",
+        "object",
         "organizationId",
       ],
     },
@@ -14697,17 +30144,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic usage.get",
-      usage: "bctrl help --topic usage.get",
+      command: "bctrl usage get",
+      usage: "bctrl usage get",
     },
     mcp: {
-      toolName: "bctrl_usage_get",
+      toolName: "usage_get",
       operationResource: "operations://usage.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic usage.get",
+        command: "bctrl usage get --help",
       },
     ],
   },
@@ -14720,6 +30167,21 @@ export const CLI_HELP_COMMANDS = {
       "Mint a scoped, component-gated hosted page or origin-restricted iframe composition. The response contains the bearer token once; keep it private.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -14777,7 +30239,7 @@ export const CLI_HELP_COMMANDS = {
             type: "boolean",
             required: false,
             description:
-              "Allow sending messages to and cancelling turns in the included conversations. Defaults to the value of control.",
+              "Allow giving input to and cancelling Tasks in the included conversations. Defaults to the value of control.",
           },
         ],
       },
@@ -14822,6 +30284,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "view",
+          required: true,
+          values: ["view"],
+        },
+        {
           name: "presentation",
           type: "object",
           required: true,
@@ -14837,6 +30305,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description:
             "Short-lived bearer token returned once when a view is created.",
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
         {
           name: "url",
@@ -14874,9 +30348,11 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "expiresAt",
         "id",
+        "object",
         "presentation",
         "scope",
         "token",
+        "updatedAt",
         "url",
       ],
     },
@@ -14888,18 +30364,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic views.create",
-      usage: "bctrl help --topic views.create",
+      command: "bctrl views create",
+      usage: "bctrl views create",
     },
     mcp: {
-      toolName: "bctrl_views_create",
+      toolName: "views_create",
       operationResource: "operations://views.create",
       schemaResources: ["schemas://ViewCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic views.create",
+        command: "bctrl views create --help",
       },
     ],
   },
@@ -14920,6 +30396,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -14951,6 +30442,12 @@ export const CLI_HELP_COMMANDS = {
           description:
             "Public view resource id. It is safe to expose in URLs and logs.",
         },
+        {
+          name: "object",
+          type: "view",
+          required: true,
+          values: ["view"],
+        },
       ],
     },
     docs: [
@@ -14966,7 +30463,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/views/{viewId}",
       operationId: "views.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -14976,17 +30473,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic views.delete",
-      usage: "bctrl help --topic views.delete",
+      command: "bctrl views delete",
+      usage: "bctrl views delete <viewId>",
     },
     mcp: {
-      toolName: "bctrl_views_delete",
+      toolName: "views_delete",
       operationResource: "operations://views.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic views.delete",
+        command: "bctrl views delete --help",
       },
     ],
   },
@@ -15008,6 +30505,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15057,6 +30569,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "view",
+          required: true,
+          values: ["view"],
+        },
+        {
           name: "presentation",
           type: "object",
           required: true,
@@ -15070,6 +30588,12 @@ export const CLI_HELP_COMMANDS = {
           name: "spaceName",
           type: "string",
           required: true,
+        },
+        {
+          name: "updatedAt",
+          type: "datetime",
+          required: true,
+          description: "RFC 3339 timestamp with a UTC offset.",
         },
       ],
     },
@@ -15094,9 +30618,11 @@ export const CLI_HELP_COMMANDS = {
         "createdAt",
         "expiresAt",
         "id",
+        "object",
         "presentation",
         "scope",
         "spaceName",
+        "updatedAt",
       ],
     },
     sdk: [
@@ -15107,17 +30633,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic views.get",
-      usage: "bctrl help --topic views.get",
+      command: "bctrl views get",
+      usage: "bctrl views get <viewId>",
     },
     mcp: {
-      toolName: "bctrl_views_get",
+      toolName: "views_get",
       operationResource: "operations://views.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic views.get",
+        command: "bctrl views get --help",
       },
     ],
   },
@@ -15135,12 +30661,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15155,6 +30703,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -15177,7 +30730,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/views",
       operationId: "views.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -15187,17 +30740,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic views.list",
-      usage: "bctrl help --topic views.list",
+      command: "bctrl views list",
+      usage: "bctrl views list",
     },
     mcp: {
-      toolName: "bctrl_views_list",
+      toolName: "views_list",
       operationResource: "operations://views.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic views.list",
+        command: "bctrl views list --help",
       },
     ],
   },
@@ -15207,9 +30760,24 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["webhooks create"],
     title: "Create a webhook",
     summary:
-      "Create a signed webhook endpoint. The signing secret is returned once; store it securely and verify every delivery signature.",
+      "Create a webhook endpoint. Deliveries are signed per Standard Webhooks (webhook-id, webhook-timestamp, webhook-signature), so any Standard Webhooks library verifies them. The whsec_ signing secret is returned once; store it securely.",
     inputs: {
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15233,6 +30801,7 @@ export const CLI_HELP_COMMANDS = {
             name: "name",
             type: "string",
             required: false,
+            description: "Customer-facing resource name. 1–200 characters.",
           },
           {
             name: "url",
@@ -15241,7 +30810,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+            type: "string[]",
             required: true,
           },
         ],
@@ -15262,7 +30831,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+          type: "string[]",
           required: true,
         },
         {
@@ -15275,6 +30844,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
         },
         {
           name: "secret",
@@ -15320,6 +30895,7 @@ export const CLI_HELP_COMMANDS = {
         "events",
         "id",
         "name",
+        "object",
         "secret",
         "subaccountId",
         "updatedAt",
@@ -15334,18 +30910,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.create",
-      usage: "bctrl help --topic webhooks.create",
+      command: "bctrl webhooks create",
+      usage: "bctrl webhooks create",
     },
     mcp: {
-      toolName: "bctrl_webhooks_create",
+      toolName: "webhooks_create",
       operationResource: "operations://webhooks.create",
       schemaResources: ["schemas://WebhookCreateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.create",
+        command: "bctrl webhooks create --help",
       },
     ],
   },
@@ -15362,10 +30938,26 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15396,6 +30988,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
           description: "Unique webhook identifier generated by BCTRL.",
         },
+        {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
+        },
       ],
     },
     docs: [
@@ -15412,7 +31010,7 @@ export const CLI_HELP_COMMANDS = {
       method: "DELETE",
       path: "/v1/webhooks/{webhookId}",
       operationId: "webhooks.delete",
-      responseFields: ["deleted", "id"],
+      responseFields: ["deleted", "id", "object"],
     },
     sdk: [
       {
@@ -15422,17 +31020,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.delete",
-      usage: "bctrl help --topic webhooks.delete",
+      command: "bctrl webhooks delete",
+      usage: "bctrl webhooks delete <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_delete",
+      toolName: "webhooks_delete",
       operationResource: "operations://webhooks.delete",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.delete",
+        command: "bctrl webhooks delete --help",
       },
     ],
   },
@@ -15449,7 +31047,8 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       query: [
@@ -15459,12 +31058,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15479,6 +31100,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -15502,7 +31128,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/webhooks/{webhookId}/deliveries",
       operationId: "webhooks.deliveries.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -15512,17 +31138,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.deliveries.list",
-      usage: "bctrl help --topic webhooks.deliveries.list",
+      command: "bctrl webhooks deliveries list",
+      usage: "bctrl webhooks deliveries list <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_deliveries_list",
+      toolName: "webhooks_deliveries_list",
       operationResource: "operations://webhooks.deliveries.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.deliveries.list",
+        command: "bctrl webhooks deliveries list --help",
       },
     ],
   },
@@ -15539,7 +31165,8 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
         {
           name: "deliveryId",
@@ -15549,6 +31176,21 @@ export const CLI_HELP_COMMANDS = {
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15604,6 +31246,12 @@ export const CLI_HELP_COMMANDS = {
           name: "nextAttemptAt",
           type: "datetime | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "webhook_delivery",
+          required: true,
+          values: ["webhook_delivery"],
         },
         {
           name: "responseStatus",
@@ -15656,6 +31304,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "lastError",
         "nextAttemptAt",
+        "object",
         "responseStatus",
         "sentAt",
         "status",
@@ -15671,17 +31320,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.deliveries.redeliver",
-      usage: "bctrl help --topic webhooks.deliveries.redeliver",
+      command: "bctrl webhooks deliveries redeliver",
+      usage: "bctrl webhooks deliveries redeliver <webhookId> <deliveryId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_deliveries_redeliver",
+      toolName: "webhooks_deliveries_redeliver",
       operationResource: "operations://webhooks.deliveries.redeliver",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.deliveries.redeliver",
+        command: "bctrl webhooks deliveries redeliver --help",
       },
     ],
   },
@@ -15697,10 +31346,26 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15725,7 +31390,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+          type: "string[]",
           required: true,
         },
         {
@@ -15738,6 +31403,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
         },
         {
           name: "subaccountId",
@@ -15777,6 +31448,7 @@ export const CLI_HELP_COMMANDS = {
         "events",
         "id",
         "name",
+        "object",
         "subaccountId",
         "updatedAt",
         "url",
@@ -15790,17 +31462,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.get",
-      usage: "bctrl help --topic webhooks.get",
+      command: "bctrl webhooks get",
+      usage: "bctrl webhooks get <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_get",
+      toolName: "webhooks_get",
       operationResource: "operations://webhooks.get",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.get",
+        command: "bctrl webhooks get --help",
       },
     ],
   },
@@ -15819,12 +31491,34 @@ export const CLI_HELP_COMMANDS = {
           required: false,
         },
         {
+          name: "order",
+          type: "asc | desc",
+          required: false,
+          description: "Order by createdAt and ID. Defaults to desc.",
+          values: ["asc", "desc"],
+        },
+        {
           name: "limit",
           type: "integer",
           required: false,
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15839,6 +31533,11 @@ export const CLI_HELP_COMMANDS = {
         {
           name: "data",
           type: "object[]",
+          required: true,
+        },
+        {
+          name: "hasMore",
+          type: "boolean",
           required: true,
         },
         {
@@ -15862,7 +31561,7 @@ export const CLI_HELP_COMMANDS = {
       method: "GET",
       path: "/v1/webhooks",
       operationId: "webhooks.list",
-      responseFields: ["data", "nextCursor"],
+      responseFields: ["data", "hasMore", "nextCursor"],
     },
     sdk: [
       {
@@ -15872,17 +31571,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.list",
-      usage: "bctrl help --topic webhooks.list",
+      command: "bctrl webhooks list",
+      usage: "bctrl webhooks list",
     },
     mcp: {
-      toolName: "bctrl_webhooks_list",
+      toolName: "webhooks_list",
       operationResource: "operations://webhooks.list",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.list",
+        command: "bctrl webhooks list --help",
       },
     ],
   },
@@ -15892,17 +31591,33 @@ export const CLI_HELP_COMMANDS = {
     aliases: ["webhooks rotate-secret"],
     title: "Rotate a webhook secret",
     summary:
-      "Replace a webhook signing secret immediately. The new secret is returned once.",
+      "Replace a webhook signing secret. The new secret is returned once and signs every delivery from now on; for 24 hours the previous secret also signs (a second v1 signature), so receivers can switch without dropping deliveries.",
     inputs: {
       path: [
         {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -15928,6 +31643,12 @@ export const CLI_HELP_COMMANDS = {
           description: "Unique webhook identifier generated by BCTRL.",
         },
         {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
+        },
+        {
           name: "secret",
           type: "string",
           required: true,
@@ -15948,27 +31669,27 @@ export const CLI_HELP_COMMANDS = {
       method: "POST",
       path: "/v1/webhooks/{webhookId}/rotate-secret",
       operationId: "webhooks.rotate-secret",
-      responseFields: ["id", "secret"],
+      responseFields: ["id", "object", "secret"],
     },
     sdk: [
       {
         language: "typescript",
-        method: "webhooks.rotateSecret",
+        method: "webhooks.rotate-secret",
         package: "@bctrl/sdk",
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.rotate-secret",
-      usage: "bctrl help --topic webhooks.rotate-secret",
+      command: "bctrl webhooks rotate-secret",
+      usage: "bctrl webhooks rotate-secret <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_rotate_secret",
+      toolName: "webhooks_rotate-secret",
       operationResource: "operations://webhooks.rotate-secret",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.rotate-secret",
+        command: "bctrl webhooks rotate-secret --help",
       },
     ],
   },
@@ -15985,10 +31706,26 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -16046,6 +31783,12 @@ export const CLI_HELP_COMMANDS = {
           required: true,
         },
         {
+          name: "object",
+          type: "webhook_delivery",
+          required: true,
+          values: ["webhook_delivery"],
+        },
+        {
           name: "responseStatus",
           type: "integer | null",
           required: true,
@@ -16096,6 +31839,7 @@ export const CLI_HELP_COMMANDS = {
         "id",
         "lastError",
         "nextAttemptAt",
+        "object",
         "responseStatus",
         "sentAt",
         "status",
@@ -16111,17 +31855,17 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.test",
-      usage: "bctrl help --topic webhooks.test",
+      command: "bctrl webhooks test",
+      usage: "bctrl webhooks test <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_test",
+      toolName: "webhooks_test",
       operationResource: "operations://webhooks.test",
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.test",
+        command: "bctrl webhooks test --help",
       },
     ],
   },
@@ -16138,10 +31882,26 @@ export const CLI_HELP_COMMANDS = {
           name: "webhookId",
           type: "string",
           required: true,
-          description: "Unique webhook identifier generated by BCTRL.",
+          description:
+            "Opaque resource ID or unique resource name in the selected Space or tenant.",
         },
       ],
       headers: [
+        {
+          name: "BCTRL-Version",
+          type: "2026-10-01 | 2026-10-03",
+          required: false,
+          description:
+            "Dated API version. Defaults to the release pinned when the API key was created.",
+          values: ["2026-10-01", "2026-10-03"],
+        },
+        {
+          name: "BCTRL-Space",
+          type: "string",
+          required: false,
+          description:
+            "Select one authorized Space by its opaque ID or unique name. Omission uses the operation default.",
+        },
         {
           name: "BCTRL-Subaccount-Id",
           type: "string",
@@ -16173,7 +31933,7 @@ export const CLI_HELP_COMMANDS = {
           },
           {
             name: "events",
-            type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+            type: "string[]",
             required: false,
           },
           {
@@ -16199,7 +31959,7 @@ export const CLI_HELP_COMMANDS = {
         },
         {
           name: "events",
-          type: "run.started | run.completed | run.failed | tool_input.requested | tool_input.responded | tool_input.expired | view.created | view.revoked | recording.ready[]",
+          type: "string[]",
           required: true,
         },
         {
@@ -16212,6 +31972,12 @@ export const CLI_HELP_COMMANDS = {
           name: "name",
           type: "string | null",
           required: true,
+        },
+        {
+          name: "object",
+          type: "webhook",
+          required: true,
+          values: ["webhook"],
         },
         {
           name: "subaccountId",
@@ -16252,6 +32018,7 @@ export const CLI_HELP_COMMANDS = {
         "events",
         "id",
         "name",
+        "object",
         "subaccountId",
         "updatedAt",
         "url",
@@ -16265,18 +32032,18 @@ export const CLI_HELP_COMMANDS = {
       },
     ],
     cli: {
-      command: "bctrl help --topic webhooks.update",
-      usage: "bctrl help --topic webhooks.update",
+      command: "bctrl webhooks update",
+      usage: "bctrl webhooks update <webhookId>",
     },
     mcp: {
-      toolName: "bctrl_webhooks_update",
+      toolName: "webhooks_update",
       operationResource: "operations://webhooks.update",
       schemaResources: ["schemas://WebhookUpdateRequest"],
     },
     examples: [
       {
         audience: "cli",
-        command: "bctrl help --topic webhooks.update",
+        command: "bctrl webhooks update --help",
       },
     ],
   },

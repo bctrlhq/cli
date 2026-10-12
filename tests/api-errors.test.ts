@@ -6,8 +6,8 @@ test('apiErrorFromResponse preserves structured v1 error context', async () => {
   const error = await apiErrorFromResponse(
     new Response(
       JSON.stringify({
-        error: 'Runtime not found',
-        code: 'runtime.not_found',
+        error: 'Browser not found',
+        code: 'browser.not_found',
         requestId: 'req_test',
         details: { spaceId: 'sp_test' },
       }),
@@ -16,11 +16,11 @@ test('apiErrorFromResponse preserves structured v1 error context', async () => {
   );
 
   assert.equal(error.apiError?.status, 404);
-  assert.equal(error.apiError?.code, 'runtime.not_found');
+  assert.equal(error.apiError?.code, 'browser.not_found');
   assert.equal(error.apiError?.requestId, 'req_test');
-  assert.match(error.message, /Code: runtime\.not_found/);
+  assert.match(error.message, /Code: browser\.not_found/);
   assert.match(error.message, /Request ID: req_test/);
-  assert.match(error.message, /Try:\n  bctrl runtime list --space sp_test/);
+  assert.match(error.message, /Try:\n  bctrl browsers list/);
 });
 
 test('apiErrorFromResponse suggests login for auth failures', async () => {
