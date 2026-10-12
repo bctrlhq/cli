@@ -1,7 +1,7 @@
 import { createWriteStream } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { once } from 'node:events';
-import { Readable } from 'node:stream';
+import { Readable, type Writable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 import type { ReadableStream as WebReadableStream } from 'node:stream/web';
 import { basename } from 'node:path';
@@ -37,11 +37,11 @@ export async function readStdinText(): Promise<string> {
 }
 
 /** Writes a binary response as it arrives; a slow destination slows the read. */
-export async function writeBinary(path: string, data: ReadableStream<Uint8Array>): Promise<void> {
+export async function writeBinary(path: string, data: ReadableStream<Uint8Array>, out: Writable = process.stdout): Promise<void> {
   const source = Readable.fromWeb(data as WebReadableStream<Uint8Array>);
   if (path === '-') {
     for await (const chunk of source) {
-      if (!process.stdout.write(chunk)) await once(process.stdout, 'drain');
+      if (!out.write(chunk)) await once(out, 'drain');
     }
     return;
   }

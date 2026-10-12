@@ -21,8 +21,8 @@ export function createMockApiClient(calls: ApiCall[], response: unknown = { ok: 
     patch: (path, options) => record('patch', path, options),
     put: (path, options) => record('put', path, options),
     delete: (path, options) => record('delete', path, options),
-    download: async (method, path, options) => {
-      calls.push({ method: 'download', path, options: { ...options, method } });
+    download: async (path, options) => {
+      calls.push({ method: 'download', path, options });
       return new ReadableStream<Uint8Array>({ start: (controller) => controller.close() });
     },
     streamText: async (path, options) => {

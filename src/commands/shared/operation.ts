@@ -80,7 +80,7 @@ export async function requestOperation<OperationId extends CliOperationId>(
     ...(input.idempotencyKey ? { idempotencyKey: input.idempotencyKey } : {}),
     ...(input.actingSubaccountId ? { actingSubaccountId: input.actingSubaccountId } : {}),
     ...(input.runtimeId ? { runtimeId: input.runtimeId } : {}),
-    ...(input.headers ? { headers: input.headers } : {}),
+    headers: { 'BCTRL-Version': '2026-10-03', ...input.headers },
   };
   const options = Object.keys(requestOptions).length > 0 ? requestOptions : undefined;
   return client[route.method](path, options);

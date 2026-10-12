@@ -1,3 +1,4 @@
+import { assertApiCalls } from '../helpers/api-assertions.js';
 import assert from 'node:assert/strict';
 import { writeFile, mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -18,7 +19,7 @@ function buildCommand(calls: ApiCall[], response: unknown = { id: secret, path: 
 test('secrets list filters paths without turning them into identifiers', async () => {
   const calls: ApiCall[] = [];
   await buildCommand(calls).command.parseAsync(['secrets', 'list', '--prefix', 'prod/', '--delimiter', '/', '--limit', '10', '--type', 'login'], { from: 'user' });
-  assert.deepEqual(calls, [{ method: 'get', path: '/secrets', options: { query: { prefix: 'prod/', delimiter: '/', limit: 10, type: 'login' } } }]);
+  assertApiCalls(calls, [{ method: 'get', path: '/secrets', options: { query: { prefix: 'prod/', delimiter: '/', limit: 10, type: 'login' } } }]);
 });
 
 test('secrets create reads write-only values from a JSON file and prints metadata', async () => {
@@ -30,14 +31,14 @@ test('secrets create reads write-only values from a JSON file and prints metadat
     const calls: ApiCall[] = [];
     const { command, io } = buildCommand(calls);
     await command.parseAsync(['secrets', 'create', '--body', '@' + file], { from: 'user' });
-    assert.deepEqual(calls, [{ method: 'post', path: '/secrets', options: { body } }]);
+    assertApiCalls(calls, [{ method: 'post', path: '/secrets', options: { body } }]);
     assert.doesNotMatch(io.stdout() + io.stderr(), /hunter2/);
   } finally { await rm(dir, { recursive: true, force: true }); }
 });
 
 test('secrets create rejects an incomplete body before sending a request', async () => {
   const calls: ApiCall[] = [];
-  await assert.rejects(buildCommand(calls).command.parseAsync(['secrets', 'create', '--body', '{}'], { from: 'user' }), /Invalid request/);
+  await assert.rejects(buildCommand(calls).command.parseAsync(['secrets', 'create', '--body', '{}'], { from: 'user' }), /Invalid input/);
   assert.equal(calls.length, 0);
 });
 
@@ -49,7 +50,7 @@ test('secret updates, deletion, reveal and history address stable IDs', async ()
     ['secrets', 'reveal', secret, '--version', '2'],
     ['secrets', 'versions', secret, '--limit', '5'],
   ]) await buildCommand(calls).command.parseAsync(args, { from: 'user' });
-  assert.deepEqual(calls, [
+  assertApiCalls(calls, [
     { method: 'patch', path: '/secrets/' + secret, options: { body: { label: 'Renamed' }, headers: { 'If-Match': '"3"' } } },
     { method: 'delete', path: '/secrets/' + secret, options: {} },
     { method: 'post', path: '/secrets/' + secret + '/reveal', options: { body: { version: 2 } } },

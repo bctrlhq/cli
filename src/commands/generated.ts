@@ -1,151 +1,132 @@
-import { Command, Option } from 'commander';
-import { z } from 'zod';
-import descriptors from '../generated/commands.json' with { type: 'json' };
+import { Command } from 'commander';
+import { basename } from 'node:path';
+import { readFile } from 'node:fs/promises';
 import type { Factory } from '../factory.js';
 import type { JsonRequestOptions } from '../api/client.js';
 import { CliError } from '../runtime/errors.js';
-import { addOutputFlags, outputData, type OutputFlags } from './shared/output.js';
-import { readBlob, readJsonFile, writeBinary } from './shared/io.js';
-import { withoutSchemaDefaults } from './shared/schema.js';
+import { API_OPERATIONS, multipartOperation, operationPath, type ApiOperation } from './shared/catalog.js';
+import { buildRequestInput, queryFlag } from './shared/request-input.js';
+import { addOutputFlags, outputData } from './shared/output.js';
+import { addCliOperationHelp } from './shared/help.js';
+import { writeBinary } from './shared/io.js';
 import { openBrowserLiveView } from './browser-open.js';
+import { bodyFlags } from './shared/request-input.js';
+import { writeEventStream } from './shared/stream-output.js';
 
-type Schema = Record<string, any>;
-type Descriptor = (typeof descriptors)[number];
-type FieldFlag = { attribute: string; group: string; name: string; schema: Schema };
-
-function resolveSchema(schema: Schema, root: Schema): Schema {
-  if (typeof schema.$ref !== 'string') return schema;
-  const name = schema.$ref.replace('#/$defs/', '');
-  const resolved = root.$defs?.[name];
-  if (!resolved) throw new Error(`Missing CLI input definition: ${schema.$ref}`);
-  return resolved;
-}
-
-function kebab(value: string): string {
-  return value.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
-}
-
-function schemaFields(schema: Schema, root: Schema): Record<string, Schema> {
-  const resolved = resolveSchema(schema, root);
-  const fields: Record<string, Schema> = { ...resolved.properties };
-  for (const branch of resolved.anyOf ?? resolved.oneOf ?? []) {
-    for (const [name, field] of Object.entries(schemaFields(branch, root))) {
-      const previous = fields[name];
-      fields[name] = previous && JSON.stringify(previous) !== JSON.stringify(field)
-        ? { anyOf: [previous, field] } : field;
+export function registerApiCommands(root: Command, factory: Factory): void {
+  for (const operation of API_OPERATIONS) {
+    const parts = operation.cli.command.split(' ');
+    let parent = root;
+    for (const part of parts.slice(0, -1)) {
+      let group = parent.commands.find((command) => command.name() === part);
+      if (!group) {
+        group = new Command(part).description(`Manage ${part}`);
+        parent.addCommand(group);
+      }
+      parent = group;
     }
-  }
-  return fields;
-}
-
-async function jsonArgument(value: string): Promise<unknown> {
-  if (value === '-') return readJsonFile('-');
-  if (value.startsWith('@')) return readJsonFile(value.slice(1));
-  try { return JSON.parse(value); }
-  catch { throw new CliError('Expected JSON, @file, or - for stdin'); }
-}
-
-function fieldValue(value: string, schema: Schema): unknown {
-  if (schema.type === 'string') return value;
-  try { return JSON.parse(value); }
-  catch { throw new CliError(`Expected a JSON value for this ${schema.type ?? 'schema'} field`); }
-}
-
-function addFieldFlags(command: Command, descriptor: Descriptor): FieldFlag[] {
-  const root = descriptor.inputSchema as Schema;
-  const flags: FieldFlag[] = [];
-  for (const group of ['query', 'headers', 'body', 'fields']) {
-    const groupSchema = root.properties[group];
-    if (!groupSchema) continue;
-    for (const [name, unresolved] of Object.entries(schemaFields(groupSchema, root))) {
-      const schema = resolveSchema(unresolved as Schema, root);
-      const variants = schema.anyOf ?? schema.oneOf;
-      const flagSchema = Array.isArray(variants) && variants.every((variant) => resolveSchema(variant, root).type === 'string')
-        ? { ...schema, type: 'string' } : schema;
-      let flag = kebab(name);
-      if (command.options.some((option) => option.long === `--${flag}`)) flag = `${group}-${flag}`;
-      const option = new Option(`--${flag} <value>`, schema.description ?? `${group}.${name}`);
-      command.addOption(option);
-      flags.push({ attribute: option.attributeName(), group, name, schema: flagSchema });
-    }
-  }
-  return flags;
-}
-
-/** All API leaves, including future resources, come exclusively from annotations. */
-export function registerGeneratedCommands(root: Command, factory: Factory): void {
-  for (const descriptor of descriptors) {
-    const segments = descriptor.cli.command.split(' ');
-    let command = root;
-    for (const segment of segments) {
-      let child = command.commands.find((candidate) => candidate.name() === segment);
-      if (!child) {
-        child = new Command(segment);
-        command.addCommand(child);
-      }
-      command = child;
-    }
-    command.description(`${descriptor.stability === 'preview' ? 'Preview. ' : ''}${descriptor.description}`);
-    for (const name of descriptor.cli.positionalArgs) command.argument(`<${name}>`);
-    const schema = descriptor.inputSchema as Schema;
-    for (const group of ['query', 'headers', 'body', 'fields']) {
-      if (schema.properties[group]) command.option(`--${group} <json>`, `${group} JSON (inline, @file, or - for stdin)`);
-    }
-    if ((descriptor.requestContentTypes as string[]).includes('multipart/form-data')) command.option('--file <path>', 'Upload a file (- for stdin)');
-    const binary = !descriptor.stream && descriptor.responseContentTypes.length > 0
-      && !descriptor.responseContentTypes.some((type) => type === 'application/json');
-    if (binary) command.option('--output <path>', 'Write downloaded bytes (- for stdout)', '-');
-    if (descriptor.operationId === 'browsers.create') command.option('--open', 'Open the browser live view when ready');
-    addOutputFlags(command);
-    if (descriptor.method === 'DELETE') command.requiredOption('--yes', 'Confirm deletion');
-    const flags = addFieldFlags(command, descriptor);
-    const validator = z.fromJSONSchema(withoutSchemaDefaults(schema) as Parameters<typeof z.fromJSONSchema>[0]);
-    command.action(async (...args: unknown[]) => {
-      const options = args.at(-2) as Record<string, string | boolean>;
-      const input: Record<string, any> = {};
-      descriptor.cli.positionalArgs.forEach((name, index) => { input[name] = args[index]; });
-      for (const group of ['query', 'headers', 'body', 'fields']) {
-        if (typeof options[group] === 'string') input[group] = await jsonArgument(options[group] as string);
-      }
-      for (const flag of flags) {
-        const value = options[flag.attribute];
-        if (typeof value !== 'string') continue;
-        if (input[flag.group] !== undefined && (typeof input[flag.group] !== 'object' || input[flag.group] === null || Array.isArray(input[flag.group]))) {
-          throw new CliError(`--${flag.group} must be an object when field flags are used`);
-        }
-        (input[flag.group] ??= {})[flag.name] = fieldValue(value, flag.schema);
-      }
-      let upload: Awaited<ReturnType<typeof readBlob>> | undefined;
-      if (typeof options.file === 'string') {
-        if (input.body !== undefined) throw new CliError('Choose --file or --body for this request');
-        upload = await readBlob(options.file);
-        input.fileBase64 = Buffer.from(await upload.blob.arrayBuffer()).toString('base64');
-      }
-      if (!upload && schema.required?.includes('body') && input.body === undefined) input.body = {};
-      const valid = validator.safeParse(input);
-      if (!valid.success) throw new CliError(`Invalid request: ${valid.error.message}`);
-      const path = descriptor.path.replace(/^\/v1(?=\/|$)/, '')
-        .replace(/\{([^}]+)\}/g, (_, name: string) => encodeURIComponent(String(input[name])));
-      const client = await factory.apiClient();
-      const request: JsonRequestOptions = {
-        ...(input.query !== undefined ? { query: input.query } : {}),
-        ...(input.headers !== undefined ? { headers: input.headers } : {}),
-        ...(input.body !== undefined ? { body: input.body } : {}),
-      };
-      if (upload) {
-        await outputData(factory.io, await client.uploadFile(path, {
-          ...request, file: upload.blob, fileName: upload.fileName, fields: input.fields,
-        }), options as OutputFlags);
-      } else if (descriptor.stream) {
-        for await (const chunk of await client.streamText(path, request)) factory.io.writeOut(chunk);
-      } else if (binary) {
-        await writeBinary(String(options.output), await client.download(descriptor.method, path, request));
-      } else {
-        const method = descriptor.method.toLowerCase() as 'get' | 'post' | 'patch' | 'put' | 'delete';
-        const response = await client[method](path, request);
-        await outputData(factory.io, response, options as OutputFlags);
-        if (options.open) await openBrowserLiveView(factory, response);
-      }
+    const command = new Command(parts.at(-1)).description(operation.description);
+    for (const name of operation.cli.positionalArgs) command.argument(`<${name}>`);
+    addRequestFlags(command, operation);
+    addCliOperationHelp(command, operation.operationId);
+    command.action(async (...values: unknown[]) => {
+      const args = values.slice(0, operation.cli.positionalArgs.length) as string[];
+      await executeOperation(factory, operation, args, command.opts());
     });
+    parent.addCommand(command);
+  }
+}
+
+function addRequestFlags(command: Command, operation: ApiOperation): void {
+  const properties = operation.inputSchema.properties ?? {};
+  if (properties.query) {
+    command.option('--query <json>', 'Query object: inline JSON, @file, or - for stdin');
+    command.option('--params <json>', 'Alias for --query');
+    for (const name of Object.keys(properties.query.properties ?? {})) {
+      command.option(`--${queryFlag(name)} <value>`, `Query parameter ${name}`);
+    }
+  }
+  command.option('--headers <json>', 'API headers: inline JSON, @file, or - for stdin')
+    .option('--api-version <date>', 'Dated API contract (default: 2026-10-03)')
+    .option('--space <id-or-name>', 'Select an authorized Space (BCTRL-Space)')
+    .option('--subaccount-id <id>', 'Effective subaccount context (BCTRL-Subaccount-Id)');
+  command.option('--bctrl-space <id-or-name>', 'Alias for --space')
+    .option('--bctrl-subaccount-id <id>', 'Alias for --subaccount-id');
+  if (properties.headers?.properties?.['Idempotency-Key']) {
+    command.option('--idempotency-key <key>', 'Retry key for this operation');
+  }
+  if (properties.headers?.properties?.['If-Match']) command.option('--if-match <version>', 'Require the current resource version');
+  if (properties.headers?.properties?.['Last-Event-ID']) command.option('--last-event-id <id>', 'Resume the event stream after this event');
+  if (operation.operationId === 'browsers.create') command.option('--open', 'Open the browser live view when ready');
+  for (const field of bodyFlags(operation)) {
+    if (!command.options.some((option) => option.long === `--${field.flag}`)) command.option(`--${field.flag} <value>`, `Body field ${field.name}`);
+  }
+  if (properties.body) command.option('--body <json>', 'Request body: inline JSON, @file, or - for stdin');
+  if (multipartOperation(operation)) {
+    command.option('--file <path>', 'Upload a local file, or - for binary stdin');
+    if (properties.fields) command.option('--fields <json>', 'Multipart fields: inline JSON, @file, or - for stdin');
+  }
+  if (operation.mcp.destructiveHint) command.requiredOption('--yes', 'Confirm this destructive operation');
+  if (operation.stream) {
+    command.option('--timeout-ms <milliseconds>', 'End the stream after this duration (1â€“60000)', '60000');
+    command.option('--max-events <number>', 'End after this many SSE events (1â€“200)');
+  }
+  if (operation.responseContentTypes.includes('application/octet-stream')) {
+    command.option('--out <path>', 'Write binary content to a file, or - for stdout', '-')
+      .option('--output <path>', 'Alias for --out');
+  } else if (!operation.stream) {
+    addOutputFlags(command);
+  }
+}
+
+async function executeOperation(
+  factory: Factory, operation: ApiOperation, args: string[], options: Record<string, unknown>
+): Promise<void> {
+  if (options.body !== undefined && options.file !== undefined) throw new CliError('Use either --body or --file');
+  if (options.fields !== undefined && options.file === undefined) throw new CliError('--fields requires --file');
+  const input = await buildRequestInput(operation, args, options, factory.io);
+  const request: JsonRequestOptions = {
+    headers: input.headers as Record<string, string>,
+    ...(input.query ? { query: input.query as JsonRequestOptions['query'] } : {}),
+    ...(input.body !== undefined ? { body: input.body } : {}),
+  };
+  if (multipartOperation(operation) && options.body === undefined) {
+    if (typeof options.file !== 'string') throw new CliError('This upload requires --file <path>');
+    const file = options.file;
+    let bytes: Buffer;
+    if (file === '-') {
+      const chunks: Buffer[] = [];
+      for await (const chunk of factory.io.in) chunks.push(Buffer.from(chunk));
+      bytes = Buffer.concat(chunks);
+    } else {
+      bytes = await readFile(file);
+    }
+    const form = new FormData();
+    form.set('file', new Blob([new Uint8Array(bytes)]), file === '-' ? 'stdin' : basename(file));
+    for (const [key, value] of Object.entries((input.fields ?? {}) as Record<string, string>)) form.set(key, value);
+    request.rawBody = form;
+  }
+  const path = operationPath(operation, input);
+  const client = await factory.apiClient();
+  if (operation.stream) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), Number(options.timeoutMs));
+    try {
+      const stream = await client.streamText(path, { ...request, signal: controller.signal });
+      await writeEventStream(stream, factory.io.out, controller.signal,
+        input.maxEvents === undefined ? undefined : Number(input.maxEvents));
+    } catch (error) {
+      if (!controller.signal.aborted) throw error;
+    } finally {
+      clearTimeout(timer);
+    }
+  } else if (operation.responseContentTypes.includes('application/octet-stream')) {
+    await writeBinary(String(options.output ?? options.out),
+      await client.download(path, { ...request, method: operation.method }), factory.io.out);
+  } else {
+    const method = operation.method.toLowerCase() as 'get' | 'post' | 'patch' | 'put' | 'delete';
+    const response = await client[method](path, request);
+    await outputData(factory.io, response, options);
+    if (options.open) await openBrowserLiveView(factory, response);
   }
 }

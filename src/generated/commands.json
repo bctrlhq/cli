@@ -341,13 +341,9 @@
               ]
             },
             "showPoweredBy": {
-              "anyOf": [
-                {
-                  "type": "boolean"
-                },
-                {
-                  "type": "null"
-                }
+              "type": [
+                "boolean",
+                "null"
               ]
             }
           },
@@ -3256,6 +3252,9 @@
                   "type": "integer"
                 },
                 "coordinate": {
+                  "items": false,
+                  "maxItems": 2,
+                  "minItems": 2,
                   "prefixItems": [
                     {
                       "maximum": 16383,
@@ -3289,6 +3288,9 @@
                   "type": "string"
                 },
                 "coordinate": {
+                  "items": false,
+                  "maxItems": 2,
+                  "minItems": 2,
                   "prefixItems": [
                     {
                       "maximum": 16383,
@@ -3322,6 +3324,9 @@
                   "type": "string"
                 },
                 "coordinate": {
+                  "items": false,
+                  "maxItems": 2,
+                  "minItems": 2,
                   "prefixItems": [
                     {
                       "maximum": 16383,
@@ -3351,6 +3356,9 @@
                   "type": "string"
                 },
                 "coordinate": {
+                  "items": false,
+                  "maxItems": 2,
+                  "minItems": 2,
                   "prefixItems": [
                     {
                       "maximum": 16383,
@@ -3372,6 +3380,9 @@
                 },
                 "path": {
                   "items": {
+                    "items": false,
+                    "maxItems": 2,
+                    "minItems": 2,
                     "prefixItems": [
                       {
                         "maximum": 16383,
@@ -3391,6 +3402,9 @@
                   "type": "array"
                 },
                 "startCoordinate": {
+                  "items": false,
+                  "maxItems": 2,
+                  "minItems": 2,
                   "prefixItems": [
                     {
                       "maximum": 16383,
@@ -3425,6 +3439,9 @@
                   "type": "integer"
                 },
                 "coordinate": {
+                  "items": false,
+                  "maxItems": 2,
+                  "minItems": 2,
                   "prefixItems": [
                     {
                       "maximum": 16383,
@@ -3665,6 +3682,9 @@
               "type": "integer"
             },
             "coordinate": {
+              "items": false,
+              "maxItems": 2,
+              "minItems": 2,
               "prefixItems": [
                 {
                   "maximum": 16383,
@@ -4104,6 +4124,9 @@
           "additionalProperties": false,
           "properties": {
             "coordinate": {
+              "items": false,
+              "maxItems": 2,
+              "minItems": 2,
               "prefixItems": [
                 {
                   "maximum": 16383,
@@ -4237,6 +4260,9 @@
           "additionalProperties": false,
           "properties": {
             "coordinate": {
+              "items": false,
+              "maxItems": 2,
+              "minItems": 2,
               "prefixItems": [
                 {
                   "maximum": 16383,
@@ -4258,6 +4284,9 @@
             },
             "path": {
               "items": {
+                "items": false,
+                "maxItems": 2,
+                "minItems": 2,
                 "prefixItems": [
                   {
                     "maximum": 16383,
@@ -4277,6 +4306,9 @@
               "type": "array"
             },
             "startCoordinate": {
+              "items": false,
+              "maxItems": 2,
+              "minItems": 2,
               "prefixItems": [
                 {
                   "maximum": 16383,
@@ -4535,6 +4567,9 @@
           "additionalProperties": false,
           "properties": {
             "coordinate": {
+              "items": false,
+              "maxItems": 2,
+              "minItems": 2,
               "prefixItems": [
                 {
                   "maximum": 16383,
@@ -4783,6 +4818,9 @@
               "type": "integer"
             },
             "coordinate": {
+              "items": false,
+              "maxItems": 2,
+              "minItems": 2,
               "prefixItems": [
                 {
                   "maximum": 16383,
@@ -7346,7 +7384,9 @@
     "pathParams": [
       "browserId"
     ],
-    "requestContentTypes": [],
+    "requestContentTypes": [
+      "multipart/form-data"
+    ],
     "responseContentTypes": [
       "application/json"
     ],
@@ -7432,12 +7472,35 @@
           },
           "required": [],
           "additionalProperties": false
+        },
+        "fields": {
+          "additionalProperties": false,
+          "properties": {},
+          "required": [],
+          "type": "object"
+        },
+        "fileBase64": {
+          "type": "string",
+          "description": "Base64-encoded file content."
+        },
+        "filename": {
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string"
         }
       },
       "required": [
         "browserId"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "fileBase64"
+          ]
+        }
+      ]
     }
   },
   {

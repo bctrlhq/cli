@@ -39,7 +39,7 @@ test('runs files commands use the Run file routes', async () => {
       'get /runs/run_u1234567890123456789012/files',
       'get /runs/run_u1234567890123456789012/files/file_u1234567890123456789012',
       'post /runs/run_u1234567890123456789012/files',
-      'uploadFile /runs/run_u1234567890123456789012/files/upload',
+      'post /runs/run_u1234567890123456789012/files/upload',
       'post /runs/run_u1234567890123456789012/files/file_u1234567890123456789012/retry',
       'delete /runs/run_u1234567890123456789012/files/file_u1234567890123456789012',
       'post /runs/run_u1234567890123456789012/files/collect',
@@ -49,6 +49,6 @@ test('runs files commands use the Run file routes', async () => {
   assert.equal((options[0]?.query as Record<string, unknown>).role, 'input');
   assert.deepEqual(options[2]?.body, { fileId: 'file_u1234567890123456789012' });
   assert.equal((options[3]?.headers as Record<string, string>)['Idempotency-Key'], 'k1');
-  assert.deepEqual(options[3]?.fields, { path: 'invoices/a.pdf' });
+  assert.equal((options[3]?.rawBody as FormData).get('path'), 'invoices/a.pdf');
   assert.deepEqual(options[6]?.body, { runtimePath: 'downloads/r.pdf', filename: 'r.pdf' });
 });

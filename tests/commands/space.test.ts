@@ -1,3 +1,4 @@
+import { assertApiCalls } from '../helpers/api-assertions.js';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createRootCommand } from '../../src/root.js';
@@ -37,7 +38,7 @@ test('space list sends documented OpenAPI query parameters', async () => {
     { from: 'user' }
   );
 
-  assert.deepEqual(calls, [
+  assertApiCalls(calls, [
     {
       method: 'get',
       path: '/spaces',
@@ -58,7 +59,7 @@ test('space get uses the OpenAPI operation route', async () => {
 
   await command.parseAsync(['spaces', 'get', 'sp_test'], { from: 'user' });
 
-  assert.deepEqual(calls, [
+  assertApiCalls(calls, [
     {
       method: 'get',
       path: '/spaces/sp_test',
@@ -76,7 +77,7 @@ test('space create maps flags to the OpenAPI request body', async () => {
     { from: 'user' }
   );
 
-  assert.deepEqual(calls, [
+  assertApiCalls(calls, [
     {
       method: 'post',
       path: '/spaces',
@@ -101,7 +102,7 @@ test('space patch maps flags to the OpenAPI request body', async () => {
     }
   );
 
-  assert.deepEqual(calls, [
+  assertApiCalls(calls, [
     {
       method: 'patch',
       path: '/spaces/sp_test',
@@ -122,7 +123,7 @@ test('space delete keeps the confirmation guard and uses the OpenAPI route', asy
     from: 'user',
   });
 
-  assert.deepEqual(calls, [
+  assertApiCalls(calls, [
     {
       method: 'delete',
       path: '/spaces/sp_test',
@@ -146,7 +147,7 @@ test('space patch accepts the environment in the resource body', async () => {
     { from: 'user' }
   );
 
-  assert.deepEqual(calls, [
+  assertApiCalls(calls, [
     {
       method: 'patch',
       path: '/spaces/sp_test',

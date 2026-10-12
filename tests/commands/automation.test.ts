@@ -107,6 +107,7 @@ test('locations list sends pagination and catalog ordering to the discovery rout
   assert.equal(calls[0]?.method, 'get');
   assert.equal(calls[0]?.path, '/locations');
   assert.deepEqual(calls[0]?.options, {
+    headers: { 'BCTRL-Version': '2026-10-03' },
     query: { order: 'asc', limit: 1, cursor: 'next' },
   });
 });
@@ -118,9 +119,9 @@ test('browser commands expose the resource lifecycle, state discard and scoped R
   await buildCommand(calls).parseAsync(['browsers', 'get', 'name / encoded'], { from: 'user' });
   await buildCommand(calls).parseAsync(['browsers', 'update', 'br_1', '--body', '{"recording":false}'], { from: 'user' });
   await buildCommand(calls).parseAsync(['browsers', 'start', 'br_1'], { from: 'user' });
-  await buildCommand(calls).parseAsync(['browsers', 'stop', 'br_1', '--discard-state', 'true', '--idempotency-key', 'stop-1'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browsers', 'stop', 'br_1', '--discard-state', 'true', '--idempotency-key', 'stop-1', '--yes'], { from: 'user' });
   await buildCommand(calls).parseAsync(['browsers', 'runs', 'list', 'br_1', '--query', '{"status":"ended","include":"usage"}'], { from: 'user' });
-  await buildCommand(calls).parseAsync(['browsers', 'connections', 'revoke', 'br_1', '--idempotency-key', 'revoke-1'], { from: 'user' });
+  await buildCommand(calls).parseAsync(['browsers', 'connections', 'revoke', 'br_1', '--idempotency-key', 'revoke-1', '--yes'], { from: 'user' });
   await buildCommand(calls).parseAsync(['browsers', 'delete', 'br_1', '--yes'], { from: 'user' });
   assert.deepEqual(calls.map(({ method, path }) => `${method} ${path}`), [
     'get /browsers', 'post /browsers', 'get /browsers/name%20%2F%20encoded',
