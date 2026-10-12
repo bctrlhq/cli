@@ -128,13 +128,18 @@ function renderOptionsTable(command: Command): string {
     '| ---- | ----------- |',
     ...options.map(
       (option) =>
-        `| \`${escapeTableCell(option.flags)}\` | ${escapeTableCell(optionDescription(option))} |`
+        `| \`${escapeTableCell(option.flags)}\` | ${escapeTableCell(escapeMdxText(optionDescription(option)))} |`
     ),
   ].join('\n');
 }
 
 function escapeTableCell(value: string): string {
   return value.replace(/\|/g, '\\|').replace(/\n/g, '<br />');
+}
+
+function escapeMdxText(value: string): string {
+  const entities: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '{': '&#123;', '}': '&#125;' };
+  return value.replace(/(`+)([\s\S]*?)\1|[&<>{}]/g, (match, ticks: string | undefined) => ticks ? match : entities[match]!);
 }
 
 function commandAnchor(reference: CommandReference): string {
@@ -146,7 +151,7 @@ function renderCommand(reference: CommandReference): string {
   const parts = [
     `## \`bctrl ${commandAnchor(reference)}\``,
     '',
-    reference.command.description() || 'Run this command.',
+    escapeMdxText(reference.command.description() || 'Run this command.'),
     '',
     '```bash',
     commandSignature(reference),
@@ -174,7 +179,7 @@ function renderGroupPage(root: Command, group: ReferenceGroup): RenderedFile {
     '',
     generatedHeader,
     '',
-    group.description,
+    escapeMdxText(group.description),
     '',
     'Output formatting flags (`--json`, `--jq`, and `--template`) are documented once in [Output Formatting](/cli/output) and are omitted from the tables below.',
     '',
@@ -230,7 +235,7 @@ function renderIndexPage(root: Command): RenderedFile {
     '| ----- | -------- | ----------- |',
     ...groups.map(
       (group) =>
-        `| [${group.navTitle}](/cli/reference/${group.slug}) | ${group.commands.map((command) => `\`${command}\``).join(', ')} | ${group.description} |`
+        `| [${group.navTitle}](/cli/reference/${group.slug}) | ${group.commands.map((command) => `\`${command}\``).join(', ')} | ${escapeTableCell(escapeMdxText(group.description))} |`
     ),
     '',
     '## Top-level commands',
