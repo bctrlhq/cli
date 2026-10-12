@@ -13,13 +13,14 @@ const AuthEffectiveScopeSchema = z
 
 export const AuthWhoamiSchema = z
   .object({
+    object: z.literal('identity'),
     email: z.string().email().nullable().optional(),
     scope: z.enum(['organization', 'subaccount']),
     organizationId: z.string().min(1),
     subaccountId: z.string().min(1).nullable(),
     defaultSpaceId: z.string().min(1).nullable(),
     effectiveScope: AuthEffectiveScopeSchema,
-    keyId: z.string().min(1),
+    keyId: z.string().min(1).nullable(),
     plan: z.string().min(1),
   })
   .strict();
@@ -33,7 +34,9 @@ export async function validateAuthToken(apiBaseUrl: string, token: string): Prom
       accept: 'application/json',
       authorization: `Bearer ${token}`,
       'user-agent': 'BCTRL CLI',
+      'BCTRL-Version': '2026-10-03',
     },
+    redirect: 'error',
   });
 
   if (!response.ok) {

@@ -1,3 +1,4 @@
+import { assertApiCalls } from '../helpers/api-assertions.js';
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createRootCommand } from '../../src/root.js';
@@ -18,7 +19,7 @@ test('file list maps --space to v1 spaceId query', async () => {
     from: 'user',
   });
 
-  assert.deepEqual(calls, [
+  assertApiCalls(calls, [
     {
       method: 'get',
       path: '/files',

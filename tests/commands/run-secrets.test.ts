@@ -58,7 +58,7 @@ test('run reveals the prefix and hands the values to the child environment only'
   assert.deepEqual(calls[0], {
     method: 'get',
     path: '/secrets',
-    options: { query: { prefix: 'prod/app/', limit: 200 } },
+    options: { query: { prefix: 'prod/app/', limit: 200 }, headers: { 'BCTRL-Version': '2026-10-03' } },
   });
   assert.deepEqual(
     calls.slice(1).map((call) => call.path),

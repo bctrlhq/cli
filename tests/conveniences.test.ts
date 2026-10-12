@@ -1,3 +1,4 @@
+import { assertApiCalls } from './helpers/api-assertions.js';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
@@ -18,7 +19,7 @@ test('create --open waits for the created browser live view and opens its URL', 
   };
   const factory = { ...createTestFactory({ io, apiClient: client }), openUrl: async (url: string) => { opened.push(url); } };
   await createRootCommand(factory).parseAsync(['browsers', 'create', '--location', 'auto', '--open'], { from: 'user' });
-  assert.deepEqual(calls, [
+  assertApiCalls(calls, [
     { method: 'post', path: '/browsers', options: { body: { location: 'auto' } } },
     { method: 'get', path: '/browsers/br_created' },
   ]);

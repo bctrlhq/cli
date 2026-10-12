@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { validateAuthToken } from '../../api/auth.js';
 import { isUnauthorizedApiError } from '../../api/errors.js';
-import { clearCredential } from '../../config/auth-store.js';
+import { clearCredential, loadCredential } from '../../config/auth-store.js';
 import type { BctrlConfig } from '../../config/config.js';
 import type { Factory } from '../../factory.js';
 import type { IOStreams } from '../../io/streams.js';
@@ -53,7 +53,8 @@ export async function authStatusRun(options: AuthStatusOptions): Promise<void> {
     whoami = await validateToken(config.apiBaseUrl, config.activeToken.token);
   } catch (error) {
     if (config.activeToken.source === 'stored' && isUnauthorizedApiError(error)) {
-      await clearCredential(options.env, config.apiBaseUrl);
+      const current = await loadCredential(options.env, config.apiBaseUrl);
+      if (current?.token === config.activeToken.token) await clearCredential(options.env, config.apiBaseUrl);
     }
     throw error;
   }

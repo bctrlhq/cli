@@ -19,13 +19,14 @@ const StoredEffectiveScopeSchema = z
 
 export const StoredWhoamiSchema = z
   .object({
+    object: z.literal('identity').optional(),
     email: z.string().email().nullable().optional(),
     scope: z.enum(['organization', 'subaccount']),
     organizationId: z.string().min(1),
     subaccountId: z.string().min(1).nullable(),
     defaultSpaceId: z.string().min(1).nullable(),
     effectiveScope: StoredEffectiveScopeSchema,
-    keyId: z.string().min(1),
+    keyId: z.string().min(1).nullable(),
     plan: z.string().min(1),
   })
   .strict();

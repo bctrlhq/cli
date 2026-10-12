@@ -4313,6 +4313,13 @@ export interface components {
              */
             id: string;
         };
+        BrowsersFilesUploadRequest: {
+            /**
+             * Format: binary
+             * @description File bytes to upload (at most 25 MiB).
+             */
+            file: string;
+        };
         BrowsersPagesNavigateRequest: {
             /** @default 30000 */
             timeoutMs: number;
@@ -20660,7 +20667,11 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["BrowsersFilesUploadRequest"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
