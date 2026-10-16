@@ -316,35 +316,6 @@
                   "type": "null"
                 }
               ]
-            },
-            "logo": {
-              "anyOf": [
-                {
-                  "maxLength": 750000,
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "productName": {
-              "anyOf": [
-                {
-                  "maxLength": 40,
-                  "minLength": 2,
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ]
-            },
-            "showPoweredBy": {
-              "type": [
-                "boolean",
-                "null"
-              ]
             }
           },
           "type": "object"
@@ -24447,6 +24418,16 @@
         "ViewCreateRequest": {
           "additionalProperties": false,
           "properties": {
+            "allowedOrigins": {
+              "description": "Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.",
+              "items": {
+                "description": "Exact parent origin allowed to frame this embedded View.",
+                "minLength": 1,
+                "type": "string"
+              },
+              "maxItems": 10,
+              "type": "array"
+            },
             "components": {
               "description": "Optional content and notification surfaces for the View.",
               "$ref": "#/$defs/ViewComponentsInput"
@@ -24466,10 +24447,6 @@
               "exclusiveMinimum": 0,
               "maximum": 2592000,
               "type": "integer"
-            },
-            "presentation": {
-              "description": "Hosted presentation by default; use embedded with explicit allowed origins.",
-              "$ref": "#/$defs/ViewPresentation"
             },
             "scope": {
               "$ref": "#/$defs/ViewScopeInput"
@@ -24539,61 +24516,6 @@
               "type": "boolean"
             }
           },
-          "type": "object"
-        },
-        "ViewPresentation": {
-          "discriminator": {
-            "mapping": {
-              "embedded": "#/components/schemas/EmbeddedViewPresentation",
-              "hosted": "#/components/schemas/HostedViewPresentation"
-            },
-            "propertyName": "mode"
-          },
-          "oneOf": [
-            {
-              "$ref": "#/$defs/HostedViewPresentation"
-            },
-            {
-              "$ref": "#/$defs/EmbeddedViewPresentation"
-            }
-          ],
-          "type": "object"
-        },
-        "HostedViewPresentation": {
-          "additionalProperties": false,
-          "properties": {
-            "mode": {
-              "const": "hosted",
-              "type": "string"
-            }
-          },
-          "required": [
-            "mode"
-          ],
-          "type": "object"
-        },
-        "EmbeddedViewPresentation": {
-          "additionalProperties": false,
-          "properties": {
-            "allowedOrigins": {
-              "items": {
-                "description": "Exact parent origin allowed to frame this embedded View.",
-                "minLength": 1,
-                "type": "string"
-              },
-              "maxItems": 10,
-              "minItems": 1,
-              "type": "array"
-            },
-            "mode": {
-              "const": "embedded",
-              "type": "string"
-            }
-          },
-          "required": [
-            "mode",
-            "allowedOrigins"
-          ],
           "type": "object"
         },
         "ViewScopeInput": {
