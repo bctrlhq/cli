@@ -30214,18 +30214,18 @@ export const CLI_HELP_COMMANDS = {
               "Allow live browser interaction and actions from the notification center.",
           },
           {
-            name: "presentation",
-            type: "object",
-            required: false,
-            description:
-              "Hosted presentation by default; use embedded with explicit allowed origins.",
-          },
-          {
             name: "expiresInSeconds",
             type: "integer",
             required: false,
             description:
               "View lifetime in seconds. Defaults to 8 hours; maximum 30 days.",
+          },
+          {
+            name: "allowedOrigins",
+            type: "string[]",
+            required: false,
+            description:
+              "Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.",
           },
           {
             name: "components",
@@ -30246,6 +30246,13 @@ export const CLI_HELP_COMMANDS = {
     },
     output: {
       fields: [
+        {
+          name: "allowedOrigins",
+          type: "unknown[]",
+          required: true,
+          description:
+            "Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.",
+        },
         {
           name: "branding",
           type: "object",
@@ -30282,17 +30289,14 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description:
+            "Public view resource id. It is safe to expose in URLs and logs.",
         },
         {
           name: "object",
           type: "view",
           required: true,
           values: ["view"],
-        },
-        {
-          name: "presentation",
-          type: "object",
-          required: true,
         },
         {
           name: "scope",
@@ -30335,12 +30339,13 @@ export const CLI_HELP_COMMANDS = {
       requestFields: [
         "scope",
         "control",
-        "presentation",
         "expiresInSeconds",
+        "allowedOrigins",
         "components",
         "conversationSend",
       ],
       responseFields: [
+        "allowedOrigins",
         "branding",
         "components",
         "control",
@@ -30349,7 +30354,6 @@ export const CLI_HELP_COMMANDS = {
         "expiresAt",
         "id",
         "object",
-        "presentation",
         "scope",
         "token",
         "updatedAt",
@@ -30532,6 +30536,13 @@ export const CLI_HELP_COMMANDS = {
     output: {
       fields: [
         {
+          name: "allowedOrigins",
+          type: "unknown[]",
+          required: true,
+          description:
+            "Exact sites allowed to embed this View in an iframe. Empty: no site may frame it.",
+        },
+        {
           name: "branding",
           type: "object",
           required: true,
@@ -30567,17 +30578,14 @@ export const CLI_HELP_COMMANDS = {
           name: "id",
           type: "string",
           required: true,
+          description:
+            "Public view resource id. It is safe to expose in URLs and logs.",
         },
         {
           name: "object",
           type: "view",
           required: true,
           values: ["view"],
-        },
-        {
-          name: "presentation",
-          type: "object",
-          required: true,
         },
         {
           name: "scope",
@@ -30611,6 +30619,7 @@ export const CLI_HELP_COMMANDS = {
       path: "/v1/views/{viewId}",
       operationId: "views.get",
       responseFields: [
+        "allowedOrigins",
         "branding",
         "components",
         "control",
@@ -30619,7 +30628,6 @@ export const CLI_HELP_COMMANDS = {
         "expiresAt",
         "id",
         "object",
-        "presentation",
         "scope",
         "spaceName",
         "updatedAt",
